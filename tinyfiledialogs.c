@@ -6,6 +6,8 @@
 \____  ___/ http://tinyfiledialogs.sourceforge.net
      \|           	                     mailto:tinfyfiledialogs@ysengrin.com
 
+            git://git.code.sf.net/p/tinyfiledialogs/code
+
  Please
 	1) let me know
 	- if you are including tiny file dialogs,

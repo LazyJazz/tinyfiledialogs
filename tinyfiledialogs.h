@@ -174,7 +174,8 @@ Then you don't need link against Comdlg32.lib and Ole32.lib */
 - On windows, inputbox and passwordbox are not as smooth as they should be:
   they open a console window for a few seconds.
 - On visual studio:
-        set Configuration Properties/General Character Set to Multi-Byte.
+      set Properties/Configuration Properties/General
+			Character Set to "Multi-Byte" or "Not Set"
 - On windows link against Comdlg32.lib and Ole32.lib
   This linking is not compulsary for console mode (see above).
 - On unix: it tries command line calls, so no such need.

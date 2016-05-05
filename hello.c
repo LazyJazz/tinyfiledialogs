@@ -29,9 +29,13 @@ A single C file (add it to your C or C++ project) with 6 modal function calls:
 - select folder dialog
 - color picker.
 
-Complement to OpenGL GLFW GLUT GLUI VTK SDL Ogre3D Unity3D
-or any GUI-less program, there is NO INIT & NO MAIN LOOP.
-The dialogs can be forced into console mode.
+Complement to OpenGL GLFW GLUT GLUI
+VTK SFML SDL Ogre Unity CEGUI ION MathGL
+CPW GLOW GLT NGL STB & GUI less programs
+
+NO INIT & NO MAIN LOOP
+
+The dialogs can be forced into console mode
 
 On Windows:
 - native code & some vbs create the graphic dialogs
@@ -165,5 +169,6 @@ VisualStudio :
   Create a console application project,
 	it links against Comdlg32.lib & Ole32.lib.
 	Right click on your Project, select Properties.
-	Configuration Properties/General Character Set to Multi-Byte.
+	Configuration Properties/General
+	Character Set to "Multi-Byte" or "Not Set"
 */

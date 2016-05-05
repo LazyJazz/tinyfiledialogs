@@ -514,7 +514,6 @@ static char const * inputBoxWinGui(
 		strcat(lDialogString, "\",\"");
 		if (aTitle && strlen(aTitle))
 		{
-
 			strcat(lDialogString, aTitle);
 		}
 		strcat(lDialogString, "\",\"");
@@ -1051,11 +1050,11 @@ static int messageBoxWinConsole (
 		strcat(lDialogString, "\" ") ;
 	}
 
-	/*
-	strcat(lDialogString, "--title \"") ;
-	strcat(lDialogString, "tab =move focus") ;
-	strcat(lDialogString, "\" ") ;
-	*/
+	if ( aDialogType && ( !strcmp( "okcancel" , aDialogType ) || !strcmp( "yesno" , aDialogType ) ) ) {
+		strcat(lDialogString, "--title \"") ;
+		strcat(lDialogString, "tab =move focus") ;
+		strcat(lDialogString, "\" ") ;
+	}
 
 	if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
 	{
@@ -2555,11 +2554,11 @@ else :\n\tprint 1\n\"" ) ;
 			strcat(lDialogString, "\" ") ;
 		}
 
-		/*
-		strcat(lDialogString, "--title \"") ;
-		strcat(lDialogString, "tab =move focus") ;
-		strcat(lDialogString, "\" ") ;
-		*/
+		if ( aDialogType && ( !strcmp( "okcancel" , aDialogType ) || !strcmp( "yesno" , aDialogType ) ) ) {
+			strcat(lDialogString, "--title \"") ;
+			strcat(lDialogString, "tab =move focus") ;
+			strcat(lDialogString, "\" ") ;
+		}
 
 		if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
 		{

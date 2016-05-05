@@ -19,7 +19,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.3.6 [April 16, 2016] zlib licence.
+v2.3.7 [May 5, 2016] zlib licence.
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -1042,10 +1042,17 @@ static int messageBoxWinConsole (
 	strcpy ( lDialogString , "dialog " ) ;
 	if ( aTitle && strlen(aTitle) )
 	{
-		strcat(lDialogString, "--title \"") ;
+		strcat(lDialogString, "--backtitle \"") ;
 		strcat(lDialogString, aTitle) ;
 		strcat(lDialogString, "\" ") ;
 	}
+
+	/*
+	strcat(lDialogString, "--title \"") ;
+	strcat(lDialogString, "tab =move focus") ;
+	strcat(lDialogString, "\" ") ;
+	*/
+
 	if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
 	{
 		if ( ! aDefaultButton )
@@ -1130,10 +1137,15 @@ static char const * inputBoxWinConsole(
 	strcat ( lDialogString , "dialog " ) ;
 	if ( aTitle && strlen(aTitle) )
 	{
-		strcat(lDialogString, "--title \"") ;
+		strcat(lDialogString, "--backtitle \"") ;
 		strcat(lDialogString, aTitle) ;
 		strcat(lDialogString, "\" ") ;
 	}
+
+	strcat(lDialogString, "--title \"") ;
+	strcat(lDialogString, "tab =move focus") ;
+	strcat(lDialogString, "\" ") ;
+
 	if ( ! aDefaultInput )
 	{
 		strcat ( lDialogString , "--passwordbox" ) ;
@@ -1204,11 +1216,15 @@ static char const * saveFileDialogWinConsole (
 	strcpy ( lDialogString , "dialog " ) ;
  	if ( aTitle && strlen(aTitle) )
 	{
-		strcat(lDialogString, "--title \"") ;
-		/*strcat(lDialogString, aTitle) ;*/
-		strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+		strcat(lDialogString, "--backtitle \"") ;
+		strcat(lDialogString, aTitle) ;
 		strcat(lDialogString, "\" ") ;
 	}
+	
+	strcat(lDialogString, "--title \"") ;
+	strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+	strcat(lDialogString, "\" ") ;
+
 	strcat ( lDialogString , "--fselect \"" ) ;
 	if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
 	{
@@ -1265,11 +1281,15 @@ static char const * openFileDialogWinConsole (
 	strcpy ( lDialogString , "dialog " ) ;
  	if ( aTitle && strlen(aTitle) )
 	{
-		strcat(lDialogString, "--title \"") ;
-		/*strcat(lDialogString, aTitle) ;*/
-		strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+		strcat(lDialogString, "--backtitle \"") ;
+		strcat(lDialogString, aTitle) ;
 		strcat(lDialogString, "\" ") ;
 	}
+
+	strcat(lDialogString, "--title \"") ;
+	strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+	strcat(lDialogString, "\" ") ;
+
 	strcat ( lDialogString , "--fselect \"" ) ;
 	if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
 	{
@@ -1319,11 +1339,15 @@ static char const * selectFolderDialogWinConsole (
 	strcpy ( lDialogString , "dialog " ) ;
  	if ( aTitle && strlen(aTitle) )
 	{
-		strcat(lDialogString, "--title \"") ;
-		/*strcat(lDialogString, aTitle) ;*/
-		strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+		strcat(lDialogString, "--backtitle \"") ;
+		strcat(lDialogString, aTitle) ;
 		strcat(lDialogString, "\" ") ;
 	}
+
+	strcat(lDialogString, "--title \"") ;
+	strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+	strcat(lDialogString, "\" ") ;
+
 	strcat ( lDialogString , "--dselect \"" ) ;
 	if ( aDefaultPath && strlen(aDefaultPath) )
 	{
@@ -2522,10 +2546,17 @@ else :\n\tprint 1\n\"" ) ;
 
  		if ( aTitle && strlen(aTitle) )
 		{
-			strcat(lDialogString, "--title \"") ;
+			strcat(lDialogString, "--backtitle \"") ;
 			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "\" ") ;
 		}
+
+		/*
+		strcat(lDialogString, "--title \"") ;
+		strcat(lDialogString, "tab =move focus") ;
+		strcat(lDialogString, "\" ") ;
+		*/
+
 		if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
 		{
 			if ( ! aDefaultButton )
@@ -2940,10 +2971,15 @@ frontmost of process \\\"Python\\\" to true' ''');");
 
 		if ( aTitle && strlen(aTitle) )
 		{
-			strcat(lDialogString, "--title \"") ;
+			strcat(lDialogString, "--backtitle \"") ;
 			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "\" ") ;
 		}
+
+		strcat(lDialogString, "--title \"") ;
+		strcat(lDialogString, "tab =move focus") ;
+		strcat(lDialogString, "\" ") ;
+
 		if ( aDefaultInput || lWasGdialog )
 		{
 			strcat ( lDialogString , "--inputbox" ) ;
@@ -3306,11 +3342,15 @@ char const * tinyfd_saveFileDialog (
 
  		if ( aTitle && strlen(aTitle) )
 		{
-			strcat(lDialogString, "--title \"") ;
-			/*strcat(lDialogString, aTitle) ;*/
-			strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+			strcat(lDialogString, "--backtitle \"") ;
+			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "\" ") ;
 		}
+
+		strcat(lDialogString, "--title \"") ;
+		strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+		strcat(lDialogString, "\" ") ;
+
 		strcat ( lDialogString , "--fselect \"" ) ;
 		if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
 		{
@@ -3639,11 +3679,15 @@ frontmost of process \\\"Python\\\" to true' ''');");
 
 		if ( aTitle && strlen(aTitle) )
 		{
-			strcat(lDialogString, "--title \"") ;
-			/*strcat(lDialogString, aTitle) ;*/
-			strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+			strcat(lDialogString, "--backtitle \"") ;
+			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "\" ") ;
 		}
+
+		strcat(lDialogString, "--title \"") ;
+		strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+		strcat(lDialogString, "\" ") ;
+
 		strcat ( lDialogString , "--fselect \"" ) ;
 		if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
 		{
@@ -3858,11 +3902,15 @@ frontmost of process \\\"Python\\\" to true' ''');");
 
 		if ( aTitle && strlen(aTitle) )
 		{
-			strcat(lDialogString, "--title \"") ;
-			/*strcat(lDialogString, aTitle) ;*/
-			strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+			strcat(lDialogString, "--backtitle \"") ;
+			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "\" ") ;
 		}
+
+		strcat(lDialogString, "--title \"") ;
+		strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+		strcat(lDialogString, "\" ") ;
+
 		strcat ( lDialogString , "--dselect \"" ) ;
 		if ( aDefaultPath && strlen(aDefaultPath) )
 		{

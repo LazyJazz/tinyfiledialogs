@@ -145,10 +145,10 @@ char const * tinyfd_colorChooser(
 /* not cross platform - zenity only */
 char const * tinyfd_arrayDialog (
 	char const * const aTitle , /* "" */
-	int const aNumOfColumns , /* 0 */
+	int const aNumOfColumns , /* 2 */
 	char const * const * const aColumns , /* {"Column 1","Column 2"} */
-	int const aNumOfRows , /* 0 */
-	char const * const * const aRows ) ;
+	int const aNumOfRows , /* 2*/
+	char const * const * const aCells ) ;
 		/* {"Row1 Col1","Row1 Col2","Row2 Col1","Row2 Col2"} */
 
 

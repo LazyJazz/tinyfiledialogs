@@ -4175,10 +4175,10 @@ frontmost of process \\\"Python\\\" to true' ''');");
 /* contributed by Attila Dusnoki */
 char const * tinyfd_arrayDialog (
 	char const * const aTitle , /* "" */
-	int const aNumOfColumns , /* 0 */
+	int const aNumOfColumns , /* 2 */
 	char const * const * const aColumns , /* {"Column 1","Column 2"} */
-	int const aNumOfRows , /* 0 */
-	char const * const * const aRows ) 
+	int const aNumOfRows , /* 2 */
+	char const * const * const aCells ) 
 		/* {"Row1 Col1","Row1 Col2","Row2 Col1","Row2 Col2"} */
 {
 	static char lBuff [ MAX_PATH_OR_CMD ] ;
@@ -4196,7 +4196,8 @@ char const * tinyfd_arrayDialog (
 			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "\"") ;
 		}
-		if ( aNumOfColumns > 0 )
+
+		if ( aColumns && (aNumOfColumns > 0) )
 		{
 			for ( i = 0 ; i < aNumOfColumns ; i ++ )
 			{
@@ -4205,13 +4206,14 @@ char const * tinyfd_arrayDialog (
 				strcat ( lDialogString , "\"" ) ;
 			}
 		}
-		if ( aNumOfRows > 0 )
+
+		if ( aCells && (aNumOfRows > 0) )
 		{
 			strcat ( lDialogString , " " ) ;
 			for ( i = 0 ; i < aNumOfRows*aNumOfColumns ; i ++ )
 			{
 				strcat ( lDialogString , "\"" ) ;
-				strcat ( lDialogString , aRows [ i ] ) ;
+				strcat ( lDialogString , aCells [ i ] ) ;
 				strcat ( lDialogString , "\" " ) ;
 			}
 		}

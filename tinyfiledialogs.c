@@ -19,7 +19,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.3.7 [May 5, 2016] zlib licence.
+v2.3.8 [May 10, 2016] zlib licence.
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -4171,7 +4171,75 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	return lBuff ;
 }
 
+/* not cross platform - zenity only */
+/* contributed by Attila Dusnoki */
+char const * tinyfd_arrayDialog (
+	char const * const aTitle , /* "" */
+	int const aNumOfColumns , /* 0 */
+	char const * const * const aColumns , /* {"Column 1","Column 2"} */
+	int const aNumOfRows , /* 0 */
+	char const * const * const aRows ) 
+		/* {"Row1 Col1","Row1 Col2","Row2 Col1","Row2 Col2"} */
+{
+	static char lBuff [ MAX_PATH_OR_CMD ] ;
+	char lDialogString [ MAX_PATH_OR_CMD ] ;
+	FILE * lIn ;
+	lBuff[0]='\0';
+	int i ;
 
+	if ( zenityPresent() )
+	{
+		strcpy ( lDialogString , "zenity --list --print-column=ALL" ) ;
+		if ( aTitle && strlen(aTitle) )
+		{
+			strcat(lDialogString, " --title=\"") ;
+			strcat(lDialogString, aTitle) ;
+			strcat(lDialogString, "\"") ;
+		}
+		if ( aNumOfColumns > 0 )
+		{
+			for ( i = 0 ; i < aNumOfColumns ; i ++ )
+			{
+				strcat ( lDialogString , " --column=\"" ) ;
+				strcat ( lDialogString , aColumns [ i ] ) ;
+				strcat ( lDialogString , "\"" ) ;
+			}
+		}
+		if ( aNumOfRows > 0 )
+		{
+			strcat ( lDialogString , " " ) ;
+			for ( i = 0 ; i < aNumOfRows*aNumOfColumns ; i ++ )
+			{
+				strcat ( lDialogString , "\"" ) ;
+				strcat ( lDialogString , aRows [ i ] ) ;
+				strcat ( lDialogString , "\" " ) ;
+			}
+		}
+	}
+	else
+	{
+		return NULL ;
+	}
+
+	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+	if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
+	{
+		return NULL ;
+	}
+	while ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
+	{}
+	pclose ( lIn ) ;
+	if ( lBuff[ strlen ( lBuff ) -1 ] == '\n' )
+	{
+		lBuff[ strlen ( lBuff ) -1 ] = '\0' ;
+	}
+	/* printf ( "lBuff: %s\n" , lBuff ) ; //*/
+	if ( ! strlen ( lBuff ) )
+	{
+		return NULL ;
+	}
+	return lBuff ;
+}
 #endif /* _WIN32 */
 
 

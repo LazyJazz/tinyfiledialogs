@@ -19,7 +19,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.3.7 [May 5, 2016] zlib licence.
+v2.3.8 [May 10, 2016] zlib licence.
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -141,6 +141,16 @@ char const * tinyfd_colorChooser(
 	/* aDefaultRGB is used only if aDefaultHexRGB is NULL */
 	/* aDefaultRGB and aoResultRGB can be the same array */
 	/* returns NULL on cancel */
+
+/* not cross platform - zenity only */
+char const * tinyfd_arrayDialog (
+	char const * const aTitle , /* "" */
+	int const aNumOfColumns , /* 0 */
+	char const * const * const aColumns , /* {"Column 1","Column 2"} */
+	int const aNumOfRows , /* 0 */
+	char const * const * const aRows ) ;
+		/* {"Row1 Col1","Row1 Col2","Row2 Col1","Row2 Col2"} */
+
 
 extern int tinyfd_forceConsole ;  /* 0 (default) or 1
 can be modified at run time.

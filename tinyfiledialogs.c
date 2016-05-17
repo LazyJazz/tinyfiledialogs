@@ -2292,7 +2292,7 @@ int tinyfd_messageBox (
 	}
     else if ( zenityPresent() || matedialogPresent() )
     {
-			if ( zenityPresent()
+			if ( zenityPresent() )
 			{
         strcpy ( lDialogString , "zenity --" ) ;
 			}
@@ -2823,7 +2823,7 @@ char const * tinyfd_inputBox(
 	}
   else if ( zenityPresent() || matedialogPresent() )
   {
-		if ( zenityPresent()
+		if ( zenityPresent() )
 		{
       strcpy ( lDialogString ,  "szAnswer=$(zenity --entry" ) ;
 		}
@@ -3190,6 +3190,7 @@ char const * tinyfd_saveFileDialog (
     char const * const * const aFilterPatterns , /* NULL or {"*.jpg","*.png"} */
     char const * const aSingleFilterDescription ) /* NULL or "image files" */
 {
+
     static char lBuff [ MAX_PATH_OR_CMD ] ;
     char lDialogString [ MAX_PATH_OR_CMD ] ;
     char lString [ MAX_PATH_OR_CMD ] ;
@@ -3229,7 +3230,7 @@ char const * tinyfd_saveFileDialog (
 	}
   else if ( zenityPresent() || matedialogPresent() )
   {
-		if ( zenityPresent()
+		if ( zenityPresent() )
 		{
       strcpy ( lDialogString , "zenity" ) ;
 		}
@@ -3563,7 +3564,7 @@ char const * tinyfd_openFileDialog (
     }
   else if ( zenityPresent() || matedialogPresent() )
   {
-		if ( zenityPresent()
+		if ( zenityPresent() )
 		{
       strcpy ( lDialogString , "zenity --file-selection" ) ;
 		}
@@ -3874,7 +3875,7 @@ char const * tinyfd_selectFolderDialog (
     }
   else if ( zenityPresent() || matedialogPresent() )
   {
-		if ( zenityPresent()
+		if ( zenityPresent() )
 		{
       strcpy ( lDialogString , "zenity --file-selection --directory" ) ;
 		}
@@ -4090,6 +4091,7 @@ char const * tinyfd_colorChooser(
 		strcpy ( lDialogString , "osascript -e 'tell app (path to frontmost \
 application as Unicode text) to set mycolor to choose color default color {");
 		sprintf(lTmp, "%d", 256 * lDefaultRGB[0] ) ;
+
 		strcat(lDialogString, lTmp ) ;
 		strcat(lDialogString, "," ) ;
 		sprintf(lTmp, "%d", 256 * lDefaultRGB[1] ) ;
@@ -4110,7 +4112,7 @@ application as Unicode text) to set mycolor to choose color default color {");
     }
   else if ( zenity3Present() || matedialogPresent() )
   {
-		if ( zenity3Present()
+		if ( zenity3Present() )
 		{
         sprintf ( lDialogString ,
 "zenity --color-selection --show-palette --color=%s" , lpDefaultHexRGB ) ;

@@ -19,7 +19,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.3.8 [May 10, 2016] zlib licence.
+v2.3.9 [May 17, 2016] zlib licence.
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -1045,13 +1045,14 @@ static int messageBoxWinConsole (
 	strcpy ( lDialogString , "dialog " ) ;
 	if ( aTitle && strlen(aTitle) )
 	{
-		strcat(lDialogString, "--backtitle \"") ;
+		strcat(lDialogString, "--title \"") ;
 		strcat(lDialogString, aTitle) ;
 		strcat(lDialogString, "\" ") ;
 	}
 
-	if ( aDialogType && ( !strcmp( "okcancel" , aDialogType ) || !strcmp( "yesno" , aDialogType ) ) ) {
-		strcat(lDialogString, "--title \"") ;
+	if ( aDialogType && ( !strcmp( "okcancel" , aDialogType ) || !strcmp( "yesno" , aDialogType ) ) )
+	{
+		strcat(lDialogString, "--backtitle \"") ;
 		strcat(lDialogString, "tab =move focus") ;
 		strcat(lDialogString, "\" ") ;
 	}
@@ -1140,12 +1141,12 @@ static char const * inputBoxWinConsole(
 	strcat ( lDialogString , "dialog " ) ;
 	if ( aTitle && strlen(aTitle) )
 	{
-		strcat(lDialogString, "--backtitle \"") ;
+		strcat(lDialogString, "--title \"") ;
 		strcat(lDialogString, aTitle) ;
 		strcat(lDialogString, "\" ") ;
 	}
 
-	strcat(lDialogString, "--title \"") ;
+	strcat(lDialogString, "--backtitle \"") ;
 	strcat(lDialogString, "tab =move focus") ;
 	strcat(lDialogString, "\" ") ;
 
@@ -1219,12 +1220,12 @@ static char const * saveFileDialogWinConsole (
 	strcpy ( lDialogString , "dialog " ) ;
  	if ( aTitle && strlen(aTitle) )
 	{
-		strcat(lDialogString, "--backtitle \"") ;
+		strcat(lDialogString, "--title \"") ;
 		strcat(lDialogString, aTitle) ;
 		strcat(lDialogString, "\" ") ;
 	}
 	
-	strcat(lDialogString, "--title \"") ;
+	strcat(lDialogString, "--backtitle \"") ;
 	strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
 	strcat(lDialogString, "\" ") ;
 
@@ -1284,12 +1285,12 @@ static char const * openFileDialogWinConsole (
 	strcpy ( lDialogString , "dialog " ) ;
  	if ( aTitle && strlen(aTitle) )
 	{
-		strcat(lDialogString, "--backtitle \"") ;
+		strcat(lDialogString, "--title \"") ;
 		strcat(lDialogString, aTitle) ;
 		strcat(lDialogString, "\" ") ;
 	}
 
-	strcat(lDialogString, "--title \"") ;
+	strcat(lDialogString, "--backtitle \"") ;
 	strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
 	strcat(lDialogString, "\" ") ;
 
@@ -1342,12 +1343,12 @@ static char const * selectFolderDialogWinConsole (
 	strcpy ( lDialogString , "dialog " ) ;
  	if ( aTitle && strlen(aTitle) )
 	{
-		strcat(lDialogString, "--backtitle \"") ;
+		strcat(lDialogString, "--title \"") ;
 		strcat(lDialogString, aTitle) ;
 		strcat(lDialogString, "\" ") ;
 	}
 
-	strcat(lDialogString, "--title \"") ;
+	strcat(lDialogString, "--backtitle \"") ;
 	strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
 	strcat(lDialogString, "\" ") ;
 
@@ -2115,6 +2116,17 @@ static int kdialogPresent ( )
 }
 
 
+static int matedialogPresent ( )
+{
+	static int lMatedialogPresent = -1 ;
+	if ( lMatedialogPresent < 0 )
+	{
+		lMatedialogPresent = detectPresence("matedialog") ;
+	}
+	return lMatedialogPresent && graphicMode ( ) ;
+}
+
+
 static int zenityPresent ( )
 {
 	static int lZenityPresent = -1 ;
@@ -2278,30 +2290,38 @@ int tinyfd_messageBox (
 		strcat(lDialogString, "-e '0' " );
 		strcat(lDialogString, "-e 'end try'") ;
 	}
-    else if ( zenityPresent() )
+    else if ( zenityPresent() || matedialogPresent() )
     {
+			if ( zenityPresent()
+			{
         strcpy ( lDialogString , "zenity --" ) ;
-        if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
-        {
-            strcat ( lDialogString ,
-            		"question --ok-label=Ok --cancel-label=Cancel" ) ;
-        }
-        else if ( aDialogType && ! strcmp( "yesno" , aDialogType ) )
-        {
-            strcat ( lDialogString , "question" ) ;
-        }
-        else if ( aIconType && ! strcmp( "error" , aIconType ) )
-		{
-            strcat ( lDialogString , "error" ) ;
-        }
-        else if ( aIconType && ! strcmp( "warning" , aIconType ) )
-		{
-            strcat ( lDialogString , "warning" ) ;
-        }
-        else
-		{
-            strcat ( lDialogString , "info" ) ;
-        }
+			}
+			else
+			{
+				strcpy ( lDialogString , "matedialog --" ) ;
+			}
+
+			if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
+			{
+					strcat ( lDialogString ,
+							"question --ok-label=Ok --cancel-label=Cancel" ) ;
+			}
+			else if ( aDialogType && ! strcmp( "yesno" , aDialogType ) )
+			{
+					strcat ( lDialogString , "question" ) ;
+			}
+			else if ( aIconType && ! strcmp( "error" , aIconType ) )
+			{
+          strcat ( lDialogString , "error" ) ;
+      }
+      else if ( aIconType && ! strcmp( "warning" , aIconType ) )
+			{
+          strcat ( lDialogString , "warning" ) ;
+      }
+      else
+			{
+          strcat ( lDialogString , "info" ) ;
+      }
 		if ( aTitle && strlen(aTitle) ) 
 		{
 			strcat(lDialogString, " --title=\"") ;
@@ -2549,15 +2569,19 @@ else :\n\tprint 1\n\"" ) ;
 
  		if ( aTitle && strlen(aTitle) )
 		{
-			strcat(lDialogString, "--backtitle \"") ;
+			strcat(lDialogString, "--title \"") ;
 			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "\" ") ;
 		}
 
-		if ( aDialogType && ( !strcmp( "okcancel" , aDialogType ) || !strcmp( "yesno" , aDialogType ) ) ) {
-			strcat(lDialogString, "--title \"") ;
-			strcat(lDialogString, "tab =move focus") ;
-			strcat(lDialogString, "\" ") ;
+		if ( dialogName() || whiptailPresent() )
+		{
+			if ( aDialogType && ( !strcmp( "okcancel" , aDialogType ) || !strcmp( "yesno" , aDialogType ) ) )
+			{
+				strcat(lDialogString, "--backtitle \"") ;
+				strcat(lDialogString, "tab =move focus") ;
+				strcat(lDialogString, "\" ") ;
+			}
 		}
 
 		if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
@@ -2797,9 +2821,17 @@ char const * tinyfd_inputBox(
 		strcat(lDialogString, "-e '0' " );
 		strcat(lDialogString, "-e 'end try'") ;
 	}
-	else if ( zenityPresent() )
-	{
-		strcpy ( lDialogString , "szAnswer=$(zenity --entry" ) ;
+  else if ( zenityPresent() || matedialogPresent() )
+  {
+		if ( zenityPresent()
+		{
+      strcpy ( lDialogString ,  "szAnswer=$(zenity --entry" ) ;
+		}
+		else
+		{
+			strcpy ( lDialogString ,  "szAnswer=$(matedialog --entry" ) ;
+		}
+
 		if ( aTitle && strlen(aTitle) )
 		{
 			strcat(lDialogString, " --title=\"") ;
@@ -2974,14 +3006,17 @@ frontmost of process \\\"Python\\\" to true' ''');");
 
 		if ( aTitle && strlen(aTitle) )
 		{
-			strcat(lDialogString, "--backtitle \"") ;
+			strcat(lDialogString, "--title \"") ;
 			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "\" ") ;
 		}
 
-		strcat(lDialogString, "--title \"") ;
-		strcat(lDialogString, "tab =move focus") ;
-		strcat(lDialogString, "\" ") ;
+		if ( dialogName() || whiptailPresent() )
+		{
+			strcat(lDialogString, "--backtitle \"") ;
+			strcat(lDialogString, "tab =move focus") ;
+			strcat(lDialogString, "\" ") ;
+		}
 
 		if ( aDefaultInput || lWasGdialog )
 		{
@@ -3192,10 +3227,18 @@ char const * tinyfd_saveFileDialog (
 		}
 		strcat ( lDialogString , ")'" ) ;
 	}
-    else if ( zenityPresent() )
-    {
-		strcpy ( lDialogString ,
-				"zenity --file-selection --save --confirm-overwrite" ) ;
+  else if ( zenityPresent() || matedialogPresent() )
+  {
+		if ( zenityPresent()
+		{
+      strcpy ( lDialogString , "zenity" ) ;
+		}
+		else
+		{
+			strcpy ( lDialogString , "matedialog" ) ;
+		}
+		strcat(lDialogString, " --file-selection --save --confirm-overwrite" ) ;
+
 		if ( aTitle && strlen(aTitle) ) 
 		{
 			strcat(lDialogString, " --title=\"") ;
@@ -3345,14 +3388,17 @@ char const * tinyfd_saveFileDialog (
 
  		if ( aTitle && strlen(aTitle) )
 		{
-			strcat(lDialogString, "--backtitle \"") ;
+			strcat(lDialogString, "--title \"") ;
 			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "\" ") ;
 		}
 
-		strcat(lDialogString, "--title \"") ;
-		strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
-		strcat(lDialogString, "\" ") ;
+		if ( dialogName() || whiptailPresent() )
+		{
+			strcat(lDialogString, "--backtitle \"") ;
+			strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+			strcat(lDialogString, "\" ") ;
+		}
 
 		strcat ( lDialogString , "--fselect \"" ) ;
 		if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
@@ -3515,9 +3561,17 @@ char const * tinyfd_openFileDialog (
 			strcat ( lDialogString , ")'" ) ;
 		}
     }
-    else if ( zenityPresent() )
-    {
-        strcpy ( lDialogString ,"zenity --file-selection" ) ;
+  else if ( zenityPresent() || matedialogPresent() )
+  {
+		if ( zenityPresent()
+		{
+      strcpy ( lDialogString , "zenity --file-selection" ) ;
+		}
+		else
+		{
+			strcpy ( lDialogString , "matedialog --file-selection" ) ;
+		}
+
 		if ( aAllowMultipleSelects )
 		{
 			strcat ( lDialogString , " --multiple" ) ;
@@ -3682,14 +3736,17 @@ frontmost of process \\\"Python\\\" to true' ''');");
 
 		if ( aTitle && strlen(aTitle) )
 		{
-			strcat(lDialogString, "--backtitle \"") ;
+			strcat(lDialogString, "--title \"") ;
 			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "\" ") ;
 		}
 
-		strcat(lDialogString, "--title \"") ;
-		strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
-		strcat(lDialogString, "\" ") ;
+		if ( dialogName() || whiptailPresent() )
+		{
+			strcat(lDialogString, "--backtitle \"") ;
+			strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+			strcat(lDialogString, "\" ") ;
+		}
 
 		strcat ( lDialogString , "--fselect \"" ) ;
 		if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
@@ -3815,9 +3872,17 @@ char const * tinyfd_selectFolderDialog (
 		}
 		strcat ( lDialogString , ")'" ) ;
     }
-	else if ( zenityPresent() )
-	{
-        strcpy ( lDialogString , "zenity --file-selection --directory" ) ;
+  else if ( zenityPresent() || matedialogPresent() )
+  {
+		if ( zenityPresent()
+		{
+      strcpy ( lDialogString , "zenity --file-selection --directory" ) ;
+		}
+		else
+		{
+			strcpy ( lDialogString , "matedialog --file-selection --directory" ) ;
+		}
+
 		if ( aTitle && strlen(aTitle) ) 
 		{
 			strcat(lDialogString, " --title=\"") ;
@@ -3905,14 +3970,17 @@ frontmost of process \\\"Python\\\" to true' ''');");
 
 		if ( aTitle && strlen(aTitle) )
 		{
-			strcat(lDialogString, "--backtitle \"") ;
+			strcat(lDialogString, "--title \"") ;
 			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "\" ") ;
 		}
 
-		strcat(lDialogString, "--title \"") ;
-		strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
-		strcat(lDialogString, "\" ") ;
+		if ( dialogName() || whiptailPresent() )
+		{
+			strcat(lDialogString, "--backtitle \"") ;
+			strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+			strcat(lDialogString, "\" ") ;
+		}
 
 		strcat ( lDialogString , "--dselect \"" ) ;
 		if ( aDefaultPath && strlen(aDefaultPath) )
@@ -4040,11 +4108,19 @@ application as Unicode text) to set mycolor to choose color default color {");
 		strcat ( lDialogString , "-e 'end repeat' " );
 		strcat ( lDialogString , "-e 'mystring'");
     }
-    else if ( zenity3Present() )
-	{
-		lWasZenity3 = 1 ;
+  else if ( zenity3Present() || matedialogPresent() )
+  {
+		if ( zenity3Present()
+		{
         sprintf ( lDialogString ,
 "zenity --color-selection --show-palette --color=%s" , lpDefaultHexRGB ) ;
+		}
+		else
+		{
+        sprintf ( lDialogString ,
+"matedialog --color-selection --show-palette --color=%s" , lpDefaultHexRGB ) ;
+		}
+
 		if ( aTitle && strlen(aTitle) ) 
 		{
 			strcat(lDialogString, " --title=\"") ;

@@ -19,7 +19,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.3.8 [May 10, 2016] zlib licence.
+v2.3.9 [May 17, 2016] zlib licence.
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box

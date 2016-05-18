@@ -19,7 +19,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.3.9 [May 17, 2016] zlib licence.
+v2.3.10 [May 18, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -1053,7 +1053,7 @@ static int messageBoxWinConsole (
 	if ( aDialogType && ( !strcmp( "okcancel" , aDialogType ) || !strcmp( "yesno" , aDialogType ) ) )
 	{
 		strcat(lDialogString, "--backtitle \"") ;
-		strcat(lDialogString, "tab =move focus") ;
+		strcat(lDialogString, "tab => move focus") ;
 		strcat(lDialogString, "\" ") ;
 	}
 
@@ -1147,7 +1147,7 @@ static char const * inputBoxWinConsole(
 	}
 
 	strcat(lDialogString, "--backtitle \"") ;
-	strcat(lDialogString, "tab =move focus") ;
+	strcat(lDialogString, "tab => move focus") ;
 	strcat(lDialogString, "\" ") ;
 
 	if ( ! aDefaultInput )
@@ -1226,7 +1226,8 @@ static char const * saveFileDialogWinConsole (
 	}
 	
 	strcat(lDialogString, "--backtitle \"") ;
-	strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+	strcat(lDialogString,
+		"tab => move focus | spacebar => select | add / => populate") ;
 	strcat(lDialogString, "\" ") ;
 
 	strcat ( lDialogString , "--fselect \"" ) ;
@@ -1291,7 +1292,8 @@ static char const * openFileDialogWinConsole (
 	}
 
 	strcat(lDialogString, "--backtitle \"") ;
-	strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+	strcat(lDialogString,
+		"tab => move focus | spacebar => select | add / => populate") ;
 	strcat(lDialogString, "\" ") ;
 
 	strcat ( lDialogString , "--fselect \"" ) ;
@@ -1349,7 +1351,8 @@ static char const * selectFolderDialogWinConsole (
 	}
 
 	strcat(lDialogString, "--backtitle \"") ;
-	strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+	strcat(lDialogString,
+		"tab => move focus | spacebar => select | add / => populate") ;
 	strcat(lDialogString, "\" ") ;
 
 	strcat ( lDialogString , "--dselect \"" ) ;
@@ -2574,12 +2577,12 @@ else :\n\tprint 1\n\"" ) ;
 			strcat(lDialogString, "\" ") ;
 		}
 
-		if ( dialogName() || whiptailPresent() )
+		if ( !xdialogPresent() && !gdialogPresent() )
 		{
 			if ( aDialogType && ( !strcmp( "okcancel" , aDialogType ) || !strcmp( "yesno" , aDialogType ) ) )
 			{
 				strcat(lDialogString, "--backtitle \"") ;
-				strcat(lDialogString, "tab =move focus") ;
+				strcat(lDialogString, "tab => move focus") ;
 				strcat(lDialogString, "\" ") ;
 			}
 		}
@@ -3011,10 +3014,10 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			strcat(lDialogString, "\" ") ;
 		}
 
-		if ( dialogName() || whiptailPresent() )
+		if ( !xdialogPresent() && !gdialogPresent() )
 		{
 			strcat(lDialogString, "--backtitle \"") ;
-			strcat(lDialogString, "tab =move focus") ;
+			strcat(lDialogString, "tab => move focus") ;
 			strcat(lDialogString, "\" ") ;
 		}
 
@@ -3394,10 +3397,11 @@ char const * tinyfd_saveFileDialog (
 			strcat(lDialogString, "\" ") ;
 		}
 
-		if ( dialogName() || whiptailPresent() )
+		if ( !xdialogPresent() && !gdialogPresent() )
 		{
 			strcat(lDialogString, "--backtitle \"") ;
-			strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+			strcat(lDialogString,
+				"tab => move focus | spacebar => select | add / => populate") ;
 			strcat(lDialogString, "\" ") ;
 		}
 
@@ -3742,10 +3746,11 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			strcat(lDialogString, "\" ") ;
 		}
 
-		if ( dialogName() || whiptailPresent() )
+		if ( !xdialogPresent() && !gdialogPresent() )
 		{
 			strcat(lDialogString, "--backtitle \"") ;
-			strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+			strcat(lDialogString,
+				"tab => move focus | spacebar => select | add / > =populate") ;
 			strcat(lDialogString, "\" ") ;
 		}
 
@@ -3976,10 +3981,11 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			strcat(lDialogString, "\" ") ;
 		}
 
-		if ( dialogName() || whiptailPresent() )
+		if ( !xdialogPresent() && !gdialogPresent() )
 		{
 			strcat(lDialogString, "--backtitle \"") ;
-			strcat(lDialogString, "tab =move focus | spacebar =select | add / =populate") ;
+			strcat(lDialogString,
+				"tab => move focus | spacebar => select | add / => populate") ;
 			strcat(lDialogString, "\" ") ;
 		}
 
@@ -4112,6 +4118,7 @@ application as Unicode text) to set mycolor to choose color default color {");
     }
   else if ( zenity3Present() || matedialogPresent() )
   {
+		lWasZenity3 = 1 ;
 		if ( zenity3Present() )
 		{
         sprintf ( lDialogString ,

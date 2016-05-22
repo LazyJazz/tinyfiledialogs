@@ -1,7 +1,7 @@
 /*
  _________
-/         \ tinyfiledialogs.c 
-|tiny file| Unique code file of "tiny file dialogs" created [November 9, 2014]
+/         \ hello.c
+|tiny file| Hello World file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
      \|           	                     mailto:tinfyfiledialogs@ysengrin.com
@@ -19,7 +19,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.3.10 [May 18, 2016] zlib licence
+v2.3.12 [May 22, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -95,6 +95,17 @@ int main()
 	char const * lTheOpenFileName;
 	FILE * lIn;
 	char lBuffer[1024];
+	char const * lWillBeGraphicMode;
+
+  lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query",NULL,NULL);
+
+	if (lWillBeGraphicMode) {
+  	tinyfd_messageBox( "Graphic mode",tinyfd_response,"ok","info",0);
+	}
+	else
+	{
+  	tinyfd_messageBox( "Console mode",tinyfd_response,"ok","info",0);
+	}
 
   tinyfd_forceConsole = tinyfd_messageBox("Hello World",
     "force dialogs into console mode?\

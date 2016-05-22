@@ -1,7 +1,7 @@
 /*
  _________
-/         \ tinyfiledialogs.c 
-|tiny file| Unique code file of "tiny file dialogs" created [November 9, 2014]
+/         \ tinyfiledialogs.h
+|tiny file| Unique header file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
      \|           	                     mailto:tinfyfiledialogs@ysengrin.com
@@ -19,7 +19,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.3.10 [May 18, 2016] zlib licence
+v2.3.12 [May 22, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -160,6 +160,19 @@ for unix & windows: 0 (graphic mode) or 1 (console mode).
    it will use the package dialog or dialog.exe if installed.
 on windows it only make sense for console applications */
 
+/* if you pass "tinyfd_query" as aTitle,
+the functions will not display the dialog 
+but will fill tinyfd_response with
+the retain solution and return:
+0 for console mode, 1 for graphic mode
+possible values for tinyfd_response are (all lowercase)
+for the graphic mode:
+	windows applescript zenity zenity3 matedialog kdialog
+	xdialog tkinter gdialog gxmessage xmessage
+for the console mode:
+	dialog whiptail basicinput */
+extern char tinyfd_response [ 1024 ] ;
+
 /* #define TINYFD_WIN_CONSOLE_ONLY //*/
 /* On windows, Define this if you don't want to include the code
 creating the GUI dialogs.
@@ -212,6 +225,7 @@ Then you don't need link against Comdlg32.lib and Ole32.lib */
   It can be found at the bottom of the following page:
   http://andrear.altervista.org/home/cdialog.php
 - If dialog is missing, it will switch to basic console input.
+- You can query the type of dialog that will be use.
 
 - Here is the Hello World (and a bit more):
     if a console is missing, it will use graphic dialogs

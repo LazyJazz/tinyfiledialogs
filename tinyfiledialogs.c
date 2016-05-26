@@ -19,7 +19,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.3.11 [May 21, 2016] zlib licence
+v2.3.13 [May 26, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -87,6 +87,7 @@ misrepresented as being the original software.
 /* #define TINYFD_WIN_CONSOLE_ONLY //*/
 
 #ifdef _WIN32
+ #pragma warning(disable:4996) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
  #ifndef _WIN32_WINNT
  #define _WIN32_WINNT 0x0500
  #endif
@@ -103,6 +104,8 @@ misrepresented as being the original software.
  #include <dirent.h> /* on old systems try <sys/dir.h> instead */
  #include <termios.h>
  #include <sys/utsname.h>
+ //#include <sys/types.h>
+ //#include <sys/wait.h>
  #define SLASH "/"
 #endif /* _WIN32 */
 
@@ -135,14 +138,8 @@ for the console mode:
 	dialog whiptail basicinput */
 char tinyfd_response [ 1024 ] ;
 
-#pragma warning(disable:4996) 
-/* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
-
 static int gWarningDisplayed = 0 ;
 static char gTitle[]= "missing software! (so we switch to basic console input)";
-static char gMessageWin[] = "tiny file dialogs on Windows needs:\n\t\
-a graphic display\nor\tdialog.exe (enhanced console mode)\
-\nor\ta console for basic input" ;
 
 static char gMessageUnix[] = "tiny file dialogs on UNIX needs:\n\tapplescript\
 \nor\tzenity (version 3 for the color chooser)\
@@ -307,34 +304,6 @@ static void replaceSubStr ( char const * const aSource ,
 }
 
 
-static int replaceChr ( char * const aString ,
-						char const aOldChr ,
-						char const aNewChr )
-{
-	char * p ;
-	int lRes = 0 ;
-
-	if ( ! aString )
-	{
-		return 0 ;
-	}
-
-	if ( aOldChr == aNewChr )
-	{
-		return 0 ;
-	}
-
-	p = aString ;
-	while ( (p = strchr ( p , aOldChr )) )
-	{
-		* p = aNewChr ;
-		p ++ ;
-		lRes = 1 ;
-	}
-	return lRes ;
-}
-
-
 static int filenameValid( char const * const aFileNameWithoutPath )
 {
 	if ( ! aFileNameWithoutPath
@@ -412,6 +381,39 @@ static char const * ensureFilesExist( char * const aDestination ,
 }
 
 #ifdef _WIN32
+
+static char gMessageWin[] = "tiny file dialogs on Windows needs:\n\t\
+a graphic display\nor\tdialog.exe (enhanced console mode)\
+\nor\ta console for basic input" ;
+
+
+static int replaceChr ( char * const aString ,
+						char const aOldChr ,
+						char const aNewChr )
+{
+	char * p ;
+	int lRes = 0 ;
+
+	if ( ! aString )
+	{
+		return 0 ;
+	}
+
+	if ( aOldChr == aNewChr )
+	{
+		return 0 ;
+	}
+
+	p = aString ;
+	while ( (p = strchr ( p , aOldChr )) )
+	{
+		* p = aNewChr ;
+		p ++ ;
+		lRes = 1 ;
+	}
+	return lRes ;
+}
+
 
 static int dirExists ( char const * const aDirPath )
 {
@@ -1751,6 +1753,7 @@ char const * tinyfd_colorChooser(
 	Hex2RGB(p,aoResultRGB);
 	return p ;
 }
+#pragma warning(default:4996)
 
 #else /* unix */
 
@@ -2125,7 +2128,7 @@ static int gdialogPresent ( )
     {
         lGdialoglPresent = detectPresence ( "gdialog" ) ;
     }
-    return lGdialoglPresent && graphicMode ( ) ;
+    return 0;//lGdialoglPresent && graphicMode ( ) ;
 }
 
 
@@ -2169,7 +2172,7 @@ static int zenityPresent ( )
 	{
 		lZenityPresent = detectPresence("zenity") ;
 	}
-	return lZenityPresent && graphicMode ( ) ;
+	return 0;//lZenityPresent && graphicMode ( ) ;
 }
 
 
@@ -2518,16 +2521,17 @@ else :\n\tprint 1\n\"" ) ;
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gxmessage");return 1;}
 
 		strcpy ( lDialogString , "gxmessage");
+
 		if ( aDialogType && ! strcmp("okcancel" , aDialogType) )
 		{
-			strcpy ( lDialogString , " -buttons Ok:1,Cancel:0");
+			strcat ( lDialogString , " -buttons Ok:1,Cancel:0");
 		}
 		else if ( aDialogType && ! strcmp("yesno" , aDialogType) )
 		{
-			strcpy ( lDialogString , " -buttons Yes:1,No:0");
+			strcat ( lDialogString , " -buttons Yes:1,No:0");
 		}
 	
-		strcpy ( lDialogString , " -center \"");
+		strcat ( lDialogString , " -center \"");
 		if ( aMessage && strlen(aMessage) )
 		{
 			strcat ( lDialogString , aMessage ) ;
@@ -2537,8 +2541,9 @@ else :\n\tprint 1\n\"" ) ;
 		{
 			strcat ( lDialogString , " -title  \"");
 			strcat ( lDialogString , aTitle ) ;
-			strcat(lDialogString, "\"" ) ;
+			strcat ( lDialogString, "\"" ) ;
 		}
+		strcat ( lDialogString , " ; echo $? ");
 	}
 	else if (!xdialogPresent() && !gdialogPresent() && notifysendPresent()
 			 && strcmp("okcancel" , aDialogType)
@@ -2771,7 +2776,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 				{
 					printf("%s\n",aMessage);
 				}
-				printf("y/n: ");
+				printf("y/n: "); fflush(stdout);
 				lChar = tolower ( getchar() ) ;
 				printf("\n\n");
 			}
@@ -2786,7 +2791,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 				{
 					printf("%s\n",aMessage);
 				}
-				printf("[O]kay/[C]ancel: ");
+				printf("[O]kay/[C]ancel: "); fflush(stdout);
 				lChar = tolower ( getchar() ) ;
 				printf("\n\n");
 			}
@@ -2799,7 +2804,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 			{
 				printf("%s\n\n",aMessage);
 			}
-			printf("press any key to continue ");
+			printf("press any key to continue "); fflush(stdout);
 			getchar() ;
 			printf("\n\n");
 			lResult = 1 ;
@@ -2815,14 +2820,17 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
     }
 	while ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
 	{}
+
 	pclose ( lIn ) ;
+
 	/* printf ( "lBuff: %s len: %lu \n" , lBuff , strlen(lBuff) ) ; //*/
     if ( lBuff[ strlen ( lBuff ) -1 ] == '\n' )
     {
     	lBuff[ strlen ( lBuff ) -1 ] = '\0' ;
     }
 	/* printf ( "lBuff1: %s len: %lu \n" , lBuff , strlen(lBuff) ) ; //*/
-    lResult =  strcmp ( lBuff , "1" ) ? 0 : 1 ;
+
+	lResult =  strcmp ( lBuff , "1" ) ? 0 : 1 ;
 	/* printf ( "lResult: %d\n" , lResult ) ; //*/
     return lResult ;
 }
@@ -3005,7 +3013,8 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	else if (!xdialogPresent() && !gdialogPresent() && gxmessagePresent() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gxmessage");return (char const *)1;}
-		strcpy ( lDialogString , "gxmessage -buttons Ok:1,Cancel:0 -center \"");
+		strcpy ( lDialogString , "szAnswer=$(gxmessage -buttons Ok:1,Cancel:0 -center \"");
+
 		if ( aMessage && strlen(aMessage) )
 		{
 			strcat ( lDialogString , aMessage ) ;
@@ -3023,6 +3032,10 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			strcat ( lDialogString , aDefaultInput ) ;
 		}
 		strcat(lDialogString, "\"" ) ;
+
+		strcat ( lDialogString , ");echo $?$szAnswer");
+		//strcat ( lDialogString , ");if [ $? = 0 ];then echo 0$szAnswer;else echo 0$szAnswer;fi");
+		//strcat ( lDialogString , " ;if [ $? = 0 ];then echo 0;else echo 1;fi");
 	}
 	else if ( xdialogPresent() || gdialogPresent()
 		   || dialogName() || whiptailPresent() )
@@ -3162,9 +3175,9 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			strcat ( lDialogString , "-s " ) ;
 		}
 		strcat ( lDialogString , "-p \"" ) ;
-		strcat(lDialogString , "(esc+enter to cancel): \" ANSWER " ) ;
-		strcat(lDialogString , ";echo 1$ANSWER >/tmp/tinyfd.txt';" ) ;
-		strcat(lDialogString , "cat -v /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
+		strcat ( lDialogString , "(esc+enter to cancel): \" ANSWER " ) ;
+		strcat ( lDialogString , ";echo 1$ANSWER >/tmp/tinyfd.txt';" ) ;
+		strcat ( lDialogString , "cat -v /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 	}
 	else if ( isatty ( 1 ) )
 	{
@@ -3183,7 +3196,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		{
 			printf("%s\n",aMessage);
 		}
-		printf("(esc+enter to cancel): ");
+		printf("(esc+enter to cancel): "); fflush(stdout);
 		if ( ! aDefaultInput )
 		{
 			tcgetattr(STDIN_FILENO, & oldt) ;
@@ -3226,7 +3239,9 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	}
 	while ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
 	{}
+
 	pclose ( lIn ) ;
+
 	/* printf ( "len Buff: %lu\n" , strlen(lBuff) ) ; //*/
 	/* printf ( "lBuff0: %s\n" , lBuff ) ; //*/
 	if ( lBuff[ strlen ( lBuff ) -1 ] == '\n' )
@@ -3241,6 +3256,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			return NULL ;
 		}
 	}
+
 	lResult =  strncmp ( lBuff , "1" , 1) ? 0 : 1 ;
 	/* printf ( "lResult: %d \n" , lResult ) ; //*/
     if ( ! lResult )
@@ -3267,7 +3283,6 @@ char const * tinyfd_saveFileDialog (
 	int lWasGraphicDialog = 0 ;
 	int lWasXterm = 0 ;
 	char const * p ;
-	DIR * lDir ;
 	FILE * lIn ;
 	lBuff[0]='\0';
 
@@ -3517,7 +3532,7 @@ char const * tinyfd_saveFileDialog (
 	}
 	else
 	{
-		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return (char const *)0;}
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){return tinyfd_inputBox (aTitle,NULL,NULL);}
 		p = tinyfd_inputBox ( aTitle , "Save file" , "" ) ;
 		getPathWithoutFinalSlash ( lString , p ) ;
 		if ( strlen ( lString ) && ! dirExists ( lString ) )
@@ -3875,6 +3890,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	}
 	else
 	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){return tinyfd_inputBox (aTitle,NULL,NULL);}
 		p2 = tinyfd_inputBox(aTitle, "Open file","");
 		if ( ! fileExists (p2) )
 		{
@@ -3934,13 +3950,12 @@ char const * tinyfd_selectFolderDialog (
 	char const * const aDefaultPath ) /* "" */
 {
 	static char lBuff [ MAX_PATH_OR_CMD ] ;
-  char lDialogString [ MAX_PATH_OR_CMD ] ;
-  DIR * lDir ;
+	char lDialogString [ MAX_PATH_OR_CMD ] ;
 	FILE * lIn ;
 	char const * p ;
 	int lWasGraphicDialog = 0 ;
 	int lWasXterm = 0 ;
-  lBuff[0]='\0';
+	lBuff[0]='\0';
 
 	if ( osascriptPresent ( ))
 	{
@@ -4114,6 +4129,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	}
 	else
 	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){return tinyfd_inputBox (aTitle,NULL,NULL);}
 		p = tinyfd_inputBox(aTitle, "Select folder","");
 		if ( !p || ! strlen ( p ) || ! dirExists ( p ) )
 		{
@@ -4291,6 +4307,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	}
 	else
 	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){return tinyfd_inputBox (aTitle,NULL,NULL);}
 		p = tinyfd_inputBox(aTitle,
 				"Enter hex rgb color (i.e. #f5ca20)",lpDefaultHexRGB);
 		if ( !p || (strlen(p) != 7) || (p[0] != '#') )
@@ -4491,8 +4508,6 @@ int main()
     tinyfd_messageBox("your password is", lBuffer, "ok", "info", 1);
 }
 //*/
-
-#pragma warning(default:4996)
 
 /*
 OSX :

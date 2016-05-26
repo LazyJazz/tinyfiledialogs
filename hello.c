@@ -19,7 +19,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.3.12 [May 22, 2016] zlib licence
+v2.3.13 [May 26, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -87,24 +87,26 @@ misrepresented as being the original software.
 
 
 #include <stdio.h>
+#include <string.h>
 #include "tinyfiledialogs.h"
 int main()
 {
-	char const * lThePassword;
+	char const * lTmp;
 	char const * lTheSaveFileName;
 	char const * lTheOpenFileName;
 	FILE * lIn;
 	char lBuffer[1024];
+	char lThePassword[1024];
 	char const * lWillBeGraphicMode;
 
-  lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query",NULL,NULL);
+	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query",NULL,NULL);
 
 	if (lWillBeGraphicMode) {
   	tinyfd_messageBox( "Graphic mode",tinyfd_response,"ok","info",0);
 	}
 	else
 	{
-  	tinyfd_messageBox( "Console mode",tinyfd_response,"ok","info",0);
+		tinyfd_messageBox( "Console mode",tinyfd_response,"ok","info",0);
 	}
 
   tinyfd_forceConsole = tinyfd_messageBox("Hello World",
@@ -112,15 +114,20 @@ int main()
     \n\t(it is better if dialog is installed)",
     "yesno", "question", 0);
 
-  lThePassword =  tinyfd_inputBox(
+	lTmp =  tinyfd_inputBox(
     "a password box","your password will be revealed",NULL);
 
-  lTheSaveFileName = tinyfd_saveFileDialog (
-	"let us save this password",
-    "passwordFile.txt",
-    0,
-    NULL,
-    NULL );
+#pragma warning(disable:4996) /* silences warning about fopen */
+  // Copy lTmp because saveDialog overwrites inputBox static buffer in basicinput mode
+	strcpy( lThePassword , lTmp );
+#pragma warning(default:4996)
+
+	lTheSaveFileName = tinyfd_saveFileDialog (
+		"let us save this password",
+		"passwordFile.txt",
+		0,
+		NULL,
+		NULL );
 
 #pragma warning(disable:4996) /* silences warning about fopen */
 	lIn = fopen(lTheSaveFileName, "w");

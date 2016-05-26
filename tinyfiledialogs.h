@@ -19,7 +19,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.3.12 [May 22, 2016] zlib licence
+v2.3.13 [May 26, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -161,7 +161,7 @@ for unix & windows: 0 (graphic mode) or 1 (console mode).
 on windows it only make sense for console applications */
 
 /* if you pass "tinyfd_query" as aTitle,
-the functions will not display the dialog 
+the functions will not display the dialogs
 but will fill tinyfd_response with
 the retain solution and return:
 0 for console mode, 1 for graphic mode

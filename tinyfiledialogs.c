@@ -19,7 +19,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.3.13 [May 26, 2016] zlib licence
+v2.3.14 [May 27, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -104,8 +104,6 @@ misrepresented as being the original software.
  #include <dirent.h> /* on old systems try <sys/dir.h> instead */
  #include <termios.h>
  #include <sys/utsname.h>
- //#include <sys/types.h>
- //#include <sys/wait.h>
  #define SLASH "/"
 #endif /* _WIN32 */
 
@@ -2128,7 +2126,7 @@ static int gdialogPresent ( )
     {
         lGdialoglPresent = detectPresence ( "gdialog" ) ;
     }
-    return 0;//lGdialoglPresent && graphicMode ( ) ;
+    return lGdialoglPresent && graphicMode ( ) ;
 }
 
 
@@ -2172,7 +2170,7 @@ static int zenityPresent ( )
 	{
 		lZenityPresent = detectPresence("zenity") ;
 	}
-	return 0;//lZenityPresent && graphicMode ( ) ;
+	return lZenityPresent && graphicMode ( ) ;
 }
 
 
@@ -3032,10 +3030,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			strcat ( lDialogString , aDefaultInput ) ;
 		}
 		strcat(lDialogString, "\"" ) ;
-
 		strcat ( lDialogString , ");echo $?$szAnswer");
-		//strcat ( lDialogString , ");if [ $? = 0 ];then echo 0$szAnswer;else echo 0$szAnswer;fi");
-		//strcat ( lDialogString , " ;if [ $? = 0 ];then echo 0;else echo 1;fi");
 	}
 	else if ( xdialogPresent() || gdialogPresent()
 		   || dialogName() || whiptailPresent() )

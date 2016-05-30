@@ -6,9 +6,11 @@
 \____  ___/ http://tinyfiledialogs.sourceforge.net
      \|           	                     mailto:tinfyfiledialogs@ysengrin.com
 
+A big thank you to Don Heyse for
+                   his code contributions, bug corrections & thorough testing!
+		
             git://git.code.sf.net/p/tinyfiledialogs/code
-
- Please
+Please
 	1) let me know
 	- if you are including tiny file dialogs,
 	  I'll be happy to add your link to the list of projects using it.
@@ -19,7 +21,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.3.15 [May 29, 2016] zlib licence
+v2.4 [May 30, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -2179,23 +2181,27 @@ static int osx10orBetter ( )
 	static int lOsx10orBetter = -1 ;
 	char lBuff [ MAX_PATH_OR_CMD ] ;
 	FILE * lIn ;
+	int V,v;
 
 	if ( lOsx10orBetter < 0 )
 	{
+		lOsx10orBetter = 0 ;
 		lIn = popen ( "osascript -e 'set osver to system version of (system info)'" , "r" ) ;
 		if ( ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
-		&& ( atof(lBuff) >= 10.10 ) )
+			&& ( 2 == sscanf(lBuff, "%d.%d", &V, &v) ) )
 		{
-			lOsx10orBetter = 1 ;
-		}
-		else
-		{
-			lOsx10orBetter = 0 ;
+			V = V * 1000 + v;
+			if ( V >= 10010 )
+			{
+				lOsx10orBetter = 1 ;
+			}
 		}
 		pclose ( lIn ) ;
+		/* printf ("Osx10 = %d, %d = <%s>\n", lOsx10orBetter, V, lBuff) ; //*/   
 	}
 	return lOsx10orBetter ;
 }
+
 
 
 static int zenity3Present ( )
@@ -3633,6 +3639,7 @@ char const * tinyfd_openFileDialog (
 		strcat ( lDialogString , " -e '" );
     if ( ! aAllowMultipleSelects )
     {
+
 
 			strcat ( lDialogString , "POSIX path of ( " );
 		}

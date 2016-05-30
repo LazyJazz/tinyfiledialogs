@@ -6,7 +6,10 @@
 \____  ___/ http://tinyfiledialogs.sourceforge.net
      \|           	                     mailto:tinfyfiledialogs@ysengrin.com
 
-            git://git.code.sf.net/p/tinyfiledialogs/code
+ A big thank you to Don Heyse for
+                   his code contributions, bug corrections & thorough testing!
+		
+           git://git.code.sf.net/p/tinyfiledialogs/code
 
  Please
 	1) let me know
@@ -19,7 +22,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.3.15 [May 29, 2016] zlib licence
+v2.4 [May 30, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box

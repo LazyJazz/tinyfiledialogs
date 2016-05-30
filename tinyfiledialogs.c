@@ -3633,6 +3633,7 @@ char const * tinyfd_openFileDialog (
 		strcat ( lDialogString , " -e '" );
     if ( ! aAllowMultipleSelects )
     {
+
 			strcat ( lDialogString , "POSIX path of ( " );
 		}
 		else
@@ -4485,86 +4486,3 @@ char const * tinyfd_arrayDialog (
 }
 #endif /* _WIN32 */
 
-
-/*// hello.c
-int main()
-{
-	char const * lThePassword;
-	char const * lTheSaveFileName;
-	char const * lTheOpenFileName;
-	FILE * lIn;
-	char lBuffer[1024];
-
-  tinyfd_forceConsole = tinyfd_messageBox("Hello World",
-    "force dialogs into console mode?\
-    \n\t(it is better if dialog is installed)",
-    "yesno", "question", 0);
-
-  lThePassword =  tinyfd_inputBox(
-    "a password box","your password will be revealed",NULL);
-
-  lTheSaveFileName = tinyfd_saveFileDialog (
-	"let us save this password",
-    "passwordFile.txt",
-    0,
-    NULL,
-    NULL );
-
-	lIn = fopen(lTheSaveFileName, "w");
-	if (!lIn)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"Can not open this file in writting mode",
-			"ok",
-			"error",
-			1 );
-		return(1);
-	}
-	fputs(lThePassword, lIn);
-	fclose(lIn);
-
-    lTheOpenFileName = tinyfd_openFileDialog (
-		"let us read this password back",
-		"",
-		0,
-		NULL,
-		NULL,
-		0);
-
-	lIn = fopen(lTheOpenFileName, "r");
-	if (!lIn)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"Can not open this file in reading mode",
-			"ok",
-			"error",
-			1 );
-		return(1);
-	}
-	fgets(lBuffer, sizeof(lBuffer), lIn);
-	fclose(lIn);
-
-  if ( *lBuffer )
-    tinyfd_messageBox("your password is", lBuffer, "ok", "info", 1);
-}
-//*/
-
-/*
-OSX :
-$ gcc -o hello.app hello.c tinyfiledialogs.c
- 
-UNIX :
-$ gcc -o hello hello.c tinyfiledialogs.c
- 
-MinGW :
-> gcc -o hello.exe hello.c tinyfiledialogs.c -LC:/mingw/lib -lcomdlg32 -lole32
- 
-VisualStudio :
-  Create a console application project,
-	it links against Comdlg32.lib & Ole32.lib.
-	Right click on your Project, select Properties.
-	Configuration Properties/General
-	Character Set to "Multi-Byte" or "Not Set"
-*/

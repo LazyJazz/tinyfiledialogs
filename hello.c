@@ -94,10 +94,10 @@ int main()
 	char const * lTmp;
 	char const * lTheSaveFileName;
 	char const * lTheOpenFileName;
+	char const * lWillBeGraphicMode;
 	FILE * lIn;
 	char lBuffer[1024];
 	char lThePassword[1024];
-	char const * lWillBeGraphicMode;
 
 	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query",NULL,NULL);
 
@@ -117,8 +117,9 @@ int main()
 	lTmp =  tinyfd_inputBox(
     "a password box","your password will be revealed",NULL);
 
-#pragma warning(disable:4996) /* silences warning about fopen */
-  // Copy lTmp because saveDialog overwrites inputBox static buffer in basicinput mode
+#pragma warning(disable:4996) /* silences warning about strcpy */
+  /* copy lTmp because saveDialog would overwrites
+     inputBox static buffer in basicinput mode */
 	strcpy( lThePassword , lTmp );
 #pragma warning(default:4996)
 
@@ -136,7 +137,7 @@ int main()
 	{
 		tinyfd_messageBox(
 			"Error",
-			"Can not open this file in writting mode",
+			"Can not open this file in write mode",
 			"ok",
 			"error",
 			1 );
@@ -160,7 +161,7 @@ int main()
 	{
 		tinyfd_messageBox(
 			"Error",
-			"Can not open this file in reading mode",
+			"Can not open this file in read mode",
 			"ok",
 			"error",
 			1 );

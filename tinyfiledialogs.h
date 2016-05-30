@@ -82,8 +82,8 @@ misrepresented as being the original software.
 #define TINYFILEDIALOGS_H
 
 /*
-if tinydialogs.c is compiled with a C++ compiler
-rather than with a C compiler, you need to comment out:
+if tinydialogs.c is compiled with a C++ compiler rather than with a C compiler
+(ie. you change the extension from .c to .cpp), you need to comment out:
 extern "C" {
 and the corresponding closing bracket:
 }
@@ -160,6 +160,7 @@ for unix & windows: 0 (graphic mode) or 1 (console mode).
    it will use the package dialog or dialog.exe if installed.
 on windows it only make sense for console applications */
 
+extern char tinyfd_response [ 1024 ] ;
 /* if you pass "tinyfd_query" as aTitle,
 the functions will not display the dialogs
 but will fill tinyfd_response with
@@ -171,7 +172,6 @@ for the graphic mode:
 	xdialog tkinter gdialog gxmessage xmessage
 for the console mode:
 	dialog whiptail basicinput */
-extern char tinyfd_response [ 1024 ] ;
 
 /* #define TINYFD_WIN_CONSOLE_ONLY //*/
 /* On windows, Define this if you don't want to include the code
@@ -226,95 +226,6 @@ Then you don't need link against Comdlg32.lib and Ole32.lib */
   http://andrear.altervista.org/home/cdialog.php
 - If dialog is missing, it will switch to basic console input.
 - You can query the type of dialog that will be use.
-
-- Here is the Hello World (and a bit more):
-    if a console is missing, it will use graphic dialogs
-    if a graphical display is absent, it will use console dialogs
+- There is the Hello World (and a bit more) on the sourceforge site:
 */
 
-/* hello.c
-#include <stdio.h>
-#include "tinyfiledialogs.h"
-int main()
-{
-	char const * lThePassword;
-	char const * lTheSaveFileName;
-	char const * lTheOpenFileName;
-	FILE * lIn;
-	char lBuffer[1024];
-
-  tinyfd_forceConsole = tinyfd_messageBox("Hello World",
-    "force dialogs into console mode?\
-    \n\t(it is better if dialog is installed)",
-    "yesno", "question", 0);
-
-  lThePassword =  tinyfd_inputBox(
-    "a password box","your password will be revealed",NULL);
-
-  lTheSaveFileName = tinyfd_saveFileDialog (
-	"let us save this password",
-    "passwordFile.txt",
-    0,
-    NULL,
-    NULL );
-
-#pragma warning(disable:4996) // silences warning about fopen
-	lIn = fopen(lTheSaveFileName, "w");
-#pragma warning(default:4996)
-	if (!lIn)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"Can not open this file in writting mode",
-			"ok",
-			"error",
-			1 );
-		return(1);
-	}
-	fputs(lThePassword, lIn);
-	fclose(lIn);
-
-    lTheOpenFileName = tinyfd_openFileDialog (
-		"let us read this password back",
-		"",
-		0,
-		NULL,
-		NULL,
-		0);
-
-#pragma warning(disable:4996) // silences warning about fopen
-	lIn = fopen(lTheOpenFileName, "r");
-#pragma warning(default:4996)
-	if (!lIn)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"Can not open this file in reading mode",
-			"ok",
-			"error",
-			1 );
-		return(1);
-	}
-	fgets(lBuffer, sizeof(lBuffer), lIn);
-	fclose(lIn);
-
-  if ( *lBuffer )
-    tinyfd_messageBox("your password is", lBuffer, "ok", "info", 1);
-}
-
-OSX :
-$ gcc -o hello.app hello.c tinyfiledialogs.c
- 
-UNIX :
-$ gcc -o hello hello.c tinyfiledialogs.c
-
-MinGW :
-> gcc -o hello.exe hello.c tinyfiledialogs.c -LC:/mingw/lib -lcomdlg32 -lole32
- 
-VisualStudio :
-  Create a console application project,
-	it links against Comdlg32.lib & Ole32.lib.
-	Right click on your Project, select Properties.
-	Configuration Properties/General
-	Character Set to "Multi-Byte" or "Not Set"
-*/

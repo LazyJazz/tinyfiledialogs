@@ -6,12 +6,12 @@
 \____  ___/ http://tinyfiledialogs.sourceforge.net
      \|           	                     mailto:tinfyfiledialogs@ysengrin.com
 
- A big thank you to Don Heyse for
+A big thank you to Don Heyse http://ldglite.sf.net for
                    his code contributions, bug corrections & thorough testing!
 		
-           git://git.code.sf.net/p/tinyfiledialogs/code
+            git://git.code.sf.net/p/tinyfiledialogs/code
 
- Please
+Please
 	1) let me know
 	- if you are including tiny file dialogs,
 	  I'll be happy to add your link to the list of projects using it.
@@ -22,7 +22,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.4 [May 30, 2016] zlib licence
+v2.4.1 [May 31, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -205,8 +205,8 @@ Then you don't need link against Comdlg32.lib and Ole32.lib */
 - On windows link against Comdlg32.lib and Ole32.lib
   This linking is not compulsary for console mode (see above).
 - On unix: it tries command line calls, so no such need.
-- On unix you need applescript, zenity, kdialog, Xdialog, python2/tkinter
-  or dialog (will open a terminal if running without console);
+- On unix you need applescript, zenity, matedialog, kdialog, Xdialog,
+  python2/tkinter or dialog (will open a terminal if running without console).
 - One of those is already included on most (if not all) desktops.
 - In the absence of those it will use gdialog, gxmessage or whiptail
   with a textinputbox.

@@ -6,10 +6,11 @@
 \____  ___/ http://tinyfiledialogs.sourceforge.net
      \|           	                     mailto:tinfyfiledialogs@ysengrin.com
 
-A big thank you to Don Heyse for
+A big thank you to Don Heyse http://ldglite.sf.net for
                    his code contributions, bug corrections & thorough testing!
 		
             git://git.code.sf.net/p/tinyfiledialogs/code
+
 Please
 	1) let me know
 	- if you are including tiny file dialogs,
@@ -21,7 +22,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-v2.4 [May 30, 2016] zlib licence
+v2.4.1 [May 31, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -2176,30 +2177,30 @@ static int zenityPresent ( )
 }
 
 
-static int osx10orBetter ( )
+static int osx9orBetter ( )
 {
-	static int lOsx10orBetter = -1 ;
+	static int lOsx9orBetter = -1 ;
 	char lBuff [ MAX_PATH_OR_CMD ] ;
 	FILE * lIn ;
 	int V,v;
 
-	if ( lOsx10orBetter < 0 )
+	if ( lOsx9orBetter < 0 )
 	{
-		lOsx10orBetter = 0 ;
+		lOsx9orBetter = 0 ;
 		lIn = popen ( "osascript -e 'set osver to system version of (system info)'" , "r" ) ;
 		if ( ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
 			&& ( 2 == sscanf(lBuff, "%d.%d", &V, &v) ) )
 		{
 			V = V * 1000 + v;
-			if ( V >= 10010 )
+			if ( V >= 1009 )
 			{
-				lOsx10orBetter = 1 ;
+				lOsx9orBetter = 1 ;
 			}
 		}
 		pclose ( lIn ) ;
-		/* printf ("Osx10 = %d, %d = <%s>\n", lOsx10orBetter, V, lBuff) ; //*/   
+		/* printf ("Osx10 = %d, %d = <%s>\n", lOsx9orBetter, V, lBuff) ; //*/   
 	}
-	return lOsx10orBetter ;
+	return lOsx9orBetter ;
 }
 
 
@@ -2301,7 +2302,7 @@ int tinyfd_messageBox (
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return 1;}
 
 		strcpy ( lDialogString , "osascript ");
-		if ( ! osx10orBetter() ) strcat ( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
+		if ( ! osx9orBetter() ) strcat ( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
 		strcat ( lDialogString , " -e 'try' -e 'display dialog \"") ;
 		if ( aMessage && strlen(aMessage) )
 		{
@@ -2357,7 +2358,7 @@ int tinyfd_messageBox (
 		strcat ( lDialogString, "-e 'on error number -128' " ) ;
 		strcat ( lDialogString, "-e '0' " );
 		strcat ( lDialogString, "-e 'end try'") ;
-		if ( ! osx10orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
+		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
 	else if ( zenityPresent() || matedialogPresent() )
 	{
@@ -2888,7 +2889,7 @@ char const * tinyfd_inputBox(
   {
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char const *)1;}
 		strcpy ( lDialogString , "osascript ");
-		if ( ! osx10orBetter() ) strcat ( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
+		if ( ! osx9orBetter() ) strcat ( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
 		strcat ( lDialogString , " -e 'try' -e 'display dialog \"") ;
     if ( aMessage && strlen(aMessage) )
     {
@@ -2916,7 +2917,7 @@ char const * tinyfd_inputBox(
 		strcat(lDialogString, "-e 'on error number -128' " ) ;
 		strcat(lDialogString, "-e '0' " );
 		strcat(lDialogString, "-e 'end try'") ;
-		if ( ! osx10orBetter() ) strcat(lDialogString, " -e 'end tell'") ;
+		if ( ! osx9orBetter() ) strcat(lDialogString, " -e 'end tell'") ;
 	}
   else if ( zenityPresent() || matedialogPresent() )
   {
@@ -3320,7 +3321,7 @@ char const * tinyfd_saveFileDialog (
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char const *)1;}
 		strcpy ( lDialogString , "osascript ");
-		if ( ! osx10orBetter() ) strcat ( lDialogString , " -e 'tell application \"Finder\"' -e 'Activate'");
+		if ( ! osx9orBetter() ) strcat ( lDialogString , " -e 'tell application \"Finder\"' -e 'Activate'");
 		strcat ( lDialogString , " -e 'POSIX path of ( choose file name " );
 		if ( aTitle && strlen(aTitle) )
 		{
@@ -3343,7 +3344,7 @@ char const * tinyfd_saveFileDialog (
 			strcat(lDialogString , "\" " ) ;
 		}
 		strcat ( lDialogString , ")'" ) ;
-		if ( ! osx10orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
+		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
   else if ( zenityPresent() || matedialogPresent() )
   {
@@ -3635,7 +3636,7 @@ char const * tinyfd_openFileDialog (
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char const *)1;}
 		strcpy ( lDialogString , "osascript ");
-		if ( ! osx10orBetter() ) strcat ( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
+		if ( ! osx9orBetter() ) strcat ( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
 		strcat ( lDialogString , " -e '" );
     if ( ! aAllowMultipleSelects )
     {
@@ -3691,7 +3692,7 @@ char const * tinyfd_openFileDialog (
 		{
 			strcat ( lDialogString , ")'" ) ;
 		}
-		if ( ! osx10orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
+		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
   else if ( zenityPresent() || matedialogPresent() )
   {
@@ -3998,7 +3999,7 @@ char const * tinyfd_selectFolderDialog (
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char const *)1;}
 		strcpy ( lDialogString , "osascript ");
-		if ( ! osx10orBetter() ) strcat ( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
+		if ( ! osx9orBetter() ) strcat ( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
 		strcat ( lDialogString , " -e 'POSIX path of ( choose folder ");
 		if ( aTitle && strlen(aTitle) )
 		{
@@ -4013,7 +4014,7 @@ char const * tinyfd_selectFolderDialog (
 			strcat(lDialogString , "\" " ) ;
 		}
 		strcat ( lDialogString , ")'" ) ;
-		if ( ! osx10orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
+		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
   else if ( zenityPresent() || matedialogPresent() )
   {
@@ -4241,7 +4242,7 @@ char const * tinyfd_colorChooser(
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char const *)1;}
   	lWasOsascript = 1 ;
 		strcpy ( lDialogString , "osascript");
-		if ( ! osx10orBetter() ) 
+		if ( ! osx9orBetter() ) 
 		{
 			strcat ( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
 			strcat ( lDialogString , " -e 'set mycolor to choose color default color {");
@@ -4270,7 +4271,7 @@ char const * tinyfd_colorChooser(
 ((item i of mycolor)/256 as integer) as string' " );
 		strcat ( lDialogString , "-e 'end repeat' " );
 		strcat ( lDialogString , "-e 'mystring'");
-		if ( ! osx10orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
+		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
   else if ( zenity3Present() || matedialogPresent() )
   {

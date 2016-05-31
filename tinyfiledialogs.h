@@ -21,7 +21,7 @@ Please
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
-Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
+Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
 v2.4.1 [May 31, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:

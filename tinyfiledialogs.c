@@ -2191,7 +2191,7 @@ static int osx9orBetter ( )
 		if ( ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
 			&& ( 2 == sscanf(lBuff, "%d.%d", &V, &v) ) )
 		{
-			V = V * 1000 + v;
+			V = V * 100 + v;
 			if ( V >= 1009 )
 			{
 				lOsx9orBetter = 1 ;
@@ -3357,6 +3357,7 @@ char const * tinyfd_saveFileDialog (
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char const *)1;}
 			strcpy ( lDialogString , "matedialog" ) ;
+
 		}
 		strcat(lDialogString, " --file-selection --save --confirm-overwrite" ) ;
 

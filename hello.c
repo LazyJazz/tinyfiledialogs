@@ -102,7 +102,7 @@ int main()
 	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query",NULL,NULL);
 
 	if (lWillBeGraphicMode) {
-  	tinyfd_messageBox( "Graphic mode",tinyfd_response,"ok","info",0);
+		tinyfd_messageBox( "Graphic mode",tinyfd_response,"ok","info",0);
 	}
 	else
 	{

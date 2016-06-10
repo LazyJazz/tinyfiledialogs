@@ -2417,7 +2417,7 @@ int tinyfd_messageBox (
 			}
 			else
 			{
-				strcat ( lDialogString , "info" ) ;
+				strcat ( lDialogString , "information" ) ;
 			}
 		}
         strcat ( lDialogString , ";if [ $? = 0 ];then echo 1;else echo 0;fi");
@@ -2844,7 +2844,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		return lResult ;
 	}
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+	 /* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
     if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
     {
         return 0 ;

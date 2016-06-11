@@ -22,7 +22,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.4.2 [Juin 10, 2016] zlib licence
+v2.4.3 [Juin 11, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -86,7 +86,6 @@ misrepresented as being the original software.
 #include <string.h>
 #include <ctype.h>
 
-#include "tinyfiledialogs.h"
 /* #define TINYFD_WIN_CONSOLE_ONLY //*/
 
 #ifdef _WIN32
@@ -112,6 +111,8 @@ misrepresented as being the original software.
 
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE 32
+
+char tinyfd_version [ 8 ] = "2.4.3";
 
 #ifdef TINYFD_WIN_CONSOLE_ONLY
 /*on windows if you don't compile with the GUI then you must use the console*/
@@ -814,7 +815,7 @@ static char const * openFileDialogWinGui (
 	int i , j ;
 	char * p;
 	OPENFILENAME ofn;
-  size_t lBuffLen ;
+	size_t lBuffLen ;
 	char * lRetval;
 	HRESULT lHResult;
 		
@@ -2417,7 +2418,7 @@ int tinyfd_messageBox (
 			}
 			else
 			{
-				strcat ( lDialogString , "information" ) ;
+				strcat ( lDialogString , "info" ) ;
 			}
 		}
         strcat ( lDialogString , ";if [ $? = 0 ];then echo 1;else echo 0;fi");
@@ -2844,7 +2845,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		return lResult ;
 	}
 
-	 /* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
     if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
     {
         return 0 ;

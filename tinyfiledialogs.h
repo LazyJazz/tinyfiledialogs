@@ -22,7 +22,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.4.2 [Juin 10, 2016] zlib licence
+v2.4.3 [Juin 11, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -154,8 +154,13 @@ char const * tinyfd_arrayDialog (
 	char const * const * const aCells ) ;
 		/* {"Row1 Col1","Row1 Col2","Row2 Col1","Row2 Col2"} */
 
+#ifdef	__cplusplus
+}
+#endif /* __cplusplus */
 
-extern int tinyfd_forceConsole ;  /* 0 (default) or 1
+extern char tinyfd_version [ 8 ] ;
+
+extern int tinyfd_forceConsole;  /* 0 (default) or 1
 can be modified at run time.
 for unix & windows: 0 (graphic mode) or 1 (console mode).
 0: try to use a graphic solution, if it fails then it uses console mode.
@@ -176,18 +181,11 @@ for the graphic mode:
 for the console mode:
 	dialog whiptail basicinput */
 
-/* #define TINYFD_WIN_CONSOLE_ONLY //*/
-/* On windows, Define this if you don't want to include the code
-creating the GUI dialogs.
-Then you don't need link against Comdlg32.lib and Ole32.lib */
-
-
-#ifdef	__cplusplus
-}
-#endif /* __cplusplus */
+/* On windows, define TINYFD_WIN_CONSOLE_ONLY in the c file
+if you don't want to include the code creating the g raphic dialogs.
+Then you won't need to link against Comdlg32.lib and Ole32.lib */
 
 #endif /* TINYFILEDIALOGS_H */
-
 
 /*
 - This is not for android nor ios.

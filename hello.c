@@ -19,7 +19,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.4.2 [Juin 10, 2016] zlib licence
+v2.4.3 [Juin 11, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -99,40 +99,45 @@ int main()
 	char lBuffer[1024];
 	char lThePassword[1024];
 
-	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query",NULL,NULL);
+	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 
-	if (lWillBeGraphicMode) {
-		tinyfd_messageBox( "Graphic mode",tinyfd_response,"ok","info",0);
+#pragma warning(disable:4996) /* silences warning about strcpy strcat fopen*/
+
+	if (lWillBeGraphicMode)
+	{
+		strcpy(lBuffer, "graphic mode: ");
 	}
 	else
 	{
-		tinyfd_messageBox( "Console mode",tinyfd_response,"ok","info",0);
+		strcpy(lBuffer, "console mode: ");
 	}
 
-  tinyfd_forceConsole = tinyfd_messageBox("Hello World",
-    "force dialogs into console mode?\
-    \n\t(it is better if dialog is installed)",
-    "yesno", "question", 0);
+	strcat(lBuffer, tinyfd_response);
+	strcpy(lThePassword, "tinyfiledialogs v");
+	strcat(lThePassword, tinyfd_version);
+	tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
 
-	lTmp =  tinyfd_inputBox(
-    "a password box","your password will be revealed",NULL);
+	tinyfd_forceConsole = tinyfd_messageBox("Hello World",
+		"force dialogs into console mode?\
+				\n\t(it is better if dialog is installed)",
+				"yesno", "question", 0);
 
-#pragma warning(disable:4996) /* silences warning about strcpy */
-  /* copy lTmp because saveDialog would overwrites
-     inputBox static buffer in basicinput mode */
-	strcpy( lThePassword , lTmp );
-#pragma warning(default:4996)
+	lTmp = tinyfd_inputBox(
+		"a password box", "your password will be revealed", NULL);
 
-	lTheSaveFileName = tinyfd_saveFileDialog (
+	/* copy lTmp because saveDialog would overwrites
+	inputBox static buffer in basicinput mode */
+
+	strcpy(lThePassword, lTmp);
+
+	lTheSaveFileName = tinyfd_saveFileDialog(
 		"let us save this password",
 		"passwordFile.txt",
 		0,
 		NULL,
-		NULL );
+		NULL);
 
-#pragma warning(disable:4996) /* silences warning about fopen */
 	lIn = fopen(lTheSaveFileName, "w");
-#pragma warning(default:4996)
 	if (!lIn)
 	{
 		tinyfd_messageBox(
@@ -140,13 +145,13 @@ int main()
 			"Can not open this file in write mode",
 			"ok",
 			"error",
-			1 );
+			1);
 		return(1);
 	}
 	fputs(lThePassword, lIn);
 	fclose(lIn);
 
-    lTheOpenFileName = tinyfd_openFileDialog (
+	lTheOpenFileName = tinyfd_openFileDialog(
 		"let us read the password back",
 		"",
 		0,
@@ -154,9 +159,10 @@ int main()
 		NULL,
 		0);
 
-#pragma warning(disable:4996) /* silences warning about fopen */
 	lIn = fopen(lTheOpenFileName, "r");
+
 #pragma warning(default:4996)
+
 	if (!lIn)
 	{
 		tinyfd_messageBox(
@@ -164,14 +170,17 @@ int main()
 			"Can not open this file in read mode",
 			"ok",
 			"error",
-			1 );
+			1);
 		return(1);
 	}
 	fgets(lBuffer, sizeof(lBuffer), lIn);
 	fclose(lIn);
 
-  if ( *lBuffer )
-    tinyfd_messageBox("your password is", lBuffer, "ok", "info", 1);
+	if (*lBuffer)
+	{
+		tinyfd_messageBox("your password is", lBuffer, "ok", "info", 1);
+
+	}
 }
 
 /*

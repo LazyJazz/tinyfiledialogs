@@ -4527,13 +4527,13 @@ int main()
 		tinyfd_forceConsole = tinyfd_messageBox("Hello World",
 			"force dialogs into console mode?\
 					\n\t(it is better if dialog is installed)",
-					"yesno",
-					"question",
-					0);
+					"yesno", "question", 0);
 	}
 
 	lTmp = tinyfd_inputBox(
 		"a password box", "your password will be revealed", NULL);
+
+	if (!lTmp) return 1 ;
 
 	strcpy(lThePassword, lTmp);
 
@@ -4544,6 +4544,8 @@ int main()
 		NULL,
 		NULL);
 
+	if (!lTheSaveFileName) return 1 ;
+
 	lIn = fopen(lTheSaveFileName, "w");
 	if (!lIn)
 	{
@@ -4553,7 +4555,7 @@ int main()
 			"ok",
 			"error",
 			1);
-		return(1);
+		return 1 ;
 	}
 	fputs(lThePassword, lIn);
 	fclose(lIn);
@@ -4565,6 +4567,8 @@ int main()
 		NULL,
 		NULL,
 		0);
+
+	if (!lTheOpenFileName) return 1;
 
 	lIn = fopen(lTheOpenFileName, "r");
 
@@ -4584,7 +4588,6 @@ int main()
 	if (*lBuffer)
 	{
 		tinyfd_messageBox("your password is", lBuffer, "ok", "info", 1);
-
 	}
 } //*/
 

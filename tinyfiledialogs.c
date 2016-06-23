@@ -1487,7 +1487,7 @@ int tinyfd_messageBox (
 			{
 				printf("%s\n\n",aMessage);
 			}
-			printf("press any key to continue ");
+			printf("press enter to continue ");
 			lChar = (char) _getch() ;
 			printf("\n\n");
 			return 1 ;
@@ -2774,7 +2774,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		}
 		else
 		{
-			strcat(lDialogString , "echo -n \"press any key to continue \"; ");
+			strcat(lDialogString , "echo -n \"press enter to continue \"; ");
 			strcat ( lDialogString , "stty raw -echo;" ) ;
 			strcat ( lDialogString ,
 				"answer=$( while ! head -c 1;do true ;done);echo 1");
@@ -2838,7 +2838,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 			{
 				printf("%s\n\n",aMessage);
 			}
-			printf("press any key to continue "); fflush(stdout);
+			printf("press enter to continue "); fflush(stdout);
 			getchar() ;
 			printf("\n\n");
 			lResult = 1 ;
@@ -3213,7 +3213,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		strcat ( lDialogString , ";echo 1$ANSWER >/tmp/tinyfd.txt';" ) ;
 		strcat ( lDialogString , "cat -v /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 	}
-	else if ( isatty ( 1 ) )
+	else
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return (char const *)0;}
 		if ( !gWarningDisplayed )
@@ -3254,16 +3254,6 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			lBuff[ strlen ( lBuff ) -1 ] = '\0' ;
 		}
 		return lBuff ;
-	}
-	else
-	{
-		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"error");return (char const *)0;}
-		if ( !gWarningDisplayed )
-		{
-			gWarningDisplayed = 1 ;
-			tinyfd_messageBox ( gTitle , gMessageUnix , "ok", "error" , 1 ) ;
-		}
-		return NULL ;
 	}
 
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/

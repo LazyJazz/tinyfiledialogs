@@ -86,7 +86,7 @@ misrepresented as being the original software.
 #include <string.h>
 #include <ctype.h>
 
- #define TINYFD_WIN_CONSOLE_ONLY //*/
+/* #define TINYFD_WIN_CONSOLE_ONLY //*/
 
 #ifdef _WIN32
  #pragma warning(disable:4996) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */

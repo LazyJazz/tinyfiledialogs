@@ -3239,10 +3239,13 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 
 		fgets(lBuff, MAX_PATH_OR_CMD, stdin);
-
 		if (lBuff[0] == '\n')
 		{
 			fgets(lBuff, MAX_PATH_OR_CMD, stdin);
+			if (lBuff[0] == '\0')
+			{
+				return NULL;
+			}
 		}
 		
 		if ( ! aDefaultInput )

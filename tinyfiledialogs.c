@@ -22,7 +22,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.4.4 [Juin 22, 2016] zlib licence
+v2.4.5 [Juin 23, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -2839,7 +2839,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 			}
 			printf("press enter to continue "); fflush(stdout);
 			getchar() ;
-			printf("\n\n");
+			printf("\n\n"); 
 			lResult = 1 ;
 		}
 		tcsetattr(0, TCSANOW, &infoOri);
@@ -3237,7 +3237,14 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			newt.c_lflag &= ~ECHO ;
 			tcsetattr(STDIN_FILENO, TCSANOW, & newt);
 		}
+
 		fgets(lBuff, MAX_PATH_OR_CMD, stdin);
+
+		if (lBuff[0] == '\n')
+		{
+			fgets(lBuff, MAX_PATH_OR_CMD, stdin);
+		}
+		
 		if ( ! aDefaultInput )
 		{
 			tcsetattr(STDIN_FILENO, TCSANOW, & oldt);
@@ -4515,10 +4522,15 @@ int main()
 	strcat(lThePassword, tinyfd_version);
 	tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
 
-	tinyfd_forceConsole = tinyfd_messageBox("Hello World",
-		"force dialogs into console mode?\
-				\n\t(it is better if dialog is installed)",
-				"yesno", "question", 0);
+	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )
+	{
+		tinyfd_forceConsole = tinyfd_messageBox("Hello World",
+			"force dialogs into console mode?\
+					\n\t(it is better if dialog is installed)",
+					"yesno",
+					"question",
+					0);
+	}
 
 	lTmp = tinyfd_inputBox(
 		"a password box", "your password will be revealed", NULL);

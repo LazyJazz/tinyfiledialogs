@@ -1757,7 +1757,6 @@ char const * tinyfd_colorChooser(
 	Hex2RGB(p,aoResultRGB);
 	return p ;
 }
-#pragma warning(default:4996)
 
 #else /* unix */
 

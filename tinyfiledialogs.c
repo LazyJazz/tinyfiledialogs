@@ -4526,8 +4526,8 @@ int main()
 	{
 		tinyfd_forceConsole = tinyfd_messageBox("Hello World",
 			"force dialogs into console mode?\
-					\n\t(it is better if dialog is installed)",
-					"yesno", "question", 0);
+				\n\t(it is better if dialog is installed)",
+				"yesno", "question", 0);
 	}
 
 	lTmp = tinyfd_inputBox(
@@ -4587,7 +4587,8 @@ int main()
 
 	if (*lBuffer)
 	{
-		tinyfd_messageBox("your password is", lBuffer, "ok", "info", 1);
+		tinyfd_messageBox("your password is",
+			lBuffer, "ok", "info", 1);
 	}
 } //*/
 

@@ -19,7 +19,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.4.3 [Juin 11, 2016] zlib licence
+v2.4.4 [Juin 22, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -125,6 +125,8 @@ int main()
 	lTmp = tinyfd_inputBox(
 		"a password box", "your password will be revealed", NULL);
 
+	if (!lTmp) return 1 ;
+
 	/* copy lTmp because saveDialog would overwrites
 	inputBox static buffer in basicinput mode */
 
@@ -137,6 +139,8 @@ int main()
 		NULL,
 		NULL);
 
+	if (!lTheSaveFileName) return 1 ;
+
 	lIn = fopen(lTheSaveFileName, "w");
 	if (!lIn)
 	{
@@ -146,7 +150,7 @@ int main()
 			"ok",
 			"error",
 			1);
-		return(1);
+		return 1 ;
 	}
 	fputs(lThePassword, lIn);
 	fclose(lIn);
@@ -158,6 +162,8 @@ int main()
 		NULL,
 		NULL,
 		0);
+
+	if (!lTheOpenFileName) return 1;
 
 	lIn = fopen(lTheOpenFileName, "r");
 
@@ -179,7 +185,6 @@ int main()
 	if (*lBuffer)
 	{
 		tinyfd_messageBox("your password is", lBuffer, "ok", "info", 1);
-
 	}
 }
 
@@ -194,9 +199,6 @@ MinGW :
 > gcc -o hello.exe hello.c tinyfiledialogs.c -LC:/mingw/lib -lcomdlg32 -lole32
 
 VisualStudio :
-  Create a console application project,
+	Create a console application project,
 	it links against Comdlg32.lib & Ole32.lib.
-	Right click on your Project, select Properties.
-	Configuration Properties/General
-	Character Set to "Multi-Byte" or "Not Set"
 */

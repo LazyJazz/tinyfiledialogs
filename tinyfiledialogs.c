@@ -22,7 +22,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.4.3 [Juin 11, 2016] zlib licence
+v2.4.4 [Juin 22, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -86,10 +86,12 @@ misrepresented as being the original software.
 #include <string.h>
 #include <ctype.h>
 
-/* #define TINYFD_WIN_CONSOLE_ONLY //*/
+ #define TINYFD_WIN_CONSOLE_ONLY //*/
 
 #ifdef _WIN32
  #pragma warning(disable:4996) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
+ #pragma warning(disable:4100) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
+ #pragma warning(disable:4706) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
  #ifndef _WIN32_WINNT
  #define _WIN32_WINNT 0x0500
  #endif
@@ -112,7 +114,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE 32
 
-char tinyfd_version [ 8 ] = "2.4.3";
+char tinyfd_version [ 8 ] = "2.4.4";
 
 #ifdef TINYFD_WIN_CONSOLE_ONLY
 /*on windows if you don't compile with the GUI then you must use the console*/
@@ -480,7 +482,7 @@ static int messageBoxWinGui (
 		aCode += MB_OK ;
 	}
 
-	lBoxReturnValue = MessageBox(NULL, aMessage, aTitle, aCode);
+	lBoxReturnValue = MessageBoxA(NULL, aMessage, aTitle, aCode);
 	if ( ( ( aDialogType
 		  && strcmp("okcancel", aDialogType)
 		  && strcmp("yesno", aDialogType) ) )
@@ -722,7 +724,7 @@ static char const * saveFileDialogWinGui (
 	char lFilterPatterns[MAX_PATH_OR_CMD] = "";
 	int i ;
 	char * p;
-	OPENFILENAME ofn ;
+	OPENFILENAMEA ofn ;
 	char * lRetval;
 	HRESULT lHResult;
 
@@ -781,7 +783,7 @@ static char const * saveFileDialogWinGui (
 	ofn.lpfnHook        = NULL ;
 	ofn.lpTemplateName  = NULL ;
 
-	if ( GetSaveFileName ( & ofn ) == 0 )
+	if ( GetSaveFileNameA ( & ofn ) == 0 )
 	{
 		lRetval = NULL ;
 	}
@@ -814,7 +816,7 @@ static char const * openFileDialogWinGui (
 	size_t lLengths[MAX_MULTIPLE];
 	int i , j ;
 	char * p;
-	OPENFILENAME ofn;
+	OPENFILENAMEA ofn;
 	size_t lBuffLen ;
 	char * lRetval;
 	HRESULT lHResult;
@@ -878,7 +880,7 @@ static char const * openFileDialogWinGui (
 		ofn.Flags |= OFN_ALLOWMULTISELECT;
 	}
 
-	if ( GetOpenFileName ( & ofn ) == 0 )
+	if ( GetOpenFileNameA ( & ofn ) == 0 )
 	{
 		lRetval = NULL ;
 	}
@@ -932,7 +934,7 @@ static char const * selectFolderDialogWinGui (
 	char const * const aTitle , /*  NULL or "" */
 	char const * const aDefaultPath ) /* NULL or "" */
 {
-	BROWSEINFO bInfo ;
+	BROWSEINFOA bInfo ;
 	LPITEMIDLIST lpItem ;
 	HRESULT lHResult;
 
@@ -948,10 +950,10 @@ static char const * selectFolderDialogWinGui (
 	bInfo.lParam = 0 ;
 	bInfo.iImage = -1 ;
 
-	lpItem = SHBrowseForFolder ( & bInfo ) ;
+	lpItem = SHBrowseForFolderA ( & bInfo ) ;
 	if ( lpItem )
 	{
-		SHGetPathFromIDList ( lpItem , aoBuff ) ;
+		SHGetPathFromIDListA ( lpItem , aoBuff ) ;
 	}
 
 	if (lHResult==S_OK || lHResult==S_FALSE) 
@@ -968,7 +970,7 @@ static char const * colorChooserWinGui(
 	unsigned char const aDefaultRGB[3], /* { 0 , 255 , 255 } */
 	unsigned char aoResultRGB[3]) /* { 0 , 0 , 0 } */
 {
-	static CHOOSECOLOR cc;
+	static CHOOSECOLORA cc;
 	static COLORREF crCustColors[16];
 	static char lResultHexRGB[8];
 	unsigned char lDefaultRGB[3];
@@ -996,7 +998,7 @@ static char const * colorChooserWinGui(
 	cc.lpfnHook = NULL;
 	cc.lpTemplateName = NULL;
 
-	lRet = ChooseColor(&cc);
+	lRet = ChooseColorA(&cc);
 
 	if ( ! lRet )
 	{
@@ -4496,3 +4498,97 @@ char const * tinyfd_arrayDialog (
 }
 #endif /* _WIN32 */
 
+
+/*
+int main()
+{
+	char const * lTmp;
+	char const * lTheSaveFileName;
+	char const * lTheOpenFileName;
+	char const * lWillBeGraphicMode;
+	FILE * lIn;
+	char lBuffer[1024];
+	char lThePassword[1024];
+
+	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
+
+	if (lWillBeGraphicMode)
+	{
+		strcpy(lBuffer, "graphic mode: ");
+	}
+	else
+	{
+		strcpy(lBuffer, "console mode: ");
+	}
+
+	strcat(lBuffer, tinyfd_response);
+	strcpy(lThePassword, "tinyfiledialogs v");
+	strcat(lThePassword, tinyfd_version);
+	tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
+
+	tinyfd_forceConsole = tinyfd_messageBox("Hello World",
+		"force dialogs into console mode?\
+				\n\t(it is better if dialog is installed)",
+				"yesno", "question", 0);
+
+	lTmp = tinyfd_inputBox(
+		"a password box", "your password will be revealed", NULL);
+
+	strcpy(lThePassword, lTmp);
+
+	lTheSaveFileName = tinyfd_saveFileDialog(
+		"let us save this password",
+		"passwordFile.txt",
+		0,
+		NULL,
+		NULL);
+
+	lIn = fopen(lTheSaveFileName, "w");
+	if (!lIn)
+	{
+		tinyfd_messageBox(
+			"Error",
+			"Can not open this file in write mode",
+			"ok",
+			"error",
+			1);
+		return(1);
+	}
+	fputs(lThePassword, lIn);
+	fclose(lIn);
+
+	lTheOpenFileName = tinyfd_openFileDialog(
+		"let us read the password back",
+		"",
+		0,
+		NULL,
+		NULL,
+		0);
+
+	lIn = fopen(lTheOpenFileName, "r");
+
+	if (!lIn)
+	{
+		tinyfd_messageBox(
+			"Error",
+			"Can not open this file in read mode",
+			"ok",
+			"error",
+			1);
+		return(1);
+	}
+	fgets(lBuffer, sizeof(lBuffer), lIn);
+	fclose(lIn);
+
+	if (*lBuffer)
+	{
+		tinyfd_messageBox("your password is", lBuffer, "ok", "info", 1);
+
+	}
+} //*/
+
+#ifdef _WIN32
+#pragma warning(default:4996)
+#pragma warning(default:4100)
+#pragma warning(default:4706)
+#endif

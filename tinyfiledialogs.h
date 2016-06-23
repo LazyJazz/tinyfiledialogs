@@ -22,7 +22,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.4.3 [Juin 11, 2016] zlib licence
+v2.4.4 [Juin 22, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 modal function calls:
 - message box & question box
@@ -182,7 +182,7 @@ for the console mode:
 	dialog whiptail basicinput */
 
 /* On windows, define TINYFD_WIN_CONSOLE_ONLY in the c file
-if you don't want to include the code creating the g raphic dialogs.
+if you don't want to include the code creating the graphic dialogs.
 Then you won't need to link against Comdlg32.lib and Ole32.lib */
 
 #endif /* TINYFILEDIALOGS_H */
@@ -190,6 +190,8 @@ Then you won't need to link against Comdlg32.lib and Ole32.lib */
 /*
 - This is not for android nor ios.
 - The code is pure C, perfectly compatible with C++.
+- The API is Fortran ISO_C_BINDING compliant
+- C# via dll, see example file
 - AVOID USING " AND ' IN TITLES AND MESSAGES.
 - There's one file filter only, it may contain several patterns.
 - If no filter description is provided,
@@ -227,6 +229,6 @@ Then you won't need to link against Comdlg32.lib and Ole32.lib */
   http://andrear.altervista.org/home/cdialog.php
 - If dialog is missing, it will switch to basic console input.
 - You can query the type of dialog that will be use.
-- There is the Hello World (and a bit more) on the sourceforge site:
+- The Hello World (and a bit more) is on the sourceforge site:
 */
 

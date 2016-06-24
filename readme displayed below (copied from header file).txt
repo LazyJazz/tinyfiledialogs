@@ -201,14 +201,12 @@ int main()
 			1);
 		return(1);
 	}
+	lBuffer[0] = '\0';
 	fgets(lBuffer, sizeof(lBuffer), lIn);
 	fclose(lIn);
 
-	if (*lBuffer)
-	{
-		tinyfd_messageBox("your password is",
+	tinyfd_messageBox("your password is",
 			lBuffer, "ok", "info", 1);
-	}
 }
 
 

@@ -145,14 +145,33 @@ char const * tinyfd_colorChooser(
 	/* aDefaultRGB and aoResultRGB can be the same array */
 	/* returns NULL on cancel */
 
-/* not cross platform - zenity only */
-char const * tinyfd_arrayDialog (
+#ifdef _WIN32
+/* not cross platform - windows only */
+wchar_t * tinyfd_utf8to16(char const * const aUtf8string);
+
+/* not cross platform - windows only */
+char * tinyfd_utf16to8(wchar_t const * const aUtf16string);
+
+/* not cross platform - windows only */
+int tinyfd_messageBoxW(
+	wchar_t const * const aTitle , /* "" */
+	wchar_t const * const aMessage, /* "" may contain \n \t */
+	char const * const aDialogType, /* "ok" "okcancel" "yesno" */
+	char const * const aIconType, /* "info" "warning" "error" "question" */
+	int const aDefaultButton ); /* 0 for cancel/no , 1 for ok/yes */
+		/* returns 0 for cancel/no , 1 for ok/yes */
+
+#else /*_WIN32*/
+
+/* not cross platform - unix zenity only */
+char const * tinyfd_arrayDialog(
 	char const * const aTitle , /* "" */
 	int const aNumOfColumns , /* 2 */
-	char const * const * const aColumns , /* {"Column 1","Column 2"} */
-	int const aNumOfRows , /* 2*/
-	char const * const * const aCells ) ;
+	char const * const * const aColumns, /* {"Column 1","Column 2"} */
+	int const aNumOfRows, /* 2*/
+	char const * const * const aCells);
 		/* {"Row1 Col1","Row1 Col2","Row2 Col1","Row2 Col2"} */
+#endif /*_WIN32*/
 
 #ifdef	__cplusplus
 }

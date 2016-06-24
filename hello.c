@@ -126,7 +126,7 @@ int main()
 	}
 
 	lTmp = tinyfd_inputBox(
-		"a password box", "your password will be revealed", NULL);
+		"a password box", "your password will be revealed", "");
 
 	if (!lTmp) return 1 ;
 
@@ -182,14 +182,12 @@ int main()
 			1);
 		return(1);
 	}
+	lBuffer[0] = '\0';
 	fgets(lBuffer, sizeof(lBuffer), lIn);
 	fclose(lIn);
 
-	if (*lBuffer)
-	{
-		tinyfd_messageBox("your password is",
+	tinyfd_messageBox("your password is",
 			lBuffer, "ok", "info", 1);
-	}
 }
 
 /*

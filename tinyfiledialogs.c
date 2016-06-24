@@ -114,7 +114,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE 32
 
-char tinyfd_version [ 8 ] = "2.4.4";
+char tinyfd_version [ 8 ] = "2.4.5";
 
 #ifdef TINYFD_WIN_CONSOLE_ONLY
 /*on windows if you don't compile with the GUI then you must use the console*/
@@ -434,68 +434,186 @@ static int dirExists ( char const * const aDirPath )
 
 #ifndef TINYFD_WIN_CONSOLE_ONLY
 
-static int messageBoxWinGui (
-    char const * const aTitle , /* NULL or "" */
-    char const * const aMessage , /* NULL or ""  may contain \n and \t */
-    char const * const aDialogType , /* "ok" "okcancel" "yesno" */
-    char const * const aIconType , /* "info" "warning" "error" "question" */
-    int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes */
+wchar_t * tinyfd_utf8to16(char const * const aUtf8string)
+{
+	static wchar_t lUtf16string[MAX_PATH_OR_CMD];
+	int lSize = MultiByteToWideChar(CP_UTF8,
+					MB_ERR_INVALID_CHARS,
+					aUtf8string, -1, lUtf16string,
+					sizeof lUtf16string / sizeof(wchar_t) );
+	if (lSize == 0)
+	{
+		return NULL;
+	}
+	return lUtf16string;
+}
+
+
+#if !defined(WC_ERR_INVALID_CHARS)
+/* undefined prior to Vista, so not yet in MINGW header file */
+#define WC_ERR_INVALID_CHARS 0x00000080
+#endif
+char * tinyfd_utf16to8(wchar_t const * const aUtf16string)
+{
+	static char lUtf8string[MAX_PATH_OR_CMD];
+	int lSize = WideCharToMultiByte(CP_UTF8, 
+		WC_ERR_INVALID_CHARS | WC_COMPOSITECHECK,
+		aUtf16string, -1, lUtf8string, sizeof lUtf8string,
+		NULL, NULL);
+	if (lSize == 0)
+	{
+		return NULL;
+	}
+	return lUtf8string;
+}
+
+
+int tinyfd_messageBoxW(
+	wchar_t const * const aTitle, /* NULL or "" */
+	wchar_t const * const aMessage, /* NULL or ""  may contain \n and \t */
+	char const * const aDialogType, /* "ok" "okcancel" "yesno" */
+	char const * const aIconType, /* "info" "warning" "error" "question" */
+	int const aDefaultButton) /* 0 for cancel/no , 1 for ok/yes */
 {
 	int lBoxReturnValue;
-    UINT aCode ;
-	
-	if ( aIconType && ! strcmp( "warning" , aIconType ) )
+	UINT aCode;
+
+	if (aIconType && !strcmp("warning", aIconType))
 	{
-		aCode = MB_ICONWARNING ;
+		aCode = MB_ICONWARNING;
 	}
-	else if ( aIconType && ! strcmp("error", aIconType))
+	else if (aIconType && !strcmp("error", aIconType))
 	{
-		aCode = MB_ICONERROR ;
+		aCode = MB_ICONERROR;
 	}
-	else if ( aIconType && ! strcmp("question", aIconType))
+	else if (aIconType && !strcmp("question", aIconType))
 	{
-		aCode = MB_ICONQUESTION ;
+		aCode = MB_ICONQUESTION;
 	}
 	else
 	{
-		aCode = MB_ICONINFORMATION ;
+		aCode = MB_ICONINFORMATION;
 	}
 
-	if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
+	if (aDialogType && !strcmp("okcancel", aDialogType))
 	{
-		aCode += MB_OKCANCEL ;
-		if ( ! aDefaultButton )
+		aCode += MB_OKCANCEL;
+		if (!aDefaultButton)
 		{
-			aCode += MB_DEFBUTTON2 ;
+			aCode += MB_DEFBUTTON2;
 		}
 	}
-	else if ( aDialogType && ! strcmp( "yesno" , aDialogType ) )
+	else if (aDialogType && !strcmp("yesno", aDialogType))
 	{
-		aCode += MB_YESNO ;
-		if ( ! aDefaultButton )
+		aCode += MB_YESNO;
+		if (!aDefaultButton)
 		{
-			aCode += MB_DEFBUTTON2 ;
+			aCode += MB_DEFBUTTON2;
 		}
 	}
 	else
 	{
-		aCode += MB_OK ;
+		aCode += MB_OK;
 	}
 
-	lBoxReturnValue = MessageBoxA(NULL, aMessage, aTitle, aCode);
-	if ( ( ( aDialogType
-		  && strcmp("okcancel", aDialogType)
-		  && strcmp("yesno", aDialogType) ) )
+	lBoxReturnValue = MessageBoxW(NULL, aMessage, aTitle, aCode);
+	if (((aDialogType
+		&& strcmp("okcancel", aDialogType)
+		&& strcmp("yesno", aDialogType)))
 		|| (lBoxReturnValue == IDOK)
-		|| (lBoxReturnValue == IDYES) )
+		|| (lBoxReturnValue == IDYES))
 	{
-		return 1 ;
+		return 1;
 	}
 	else
 	{
-		return 0 ;
+		return 0;
 	}
 }
+
+
+static int messageBoxWinGui(
+	char const * const aTitle, /* NULL or "" */
+	char const * const aMessage, /* NULL or ""  may contain \n and \t */
+	char const * const aDialogType, /* "ok" "okcancel" "yesno" */
+	char const * const aIconType, /* "info" "warning" "error" "question" */
+	int const aDefaultButton) /* 0 for cancel/no , 1 for ok/yes */
+{
+	wchar_t * lTmp;
+	wchar_t lTitle[MAX_PATH_OR_CMD];
+	wchar_t lMessage[MAX_PATH_OR_CMD];
+
+	lTmp = tinyfd_utf8to16(aTitle);
+	wcscpy(lTitle, lTmp);
+	lTmp = tinyfd_utf8to16(aMessage);
+	wcscpy(lMessage, lTmp);
+	return tinyfd_messageBoxW(lTitle, lMessage,
+			aDialogType, aIconType, aDefaultButton );
+}
+
+
+//static int messageBoxWinGui (
+//    char const * const aTitle , /* NULL or "" */
+//    char const * const aMessage , /* NULL or ""  may contain \n and \t */
+//    char const * const aDialogType , /* "ok" "okcancel" "yesno" */
+//    char const * const aIconType , /* "info" "warning" "error" "question" */
+//    int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes */
+//{
+//	int lBoxReturnValue;
+//    UINT aCode ;
+//	
+//	if ( aIconType && ! strcmp( "warning" , aIconType ) )
+//	{
+//		aCode = MB_ICONWARNING ;
+//	}
+//	else if ( aIconType && ! strcmp("error", aIconType))
+//	{
+//		aCode = MB_ICONERROR ;
+//	}
+//	else if ( aIconType && ! strcmp("question", aIconType))
+//	{
+//		aCode = MB_ICONQUESTION ;
+//	}
+//	else
+//	{
+//		aCode = MB_ICONINFORMATION ;
+//	}
+//
+//	if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
+//	{
+//		aCode += MB_OKCANCEL ;
+//		if ( ! aDefaultButton )
+//		{
+//			aCode += MB_DEFBUTTON2 ;
+//		}
+//	}
+//	else if ( aDialogType && ! strcmp( "yesno" , aDialogType ) )
+//	{
+//		aCode += MB_YESNO ;
+//		if ( ! aDefaultButton )
+//		{
+//			aCode += MB_DEFBUTTON2 ;
+//		}
+//	}
+//	else
+//	{
+//		aCode += MB_OK ;
+//	}
+//
+//	lBoxReturnValue = MessageBoxA(NULL, aMessage, aTitle, aCode);
+//	if ( ( ( aDialogType
+//		  && strcmp("okcancel", aDialogType)
+//		  && strcmp("yesno", aDialogType) ) )
+//		|| (lBoxReturnValue == IDOK)
+//		|| (lBoxReturnValue == IDYES) )
+//	{
+//		return 1 ;
+//	}
+//	else
+//	{
+//		return 0 ;
+//	}
+//}
 
 
 static char const * inputBoxWinGui(
@@ -1540,7 +1658,7 @@ char const * tinyfd_inputBox(
 		{
 			printf("%s\n",aMessage);
 		}
-		printf("(esc+enter to cancel): ");
+		printf("(ctrl-Z + enter to cancel): ");
 #ifndef TINYFD_WIN_CONSOLE_ONLY
 		if ( ! aDefaultInput )
 		{
@@ -1548,7 +1666,11 @@ char const * tinyfd_inputBox(
 			SetConsoleMode(hStdin,mode & (~ENABLE_ECHO_INPUT) );
 		}
 #endif /* TINYFD_WIN_CONSOLE_ONLY */
-		fgets(lBuff, MAX_PATH_OR_CMD, stdin);
+		char * lEOF = fgets(lBuff, MAX_PATH_OR_CMD, stdin);
+		if ( ! lEOF )
+		{
+			return NULL;
+		}
 #ifndef TINYFD_WIN_CONSOLE_ONLY
 		if ( ! aDefaultInput )
 		{
@@ -4585,14 +4707,12 @@ int main()
 			1);
 		return(1);
 	}
+	lBuffer[0] = '\0';
 	fgets(lBuffer, sizeof(lBuffer), lIn);
 	fclose(lIn);
 
-	if (*lBuffer)
-	{
-		tinyfd_messageBox("your password is",
-			lBuffer, "ok", "info", 1);
-	}
+	tinyfd_messageBox("your password is",
+	lBuffer, "ok", "info", 1);
 } //*/
 
 #ifdef _WIN32

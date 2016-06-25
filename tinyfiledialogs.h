@@ -125,12 +125,12 @@ extern "C" {
 #endif /* __cplusplus */
 
 int tinyfd_messageBox (
-  char const * const aTitle , /* "" */
-  char const * const aMessage , /* "" may contain \n \t */
-  char const * const aDialogType , /* "ok" "okcancel" "yesno" */
-  char const * const aIconType , /* "info" "warning" "error" "question" */
-  int const aDefaultButton ) ; /* 0 for cancel/no , 1 for ok/yes */
-	/* returns 0 for cancel/no , 1 for ok/yes */
+	char const * const aTitle , /* "" */
+	char const * const aMessage , /* "" may contain \n \t */
+	char const * const aDialogType , /* "ok" "okcancel" "yesno" */
+	char const * const aIconType , /* "info" "warning" "error" "question" */
+	int const aDefaultButton ) ; /* 0 for cancel/no , 1 for ok/yes */
+		/* returns 0 for cancel/no , 1 for ok/yes */
 
 char const * tinyfd_inputBox (
 	char const * const aTitle , /* "" */
@@ -139,22 +139,22 @@ char const * tinyfd_inputBox (
 	/* returns NULL on cancel */
 
 char const * tinyfd_saveFileDialog (
-  char const * const aTitle , /* "" */
-  char const * const aDefaultPathAndFile , /* "" */
-  int const aNumOfFilterPatterns , /* 0 */
-  char const * const * const aFilterPatterns , /* NULL | {"*.jpg","*.png"} */
-  char const * const aSingleFilterDescription ) ; /* NULL | "text files" */
-	/* returns NULL on cancel */
+	char const * const aTitle , /* "" */
+	char const * const aDefaultPathAndFile , /* "" */
+	int const aNumOfFilterPatterns , /* 0 */
+	char const * const * const aFilterPatterns , /* NULL | {"*.jpg","*.png"} */
+	char const * const aSingleFilterDescription ) ; /* NULL | "text files" */
+		/* returns NULL on cancel */
 
 char const * tinyfd_openFileDialog (
-  char const * const aTitle , /* "" */
-  char const * const aDefaultPathAndFile , /* "" */
-  int const aNumOfFilterPatterns , /* 0 */
-  char const * const * const aFilterPatterns , /* NULL {"*.jpg","*.png"} */
-  char const * const aSingleFilterDescription , /* NULL | "image files" */
-  int const aAllowMultipleSelects ) ; /* 0 or 1 */
-	/* in case of multiple files, the separator is | */
-	/* returns NULL on cancel */
+	char const * const aTitle , /* "" */
+	char const * const aDefaultPathAndFile , /* "" */
+	int const aNumOfFilterPatterns , /* 0 */
+	char const * const * const aFilterPatterns , /* NULL {"*.jpg","*.png"} */
+	char const * const aSingleFilterDescription , /* NULL | "image files" */
+	int const aAllowMultipleSelects ) ; /* 0 or 1 */
+		/* in case of multiple files, the separator is | */
+		/* returns NULL on cancel */
 
 char const * tinyfd_selectFolderDialog (
 	char const * const aTitle , /* "" */

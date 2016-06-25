@@ -19,43 +19,42 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.4.5 [Juin 23, 2016] zlib licence
+v2.5 [Juin 25, 2016] zlib licence
 
-A single C file (add it to your C or C++ project) with 6 modal function calls:
-- message box & question box
-- input box & password box
-- save file dialog
-- open file dialog & multiple files
-- select folder dialog
+A single C file (add it to your C or C++ project) with 6 boxes:
+- message / question
+- input / password
+- save file
+- open file & multiple files
+- select folder
 - color picker.
 
-Complement to OpenGL GLFW GLUT GLUI
-VTK SFML SDL Ogre Unity CEGUI ION MathGL
-CPW GLOW GLT NGL STB & GUI less programs
+Complements OpenGL GLFW GLUT GLUI VTK SFML SDL Ogre Unity ION
+CEGUI MathGL CPW GLOW IMGUI GLT NGL STB & GUI less programs
 
-NO INIT & NO MAIN LOOP
+NO INIT
+NO MAIN LOOP
 
 The dialogs can be forced into console mode
 
-On Windows:
+Windows [UTF-8 + UTF-16]
 - native code & some vbs create the graphic dialogs
 - enhanced console mode can use dialog.exe from
-  http://andrear.altervista.org/home/cdialog.php
-- basic console input.
+http://andrear.altervista.org/home/cdialog.php
+- basic console input
 
-On Unix (command line call attempts):
+Unix [UTF-8] (command line call attempts)
 - applescript
-- zenity
+- zenity / matedialog
 - kdialog
 - Xdialog
 - python2 tkinter
 - dialog (opens a console if needed)
-- whiptail, gdialog, gxmessage
-- basic console input.
-The same executable can run across desktops & distributions.
+- basic console input
+The same executable can run across desktops & distributions
 
 tested with C & C++ compilers
-on Visual Studio MinGW OSX LINUX FREEBSD ILLUMOS SOLARIS MINIX RASPBIAN
+on VisualStudio MinGW Mac Linux Bsd Solaris Minix Raspbian C# fortran (iso_c)
 using Gnome Kde Enlightenment Mate Cinnamon Unity
 Lxde Lxqt Xfce WindowMaker IceWm Cde Jds OpenBox
 
@@ -98,6 +97,7 @@ int main()
 	FILE * lIn;
 	char lBuffer[1024];
 	char lThePassword[1024];
+	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
 	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 
@@ -138,8 +138,8 @@ int main()
 	lTheSaveFileName = tinyfd_saveFileDialog(
 		"let us save this password",
 		"passwordFile.txt",
-		0,
-		NULL,
+		2,
+		lFilterPatterns,
 		NULL);
 
 	if (!lTheSaveFileName) return 1 ;
@@ -161,8 +161,8 @@ int main()
 	lTheOpenFileName = tinyfd_openFileDialog(
 		"let us read the password back",
 		"",
-		0,
-		NULL,
+		2,
+		lFilterPatterns,
 		NULL,
 		0);
 

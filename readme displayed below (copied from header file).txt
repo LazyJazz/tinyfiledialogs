@@ -1,9 +1,9 @@
 ﻿ _________
 /         \    tiny file dialogs ( cross-platform C C++ )
-|tiny file|       v2.4.5 [Juin 23, 2016] zlib licence
+|tiny file|       v2.5 [Juin 25, 2016] zlib licence
 | dialogs |   InputBox PasswordBox MessageBox ColorPicker
 \____  ___/ OpenFileDialog SaveFileDialog SelectFolderDialog		
-     \|   
+     \|        Unicode UTF-8 (and also UTF-16 for windows)
 Native dialog library for
         WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & C# dll
 tested with C & C++ compilers on 
@@ -121,6 +121,7 @@ int main()
 	FILE * lIn;
 	char lBuffer[1024];
 	char lThePassword[1024];
+	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
 	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 
@@ -159,8 +160,8 @@ int main()
 	lTheSaveFileName = tinyfd_saveFileDialog(
 		"let us save this password",
 		"passwordFile.txt",
-		0,
-		NULL,
+		2,
+		lFilterPatterns,
 		NULL);
 
 	if (!lTheSaveFileName) return 1 ;
@@ -182,8 +183,8 @@ int main()
 	lTheOpenFileName = tinyfd_openFileDialog(
 		"let us read the password back",
 		"",
-		0,
-		NULL,
+		2,
+		lFilterPatterns,
 		NULL,
 		0);
 

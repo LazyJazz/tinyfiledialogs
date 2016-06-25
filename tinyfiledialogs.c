@@ -22,43 +22,42 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.4.5 [Juin 23, 2016] zlib licence
+v2.5 [Juin 25, 2016] zlib licence
 
-A single C file (add it to your C or C++ project) with 6 modal function calls:
-- message box & question box
-- input box & password box
-- save file dialog
-- open file dialog & multiple files
-- select folder dialog
+A single C file (add it to your C or C++ project) with 6 boxes:
+- message / question
+- input / password
+- save file
+- open file & multiple files
+- select folder
 - color picker.
 
-Complement to OpenGL GLFW GLUT GLUI
-VTK SFML SDL Ogre Unity CEGUI ION MathGL
-CPW GLOW GLT NGL STB & GUI less programs
+Complements OpenGL GLFW GLUT GLUI VTK SFML SDL Ogre Unity ION
+CEGUI MathGL CPW GLOW IMGUI GLT NGL STB & GUI less programs
 
-NO INIT & NO MAIN LOOP
+NO INIT
+NO MAIN LOOP
 
 The dialogs can be forced into console mode
 
-On Windows:
+Windows [UTF-8 + UTF-16]
 - native code & some vbs create the graphic dialogs
 - enhanced console mode can use dialog.exe from
-  http://andrear.altervista.org/home/cdialog.php
-- basic console input.
+http://andrear.altervista.org/home/cdialog.php
+- basic console input
 
-On Unix (command line call attempts):
+Unix [UTF-8] (command line call attempts)
 - applescript
-- zenity
+- zenity / matedialog
 - kdialog
 - Xdialog
 - python2 tkinter
 - dialog (opens a console if needed)
-- whiptail, gdialog, gxmessage
-- basic console input.
-The same executable can run across desktops & distributions.
+- basic console input
+The same executable can run across desktops & distributions
 
 tested with C & C++ compilers
-on Visual Studio MinGW OSX LINUX FREEBSD ILLUMOS SOLARIS MINIX RASPBIAN
+on VisualStudio MinGW Mac Linux Bsd Solaris Minix Raspbian C# fortran (iso_c)
 using Gnome Kde Enlightenment Mate Cinnamon Unity
 Lxde Lxqt Xfce WindowMaker IceWm Cde Jds OpenBox
 
@@ -86,6 +85,7 @@ misrepresented as being the original software.
 #include <string.h>
 #include <ctype.h>
 
+#include "tinyfiledialogs.h"
 /* #define TINYFD_WIN_CONSOLE_ONLY //*/
 
 #ifdef _WIN32
@@ -112,9 +112,9 @@ misrepresented as being the original software.
 #endif /* _WIN32 */
 
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
-#define MAX_MULTIPLE 32
+#define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [ 8 ] = "2.4.5";
+char tinyfd_version [ 8 ] = "2.5";
 
 #ifdef TINYFD_WIN_CONSOLE_ONLY
 /*on windows if you don't compile with the GUI then you must use the console*/
@@ -432,9 +432,116 @@ static int dirExists ( char const * const aDirPath )
 		return 0 ;
 }
 
+static wchar_t * getPathWithoutFinalSlashW(
+	wchar_t * const aoDestination, /* make sure it is allocated, use _MAX_PATH */
+	wchar_t const * const aSource) /* aoDestination and aSource can be the same */
+{
+	wchar_t const * lTmp;
+	if (aSource)
+	{
+		lTmp = wcsrchr(aSource, L'/');
+		if (!lTmp)
+		{
+			lTmp = wcsrchr(aSource, L'\\');
+		}
+		if (lTmp)
+		{
+			wcsncpy(aoDestination, aSource, lTmp - aSource);
+			aoDestination[lTmp - aSource] = L'\0';
+		}
+		else
+		{
+			*aoDestination = L'\0';
+		}
+	}
+	else
+	{
+		*aoDestination = L'\0';
+	}
+	return aoDestination;
+}
+
+
+static wchar_t * getLastNameW(
+	wchar_t * const aoDestination, /* make sure it is allocated */
+	wchar_t const * const aSource)
+{
+	/* copy the last name after '/' or '\' */
+	wchar_t const * lTmp;
+	if (aSource)
+	{
+		lTmp = wcsrchr(aSource, L'/');
+		if (!lTmp)
+		{
+			lTmp = wcsrchr(aSource, L'\\');
+		}
+		if (lTmp)
+		{
+			wcscpy(aoDestination, lTmp + 1);
+		}
+		else
+		{
+			wcscpy(aoDestination, aSource);
+		}
+	}
+	else
+	{
+		*aoDestination = L'\0';
+	}
+	return aoDestination;
+}
+
+
+static void Hex2RGBW(wchar_t const aHexRGB[8],
+	unsigned char aoResultRGB[3])
+{
+	wchar_t lColorChannel[8];
+	if (aoResultRGB)
+	{
+		if (aHexRGB)
+		{
+			wcscpy(lColorChannel, aHexRGB);
+			aoResultRGB[2] = (unsigned char)wcstoul(lColorChannel + 5, NULL, 16);
+			lColorChannel[5] = '\0';
+			aoResultRGB[1] = (unsigned char)wcstoul(lColorChannel + 3, NULL, 16);
+			lColorChannel[3] = '\0';
+			aoResultRGB[0] = (unsigned char)wcstoul(lColorChannel + 1, NULL, 16);
+			/* printf("%d %d %d\n", aoResultRGB[0], aoResultRGB[1], aoResultRGB[2]); //*/
+		}
+		else
+		{
+			aoResultRGB[0] = 0;
+			aoResultRGB[1] = 0;
+			aoResultRGB[2] = 0;
+		}
+	}
+}
+
+
+static void RGB2HexW(
+	unsigned char const aRGB[3],
+	wchar_t aoResultHexRGB[8])
+{
+	if (aoResultHexRGB)
+	{
+		if (aRGB)
+		{
+			swprintf(aoResultHexRGB, 8, L"#%02hhx%02hhx%02hhx",
+				aRGB[0], aRGB[1], aRGB[2]);
+		 wprintf(L"aoResultHexRGB %s\n", aoResultHexRGB); //*/
+		}
+		else
+		{
+			aoResultHexRGB[0] = 0;
+			aoResultHexRGB[1] = 0;
+			aoResultHexRGB[2] = 0;
+		}
+	}
+}
+
 #ifndef TINYFD_WIN_CONSOLE_ONLY
 
-wchar_t * tinyfd_utf8to16(char const * const aUtf8string)
+wchar_t const * tinyfd_utf8to16(char const * const aUtf8string)
 {
 	static wchar_t lUtf16string[MAX_PATH_OR_CMD];
 	int lSize = MultiByteToWideChar(CP_UTF8,
@@ -453,11 +560,11 @@ wchar_t * tinyfd_utf8to16(char const * const aUtf8string)
 /* undefined prior to Vista, so not yet in MINGW header file */
 #define WC_ERR_INVALID_CHARS 0x00000080
 #endif
-char * tinyfd_utf16to8(wchar_t const * const aUtf16string)
+char const * tinyfd_utf16to8(wchar_t const * const aUtf16string)
 {
 	static char lUtf8string[MAX_PATH_OR_CMD];
 	int lSize = WideCharToMultiByte(CP_UTF8, 
-		WC_ERR_INVALID_CHARS | WC_COMPOSITECHECK,
+		WC_ERR_INVALID_CHARS,
 		aUtf16string, -1, lUtf8string, sizeof lUtf8string,
 		NULL, NULL);
 	if (lSize == 0)
@@ -471,22 +578,22 @@ char * tinyfd_utf16to8(wchar_t const * const aUtf16string)
 int tinyfd_messageBoxW(
 	wchar_t const * const aTitle, /* NULL or "" */
 	wchar_t const * const aMessage, /* NULL or ""  may contain \n and \t */
-	char const * const aDialogType, /* "ok" "okcancel" "yesno" */
-	char const * const aIconType, /* "info" "warning" "error" "question" */
+	wchar_t const * const aDialogType, /* "ok" "okcancel" "yesno" */
+	wchar_t const * const aIconType, /* "info" "warning" "error" "question" */
 	int const aDefaultButton) /* 0 for cancel/no , 1 for ok/yes */
 {
 	int lBoxReturnValue;
 	UINT aCode;
 
-	if (aIconType && !strcmp("warning", aIconType))
+	if (aIconType && !wcscmp(L"warning", aIconType))
 	{
 		aCode = MB_ICONWARNING;
 	}
-	else if (aIconType && !strcmp("error", aIconType))
+	else if (aIconType && !wcscmp(L"error", aIconType))
 	{
 		aCode = MB_ICONERROR;
 	}
-	else if (aIconType && !strcmp("question", aIconType))
+	else if (aIconType && !wcscmp(L"question", aIconType))
 	{
 		aCode = MB_ICONQUESTION;
 	}
@@ -495,7 +602,7 @@ int tinyfd_messageBoxW(
 		aCode = MB_ICONINFORMATION;
 	}
 
-	if (aDialogType && !strcmp("okcancel", aDialogType))
+	if (aDialogType && !wcscmp(L"okcancel", aDialogType))
 	{
 		aCode += MB_OKCANCEL;
 		if (!aDefaultButton)
@@ -503,7 +610,7 @@ int tinyfd_messageBoxW(
 			aCode += MB_DEFBUTTON2;
 		}
 	}
-	else if (aDialogType && !strcmp("yesno", aDialogType))
+	else if (aDialogType && !wcscmp(L"yesno", aDialogType))
 	{
 		aCode += MB_YESNO;
 		if (!aDefaultButton)
@@ -518,8 +625,8 @@ int tinyfd_messageBoxW(
 
 	lBoxReturnValue = MessageBoxW(NULL, aMessage, aTitle, aCode);
 	if (((aDialogType
-		&& strcmp("okcancel", aDialogType)
-		&& strcmp("yesno", aDialogType)))
+		&& wcscmp(L"okcancel", aDialogType)
+		&& wcscmp(L"yesno", aDialogType)))
 		|| (lBoxReturnValue == IDOK)
 		|| (lBoxReturnValue == IDYES))
 	{
@@ -539,16 +646,43 @@ static int messageBoxWinGui(
 	char const * const aIconType, /* "info" "warning" "error" "question" */
 	int const aDefaultButton) /* 0 for cancel/no , 1 for ok/yes */
 {
-	wchar_t * lTmp;
 	wchar_t lTitle[MAX_PATH_OR_CMD];
 	wchar_t lMessage[MAX_PATH_OR_CMD];
+	wchar_t lDialogType[16];
+	wchar_t lIconType[16];
+	wchar_t const * lTmp;
 
-	lTmp = tinyfd_utf8to16(aTitle);
-	wcscpy(lTitle, lTmp);
-	lTmp = tinyfd_utf8to16(aMessage);
-	wcscpy(lMessage, lTmp);
+	lTitle[0] = L'\0';
+	lMessage[0] = L'\0';
+	lDialogType[0] = L'\0';
+	lIconType[0] = L'\0';
+
+	if (aTitle)
+	{
+		lTmp = tinyfd_utf8to16(aTitle);
+		wcscpy(lTitle, lTmp);
+	}
+
+	if (aMessage)
+	{
+		lTmp = tinyfd_utf8to16(aMessage);
+		wcscpy(lMessage, lTmp);
+	}
+	
+	if (aDialogType)
+	{
+		lTmp = tinyfd_utf8to16(aDialogType);
+		wcscpy(lDialogType, lTmp);
+	}
+	
+	if (aIconType)
+	{
+		lTmp = tinyfd_utf8to16(aIconType);
+		wcscpy(lIconType, lTmp);
+	}
+
 	return tinyfd_messageBoxW(lTitle, lMessage,
-			aDialogType, aIconType, aDefaultButton );
+			lDialogType, lIconType, aDefaultButton );
 }
 
 
@@ -828,222 +962,635 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 	return aoBuff + 1;
 }
 
-
-static char const * saveFileDialogWinGui (
-	char * const aoBuff ,
-    char const * const aTitle , /* NULL or "" */
-    char const * const aDefaultPathAndFile , /* NULL or "" */
-    int const aNumOfFilterPatterns , /* 0 */
-    char const * const * const aFilterPatterns , /* NULL or {"*.jpg","*.png"} */
-    char const * const aSingleFilterDescription ) /* NULL or "image files" */
+wchar_t const * tinyfd_saveFileDialogW(
+	wchar_t const * const aTitle, /* NULL or "" */
+	wchar_t const * const aDefaultPathAndFile, /* NULL or "" */
+	int const aNumOfFilterPatterns, /* 0 */
+	wchar_t const * const * const aFilterPatterns, /* NULL or {"*.jpg","*.png"} */
+	wchar_t const * const aSingleFilterDescription) /* NULL or "image files" */
 {
-	char lDirname [ MAX_PATH_OR_CMD ] ;
-	char lDialogString[MAX_PATH_OR_CMD];
-	char lFilterPatterns[MAX_PATH_OR_CMD] = "";
-	int i ;
-	char * p;
-	OPENFILENAMEA ofn ;
-	char * lRetval;
+	static wchar_t lBuff[MAX_PATH_OR_CMD];
+	wchar_t lDirname[MAX_PATH_OR_CMD];
+	wchar_t lDialogString[MAX_PATH_OR_CMD];
+	wchar_t lFilterPatterns[MAX_PATH_OR_CMD] = L"";
+	wchar_t * p;
+	wchar_t * lRetval;
+	int i;
+	OPENFILENAMEW ofn;
 	HRESULT lHResult;
 
-	lHResult = CoInitializeEx(NULL,0);
+	lHResult = CoInitializeEx(NULL, 0);
 
-	getPathWithoutFinalSlash(lDirname, aDefaultPathAndFile);
-	getLastName(aoBuff, aDefaultPathAndFile);
-    
-	if (aNumOfFilterPatterns > 0)
-	{
-		if ( aSingleFilterDescription && strlen(aSingleFilterDescription) )
-		{
-			strcpy(lFilterPatterns, aSingleFilterDescription);
-			strcat(lFilterPatterns, "\n");
-		}
-		strcat(lFilterPatterns, aFilterPatterns[0]);
-		for (i = 1; i < aNumOfFilterPatterns; i++)
-		{
-			strcat(lFilterPatterns, ";");
-			strcat(lFilterPatterns, aFilterPatterns[i]);
-		}
-		strcat(lFilterPatterns, "\n");
-		if ( ! (aSingleFilterDescription && strlen(aSingleFilterDescription) ) )
-		{
-			strcpy(lDialogString, lFilterPatterns);
-			strcat(lFilterPatterns, lDialogString);
-		}
-		strcat(lFilterPatterns, "All Files\n*.*\n");
-		p = lFilterPatterns;
-		while ((p = strchr(p, '\n')) != NULL)
-		{
-			*p = '\0';
-			p ++ ;
-		}
-	}
-    
-	ofn.lStructSize     = sizeof(OPENFILENAME) ;
-	ofn.hwndOwner       = 0 ;
-	ofn.hInstance       = 0 ;
-	ofn.lpstrFilter     = lFilterPatterns ;
-	ofn.lpstrCustomFilter = NULL ;
-	ofn.nMaxCustFilter  = 0 ;
-	ofn.nFilterIndex    = 1 ;
-	ofn.lpstrFile		= aoBuff;
-
-	ofn.nMaxFile        = MAX_PATH_OR_CMD ;
-	ofn.lpstrFileTitle  = NULL ;
-	ofn.nMaxFileTitle   = _MAX_FNAME + _MAX_EXT ;
-	ofn.lpstrInitialDir = lDirname;
-	ofn.lpstrTitle      = aTitle ;
-	ofn.Flags           = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR ;
-	ofn.nFileOffset     = 0 ;
-	ofn.nFileExtension  = 0 ;
-	ofn.lpstrDefExt     = NULL ;
-	ofn.lCustData       = 0L ;
-	ofn.lpfnHook        = NULL ;
-	ofn.lpTemplateName  = NULL ;
-
-	if ( GetSaveFileNameA ( & ofn ) == 0 )
-	{
-		lRetval = NULL ;
-	}
-	else 
-	{ 
-		lRetval = aoBuff ;
-	}
-
-	if (lHResult==S_OK || lHResult==S_FALSE) 
-	{
-		CoUninitialize();
-	}
-	return lRetval ;
-}
-
-
-static char const * openFileDialogWinGui (
-	char * const aoBuff ,
-    char const * const aTitle , /*  NULL or "" */
-    char const * const aDefaultPathAndFile , /*  NULL or "" */
-    int const aNumOfFilterPatterns , /* 0 */
-    char const * const * const aFilterPatterns , /* NULL or {"*.jpg","*.png"} */
-    char const * const aSingleFilterDescription , /* NULL or "image files" */
-    int const aAllowMultipleSelects ) /* 0 or 1 */
-{
-	char lDirname [ MAX_PATH_OR_CMD ] ;
-	char lFilterPatterns[MAX_PATH_OR_CMD] = "";
-	char lDialogString[MAX_PATH_OR_CMD] ;
-	char * lPointers[MAX_MULTIPLE];
-	size_t lLengths[MAX_MULTIPLE];
-	int i , j ;
-	char * p;
-	OPENFILENAMEA ofn;
-	size_t lBuffLen ;
-	char * lRetval;
-	HRESULT lHResult;
-		
-	lHResult = CoInitializeEx(NULL,0);
-
-	getPathWithoutFinalSlash(lDirname, aDefaultPathAndFile);
-	getLastName(aoBuff, aDefaultPathAndFile);
+	getPathWithoutFinalSlashW(lDirname, aDefaultPathAndFile);
+	getLastNameW(lBuff, aDefaultPathAndFile);
 
 	if (aNumOfFilterPatterns > 0)
 	{
-		if ( aSingleFilterDescription && strlen(aSingleFilterDescription) )
+		if (aSingleFilterDescription && wcslen(aSingleFilterDescription))
 		{
-			strcpy(lFilterPatterns, aSingleFilterDescription);
-			strcat(lFilterPatterns, "\n");
+			wcscpy(lFilterPatterns, aSingleFilterDescription);
+			wcscat(lFilterPatterns, L"\n");
 		}
-		strcat(lFilterPatterns, aFilterPatterns[0]);
+		wcscat(lFilterPatterns, aFilterPatterns[0]);
 		for (i = 1; i < aNumOfFilterPatterns; i++)
 		{
-			strcat(lFilterPatterns, ";");
-			strcat(lFilterPatterns, aFilterPatterns[i]);
+			wcscat(lFilterPatterns, L";");
+			wcscat(lFilterPatterns, aFilterPatterns[i]);
 		}
-		strcat(lFilterPatterns, "\n");
-		if ( ! (aSingleFilterDescription && strlen(aSingleFilterDescription) ) )
+		wcscat(lFilterPatterns, L"\n");
+		if (!(aSingleFilterDescription && wcslen(aSingleFilterDescription)))
 		{
-			strcpy(lDialogString, lFilterPatterns);
-			strcat(lFilterPatterns, lDialogString);
+			wcscpy(lDialogString, lFilterPatterns);
+			wcscat(lFilterPatterns, lDialogString);
 		}
-		strcat(lFilterPatterns, "All Files\n*.*\n");
+		wcscat(lFilterPatterns, L"All Files\n*.*\n");
 		p = lFilterPatterns;
-		while ((p = strchr(p, '\n')) != NULL)
+		while ((p = wcschr(p, L'\n')) != NULL)
 		{
-			*p = '\0';
-			p ++ ;
-		}
-	}
-
-	ofn.lStructSize     = sizeof ( OPENFILENAME ) ;
-	ofn.hwndOwner       = 0 ;
-	ofn.hInstance       = 0 ;
-	ofn.lpstrFilter		= lFilterPatterns;
-	ofn.lpstrCustomFilter = NULL ;
-	ofn.nMaxCustFilter  = 0 ;
-	ofn.nFilterIndex    = 1 ;
-	ofn.lpstrFile		= aoBuff ;
-	ofn.nMaxFile        = MAX_PATH_OR_CMD ;
-	ofn.lpstrFileTitle  = NULL ;
-	ofn.nMaxFileTitle   = _MAX_FNAME + _MAX_EXT ;
-	ofn.lpstrInitialDir = lDirname ;
-	ofn.lpstrTitle      = aTitle ;
-	ofn.Flags			= OFN_EXPLORER  | OFN_NOCHANGEDIR ;
-	ofn.nFileOffset     = 0 ;
-	ofn.nFileExtension  = 0 ;
-	ofn.lpstrDefExt     = NULL ;
-	ofn.lCustData       = 0L ;
-	ofn.lpfnHook        = NULL ;
-	ofn.lpTemplateName  = NULL ;
-
-	if ( aAllowMultipleSelects )
-	{
-		ofn.Flags |= OFN_ALLOWMULTISELECT;
-	}
-
-	if ( GetOpenFileNameA ( & ofn ) == 0 )
-	{
-		lRetval = NULL ;
-	}
-	else 
-	{
-		lBuffLen = strlen(aoBuff) ;
-		lPointers[0] = aoBuff + lBuffLen + 1 ;
-		if ( !aAllowMultipleSelects || (lPointers[0][0] == '\0')  )
-		{
-			lRetval = aoBuff ;
-		}
-		else 
-		{
-			i = 0 ;
-			do
-			{
-				lLengths[i] = strlen(lPointers[i]);
-				lPointers[i+1] = lPointers[i] + lLengths[i] + 1 ;
-				i ++ ;
-			}
-			while ( lPointers[i][0] != '\0' );
-			i--;
-			p = aoBuff + MAX_MULTIPLE*MAX_PATH_OR_CMD - 1 ;
-			* p = '\0';
-			for ( j = i ; j >=0 ; j-- )
-			{
-				p -= lLengths[j];
-				memmove(p, lPointers[j], lLengths[j]);
-				p--;
-				*p = '\\';
-				p -= lBuffLen ;
-				memmove(p, aoBuff, lBuffLen);
-				p--;
-				*p = '|';
-			}
+			*p = L'\0';
 			p++;
-			lRetval = p ;
 		}
 	}
 
-	if (lHResult==S_OK || lHResult==S_FALSE) 
+	ofn.lStructSize = sizeof(OPENFILENAMEW);
+	ofn.hwndOwner = 0;
+	ofn.hInstance = 0;
+	ofn.lpstrFilter = lFilterPatterns;
+	ofn.lpstrCustomFilter = NULL;
+	ofn.nMaxCustFilter = 0;
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFile = lBuff;
+
+	ofn.nMaxFile = MAX_PATH_OR_CMD;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = _MAX_FNAME + _MAX_EXT;
+	ofn.lpstrInitialDir = lDirname;
+	ofn.lpstrTitle = aTitle;
+	ofn.Flags = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
+	ofn.nFileOffset = 0;
+	ofn.nFileExtension = 0;
+	ofn.lpstrDefExt = NULL;
+	ofn.lCustData = 0L;
+	ofn.lpfnHook = NULL;
+	ofn.lpTemplateName = NULL;
+
+	if (GetSaveFileNameW(&ofn) == 0)
+	{
+		lRetval = NULL;
+	}
+	else
+	{
+		lRetval = lBuff;
+	}
+
+	if (lHResult == S_OK || lHResult == S_FALSE)
 	{
 		CoUninitialize();
 	}
 	return lRetval;
+}
+
+
+static char const * saveFileDialogWinGui(
+	char * const aoBuff,
+	char const * const aTitle, /* NULL or "" */
+	char const * const aDefaultPathAndFile, /* NULL or "" */
+	int const aNumOfFilterPatterns, /* 0 */
+	char const * const * const aFilterPatterns, /* NULL or {"*.jpg","*.png"} */
+	char const * const aSingleFilterDescription) /* NULL or "image files" */
+{
+	wchar_t lTitle[MAX_PATH_OR_CMD];
+	wchar_t lDefaultPathAndFile[MAX_PATH_OR_CMD];
+	wchar_t lSingleFilterDescription[MAX_PATH_OR_CMD];
+	wchar_t * * lFilterPatterns;
+	wchar_t const * lTmpWChar;
+	char const * lTmpChar;
+	int i ;
+
+	lTitle[0] = L'\0';
+	lDefaultPathAndFile[0] = L'\0';
+	lSingleFilterDescription[0] = L'\0';
+
+	lFilterPatterns = malloc(aNumOfFilterPatterns*sizeof(wchar_t *));
+	for (i = 0; i < aNumOfFilterPatterns; i++)
+	{
+		if (aFilterPatterns[i])
+		{
+			int lSize = strlen(aFilterPatterns[i]);
+			lFilterPatterns[i] = malloc(2*lSize*sizeof(wchar_t)); //2*bigger to be sure
+			lTmpWChar = tinyfd_utf8to16(aFilterPatterns[i]);
+			wcscpy(lFilterPatterns[i], lTmpWChar);
+		}
+		else
+		{
+			lFilterPatterns[i] = NULL;
+		}
+	}
+
+	if (aTitle)
+	{
+		lTmpWChar = tinyfd_utf8to16(aTitle);
+		wcscpy(lTitle, lTmpWChar);
+	}
+	if (aDefaultPathAndFile)
+	{
+		lTmpWChar = tinyfd_utf8to16(aDefaultPathAndFile);
+		wcscpy(lDefaultPathAndFile, lTmpWChar);
+	}
+	if (aSingleFilterDescription)
+	{
+		lTmpWChar = tinyfd_utf8to16(aSingleFilterDescription);
+		wcscpy(lSingleFilterDescription, lTmpWChar);
+	}
+
+	lTmpWChar = tinyfd_saveFileDialogW(
+					lTitle,
+					lDefaultPathAndFile,
+					aNumOfFilterPatterns,
+					lFilterPatterns,
+					lSingleFilterDescription);
+
+	for (i = 0; i < aNumOfFilterPatterns; i++)
+	{
+		if (aFilterPatterns[i])
+		{
+			free(lFilterPatterns[i]);
+		}
+	}
+	free(lFilterPatterns);
+
+	if (!lTmpWChar)
+	{
+		return NULL;
+	}
+
+	lTmpChar = tinyfd_utf16to8(lTmpWChar);
+	strcpy(aoBuff, lTmpChar);
+
+	return aoBuff;
+}
+
+//static char const * saveFileDialogWinGui (
+//	char * const aoBuff ,
+//    char const * const aTitle , /* NULL or "" */
+//    char const * const aDefaultPathAndFile , /* NULL or "" */
+//    int const aNumOfFilterPatterns , /* 0 */
+//    char const * const * const aFilterPatterns , /* NULL or {"*.jpg","*.png"} */
+//    char const * const aSingleFilterDescription ) /* NULL or "image files" */
+//{
+//	char lDirname [ MAX_PATH_OR_CMD ] ;
+//	char lDialogString[MAX_PATH_OR_CMD];
+//	char lFilterPatterns[MAX_PATH_OR_CMD] = "";
+//	int i ;
+//	char * p;
+//	OPENFILENAMEA ofn ;
+//	char * lRetval;
+//	HRESULT lHResult;
+//
+//	lHResult = CoInitializeEx(NULL,0);
+//
+//	getPathWithoutFinalSlash(lDirname, aDefaultPathAndFile);
+//	getLastName(aoBuff, aDefaultPathAndFile);
+//    
+//	if (aNumOfFilterPatterns > 0)
+//	{
+//		if ( aSingleFilterDescription && strlen(aSingleFilterDescription) )
+//		{
+//			strcpy(lFilterPatterns, aSingleFilterDescription);
+//			strcat(lFilterPatterns, "\n");
+//		}
+//		strcat(lFilterPatterns, aFilterPatterns[0]);
+//		for (i = 1; i < aNumOfFilterPatterns; i++)
+//		{
+//			strcat(lFilterPatterns, ";");
+//			strcat(lFilterPatterns, aFilterPatterns[i]);
+//		}
+//		strcat(lFilterPatterns, "\n");
+//		if ( ! (aSingleFilterDescription && strlen(aSingleFilterDescription) ) )
+//		{
+//			strcpy(lDialogString, lFilterPatterns);
+//			strcat(lFilterPatterns, lDialogString);
+//		}
+//		strcat(lFilterPatterns, "All Files\n*.*\n");
+//		p = lFilterPatterns;
+//		while ((p = strchr(p, '\n')) != NULL)
+//		{
+//			*p = '\0';
+//			p ++ ;
+//		}
+//	}
+//    
+//	ofn.lStructSize     = sizeof(OPENFILENAME) ;
+//	ofn.hwndOwner       = 0 ;
+//	ofn.hInstance       = 0 ;
+//	ofn.lpstrFilter     = lFilterPatterns ;
+//	ofn.lpstrCustomFilter = NULL ;
+//	ofn.nMaxCustFilter  = 0 ;
+//	ofn.nFilterIndex    = 1 ;
+//	ofn.lpstrFile		= aoBuff;
+//
+//	ofn.nMaxFile        = MAX_PATH_OR_CMD ;
+//	ofn.lpstrFileTitle  = NULL ;
+//	ofn.nMaxFileTitle   = _MAX_FNAME + _MAX_EXT ;
+//	ofn.lpstrInitialDir = lDirname;
+//	ofn.lpstrTitle      = aTitle ;
+//	ofn.Flags           = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR ;
+//	ofn.nFileOffset     = 0 ;
+//	ofn.nFileExtension  = 0 ;
+//	ofn.lpstrDefExt     = NULL ;
+//	ofn.lCustData       = 0L ;
+//	ofn.lpfnHook        = NULL ;
+//	ofn.lpTemplateName  = NULL ;
+//
+//	if ( GetSaveFileNameA ( & ofn ) == 0 )
+//	{
+//		lRetval = NULL ;
+//	}
+//	else 
+//	{ 
+//		lRetval = aoBuff ;
+//	}
+//
+//	if (lHResult==S_OK || lHResult==S_FALSE) 
+//	{
+//		CoUninitialize();
+//	}
+//	return lRetval ;
+//}
+
+
+wchar_t const * tinyfd_openFileDialogW(
+	wchar_t const * const aTitle, /*  NULL or "" */
+	wchar_t const * const aDefaultPathAndFile, /*  NULL or "" */
+	int const aNumOfFilterPatterns, /* 0 */
+	wchar_t const * const * const aFilterPatterns, /* NULL or {"*.jpg","*.png"} */
+	wchar_t const * const aSingleFilterDescription, /* NULL or "image files" */
+	int const aAllowMultipleSelects) /* 0 or 1 */
+{
+	static wchar_t lBuff[MAX_MULTIPLE_FILES*MAX_PATH_OR_CMD];
+		
+	size_t lLengths[MAX_MULTIPLE_FILES];
+	wchar_t lDirname[MAX_PATH_OR_CMD];
+	wchar_t lFilterPatterns[MAX_PATH_OR_CMD] = L"";
+	wchar_t lDialogString[MAX_PATH_OR_CMD];
+	wchar_t * lPointers[MAX_MULTIPLE_FILES];
+	wchar_t * lRetval, * p;
+	int i, j;
+	OPENFILENAMEW ofn;
+	size_t lBuffLen;
+	HRESULT lHResult;
+
+	lHResult = CoInitializeEx(NULL, 0);
+
+	getPathWithoutFinalSlashW(lDirname, aDefaultPathAndFile);
+	getLastNameW(lBuff, aDefaultPathAndFile);
+
+	if (aNumOfFilterPatterns > 0)
+	{
+		if (aSingleFilterDescription && wcslen(aSingleFilterDescription))
+		{
+			wcscpy(lFilterPatterns, aSingleFilterDescription);
+			wcscat(lFilterPatterns, L"\n");
+		}
+		wcscat(lFilterPatterns, aFilterPatterns[0]);
+		for (i = 1; i < aNumOfFilterPatterns; i++)
+		{
+			wcscat(lFilterPatterns, L";");
+			wcscat(lFilterPatterns, aFilterPatterns[i]);
+		}
+		wcscat(lFilterPatterns, L"\n");
+		if (!(aSingleFilterDescription && wcslen(aSingleFilterDescription)))
+		{
+			wcscpy(lDialogString, lFilterPatterns);
+			wcscat(lFilterPatterns, lDialogString);
+		}
+		wcscat(lFilterPatterns, L"All Files\n*.*\n");
+		p = lFilterPatterns;
+		while ((p = wcschr(p, L'\n')) != NULL)
+		{
+			*p = L'\0';
+			p++;
+		}
+	}
+
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = 0;
+	ofn.hInstance = 0;
+	ofn.lpstrFilter = lFilterPatterns;
+	ofn.lpstrCustomFilter = NULL;
+	ofn.nMaxCustFilter = 0;
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFile = lBuff;
+	ofn.nMaxFile = MAX_PATH_OR_CMD;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = _MAX_FNAME + _MAX_EXT;
+	ofn.lpstrInitialDir = lDirname;
+	ofn.lpstrTitle = aTitle;
+	ofn.Flags = OFN_EXPLORER | OFN_NOCHANGEDIR;
+	ofn.nFileOffset = 0;
+	ofn.nFileExtension = 0;
+	ofn.lpstrDefExt = NULL;
+	ofn.lCustData = 0L;
+	ofn.lpfnHook = NULL;
+	ofn.lpTemplateName = NULL;
+
+	if (aAllowMultipleSelects)
+	{
+		ofn.Flags |= OFN_ALLOWMULTISELECT;
+	}
+
+	if (GetOpenFileNameW(&ofn) == 0)
+	{
+		lRetval = NULL;
+	}
+	else
+	{
+		lBuffLen = wcslen(lBuff);
+		lPointers[0] = lBuff + lBuffLen + 1;
+		if (!aAllowMultipleSelects || (lPointers[0][0] == L'\0'))
+		{
+			lRetval = lBuff;
+		}
+		else
+		{
+			i = 0;
+			do
+			{
+				lLengths[i] = wcslen(lPointers[i]);
+				lPointers[i + 1] = lPointers[i] + lLengths[i] + 1;
+				i++;
+			} while (lPointers[i][0] != L'\0');
+			i--;
+			p = lBuff + MAX_MULTIPLE_FILES*MAX_PATH_OR_CMD - 1;
+			*p = L'\0';
+			for (j = i; j >= 0; j--)
+			{
+				p -= lLengths[j];
+				memmove(p, lPointers[j], lLengths[j]*sizeof(wchar_t));
+				p--;
+				*p = L'\\';
+				p -= lBuffLen;
+				memmove(p, lBuff, lBuffLen*sizeof(wchar_t));
+				p--;
+				*p = L'|';
+			}
+			p++;
+			lRetval = p;
+		}
+	}
+
+	if (lHResult == S_OK || lHResult == S_FALSE)
+	{
+		CoUninitialize();
+	}
+	return lRetval;
+}
+
+
+static char const * openFileDialogWinGui(
+	char * const aoBuff,
+	char const * const aTitle, /*  NULL or "" */
+	char const * const aDefaultPathAndFile, /*  NULL or "" */
+	int const aNumOfFilterPatterns, /* 0 */
+	char const * const * const aFilterPatterns, /* NULL or {"*.jpg","*.png"} */
+	char const * const aSingleFilterDescription, /* NULL or "image files" */
+	int const aAllowMultipleSelects) /* 0 or 1 */
+{
+	wchar_t lTitle[MAX_PATH_OR_CMD];
+	wchar_t lDefaultPathAndFile[MAX_PATH_OR_CMD];
+	wchar_t lSingleFilterDescription[MAX_PATH_OR_CMD];
+	wchar_t * * lFilterPatterns;
+	wchar_t const * lTmpWChar;
+	char const * lTmpChar;
+	int i;
+
+	lTitle[0] = L'\0';
+	lDefaultPathAndFile[0] = L'\0';
+	lSingleFilterDescription[0] = L'\0';
+
+	lFilterPatterns = malloc(aNumOfFilterPatterns*sizeof(wchar_t *));
+	for (i = 0; i < aNumOfFilterPatterns; i++)
+	{
+		if (aFilterPatterns[i])
+		{
+			int lSize = strlen(aFilterPatterns[i]);
+			lFilterPatterns[i] = malloc(2 * lSize*sizeof(wchar_t)); //2*bigger to be sure
+			lTmpWChar = tinyfd_utf8to16(aFilterPatterns[i]);
+			wcscpy(lFilterPatterns[i], lTmpWChar);
+		}
+		else
+		{
+			lFilterPatterns[i] = NULL;
+		}
+	}
+
+	if (aTitle)
+	{
+		lTmpWChar = tinyfd_utf8to16(aTitle);
+		wcscpy(lTitle, lTmpWChar);
+	}
+	if (aDefaultPathAndFile)
+	{
+		lTmpWChar = tinyfd_utf8to16(aDefaultPathAndFile);
+		wcscpy(lDefaultPathAndFile, lTmpWChar);
+	}
+	if (aSingleFilterDescription)
+	{
+		lTmpWChar = tinyfd_utf8to16(aSingleFilterDescription);
+		wcscpy(lSingleFilterDescription, lTmpWChar);
+	}
+
+	lTmpWChar = tinyfd_openFileDialogW(
+		lTitle,
+		lDefaultPathAndFile,
+		aNumOfFilterPatterns,
+		lFilterPatterns,
+		lSingleFilterDescription,
+		aAllowMultipleSelects);
+
+	for (i = 0; i < aNumOfFilterPatterns; i++)
+	{
+		if (aFilterPatterns[i])
+		{
+			free(lFilterPatterns[i]);
+		}
+	}
+	free(lFilterPatterns);
+
+	if (!lTmpWChar)
+	{
+		return NULL;
+	}
+
+	lTmpChar = tinyfd_utf16to8(lTmpWChar);
+	strcpy(aoBuff, lTmpChar);
+
+	return aoBuff;
+}
+
+
+//static char const * openFileDialogWinGui (
+//	char * const aoBuff ,
+//    char const * const aTitle , /*  NULL or "" */
+//    char const * const aDefaultPathAndFile , /*  NULL or "" */
+//    int const aNumOfFilterPatterns , /* 0 */
+//    char const * const * const aFilterPatterns , /* NULL or {"*.jpg","*.png"} */
+//    char const * const aSingleFilterDescription , /* NULL or "image files" */
+//    int const aAllowMultipleSelects ) /* 0 or 1 */
+//{
+//	char lDirname [ MAX_PATH_OR_CMD ] ;
+//	char lFilterPatterns[MAX_PATH_OR_CMD] = "";
+//	char lDialogString[MAX_PATH_OR_CMD] ;
+//	char * lPointers[MAX_MULTIPLE];
+//	size_t lLengths[MAX_MULTIPLE];
+//	int i , j ;
+//	char * p;
+//	OPENFILENAMEA ofn;
+//	size_t lBuffLen ;
+//	char * lRetval;
+//	HRESULT lHResult;
+//		
+//	lHResult = CoInitializeEx(NULL,0);
+//
+//	getPathWithoutFinalSlash(lDirname, aDefaultPathAndFile);
+//	getLastName(aoBuff, aDefaultPathAndFile);
+//
+//	if (aNumOfFilterPatterns > 0)
+//	{
+//		if ( aSingleFilterDescription && strlen(aSingleFilterDescription) )
+//		{
+//			strcpy(lFilterPatterns, aSingleFilterDescription);
+//			strcat(lFilterPatterns, "\n");
+//		}
+//		strcat(lFilterPatterns, aFilterPatterns[0]);
+//		for (i = 1; i < aNumOfFilterPatterns; i++)
+//		{
+//			strcat(lFilterPatterns, ";");
+//			strcat(lFilterPatterns, aFilterPatterns[i]);
+//		}
+//		strcat(lFilterPatterns, "\n");
+//		if ( ! (aSingleFilterDescription && strlen(aSingleFilterDescription) ) )
+//		{
+//			strcpy(lDialogString, lFilterPatterns);
+//			strcat(lFilterPatterns, lDialogString);
+//		}
+//		strcat(lFilterPatterns, "All Files\n*.*\n");
+//		p = lFilterPatterns;
+//		while ((p = strchr(p, '\n')) != NULL)
+//		{
+//			*p = '\0';
+//			p ++ ;
+//		}
+//	}
+//
+//	ofn.lStructSize     = sizeof ( OPENFILENAME ) ;
+//	ofn.hwndOwner       = 0 ;
+//	ofn.hInstance       = 0 ;
+//	ofn.lpstrFilter		= lFilterPatterns;
+//	ofn.lpstrCustomFilter = NULL ;
+//	ofn.nMaxCustFilter  = 0 ;
+//	ofn.nFilterIndex    = 1 ;
+//	ofn.lpstrFile		= aoBuff ;
+//	ofn.nMaxFile        = MAX_PATH_OR_CMD ;
+//	ofn.lpstrFileTitle  = NULL ;
+//	ofn.nMaxFileTitle   = _MAX_FNAME + _MAX_EXT ;
+//	ofn.lpstrInitialDir = lDirname ;
+//	ofn.lpstrTitle      = aTitle ;
+//	ofn.Flags			= OFN_EXPLORER  | OFN_NOCHANGEDIR ;
+//	ofn.nFileOffset     = 0 ;
+//	ofn.nFileExtension  = 0 ;
+//	ofn.lpstrDefExt     = NULL ;
+//	ofn.lCustData       = 0L ;
+//	ofn.lpfnHook        = NULL ;
+//	ofn.lpTemplateName  = NULL ;
+//
+//	if ( aAllowMultipleSelects )
+//	{
+//		ofn.Flags |= OFN_ALLOWMULTISELECT;
+//	}
+//
+//	if ( GetOpenFileNameA ( & ofn ) == 0 )
+//	{
+//		lRetval = NULL ;
+//	}
+//	else 
+//	{
+//		lBuffLen = strlen(aoBuff) ;
+//		lPointers[0] = aoBuff + lBuffLen + 1 ;
+//		if ( !aAllowMultipleSelects || (lPointers[0][0] == '\0')  )
+//		{
+//			lRetval = aoBuff ;
+//		}
+//		else 
+//		{
+//			i = 0 ;
+//			do
+//			{
+//				lLengths[i] = strlen(lPointers[i]);
+//				lPointers[i+1] = lPointers[i] + lLengths[i] + 1 ;
+//				i ++ ;
+//			}
+//			while ( lPointers[i][0] != '\0' );
+//			i--;
+//			p = aoBuff + MAX_MULTIPLE*MAX_PATH_OR_CMD - 1 ;
+//			* p = '\0';
+//			for ( j = i ; j >=0 ; j-- )
+//			{
+//				p -= lLengths[j];
+//				memmove(p, lPointers[j], lLengths[j]);
+//				p--;
+//				*p = '\\';
+//				p -= lBuffLen ;
+//				memmove(p, aoBuff, lBuffLen);
+//				p--;
+//				*p = '|';
+//			}
+//			p++;
+//			lRetval = p ;
+//		}
+//	}
+//
+//	if (lHResult==S_OK || lHResult==S_FALSE) 
+//	{
+//		CoUninitialize();
+//	}
+//	return lRetval;
+//}
+
+
+wchar_t const * tinyfd_selectFolderDialogW(
+	wchar_t const * const aTitle, /*  NULL or "" */
+	wchar_t const * const aDefaultPath) /* NULL or "" */
+{
+	static wchar_t lBuff[MAX_PATH_OR_CMD];
+		
+	BROWSEINFOW bInfo;
+	LPITEMIDLIST lpItem;
+	HRESULT lHResult;
+
+	lHResult = CoInitializeEx(NULL, 0);
+
+	/* we can't use aDefaultPath */
+	bInfo.hwndOwner = 0;
+	bInfo.pidlRoot = NULL;
+	bInfo.pszDisplayName = lBuff;
+	bInfo.lpszTitle = aTitle;
+	bInfo.ulFlags = 0;
+	bInfo.lpfn = NULL;
+	bInfo.lParam = 0;
+	bInfo.iImage = -1;
+
+	lpItem = SHBrowseForFolderW(&bInfo);
+	if (lpItem)
+	{
+		SHGetPathFromIDListW(lpItem, lBuff);
+	}
+
+	if (lHResult == S_OK || lHResult == S_FALSE)
+	{
+		CoUninitialize();
+	}
+	return lBuff;
 }
 
 
@@ -1052,33 +1599,124 @@ static char const * selectFolderDialogWinGui (
 	char const * const aTitle , /*  NULL or "" */
 	char const * const aDefaultPath ) /* NULL or "" */
 {
-	BROWSEINFOA bInfo ;
-	LPITEMIDLIST lpItem ;
-	HRESULT lHResult;
+	wchar_t lTitle[MAX_PATH_OR_CMD];
+	wchar_t lDefaultPath[MAX_PATH_OR_CMD];
+	wchar_t const * lTmpWChar;
+	char const * lTmpChar;
 
-	lHResult = CoInitializeEx(NULL,0);
-	
-	/* we can't use aDefaultPath */
-	bInfo.hwndOwner = 0 ;
-	bInfo.pidlRoot = NULL ;
-	bInfo.pszDisplayName = aoBuff ;
-	bInfo.lpszTitle = aTitle ;
-	bInfo.ulFlags = 0 ;
-	bInfo.lpfn = NULL ;
-	bInfo.lParam = 0 ;
-	bInfo.iImage = -1 ;
+	lTitle[0] = L'\0';
+	lDefaultPath[0] = L'\0';
 
-	lpItem = SHBrowseForFolderA ( & bInfo ) ;
-	if ( lpItem )
+	if (aTitle)
 	{
-		SHGetPathFromIDListA ( lpItem , aoBuff ) ;
+		lTmpWChar = tinyfd_utf8to16(aTitle);
+		wcscpy(lTitle, lTmpWChar);
+	}
+	if (aDefaultPath)
+	{
+		lTmpWChar = tinyfd_utf8to16(aDefaultPath);
+		wcscpy(lDefaultPath, lTmpWChar);
 	}
 
-	if (lHResult==S_OK || lHResult==S_FALSE) 
+	lTmpWChar = tinyfd_selectFolderDialogW(
+		lTitle,
+		lDefaultPath);
+
+	if (!lTmpWChar)
 	{
-		CoUninitialize();
+		return NULL;
 	}
-	return aoBuff ;
+
+	lTmpChar = tinyfd_utf16to8(lTmpWChar);
+	strcpy(aoBuff, lTmpChar);
+
+	return aoBuff;
+}
+
+//static char const * selectFolderDialogWinGui (
+//	char * const aoBuff ,
+//	char const * const aTitle , /*  NULL or "" */
+//	char const * const aDefaultPath ) /* NULL or "" */
+//{
+//	BROWSEINFOA bInfo ;
+//	LPITEMIDLIST lpItem ;
+//	HRESULT lHResult;
+//
+//	lHResult = CoInitializeEx(NULL,0);
+//	
+//	/* we can't use aDefaultPath */
+//	bInfo.hwndOwner = 0 ;
+//	bInfo.pidlRoot = NULL ;
+//	bInfo.pszDisplayName = aoBuff ;
+//	bInfo.lpszTitle = aTitle ;
+//	bInfo.ulFlags = 0 ;
+//	bInfo.lpfn = NULL ;
+//	bInfo.lParam = 0 ;
+//	bInfo.iImage = -1 ;
+//
+//	lpItem = SHBrowseForFolderA ( & bInfo ) ;
+//	if ( lpItem )
+//	{
+//		SHGetPathFromIDListA ( lpItem , aoBuff ) ;
+//	}
+//
+//	if (lHResult==S_OK || lHResult==S_FALSE) 
+//	{
+//		CoUninitialize();
+//	}
+//	return aoBuff ;
+//}
+
+
+wchar_t const * tinyfd_colorChooserW(
+	wchar_t const * const aTitle, /* NULL or "" */
+	wchar_t const * const aDefaultHexRGB, /* NULL or "#FF0000"*/
+	unsigned char const aDefaultRGB[3], /* { 0 , 255 , 255 } */
+	unsigned char aoResultRGB[3]) /* { 0 , 0 , 0 } */
+{
+	static wchar_t lResultHexRGB[8];
+
+	CHOOSECOLORW cc;
+	COLORREF crCustColors[16];
+	unsigned char lDefaultRGB[3];
+	int lRet;
+
+	if (aDefaultHexRGB)
+	{
+		Hex2RGBW(aDefaultHexRGB, lDefaultRGB);
+	}
+	else
+	{
+		lDefaultRGB[0] = aDefaultRGB[0];
+		lDefaultRGB[1] = aDefaultRGB[1];
+		lDefaultRGB[2] = aDefaultRGB[2];
+	}
+
+	/* we can't use aTitle */
+	cc.lStructSize = sizeof(CHOOSECOLOR);
+	cc.hwndOwner = NULL;
+	cc.hInstance = NULL;
+	cc.rgbResult = RGB(lDefaultRGB[0], lDefaultRGB[1], lDefaultRGB[2]);
+	cc.lpCustColors = crCustColors;
+	cc.Flags = CC_RGBINIT | CC_FULLOPEN;
+	cc.lCustData = 0;
+	cc.lpfnHook = NULL;
+	cc.lpTemplateName = NULL;
+
+	lRet = ChooseColorW(&cc);
+
+	if (!lRet)
+	{
+		return NULL;
+	}
+
+	aoResultRGB[0] = GetRValue(cc.rgbResult);
+	aoResultRGB[1] = GetGValue(cc.rgbResult);
+	aoResultRGB[2] = GetBValue(cc.rgbResult);
+
+	RGB2HexW(aoResultRGB, lResultHexRGB);
+
+	return lResultHexRGB;
 }
 
 
@@ -1088,52 +1726,96 @@ static char const * colorChooserWinGui(
 	unsigned char const aDefaultRGB[3], /* { 0 , 255 , 255 } */
 	unsigned char aoResultRGB[3]) /* { 0 , 0 , 0 } */
 {
-	static CHOOSECOLORA cc;
-	static COLORREF crCustColors[16];
 	static char lResultHexRGB[8];
-	unsigned char lDefaultRGB[3];
-	int lRet;
 
-	if ( aDefaultHexRGB )
+	wchar_t lTitle[MAX_PATH_OR_CMD];
+	wchar_t lDefaultHexRGB[MAX_PATH_OR_CMD];
+	wchar_t const * lTmpWChar;
+	char const * lTmpChar;
+
+	lTitle[0] = L'\0';
+	lDefaultHexRGB[0] = L'\0';
+
+	if (aTitle)
 	{
-		Hex2RGB(aDefaultHexRGB, lDefaultRGB);
+		lTmpWChar = tinyfd_utf8to16(aTitle);
+		wcscpy(lTitle, lTmpWChar);
 	}
-	else
+	if (aDefaultHexRGB)
 	{
-		lDefaultRGB[0]=aDefaultRGB[0];
-		lDefaultRGB[1]=aDefaultRGB[1];
-		lDefaultRGB[2]=aDefaultRGB[2];
+		lTmpWChar = tinyfd_utf8to16(aDefaultHexRGB);
+		wcscpy(lDefaultHexRGB, lTmpWChar);
 	}
 
-	/* we can't use aTitle */
-	cc.lStructSize = sizeof ( CHOOSECOLOR ) ;
-	cc.hwndOwner = NULL ;
-	cc.hInstance = NULL ;
-	cc.rgbResult = RGB(lDefaultRGB[0], lDefaultRGB[1], lDefaultRGB[2]);
-	cc.lpCustColors = crCustColors;
-	cc.Flags = CC_RGBINIT | CC_FULLOPEN;
-	cc.lCustData = 0;
-	cc.lpfnHook = NULL;
-	cc.lpTemplateName = NULL;
+	lTmpWChar = tinyfd_colorChooserW(
+		lTitle,
+		lDefaultHexRGB,
+		aDefaultRGB,
+		aoResultRGB );
 
-	lRet = ChooseColorA(&cc);
-
-	if ( ! lRet )
+	if (!lTmpWChar)
 	{
 		return NULL;
 	}
 
-	aoResultRGB[0] = GetRValue(cc.rgbResult);
-	aoResultRGB[1] = GetGValue(cc.rgbResult);
-	aoResultRGB[2] = GetBValue(cc.rgbResult);
-
-	RGB2Hex(aoResultRGB, lResultHexRGB);
+	lTmpChar = tinyfd_utf16to8(lTmpWChar);
+	strcpy(lResultHexRGB, lTmpChar);
 
 	return lResultHexRGB;
 }
 
-#endif /* TINYFD_WIN_CONSOLE_ONLY */
 
+//static char const * colorChooserWinGui(
+//	char const * const aTitle, /* NULL or "" */
+//	char const * const aDefaultHexRGB, /* NULL or "#FF0000"*/
+//	unsigned char const aDefaultRGB[3], /* { 0 , 255 , 255 } */
+//	unsigned char aoResultRGB[3]) /* { 0 , 0 , 0 } */
+//{
+//	static CHOOSECOLORA cc;
+//	static COLORREF crCustColors[16];
+//	static char lResultHexRGB[8];
+//	unsigned char lDefaultRGB[3];
+//	int lRet;
+//
+//	if ( aDefaultHexRGB )
+//	{
+//		Hex2RGB(aDefaultHexRGB, lDefaultRGB);
+//	}
+//	else
+//	{
+//		lDefaultRGB[0]=aDefaultRGB[0];
+//		lDefaultRGB[1]=aDefaultRGB[1];
+//		lDefaultRGB[2]=aDefaultRGB[2];
+//	}
+//
+//	/* we can't use aTitle */
+//	cc.lStructSize = sizeof ( CHOOSECOLOR ) ;
+//	cc.hwndOwner = NULL ;
+//	cc.hInstance = NULL ;
+//	cc.rgbResult = RGB(lDefaultRGB[0], lDefaultRGB[1], lDefaultRGB[2]);
+//	cc.lpCustColors = crCustColors;
+//	cc.Flags = CC_RGBINIT | CC_FULLOPEN;
+//	cc.lCustData = 0;
+//	cc.lpfnHook = NULL;
+//	cc.lpTemplateName = NULL;
+//
+//	lRet = ChooseColorA(&cc);
+//
+//	if ( ! lRet )
+//	{
+//		return NULL;
+//	}
+//
+//	aoResultRGB[0] = GetRValue(cc.rgbResult);
+//	aoResultRGB[1] = GetGValue(cc.rgbResult);
+//	aoResultRGB[2] = GetBValue(cc.rgbResult);
+//
+//	RGB2Hex(aoResultRGB, lResultHexRGB);
+//
+//	return lResultHexRGB;
+//}
+
+#endif /* TINYFD_WIN_CONSOLE_ONLY */
 
 static int dialogPresent ( )
 {
@@ -1751,7 +2433,7 @@ char const * tinyfd_openFileDialog (
     char const * const aSingleFilterDescription , /* NULL or "image files" */
     int const aAllowMultipleSelects ) /* 0 or 1 */
 {
-	static char lBuff[MAX_MULTIPLE*MAX_PATH_OR_CMD];
+	static char lBuff[MAX_MULTIPLE_FILES*MAX_PATH_OR_CMD];
 	char const * p ;
 #ifndef TINYFD_WIN_CONSOLE_ONLY
 	if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
@@ -1980,8 +2662,14 @@ static char const * terminalName ( )
 		{
 			strcat(lTerminalName , " -e bash -c " ) ;
 		}
+		else if ( strcpy(lTerminalName,"uterm")
+			&& detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e bash -c " ) ;
+			//strcat(lTerminalName , " -e " ) ;
+		}
 		else if ( strcpy(lTerminalName,"xterm")
-			  && detectPresence(lTerminalName) )
+			&& detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e bash -c " ) ;
 			//strcat(lTerminalName , " -e " ) ;
@@ -4623,97 +5311,99 @@ char const * tinyfd_arrayDialog (
 /*
 int main()
 {
-	char const * lTmp;
-	char const * lTheSaveFileName;
-	char const * lTheOpenFileName;
-	char const * lWillBeGraphicMode;
-	FILE * lIn;
-	char lBuffer[1024];
-	char lThePassword[1024];
+char const * lTmp;
+char const * lTheSaveFileName;
+char const * lTheOpenFileName;
+char const * lWillBeGraphicMode;
+FILE * lIn;
+char lBuffer[1024];
+char lThePassword[1024];
+char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
-	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
+lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 
-	if (lWillBeGraphicMode)
-	{
-		strcpy(lBuffer, "graphic mode: ");
-	}
-	else
-	{
-		strcpy(lBuffer, "console mode: ");
-	}
+if (lWillBeGraphicMode)
+{
+	strcpy(lBuffer, "graphic mode: ");
+}
+else
+{
+	strcpy(lBuffer, "console mode: ");
+}
 
-	strcat(lBuffer, tinyfd_response);
-	strcpy(lThePassword, "tinyfiledialogs v");
-	strcat(lThePassword, tinyfd_version);
-	tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
+strcat(lBuffer, tinyfd_response);
+strcpy(lThePassword, "tinyfiledialogs v");
+strcat(lThePassword, tinyfd_version);
+tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
 
-	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )
-	{
-		tinyfd_forceConsole = tinyfd_messageBox("Hello World",
-			"force dialogs into console mode?\
-				\n\t(it is better if dialog is installed)",
-				"yesno", "question", 0);
-	}
+if (lWillBeGraphicMode && !tinyfd_forceConsole)
+{
+	tinyfd_forceConsole = tinyfd_messageBox("Hello World",
+		"force dialogs into console mode?\
+						\n\t(it is better if dialog is installed)",
+						"yesno", "question", 0);
+}
 
-	lTmp = tinyfd_inputBox(
-		"a password box", "your password will be revealed", NULL);
+lTmp = tinyfd_inputBox(
+	"a password box", "your password will be revealed", NULL);
 
-	if (!lTmp) return 1 ;
+if (!lTmp) return 1;
 
-	strcpy(lThePassword, lTmp);
+strcpy(lThePassword, lTmp);
 
-	lTheSaveFileName = tinyfd_saveFileDialog(
-		"let us save this password",
-		"passwordFile.txt",
-		0,
-		NULL,
-		NULL);
+lTheSaveFileName = tinyfd_saveFileDialog(
+	"let us save this password",
+	"passwordFile.txt",
+	2,
+	lFilterPatterns,
+	NULL);
 
-	if (!lTheSaveFileName) return 1 ;
+if (!lTheSaveFileName) return 1;
 
-	lIn = fopen(lTheSaveFileName, "w");
-	if (!lIn)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"Can not open this file in write mode",
-			"ok",
-			"error",
-			1);
-		return 1 ;
-	}
-	fputs(lThePassword, lIn);
-	fclose(lIn);
+lIn = fopen(lTheSaveFileName, "w");
+if (!lIn)
+{
+	tinyfd_messageBox(
+		"Error",
+		"Can not open this file in write mode",
+		"ok",
+		"error",
+		1);
+	return 1;
+}
+fputs(lThePassword, lIn);
+fclose(lIn);
 
-	lTheOpenFileName = tinyfd_openFileDialog(
-		"let us read the password back",
-		"",
-		0,
-		NULL,
-		NULL,
-		0);
+lTheOpenFileName = tinyfd_openFileDialog(
+	"let us read the password back",
+	"",
+	2,
+	lFilterPatterns,
+	NULL,
+	0);
 
-	if (!lTheOpenFileName) return 1;
+if (!lTheOpenFileName) return 1;
 
-	lIn = fopen(lTheOpenFileName, "r");
+lIn = fopen(lTheOpenFileName, "r");
 
-	if (!lIn)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"Can not open this file in read mode",
-			"ok",
-			"error",
-			1);
-		return(1);
-	}
-	lBuffer[0] = '\0';
-	fgets(lBuffer, sizeof(lBuffer), lIn);
-	fclose(lIn);
+if (!lIn)
+{
+	tinyfd_messageBox(
+		"Error",
+		"Can not open this file in read mode",
+		"ok",
+		"error",
+		1);
+	return(1);
+}
+lBuffer[0] = '\0';
+fgets(lBuffer, sizeof(lBuffer), lIn);
+fclose(lIn);
 
-	tinyfd_messageBox("your password is",
+tinyfd_messageBox("your password is",
 	lBuffer, "ok", "info", 1);
-} //*/
+}
+//*/
 
 #ifdef _WIN32
 #pragma warning(default:4996)

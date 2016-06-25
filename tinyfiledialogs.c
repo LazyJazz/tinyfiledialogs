@@ -4442,7 +4442,7 @@ char const * tinyfd_openFileDialog (
     char const * const aSingleFilterDescription , /* NULL or "image files" */
     int const aAllowMultipleSelects ) /* 0 or 1 */
 {
-	static char lBuff [ MAX_MULTIPLE*MAX_PATH_OR_CMD ] ;
+	static char lBuff [ MAX_MULTIPLE_FILES*MAX_PATH_OR_CMD ] ;
 	char lDialogString [ MAX_PATH_OR_CMD ] ;
 	char lString [ MAX_PATH_OR_CMD ] ;
 	int i ;

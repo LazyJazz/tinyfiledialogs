@@ -2312,6 +2312,7 @@ char const * tinyfd_inputBox(
 	char const * const aDefaultInput ) /* "" , if NULL it's a passwordBox */
 {
 	static char lBuff [ MAX_PATH_OR_CMD ] ;
+	char * lEOF;
 
 #ifndef TINYFD_WIN_CONSOLE_ONLY
 	DWORD mode = 0;
@@ -2357,7 +2358,7 @@ char const * tinyfd_inputBox(
 			SetConsoleMode(hStdin,mode & (~ENABLE_ECHO_INPUT) );
 		}
 #endif /* TINYFD_WIN_CONSOLE_ONLY */
-		char * lEOF = fgets(lBuff, MAX_PATH_OR_CMD, stdin);
+		lEOF = fgets(lBuff, MAX_PATH_OR_CMD, stdin);
 		if ( ! lEOF )
 		{
 			return NULL;
@@ -3704,6 +3705,7 @@ char const * tinyfd_inputBox(
 	int lWasBasicXterm = 0 ;
 	struct termios oldt ;
 	struct termios newt ;
+	char * lEOF;
 	lBuff[0]='\0';
 
   if ( osascriptPresent ( ) )
@@ -4057,16 +4059,23 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			tcsetattr(STDIN_FILENO, TCSANOW, & newt);
 		}
 
-		fgets(lBuff, MAX_PATH_OR_CMD, stdin);
-		if (lBuff[0] == '\n')
+		lEOF = fgets(lBuff, MAX_PATH_OR_CMD, stdin);
+		/* printf("lbuff<%c><%d>\n",lBuff[0],lBuff[0]); //*/
+		if ( ! lEOF  || (lBuff[0] == '\0') )
 		{
-			fgets(lBuff, MAX_PATH_OR_CMD, stdin);
-			if (lBuff[0] == '\0')
+			return NULL;
+		}
+
+		if ( lBuff[0] == '\n' )
+		{
+			lEOF = fgets(lBuff, MAX_PATH_OR_CMD, stdin);
+			/* printf("lbuff<%c><%d>\n",lBuff[0],lBuff[0]); //*/
+			if ( ! lEOF  || (lBuff[0] == '\0') )
 			{
 				return NULL;
 			}
 		}
-		
+
 		if ( ! aDefaultInput )
 		{
 			tcsetattr(STDIN_FILENO, TCSANOW, & oldt);

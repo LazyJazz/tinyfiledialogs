@@ -176,7 +176,7 @@ char const * tinyfd_colorChooser(
 /************ NOT CROSS PLATFORM SECTION STARTS HERE ************************/
 #ifdef _WIN32
 #ifndef TINYFD_WIN_CONSOLE_ONLY
-#ifdef _MSC_VER
+
 /* windows only */
 wchar_t const * tinyfd_utf8to16(char const * const aUtf8string);
 
@@ -229,7 +229,7 @@ wchar_t const * tinyfd_colorChooserW(
 		/* aDefaultRGB and aoResultRGB can be the same array */
 		/* returns NULL on cancel */
 
-#endif /*_MSC_VER*/
+
 #endif /*TINYFD_WIN_CONSOLE_ONLY*/
 #else /*_WIN32*/
 

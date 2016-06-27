@@ -89,7 +89,7 @@ misrepresented as being the original software.
 #include <string.h>
 #include "tinyfiledialogs.h"
 int main()
-{tinyfd_forceConsole = 1;
+{
 	char const * lTmp;
 	char const * lTheSaveFileName;
 	char const * lTheOpenFileName;
@@ -196,6 +196,7 @@ $ gcc -o hello.app hello.c tinyfiledialogs.c
 
 UNIX :
 $ gcc -o hello hello.c tinyfiledialogs.c
+$ clang -o hello hello.c tinyfiledialogs.c
 
 MinGW :
 > gcc -o hello.exe hello.c tinyfiledialogs.c -LC:/mingw/lib -lcomdlg32 -lole32

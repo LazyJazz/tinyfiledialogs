@@ -216,10 +216,11 @@ $ gcc -o hello.app hello.c tinyfiledialogs.c
 
 UNIX :
 $ gcc -o hello hello.c tinyfiledialogs.c
-$ clang -o hello hello.c tinyfiledialogs.c
+( or clang tcc cc CC )
 
 MinGW :
 > gcc -o hello.exe hello.c tinyfiledialogs.c -LC:/mingw/lib -lcomdlg32 -lole32
+(unfortunately some headers are missing with tcc)
 
 VisualStudio :
     Create a console application project,

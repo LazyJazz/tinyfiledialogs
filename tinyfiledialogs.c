@@ -2663,6 +2663,16 @@ static char const * terminalName ( )
 				strcpy(lTerminalName , "" ) ;
 			}
 		}
+		else if ( strcpy(lTerminalName,"terminator")
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -x bash -c " ) ;
+		}
+		else if ( strcpy(lTerminalName,"xfce4-terminal")
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -x bash -c " ) ;
+		}
 		else if ( strcpy(lTerminalName,"xterm")
 			&& detectPresence(lTerminalName) )
 		{
@@ -2684,11 +2694,6 @@ static char const * terminalName ( )
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e bash -c " ) ;
-		}
-		else if ( strcpy(lTerminalName,"xfce4-terminal")
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -x bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"Terminal")
 			  && detectPresence(lTerminalName) )
@@ -2764,11 +2769,6 @@ static char const * terminalName ( )
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e bash -c " ) ;
-		}
-		else if ( strcpy(lTerminalName,"terminator")
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -x bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"lilyterm")
 			  && detectPresence(lTerminalName) )

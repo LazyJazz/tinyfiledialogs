@@ -2663,10 +2663,11 @@ static char const * terminalName ( )
 				strcpy(lTerminalName , "" ) ;
 			}
 		}
-		else if ( strcpy(lTerminalName,"gnome-terminal")
-			  && detectPresence(lTerminalName) )
+		else if ( strcpy(lTerminalName,"xterm")
+			&& detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -x bash -c " ) ;
+			strcat(lTerminalName , " -e bash -c " ) ;
+			//strcat(lTerminalName , " -e " ) ;
 		}
 		else if ( strcpy(lTerminalName,"konsole")
 			  && detectPresence(lTerminalName) )
@@ -2674,12 +2675,6 @@ static char const * terminalName ( )
 			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"uterm")
-			&& detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e bash -c " ) ;
-			//strcat(lTerminalName , " -e " ) ;
-		}
-		else if ( strcpy(lTerminalName,"xterm")
 			&& detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e bash -c " ) ;
@@ -2734,11 +2729,6 @@ static char const * terminalName ( )
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e bash -c " ) ;
-		}
-		else if ( strcpy(lTerminalName,"multi-gnome-terminal")
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -x bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"hpterm")
 			  && detectPresence(lTerminalName) )
@@ -2840,11 +2830,21 @@ static char const * terminalName ( )
 		{
 			strcat(lTerminalName , " -e bash -c " ) ;
 		}
+		else if ( strcpy(lTerminalName,"multi-gnome-terminal")
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -x bash -c " ) ;
+		}
+		else if ( strcpy(lTerminalName,"gnome-terminal")
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -x bash -c " ) ;
+		}
 		else
 		{
 			strcpy(lTerminalName , "" ) ;
 		}
-    }
+	}
 	if ( strlen(lTerminalName) )
 	{
 		return lTerminalName ;

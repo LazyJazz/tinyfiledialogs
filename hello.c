@@ -89,7 +89,7 @@ misrepresented as being the original software.
 #include <string.h>
 #include "tinyfiledialogs.h"
 int main()
-{
+{tinyfd_forceConsole = 1;
 	char const * lTmp;
 	char const * lTheSaveFileName;
 	char const * lTheOpenFileName;

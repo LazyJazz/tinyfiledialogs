@@ -22,7 +22,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.5 [Juin 25, 2016] zlib licence
+v2.5.1 [Juin 28, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 boxes:
 - message / question
@@ -114,7 +114,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [ 8 ] = "2.5";
+char tinyfd_version [ 8 ] = "2.5.1";
 
 #ifdef TINYFD_WIN_CONSOLE_ONLY
 /*on windows if you don't compile with the GUI then you must use the console*/
@@ -2826,6 +2826,26 @@ static char const * terminalName ( )
 			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"osso-xterm")
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e bash -c " ) ;
+		}
+		else if ( strcpy(lTerminalName,"uxterm")
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e bash -c " ) ;
+		}
+		else if ( strcpy(lTerminalName,"lxterm")
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e bash -c " ) ;
+		}
+		else if ( strcpy(lTerminalName,"koi8rxterm")
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e bash -c " ) ;
+		}
+		else if ( strcpy(lTerminalName,"x-terminal-emulator")
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e bash -c " ) ;

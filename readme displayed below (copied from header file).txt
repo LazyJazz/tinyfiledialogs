@@ -1,6 +1,6 @@
 ﻿ _________
 /         \    tiny file dialogs ( cross-platform C C++ )
-|tiny file|       v2.5 [Juin 25, 2016] zlib licence
+|tiny file|       v2.5.1 [Juin 28, 2016] zlib licence
 | dialogs |   InputBox PasswordBox MessageBox ColorPicker
 \____  ___/ OpenFileDialog SaveFileDialog SelectFolderDialog		
      \|        Unicode UTF-8 (and also UTF-16 for windows)

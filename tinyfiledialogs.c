@@ -2743,6 +2743,11 @@ static char const * terminalName ( )
 		{
 			strcat(lTerminalName , " -e bash -c " ) ;
 		}
+		else if ( strcpy(lTerminalName,"$TERM") /*alias*/
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -x bash -c " ) ;
+		}
 		else
 		{
 			strcpy(lTerminalName , "" ) ;

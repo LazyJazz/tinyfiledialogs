@@ -1883,7 +1883,7 @@ static int messageBoxWinConsole (
 	if ( aDialogType && ( !strcmp( "okcancel" , aDialogType ) || !strcmp( "yesno" , aDialogType ) ) )
 	{
 		strcat(lDialogString, "--backtitle \"") ;
-		strcat(lDialogString, "tab => move focus") ;
+		strcat(lDialogString, "tab -> move focus") ;
 		strcat(lDialogString, "\" ") ;
 	}
 
@@ -1977,7 +1977,7 @@ static char const * inputBoxWinConsole(
 	}
 
 	strcat(lDialogString, "--backtitle \"") ;
-	strcat(lDialogString, "tab => move focus") ;
+	strcat(lDialogString, "tab -> move focus") ;
 	strcat(lDialogString, "\" ") ;
 
 	if ( ! aDefaultInput )
@@ -2057,7 +2057,7 @@ static char const * saveFileDialogWinConsole (
 	
 	strcat(lDialogString, "--backtitle \"") ;
 	strcat(lDialogString,
-		"tab => move focus | spacebar => select | add / => populate") ;
+		"tab -> focus | spacebar -> select | / -> populate | enter -> ok input line") ;
 	strcat(lDialogString, "\" ") ;
 
 	strcat ( lDialogString , "--fselect \"" ) ;
@@ -2123,7 +2123,7 @@ static char const * openFileDialogWinConsole (
 
 	strcat(lDialogString, "--backtitle \"") ;
 	strcat(lDialogString,
-		"tab => move focus | spacebar => select | add / => populate") ;
+		"tab -> focus | spacebar -> select | / -> populate | enter -> ok input line") ;
 	strcat(lDialogString, "\" ") ;
 
 	strcat ( lDialogString , "--fselect \"" ) ;
@@ -2182,7 +2182,7 @@ static char const * selectFolderDialogWinConsole (
 
 	strcat(lDialogString, "--backtitle \"") ;
 	strcat(lDialogString,
-		"tab => move focus | spacebar => select | add / => populate") ;
+		"tab -> focus | spacebar -> select | / -> populate | enter -> ok input line") ;
 	strcat(lDialogString, "\" ") ;
 
 	strcat ( lDialogString , "--dselect \"" ) ;
@@ -2668,7 +2668,7 @@ static char const * terminalName ( )
 		{
 			strcat(lTerminalName , " -x bash -c " ) ;
 		}
-		else if ( strcpy(lTerminalName,"xfce4-terminal")
+		else if ( strcpy(lTerminalName,"mate-terminal")
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -x bash -c " ) ;
@@ -2845,15 +2845,15 @@ static char const * terminalName ( )
 		{
 			strcat(lTerminalName , " -e bash -c " ) ;
 		}
-		else if ( strcpy(lTerminalName,"mate-terminal")
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e bash -c " ) ;
-		}
 		else if ( strcpy(lTerminalName,"x-terminal-emulator")
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e bash -c " ) ;
+		}
+		else if ( strcpy(lTerminalName,"xfce4-terminal")
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -x bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"multi-gnome-terminal")
 			  && detectPresence(lTerminalName) )
@@ -3516,7 +3516,7 @@ else :\n\tprint 1\n\"" ) ;
 			if ( aDialogType && ( !strcmp( "okcancel" , aDialogType ) || !strcmp( "yesno" , aDialogType ) ) )
 			{
 				strcat(lDialogString, "--backtitle \"") ;
-				strcat(lDialogString, "tab => move focus") ;
+				strcat(lDialogString, "tab -> move focus") ;
 				strcat(lDialogString, "\" ") ;
 			}
 		}
@@ -3973,7 +3973,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		if ( !xdialogPresent() && !gdialogPresent() )
 		{
 			strcat(lDialogString, "--backtitle \"") ;
-			strcat(lDialogString, "tab => move focus") ;
+			strcat(lDialogString, "tab -> move focus") ;
 			strcat(lDialogString, "\" ") ;
 		}
 
@@ -4379,7 +4379,7 @@ char const * tinyfd_saveFileDialog (
 		{
 			strcat(lDialogString, "--backtitle \"") ;
 			strcat(lDialogString,
-				"tab => move focus | spacebar => select | add / => populate") ;
+				"tab -> focus | spacebar -> select | / -> populate | enter -> ok input line") ;
 			strcat(lDialogString, "\" ") ;
 		}
 
@@ -4742,7 +4742,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		{
 			strcat(lDialogString, "--backtitle \"") ;
 			strcat(lDialogString,
-				"tab => move focus | spacebar => select | add / => populate") ;
+				"tab -> focus | spacebar -> select | / -> populate | enter -> ok input line") ;
 			strcat(lDialogString, "\" ") ;
 		}
 
@@ -4987,7 +4987,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		{
 			strcat(lDialogString, "--backtitle \"") ;
 			strcat(lDialogString,
-				"tab => move focus | spacebar => select | add / => populate") ;
+				"tab -> focus | spacebar -> select | / -> populate | enter -> ok input line") ;
 			strcat(lDialogString, "\" ") ;
 		}
 

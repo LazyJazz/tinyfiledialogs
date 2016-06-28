@@ -3641,11 +3641,11 @@ char const * tinyfd_inputBox(
 			strcat(lDialogString, "hidden answer true ") ;
 		}
 		if ( aTitle && strlen(aTitle) )
-	    {
+		{
 			strcat(lDialogString, "with title \"") ;
 			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "\" ") ;
-	    }
+		}
 		strcat(lDialogString, "with icon note' ") ;
 		strcat(lDialogString, "-e '\"1\" & text returned of result' " );
 		strcat(lDialogString, "-e 'on error number -128' " ) ;
@@ -3678,14 +3678,11 @@ char const * tinyfd_inputBox(
 			strcat(lDialogString, aMessage) ;
 			strcat(lDialogString, "\"") ;
 		}
-		if ( aDefaultInput )
+		if ( aDefaultInput && strlen(aDefaultInput) )
 		{
-			if ( strlen(aDefaultInput) )
-			{
-				strcat(lDialogString, " --entry-text=\"") ;
-				strcat(lDialogString, aDefaultInput) ;
-				strcat(lDialogString, "\"") ;
-			}
+			strcat(lDialogString, " --entry-text=\"") ;
+			strcat(lDialogString, aDefaultInput) ;
+			strcat(lDialogString, "\"") ;
 		}
 		else
 		{
@@ -3709,7 +3706,6 @@ char const * tinyfd_inputBox(
 		}
 		strcat(lDialogString, "\"") ;
 		if ( aMessage && strlen(aMessage) )
-
 		{
 			strcat(lDialogString, aMessage ) ;
 		}

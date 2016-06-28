@@ -2845,6 +2845,11 @@ static char const * terminalName ( )
 		{
 			strcat(lTerminalName , " -e bash -c " ) ;
 		}
+		else if ( strcpy(lTerminalName,"mate-terminal")
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e bash -c " ) ;
+		}
 		else if ( strcpy(lTerminalName,"x-terminal-emulator")
 			  && detectPresence(lTerminalName) )
 		{

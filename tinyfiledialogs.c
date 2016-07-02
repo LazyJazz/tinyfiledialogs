@@ -1294,14 +1294,14 @@ wchar_t const * tinyfd_selectFolderDialogW(
 	LPITEMIDLIST lpItem;
 	HRESULT lHResult;
 
-	lHResult = CoInitializeEx(NULL, 0);
+	lHResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 
 	/* we can't use aDefaultPath */
 	bInfo.hwndOwner = 0;
 	bInfo.pidlRoot = NULL;
 	bInfo.pszDisplayName = lBuff;
 	bInfo.lpszTitle = aTitle;
-	bInfo.ulFlags = 0;
+	bInfo.ulFlags = BIF_USENEWUI;
 	bInfo.lpfn = NULL;
 	bInfo.lParam = 0;
 	bInfo.iImage = -1;
@@ -1367,11 +1367,13 @@ wchar_t const * tinyfd_colorChooserW(
 	unsigned char aoResultRGB[3]) /* { 0 , 0 , 0 } */
 {
 	static wchar_t lResultHexRGB[8];
-
 	CHOOSECOLORW cc;
 	COLORREF crCustColors[16];
 	unsigned char lDefaultRGB[3];
 	int lRet;
+	//HRESULT lHResult;
+
+	//lHResult = CoInitializeEx(NULL, 0);
 
 	if (aDefaultHexRGB)
 	{
@@ -1407,6 +1409,11 @@ wchar_t const * tinyfd_colorChooserW(
 	aoResultRGB[2] = GetBValue(cc.rgbResult);
 
 	RGB2HexW(aoResultRGB, lResultHexRGB);
+
+	//if (lHResult == S_OK || lHResult == S_FALSE)
+	//{
+	//	CoUninitialize();
+	//}
 
 	return lResultHexRGB;
 }
@@ -5244,116 +5251,155 @@ char const * tinyfd_arrayDialog (
 /*
 int main()
 {
-	char const * lTmp;
-	char const * lTheSaveFileName;
-	char const * lTheOpenFileName;
-	char const * lWillBeGraphicMode;
-	FILE * lIn;
-	char lBuffer[1024];
-	char lThePassword[1024];
-	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
+char const * lTmp;
+char const * lTheSaveFileName;
+char const * lTheOpenFileName;
+char const * lTheSelectFolderName;
+char const * lTheHexColor;
+char const * lWillBeGraphicMode;
+unsigned char lRgbColor[3];
+FILE * lIn;
+char lBuffer[1024];
+char lThePassword[1024];
+char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
-	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
+lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 
-	if (lWillBeGraphicMode)
-	{
-		strcpy(lBuffer, "graphic mode: ");
-	}
-	else
-	{
-		strcpy(lBuffer, "console mode: ");
-	}
+if (lWillBeGraphicMode)
+{
+	strcpy(lBuffer, "graphic mode: ");
+}
+else
+{
+	strcpy(lBuffer, "console mode: ");
+}
 
-	strcat(lBuffer, tinyfd_response);
-	strcpy(lThePassword, "tinyfiledialogs v");
-	strcat(lThePassword, tinyfd_version);
-	tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
+strcat(lBuffer, tinyfd_response);
+strcpy(lThePassword, "tinyfiledialogs v");
+strcat(lThePassword, tinyfd_version);
+tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
 
-	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )
-	{
-		tinyfd_forceConsole = tinyfd_messageBox("Hello World",
-			"force dialogs into console mode?\
-				\n\t(it is better if dialog is installed)",
-				"yesno", "question", 0);
-	}
+if (lWillBeGraphicMode && !tinyfd_forceConsole)
+{
+	tinyfd_forceConsole = tinyfd_messageBox("Hello World",
+		"force dialogs into console mode?\
+						\n\t(it is better if dialog is installed)",
+						"yesno", "question", 0);
+}
 
-	lTmp = tinyfd_inputBox(
-		"a password box", "your password will be revealed", NULL);
+lTmp = tinyfd_inputBox(
+	"a password box", "your password will be revealed", NULL);
 
-	if (!lTmp) return 1 ;
+if (!lTmp) return 1;
 
-	strcpy(lThePassword, lTmp);
+strcpy(lThePassword, lTmp);
 
-	lTheSaveFileName = tinyfd_saveFileDialog(
-		"let us save this password",
-		"passwordFile.txt",
-		2,
-		lFilterPatterns,
-		NULL);
+lTheSaveFileName = tinyfd_saveFileDialog(
+	"let us save this password",
+	"passwordFile.txt",
+	2,
+	lFilterPatterns,
+	NULL);
 
-	if (! lTheSaveFileName)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"Save file name is NULL",
-			"ok",
-			"error",
-			1);
-		return 1 ;
-	}
+if (!lTheSaveFileName)
+{
+	tinyfd_messageBox(
+		"Error",
+		"Save file name is NULL",
+		"ok",
+		"error",
+		1);
+	return 1;
+}
 
-	lIn = fopen(lTheSaveFileName, "w");
-	if (!lIn)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"Can not open this file in write mode",
-			"ok",
-			"error",
-			1);
-		return 1 ;
-	}
-	fputs(lThePassword, lIn);
-	fclose(lIn);
+lIn = fopen(lTheSaveFileName, "w");
+if (!lIn)
+{
+	tinyfd_messageBox(
+		"Error",
+		"Can not open this file in write mode",
+		"ok",
+		"error",
+		1);
+	return 1;
+}
+fputs(lThePassword, lIn);
+fclose(lIn);
 
-	lTheOpenFileName = tinyfd_openFileDialog(
-		"let us read the password back",
-		"",
-		2,
-		lFilterPatterns,
-		NULL,
-		0);
+lTheOpenFileName = tinyfd_openFileDialog(
+	"let us read the password back",
+	"",
+	2,
+	lFilterPatterns,
+	NULL,
+	0);
 
-	if (! lTheOpenFileName)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"Open file name is NULL",
-			"ok",
-			"error",
-			1);
-		return 1 ;
-	}
+if (!lTheOpenFileName)
+{
+	tinyfd_messageBox(
+		"Error",
+		"Open file name is NULL",
+		"ok",
+		"error",
+		1);
+	return 1;
+}
 
+lIn = fopen(lTheOpenFileName, "r");
 
-	lIn = fopen(lTheOpenFileName, "r");
+if (!lIn)
+{
+	tinyfd_messageBox(
+		"Error",
+		"Can not open this file in read mode",
+		"ok",
+		"error",
+		1);
+	return(1);
+}
+lBuffer[0] = '\0';
+fgets(lBuffer, sizeof(lBuffer), lIn);
+fclose(lIn);
 
-	if (!lIn)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"Can not open this file in read mode",
-			"ok",
-			"error",
-			1);
-		return(1);
-	}
-	lBuffer[0] = '\0';
-	fgets(lBuffer, sizeof(lBuffer), lIn);
-	fclose(lIn);
+tinyfd_messageBox("your password is",
+	lBuffer, "ok", "info", 1);
 
-	tinyfd_messageBox("your password is",
-			lBuffer, "ok", "info", 1);
+lTheSelectFolderName = tinyfd_selectFolderDialog(
+	"let us just select a directory", NULL);
+
+if (!lTheSelectFolderName)
+{
+	tinyfd_messageBox(
+		"Error",
+		"Select folder name is NULL",
+		"ok",
+		"error",
+		1);
+	return 1;
+}
+
+tinyfd_messageBox("The selected folder is",
+	lTheSelectFolderName, "ok", "info", 1);
+
+lTheHexColor = tinyfd_colorChooser(
+	"choose a nice color",
+	"#FF0077",
+	lRgbColor,
+	lRgbColor);
+
+if (!lTheHexColor)
+{
+	tinyfd_messageBox(
+		"Error",
+		"hexcolor is NULL",
+		"ok",
+		"error",
+		1);
+	return 1;
+}
+
+tinyfd_messageBox("The selected hexcolor is",
+	lTheHexColor, "ok", "info", 1);
 }
 //*/
 

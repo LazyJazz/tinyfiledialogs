@@ -118,7 +118,10 @@ int main()
 	char const * lTmp;
 	char const * lTheSaveFileName;
 	char const * lTheOpenFileName;
+	char const * lTheSelectFolderName;
+	char const * lTheHexColor;
 	char const * lWillBeGraphicMode;
+	unsigned char lRgbColor[3];
 	FILE * lIn;
 	char lBuffer[1024];
 	char lThePassword[1024];
@@ -209,7 +212,6 @@ int main()
 		return 1 ;
 	}
 
-
 	lIn = fopen(lTheOpenFileName, "r");
 
 	if (!lIn)
@@ -228,6 +230,43 @@ int main()
 
 	tinyfd_messageBox("your password is",
 			lBuffer, "ok", "info", 1);
+
+	lTheSelectFolderName = tinyfd_selectFolderDialog(
+		"let us just select a directory", NULL);
+
+	if (!lTheSelectFolderName)
+	{
+		tinyfd_messageBox(
+			"Error",
+			"Select folder name is NULL",
+			"ok",
+			"error",
+			1);
+		return 1;
+	}
+
+	tinyfd_messageBox("The selected folder is",
+		lTheSelectFolderName, "ok", "info", 1);
+
+	lTheHexColor = tinyfd_colorChooser(
+		"choose a nice color",
+		"#FF0077",
+		lRgbColor,
+		lRgbColor);
+
+	if (!lTheHexColor)
+	{
+		tinyfd_messageBox(
+			"Error",
+			"hexcolor is NULL",
+			"ok",
+			"error",
+			1);
+		return 1;
+	}
+
+	tinyfd_messageBox("The selected hexcolor is",
+		lTheHexColor, "ok", "info", 1);
 }
 
 

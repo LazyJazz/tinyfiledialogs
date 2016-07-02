@@ -19,7 +19,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.5.1 [Juin 28, 2016] zlib licence
+v2.5.2 [July 2, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 boxes:
 - message / question
@@ -142,7 +142,16 @@ int main()
 		lFilterPatterns,
 		NULL);
 
-	if (!lTheSaveFileName) return 1 ;
+	if (! lTheSaveFileName)
+	{
+		tinyfd_messageBox(
+			"Error",
+			"Save file name is NULL",
+			"ok",
+			"error",
+			1);
+		return 1 ;
+	}
 
 	lIn = fopen(lTheSaveFileName, "w");
 	if (!lIn)
@@ -166,7 +175,17 @@ int main()
 		NULL,
 		0);
 
-	if (!lTheOpenFileName) return 1;
+	if (! lTheOpenFileName)
+	{
+		tinyfd_messageBox(
+			"Error",
+			"Open file name is NULL",
+			"ok",
+			"error",
+			1);
+		return 1 ;
+	}
+
 
 	lIn = fopen(lTheOpenFileName, "r");
 

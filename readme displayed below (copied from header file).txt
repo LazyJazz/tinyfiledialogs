@@ -1,6 +1,6 @@
 ﻿ _________
 /         \    tiny file dialogs ( cross-platform C C++ )
-|tiny file|       v2.5.1 [Juin 28, 2016] zlib licence
+|tiny file|       v2.5.2 [July 2, 2016] zlib licence
 | dialogs |   InputBox PasswordBox MessageBox ColorPicker
 \____  ___/ OpenFileDialog SaveFileDialog SelectFolderDialog		
      \|        Unicode UTF-8 (and also UTF-16 for windows)
@@ -108,6 +108,7 @@ char const * tinyfd_colorChooser(
             if a console is missing, it will use graphic dialogs
             if a graphical display is absent, it will use console dialogs
 
+
 hello.c
 #include <stdio.h>
 #include <string.h>
@@ -164,7 +165,16 @@ int main()
 		lFilterPatterns,
 		NULL);
 
-	if (!lTheSaveFileName) return 1 ;
+	if (! lTheSaveFileName)
+	{
+		tinyfd_messageBox(
+			"Error",
+			"Save file name is NULL",
+			"ok",
+			"error",
+			1);
+		return 1 ;
+	}
 
 	lIn = fopen(lTheSaveFileName, "w");
 	if (!lIn)
@@ -188,7 +198,17 @@ int main()
 		NULL,
 		0);
 
-	if (!lTheOpenFileName) return 1;
+	if (! lTheOpenFileName)
+	{
+		tinyfd_messageBox(
+			"Error",
+			"Open file name is NULL",
+			"ok",
+			"error",
+			1);
+		return 1 ;
+	}
+
 
 	lIn = fopen(lTheOpenFileName, "r");
 

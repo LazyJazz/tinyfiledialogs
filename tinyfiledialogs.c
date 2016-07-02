@@ -22,7 +22,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.5.1 [Juin 28, 2016] zlib licence
+v2.5.2 [July 2, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 boxes:
 - message / question
@@ -114,7 +114,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [ 8 ] = "2.5.1";
+char tinyfd_version [ 8 ] = "2.5.2";
 
 #ifdef TINYFD_WIN_CONSOLE_ONLY
 /*on windows if you don't compile with the GUI then you must use the console*/
@@ -4059,7 +4059,7 @@ char const * tinyfd_saveFileDialog (
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char const *)1;}
 		strcpy ( lDialogString , "osascript ");
 		if ( ! osx9orBetter() ) strcat ( lDialogString , " -e 'tell application \"Finder\"' -e 'Activate'");
-		strcat ( lDialogString , " -e 'POSIX path of ( choose file name " );
+		strcat ( lDialogString , " -e 'try' -e 'POSIX path of ( choose file name " );
 		if ( aTitle && strlen(aTitle) )
 		{
 			strcat(lDialogString, "with prompt \"") ;
@@ -4080,7 +4080,9 @@ char const * tinyfd_saveFileDialog (
 			strcat(lDialogString, lString ) ;
 			strcat(lDialogString , "\" " ) ;
 		}
-		strcat ( lDialogString , ")'" ) ;
+		strcat ( lDialogString , ")' " ) ;
+		strcat(lDialogString, "-e 'on error number -128' " ) ;
+		strcat(lDialogString, "-e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
   else if ( zenityPresent() || matedialogPresent() )
@@ -4375,7 +4377,7 @@ char const * tinyfd_openFileDialog (
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char const *)1;}
 		strcpy ( lDialogString , "osascript ");
 		if ( ! osx9orBetter() ) strcat ( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
-		strcat ( lDialogString , " -e '" );
+		strcat ( lDialogString , " -e 'try' -e '" );
     if ( ! aAllowMultipleSelects )
     {
 
@@ -4424,12 +4426,14 @@ char const * tinyfd_openFileDialog (
 			strcat ( lDialogString ,
 			"-e 'set mystring to mystring & POSIX path of item i of mylist' " );
 			strcat ( lDialogString , "-e 'end repeat' " );
-			strcat ( lDialogString , "-e 'mystring'" );
+			strcat ( lDialogString , "-e 'mystring' " );
 		}
 		else
 		{
-			strcat ( lDialogString , ")'" ) ;
+			strcat ( lDialogString , ")' " ) ;
 		}
+		strcat(lDialogString, "-e 'on error number -128' " ) ;
+		strcat(lDialogString, "-e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
   else if ( zenityPresent() || matedialogPresent() )
@@ -4675,7 +4679,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		return p2 ;
 	}
 
-    /* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+     /* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
     if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
     {
         return NULL ;
@@ -4738,7 +4742,7 @@ char const * tinyfd_selectFolderDialog (
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char const *)1;}
 		strcpy ( lDialogString , "osascript ");
 		if ( ! osx9orBetter() ) strcat ( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
-		strcat ( lDialogString , " -e 'POSIX path of ( choose folder ");
+		strcat ( lDialogString , " -e 'try' -e 'POSIX path of ( choose folder ");
 		if ( aTitle && strlen(aTitle) )
 		{
 		strcat(lDialogString, "with prompt \"") ;
@@ -4751,7 +4755,9 @@ char const * tinyfd_selectFolderDialog (
 			strcat(lDialogString, aDefaultPath ) ;
 			strcat(lDialogString , "\" " ) ;
 		}
-		strcat ( lDialogString , ")'" ) ;
+		strcat ( lDialogString , ")' " ) ;
+		strcat(lDialogString, "-e 'on error number -128' " ) ;
+		strcat(lDialogString, "-e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
   else if ( zenityPresent() || matedialogPresent() )
@@ -4983,11 +4989,11 @@ char const * tinyfd_colorChooser(
 		if ( ! osx9orBetter() ) 
 		{
 			strcat ( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
-			strcat ( lDialogString , " -e 'set mycolor to choose color default color {");
+			strcat ( lDialogString , " -e 'try' -e 'set mycolor to choose color default color {");
 		}
 		else 
 		{
-			strcat ( lDialogString , " -e 'tell app (path to frontmost application as Unicode text) to set mycolor to choose color default color {");
+			strcat ( lDialogString , " -e 'try' -e 'tell app (path to frontmost application as Unicode text) to set mycolor to choose color default color {");
 		}
 
 		sprintf(lTmp, "%d", 256 * lDefaultRGB[0] ) ;
@@ -5008,7 +5014,9 @@ char const * tinyfd_colorChooser(
 "-e 'set mystring to mystring & \" \" & \
 ((item i of mycolor)/256 as integer) as string' " );
 		strcat ( lDialogString , "-e 'end repeat' " );
-		strcat ( lDialogString , "-e 'mystring'");
+		strcat ( lDialogString , "-e 'mystring' ");
+		strcat(lDialogString, "-e 'on error number -128' " ) ;
+		strcat(lDialogString, "-e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
   else if ( zenity3Present() || matedialogPresent() )
@@ -5236,97 +5244,116 @@ char const * tinyfd_arrayDialog (
 /*
 int main()
 {
-char const * lTmp;
-char const * lTheSaveFileName;
-char const * lTheOpenFileName;
-char const * lWillBeGraphicMode;
-FILE * lIn;
-char lBuffer[1024];
-char lThePassword[1024];
-char const * lFilterPatterns[2] = { "*.txt", "*.text" };
+	char const * lTmp;
+	char const * lTheSaveFileName;
+	char const * lTheOpenFileName;
+	char const * lWillBeGraphicMode;
+	FILE * lIn;
+	char lBuffer[1024];
+	char lThePassword[1024];
+	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
-lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
+	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 
-if (lWillBeGraphicMode)
-{
-	strcpy(lBuffer, "graphic mode: ");
-}
-else
-{
-	strcpy(lBuffer, "console mode: ");
-}
+	if (lWillBeGraphicMode)
+	{
+		strcpy(lBuffer, "graphic mode: ");
+	}
+	else
+	{
+		strcpy(lBuffer, "console mode: ");
+	}
 
-strcat(lBuffer, tinyfd_response);
-strcpy(lThePassword, "tinyfiledialogs v");
-strcat(lThePassword, tinyfd_version);
-tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
+	strcat(lBuffer, tinyfd_response);
+	strcpy(lThePassword, "tinyfiledialogs v");
+	strcat(lThePassword, tinyfd_version);
+	tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
 
-if (lWillBeGraphicMode && !tinyfd_forceConsole)
-{
-	tinyfd_forceConsole = tinyfd_messageBox("Hello World",
-		"force dialogs into console mode?\
-						\n\t(it is better if dialog is installed)",
-						"yesno", "question", 0);
-}
+	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )
+	{
+		tinyfd_forceConsole = tinyfd_messageBox("Hello World",
+			"force dialogs into console mode?\
+				\n\t(it is better if dialog is installed)",
+				"yesno", "question", 0);
+	}
 
-lTmp = tinyfd_inputBox(
-	"a password box", "your password will be revealed", NULL);
+	lTmp = tinyfd_inputBox(
+		"a password box", "your password will be revealed", NULL);
 
-if (!lTmp) return 1;
+	if (!lTmp) return 1 ;
 
-strcpy(lThePassword, lTmp);
+	strcpy(lThePassword, lTmp);
 
-lTheSaveFileName = tinyfd_saveFileDialog(
-	"let us save this password",
-	"passwordFile.txt",
-	2,
-	lFilterPatterns,
-	NULL);
+	lTheSaveFileName = tinyfd_saveFileDialog(
+		"let us save this password",
+		"passwordFile.txt",
+		2,
+		lFilterPatterns,
+		NULL);
 
-if (!lTheSaveFileName) return 1;
+	if (! lTheSaveFileName)
+	{
+		tinyfd_messageBox(
+			"Error",
+			"Save file name is NULL",
+			"ok",
+			"error",
+			1);
+		return 1 ;
+	}
 
-lIn = fopen(lTheSaveFileName, "w");
-if (!lIn)
-{
-	tinyfd_messageBox(
-		"Error",
-		"Can not open this file in write mode",
-		"ok",
-		"error",
-		1);
-	return 1;
-}
-fputs(lThePassword, lIn);
-fclose(lIn);
+	lIn = fopen(lTheSaveFileName, "w");
+	if (!lIn)
+	{
+		tinyfd_messageBox(
+			"Error",
+			"Can not open this file in write mode",
+			"ok",
+			"error",
+			1);
+		return 1 ;
+	}
+	fputs(lThePassword, lIn);
+	fclose(lIn);
 
-lTheOpenFileName = tinyfd_openFileDialog(
-	"let us read the password back",
-	"",
-	2,
-	lFilterPatterns,
-	NULL,
-	0);
+	lTheOpenFileName = tinyfd_openFileDialog(
+		"let us read the password back",
+		"",
+		2,
+		lFilterPatterns,
+		NULL,
+		0);
 
-if (!lTheOpenFileName) return 1;
+	if (! lTheOpenFileName)
+	{
+		tinyfd_messageBox(
+			"Error",
+			"Open file name is NULL",
+			"ok",
+			"error",
+			1);
+		return 1 ;
+	}
 
-lIn = fopen(lTheOpenFileName, "r");
 
-if (!lIn)
-{
-	tinyfd_messageBox(
-		"Error",
-		"Can not open this file in read mode",
-		"ok",
-		"error",
-		1);
-	return(1);
-}
-lBuffer[0] = '\0';
-fgets(lBuffer, sizeof(lBuffer), lIn);
-fclose(lIn);
+	lIn = fopen(lTheOpenFileName, "r");
 
-tinyfd_messageBox("your password is",
-	lBuffer, "ok", "info", 1);
+	if (!lIn)
+	{
+		tinyfd_messageBox(
+			"Error",
+			"Can not open this file in read mode",
+			"ok",
+			"error",
+			1);
+		return(1);
+	}
+	lBuffer[0] = '\0';
+	fgets(lBuffer, sizeof(lBuffer), lIn);
+	fclose(lIn);
+
+	tinyfd_messageBox("your password is",
+			lBuffer, "ok", "info", 1);
 }
 //*/
 

@@ -86,7 +86,7 @@ misrepresented as being the original software.
 #include <ctype.h>
 
 #include "tinyfiledialogs.h"
-/* #define TINYFD_WIN_CONSOLE_ONLY //*/
+/* #define TINYFD_NOLIB //*/
 
 #ifdef _WIN32
  #pragma warning(disable:4996) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
@@ -95,10 +95,10 @@ misrepresented as being the original software.
  #ifndef _WIN32_WINNT
  #define _WIN32_WINNT 0x0500
  #endif
- #ifndef TINYFD_WIN_CONSOLE_ONLY
+ #ifndef TINYFD_NOLIB
   #include <Windows.h>
   #include <Shlobj.h>
- #endif /* TINYFD_WIN_CONSOLE_ONLY */
+ #endif /* TINYFD_NOLIB */
  #include <sys/stat.h>
  #include <conio.h>
  #define SLASH "\\"
@@ -116,34 +116,40 @@ misrepresented as being the original software.
 
 char tinyfd_version [ 8 ] = "2.5.2";
 
-#ifdef TINYFD_WIN_CONSOLE_ONLY
-/*on windows if you don't compile with the GUI then you must use the console*/
-int tinyfd_forceConsole = 1 ;
-#else
 int tinyfd_forceConsole = 0 ; /* 0 (default) or 1
-can be modified at run time.
 for unix & windows: 0 (graphic mode) or 1 (console mode).
 0: try to use a graphic solution, if it fails then it uses console mode.
 1: forces all dialogs into console mode even when the X server is present,
-   if the package dialog (and a console is present) or dialog.exe is installed.
-on windows it only make sense for console applications */
-#endif /* TINYFD_WIN_CONSOLE_ONLY */
+  if the package dialog (and a console is present) or dialog.exe is installed.
+  on windows it only make sense for console applications */
 
+char tinyfd_response[1024];
 /* if you pass "tinyfd_query" as aTitle,
-the functions will not display the dialog 
-but will fill tinyfd_response with
-the retain solution and return:
-0 for console mode, 1 for graphic mode
+the functions will not display the dialogs
+but and return 0 for console mode, 1 for graphic mode.
+tinyfd_response is then filled with the retain solution.
 possible values for tinyfd_response are (all lowercase)
 for the graphic mode:
-	windows applescript zenity zenity3 matedialog kdialog
-	xdialog tkinter gdialog gxmessage xmessage
+  windows applescript zenity zenity3 matedialog kdialog
+  xdialog tkinter gdialog gxmessage xmessage
 for the console mode:
-	dialog whiptail basicinput */
-char tinyfd_response [ 1024 ] ;
+  dialog whiptail basicinput */
 
+#ifndef TINYFD_NOLIB
 static int gWarningDisplayed = 0 ;
-static char gTitle[]= "missing software! (so we switch to basic console input)";
+#else
+static int gWarningDisplayed = 1 ;
+#endif
+
+static char gTitle[]="missing software! (so we switch to basic console input)";
+
+static char gAsciiArt[] ="\
+ ___________\n\
+/           \\\n\
+| tiny file |\n\
+|  dialogs  |\n\
+\\_____  ____/\n\
+      \\|";
 
 static char gMessageUnix[] = "tiny file dialogs on UNIX needs:\n\tapplescript\
 \nor\tzenity (version 3 for the color chooser)\
@@ -152,6 +158,10 @@ static char gMessageUnix[] = "tiny file dialogs on UNIX needs:\n\tapplescript\
 \nor\tdialog (opens a console if needed)\
 \nor\twhiptail, gdialog, gxmessage or xmessage (really?)\
 \nor\tit will open a console (if needed) for basic input (you had it comming!)";
+
+static char gMessageWin[] = "tiny file dialogs on Windows needs:\n\t\
+a graphic display\nor\tdialog.exe (enhanced console mode)\
+\nor\ta console for basic input";
 
 static char * getPathWithoutFinalSlash(
 	char * const aoDestination, /* make sure it is allocated, use _MAX_PATH */
@@ -386,11 +396,6 @@ static char const * ensureFilesExist( char * const aDestination ,
 
 #ifdef _WIN32
 
-static char gMessageWin[] = "tiny file dialogs on Windows needs:\n\t\
-a graphic display\nor\tdialog.exe (enhanced console mode)\
-\nor\ta console for basic input" ;
-
-
 static int replaceChr ( char * const aString ,
 						char const aOldChr ,
 						char const aNewChr )
@@ -532,7 +537,7 @@ swprintf(aoResultHexRGB, L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 #else
 swprintf(aoResultHexRGB, 8, L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 #endif
-		 wprintf(L"aoResultHexRGB %s\n", aoResultHexRGB); //*/
+		 /* wprintf(L"aoResultHexRGB %s\n", aoResultHexRGB); //*/
 		}
 		else
 		{
@@ -543,7 +548,7 @@ swprintf(aoResultHexRGB, 8, L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 	}
 }
 
-#ifndef TINYFD_WIN_CONSOLE_ONLY
+#ifndef TINYFD_NOLIB
 
 wchar_t const * tinyfd_utf8to16(char const * const aUtf8string)
 {
@@ -1371,8 +1376,8 @@ wchar_t const * tinyfd_colorChooserW(
 	COLORREF crCustColors[16];
 	unsigned char lDefaultRGB[3];
 	int lRet;
-	//HRESULT lHResult;
 
+	//HRESULT lHResult;
 	//lHResult = CoInitializeEx(NULL, 0);
 
 	if (aDefaultHexRGB)
@@ -1832,7 +1837,7 @@ static char const * colorChooserWinGui(
 //	return lResultHexRGB;
 //}
 
-#endif /* TINYFD_WIN_CONSOLE_ONLY */
+#endif /* TINYFD_NOLIB */
 
 static int dialogPresent ( )
 {
@@ -1916,7 +1921,6 @@ static int messageBoxWinConsole (
 		strcat ( lDialogString , "--msgbox " ) ;
 			
 	}
-
 
 	strcat ( lDialogString , "\"" ) ;
 	if ( aMessage && strlen(aMessage) )
@@ -2119,7 +2123,6 @@ static char const * openFileDialogWinConsole (
 	char lDialogString[MAX_PATH_OR_CMD] ;
 	FILE * lIn;
 
-
 	strcpy ( lDialogString , "dialog " ) ;
  	if ( aTitle && strlen(aTitle) )
 	{
@@ -2239,7 +2242,7 @@ int tinyfd_messageBox (
 {
 	char lChar ;
 
-#ifndef TINYFD_WIN_CONSOLE_ONLY
+#ifndef TINYFD_NOLIB
 	if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
 	  && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
 	{
@@ -2248,7 +2251,7 @@ int tinyfd_messageBox (
 					aTitle,aMessage,aDialogType,aIconType,aDefaultButton);
 	}
 	else
-#endif /* TINYFD_WIN_CONSOLE_ONLY */
+#endif /* TINYFD_NOLIB */
 	if ( dialogPresent() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return 0;}
@@ -2258,11 +2261,12 @@ int tinyfd_messageBox (
 	else
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return 0;}
-		if ( !gWarningDisplayed )
+		if (!gWarningDisplayed && !tinyfd_forceConsole )
 		{
-			gWarningDisplayed = 1 ;
-			printf ("\n\n%s\n", gTitle);
-			printf ("%s\n\n\n", gMessageWin);
+			gWarningDisplayed = 1; 
+			printf("\n\n%s", gAsciiArt);
+			printf("\n\n%s\n", gTitle);
+			printf("%s\n\n\n", gMessageWin);
 		}
  		if ( aTitle && strlen(aTitle) )
 		{
@@ -2322,7 +2326,7 @@ char const * tinyfd_inputBox(
 	static char lBuff [ MAX_PATH_OR_CMD ] ;
 	char * lEOF;
 
-#ifndef TINYFD_WIN_CONSOLE_ONLY
+#ifndef TINYFD_NOLIB
 	DWORD mode = 0;
 	HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);;
 	if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
@@ -2333,7 +2337,7 @@ char const * tinyfd_inputBox(
 		return inputBoxWinGui(lBuff,aTitle,aMessage,aDefaultInput);
 	}
 	else
-#endif /* TINYFD_WIN_CONSOLE_ONLY */
+#endif /* TINYFD_NOLIB */
 	if ( dialogPresent() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
@@ -2344,11 +2348,12 @@ char const * tinyfd_inputBox(
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return (char const *)0;}
 		lBuff[0]='\0';
-		if ( !gWarningDisplayed )
+		if (!gWarningDisplayed && !tinyfd_forceConsole)
 		{
 			gWarningDisplayed = 1 ;
-			printf ("\n\n%s\n", gTitle);
-			printf ("%s\n\n\n", gMessageWin);
+			printf("\n\n%s", gAsciiArt);
+			printf("\n\n%s\n", gTitle);
+			printf("%s\n\n\n", gMessageWin);
 		}
 		if ( aTitle && strlen(aTitle) )
 		{
@@ -2359,25 +2364,25 @@ char const * tinyfd_inputBox(
 			printf("%s\n",aMessage);
 		}
 		printf("(ctrl-Z + enter to cancel): ");
-#ifndef TINYFD_WIN_CONSOLE_ONLY
+#ifndef TINYFD_NOLIB
 		if ( ! aDefaultInput )
 		{
 			GetConsoleMode(hStdin,&mode);
 			SetConsoleMode(hStdin,mode & (~ENABLE_ECHO_INPUT) );
 		}
-#endif /* TINYFD_WIN_CONSOLE_ONLY */
+#endif /* TINYFD_NOLIB */
 		lEOF = fgets(lBuff, MAX_PATH_OR_CMD, stdin);
 		if ( ! lEOF )
 		{
 			return NULL;
 		}
-#ifndef TINYFD_WIN_CONSOLE_ONLY
+#ifndef TINYFD_NOLIB
 		if ( ! aDefaultInput )
 		{
 			SetConsoleMode(hStdin,mode);
 			printf ("\n");
 		}
-#endif /* TINYFD_WIN_CONSOLE_ONLY */
+#endif /* TINYFD_NOLIB */
 		printf ("\n");
 		if ( strchr(lBuff,27) )
 		{
@@ -2403,7 +2408,7 @@ char const * tinyfd_saveFileDialog (
 	char lString[MAX_PATH_OR_CMD] ;
 	char const * p ;
 	lBuff[0]='\0';
-#ifndef TINYFD_WIN_CONSOLE_ONLY
+#ifndef TINYFD_NOLIB
 	if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
 	  && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
 	{
@@ -2412,7 +2417,7 @@ char const * tinyfd_saveFileDialog (
 				aTitle,aDefaultPathAndFile,aNumOfFilterPatterns,aFilterPatterns,aSingleFilterDescription);
 	}
 	else
-#endif /* TINYFD_WIN_CONSOLE_ONLY */
+#endif /* TINYFD_NOLIB */
 	if ( dialogPresent() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
@@ -2453,7 +2458,7 @@ char const * tinyfd_openFileDialog (
 {
 	static char lBuff[MAX_MULTIPLE_FILES*MAX_PATH_OR_CMD];
 	char const * p ;
-#ifndef TINYFD_WIN_CONSOLE_ONLY
+#ifndef TINYFD_NOLIB
 	if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
 	  && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
 	{
@@ -2463,7 +2468,7 @@ char const * tinyfd_openFileDialog (
 				aFilterPatterns,aSingleFilterDescription,aAllowMultipleSelects);
 	}
 	else
-#endif /* TINYFD_WIN_CONSOLE_ONLY */
+#endif /* TINYFD_NOLIB */
 	if ( dialogPresent() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
@@ -2499,7 +2504,7 @@ char const * tinyfd_selectFolderDialog (
 {
     static char lBuff [ MAX_PATH_OR_CMD ] ;
 	char const * p ;
-#ifndef TINYFD_WIN_CONSOLE_ONLY
+#ifndef TINYFD_NOLIB
 	if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
 	  && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
 	{
@@ -2507,7 +2512,7 @@ char const * tinyfd_selectFolderDialog (
 		p = selectFolderDialogWinGui(lBuff,aTitle,aDefaultPath);
 	}
 	else
-#endif /* TINYFD_WIN_CONSOLE_ONLY */
+#endif /* TINYFD_NOLIB */
 	if ( dialogPresent() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
@@ -2542,7 +2547,7 @@ char const * tinyfd_colorChooser(
 	int i;
 	char const * p ;
 
-#ifndef TINYFD_WIN_CONSOLE_ONLY
+#ifndef TINYFD_NOLIB
 	if ( (!tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent()) )
 	  && (!getenv("SSH_CLIENT") || getenv("DISPLAY")) )
 	{
@@ -2551,7 +2556,7 @@ char const * tinyfd_colorChooser(
 						aTitle,aDefaultHexRGB,aDefaultRGB,aoResultRGB);
 	}
 	else
-#endif /* TINYFD_WIN_CONSOLE_ONLY */
+#endif /* TINYFD_NOLIB */
 	if ( aDefaultHexRGB )
 	{
 		lpDefaultHexRGB = (char *) aDefaultHexRGB ;
@@ -3467,7 +3472,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return 0;}
 		strcpy ( lDialogString , terminalName() ) ;
 		strcat ( lDialogString , "'" ) ;
-		if ( !gWarningDisplayed )
+		if ( !gWarningDisplayed && !tinyfd_forceConsole)
 		{
 			gWarningDisplayed = 1 ;
 			strcat ( lDialogString , "echo \"" ) ;
@@ -3522,7 +3527,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 	else
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return 0;}
-		if ( !gWarningDisplayed )
+		if ( !gWarningDisplayed && !tinyfd_forceConsole)
 		{
 			gWarningDisplayed = 1 ;
 			printf ("\n\n%s\n", gTitle);
@@ -3915,7 +3920,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		lWasBasicXterm = 1 ;
 		strcpy ( lDialogString , terminalName() ) ;
 		strcat ( lDialogString , "'" ) ;
-		if ( !gWarningDisplayed )
+		if ( !gWarningDisplayed && !tinyfd_forceConsole)
 		{
 			gWarningDisplayed = 1 ;
 			strcat ( lDialogString , "echo \"" ) ;
@@ -3925,7 +3930,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			strcat ( lDialogString, gMessageUnix) ;
 			strcat ( lDialogString , "\";echo;echo;" ) ;
 		}
-		if ( aTitle && strlen(aTitle) )
+		if ( aTitle && strlen(aTitle) && !tinyfd_forceConsole)
 		{
 			strcat ( lDialogString , "echo \"" ) ;
 			strcat ( lDialogString, aTitle) ;
@@ -3950,7 +3955,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	else
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return (char const *)0;}
-		if ( !gWarningDisplayed )
+		if ( !gWarningDisplayed && !tinyfd_forceConsole)
 		{
 			gWarningDisplayed = 1 ;
 			printf ("\n\n%s\n", gTitle);

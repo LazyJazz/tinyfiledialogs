@@ -145,7 +145,7 @@ static char gTitle[]="missing software! (so we switch to basic console input)";
 
 static char gAsciiArt[] ="\
  ___________\n\
-/           \\\n\
+/           \\ \n\
 | tiny file |\n\
 |  dialogs  |\n\
 \\_____  ____/\n\
@@ -2265,7 +2265,7 @@ int tinyfd_messageBox (
 		{
 			gWarningDisplayed = 1; 
 			printf("\n\n%s", gAsciiArt);
-			printf("\n\n%s\n", gTitle);
+			printf("\n%s\n", gTitle);
 			printf("%s\n\n\n", gMessageWin);
 		}
  		if ( aTitle && strlen(aTitle) )
@@ -2352,7 +2352,7 @@ char const * tinyfd_inputBox(
 		{
 			gWarningDisplayed = 1 ;
 			printf("\n\n%s", gAsciiArt);
-			printf("\n\n%s\n", gTitle);
+			printf("\n%s\n", gTitle);
 			printf("%s\n\n\n", gMessageWin);
 		}
 		if ( aTitle && strlen(aTitle) )
@@ -2781,10 +2781,10 @@ static char const * terminalName ( )
 static char const * dialogName ( )
 {
 	static char lDialogName[64] = "*" ;
-    if ( lDialogName[0] == '*' )
-    {
+	if ( lDialogName[0] == '*' )
+	{
 		if ( isDarwin() && strcpy(lDialogName , "/opt/local/bin/dialog" )
-		  && detectPresence ( lDialogName ) )
+			&& detectPresence ( lDialogName ) )
 		{}
 		else if ( strcpy(lDialogName , "dialog" )
 			&& detectPresence ( lDialogName ) )
@@ -2793,7 +2793,7 @@ static char const * dialogName ( )
 		{
 			strcpy(lDialogName , "" ) ;
 		}
-    }
+	}
 	if ( strlen(lDialogName) && ( isatty(1) || terminalName() ) )
 	{
 		return lDialogName ;
@@ -2807,11 +2807,11 @@ static char const * dialogName ( )
 
 static int whiptailPresent ( )
 {
-    static int lWhiptailPresent = -1 ;
-    if ( lWhiptailPresent < 0 )
-    {
-        lWhiptailPresent = detectPresence ( "whiptail" ) ;
-    }
+	static int lWhiptailPresent = -1 ;
+	if ( lWhiptailPresent < 0 )
+	{
+		lWhiptailPresent = detectPresence ( "whiptail" ) ;
+	}
 	return lWhiptailPresent && ( isatty(1) || terminalName() ) ;
 }
 
@@ -2825,12 +2825,12 @@ static int graphicMode()
 
 static int xmessagePresent ( )
 {
-    static int lXmessagePresent = -1 ;
-    if ( lXmessagePresent < 0 )
-    {
-	 lXmessagePresent = detectPresence("xmessage");/*if not tty,not on osxpath*/
-    }
-    return lXmessagePresent && graphicMode ( ) ;
+	static int lXmessagePresent = -1 ;
+	if ( lXmessagePresent < 0 )
+	{
+		lXmessagePresent = detectPresence("xmessage");/*if not tty,not on osxpath*/
+	}
+	return lXmessagePresent && graphicMode ( ) ;
 }
 
 
@@ -3476,6 +3476,9 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		{
 			gWarningDisplayed = 1 ;
 			strcat ( lDialogString , "echo \"" ) ;
+			strcat ( lDialogString, gAsciiArt) ;
+			strcat ( lDialogString , " \";" ) ;
+			strcat ( lDialogString , "echo \"" ) ;
 			strcat ( lDialogString, gTitle) ;
 			strcat ( lDialogString , "\";" ) ;
 			strcat ( lDialogString , "echo \"" ) ;
@@ -3530,7 +3533,8 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		if ( !gWarningDisplayed && !tinyfd_forceConsole)
 		{
 			gWarningDisplayed = 1 ;
-			printf ("\n\n%s\n", gTitle);
+			printf("\n\n%s", gAsciiArt);
+			printf ("\n%s\n", gTitle);
 			printf ("%s\n\n\n", gMessageUnix);
 		}
  		if ( aTitle && strlen(aTitle) )
@@ -3924,6 +3928,9 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		{
 			gWarningDisplayed = 1 ;
 			strcat ( lDialogString , "echo \"" ) ;
+			strcat ( lDialogString, gAsciiArt) ;
+			strcat ( lDialogString , "\";" ) ;
+			strcat ( lDialogString , "echo \"" ) ;
 			strcat ( lDialogString, gTitle) ;
 			strcat ( lDialogString , "\";" ) ;
 			strcat ( lDialogString , "echo \"" ) ;
@@ -3958,7 +3965,8 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		if ( !gWarningDisplayed && !tinyfd_forceConsole)
 		{
 			gWarningDisplayed = 1 ;
-			printf ("\n\n%s\n", gTitle);
+			printf ("\n\n%s", gAsciiArt);
+			printf ("\n%s\n", gTitle);
 			printf ("%s\n\n\n", gMessageUnix);
 		}
 		if ( aTitle && strlen(aTitle) )

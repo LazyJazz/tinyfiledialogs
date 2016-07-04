@@ -135,10 +135,10 @@ for the graphic mode:
 for the console mode:
   dialog whiptail basicinput */
 
-#ifndef TINYFD_NOLIB
-static int gWarningDisplayed = 0 ;
-#else
+#if defined(TINYFD_NOLIB) && defined(_WIN32)
 static int gWarningDisplayed = 1 ;
+#else
+static int gWarningDisplayed = 0 ;
 #endif
 
 static char gTitle[]="missing software! (so we switch to basic console input)";

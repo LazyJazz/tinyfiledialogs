@@ -83,9 +83,18 @@ misrepresented as being the original software.
 #ifndef TINYFILEDIALOGS_H
 #define TINYFILEDIALOGS_H
 
+/* if tinydialogs.c is compiled with a C++ compiler rather than with a C compiler
+(ie. you change the extension from .c to .cpp), you need to comment out:
+extern "C" {
+and the corresponding closing bracket:
+} */
+#ifdef	__cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 extern char tinyfd_version[8];
 
-extern int tinyfd_forceConsole;  /* 0 (default) or 1
+extern int tinyfd_forceConsole ;  /* 0 (default) or 1
 for unix & windows: 0 (graphic mode) or 1 (console mode).
 0: try to use a graphic solution, if it fails then it uses console mode.
 1: forces all dialogs into console mode even when the X server is present,
@@ -109,18 +118,6 @@ for the console mode:
 if you don't want to include the code creating the graphic dialogs.
 Then you won't need to link against Comdlg32.lib and Ole32.lib */
 
-
-/*
-if tinydialogs.c is compiled with a C++ compiler rather than with a C compiler
-(ie. you change the extension from .c to .cpp), you need to comment out:
-extern "C" {
-and the corresponding closing bracket:
-}
-*/
-
-#ifdef	__cplusplus
-extern "C" {
-#endif /* __cplusplus */
 
 int tinyfd_messageBox (
 	char const * const aTitle , /* "" */

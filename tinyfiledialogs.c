@@ -550,6 +550,58 @@ swprintf(aoResultHexRGB, 8, L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 
 #ifndef TINYFD_NOLIB
 
+static DWORD runSilent(char* aString)
+{
+	STARTUPINFOA StartupInfo;
+	PROCESS_INFORMATION ProcessInfo;
+	char Args[4096];
+	char *pEnvCMD = NULL;
+	char *pDefaultCMD = "CMD.EXE";
+	ULONG rc;
+
+	memset(&StartupInfo, 0, sizeof(StartupInfo));
+	StartupInfo.cb = sizeof(STARTUPINFOA);
+	StartupInfo.dwFlags = STARTF_USESHOWWINDOW;
+	StartupInfo.wShowWindow = SW_HIDE;
+
+	Args[0] = 0;
+
+	pEnvCMD = getenv("COMSPEC");
+
+	if (pEnvCMD){
+
+		strcpy(Args, pEnvCMD);
+	}
+	else{
+		strcpy(Args, pDefaultCMD);
+	}
+
+	// "/c" option - Do the command then terminate the command window
+	strcat(Args, " /c ");
+	//the application you would like to run from the command window
+	//the parameters passed to the application being run from the command window.
+	strcat(Args, aString);
+
+	if (!CreateProcessA(NULL, Args, NULL, NULL, FALSE,
+		CREATE_NEW_CONSOLE,
+		NULL,
+		NULL,
+		&StartupInfo,
+		&ProcessInfo))
+	{
+		return GetLastError();
+	}
+
+	WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
+	if (!GetExitCodeProcess(ProcessInfo.hProcess, &rc))
+		rc = 0;
+
+	CloseHandle(ProcessInfo.hThread);
+	CloseHandle(ProcessInfo.hProcess);
+
+	return rc;
+}
+
 wchar_t const * tinyfd_utf8to16(char const * const aUtf8string)
 {
 	static wchar_t lUtf16string[MAX_PATH_OR_CMD];
@@ -694,6 +746,7 @@ static int messageBoxWinGui(
 			lDialogType, lIconType, aDefaultButton );
 }
 
+#endif /* TINYFD_NOLIB */
 
 static char const * inputBoxWinGui(
 	char * const aoBuff ,
@@ -704,6 +757,9 @@ static char const * inputBoxWinGui(
 	char lDialogString[4*MAX_PATH_OR_CMD];
 	FILE * lIn;
 	int lResult;
+#ifndef TINYFD_NOLIB
+	DWORD lDword;
+#endif
 
 	if (aDefaultInput)
 	{
@@ -838,14 +894,15 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 	fputs(lDialogString, lIn);
 	fclose(lIn);
 
-	if ( GetConsoleWindow() )
+	strcpy(lDialogString, "");
+
+#ifndef TINYFD_NOLIB
+	if ( ! GetConsoleWindow() )
 	{
-		strcpy(lDialogString, "");
+		strcat(lDialogString, "powershell -WindowStyle Hidden -Command \"");
 	}
-	else
-	{
-		strcpy(lDialogString, "powershell -WindowStyle Hidden -Command \"");
-	}
+#endif
+
 	if (aDefaultInput)
 	{
 		strcat(lDialogString,
@@ -861,7 +918,10 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 		strcat(lDialogString, "\"");
 	}
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
-	if (!(lIn = _popen(lDialogString,"r")))
+//#ifndef TINYFD_NOLIB
+//	lDword = runSilent(lDialogString);
+//#else
+	if (!(lIn = _popen(lDialogString, "r")))
 	{
 		return NULL ;
 	}
@@ -872,6 +932,7 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 	{
 		aoBuff[ strlen ( aoBuff ) -1 ] = '\0' ;
 	}
+//#endif
 	if (aDefaultInput)
 	{
 		sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.vbs",
@@ -907,6 +968,7 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 	return aoBuff + 1;
 }
 
+#ifndef TINYFD_NOLIB
 
 wchar_t const * tinyfd_saveFileDialogW(
 	wchar_t const * const aTitle, /* NULL or "" */

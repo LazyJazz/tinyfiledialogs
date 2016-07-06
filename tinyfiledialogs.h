@@ -22,7 +22,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.5.2 [July 2, 2016] zlib licence
+v2.5.3 [July 6, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 boxes:
 - message / question
@@ -83,6 +83,11 @@ misrepresented as being the original software.
 #ifndef TINYFILEDIALOGS_H
 #define TINYFILEDIALOGS_H
 
+/* #define TINYFD_NOLIB //*/
+/* On windows, define TINYFD_NOLIB here
+if you don't want to include the code creating the graphic dialogs.
+Then you won't need to link against Comdlg32.lib and Ole32.lib */
+
 /* if tinydialogs.c is compiled with a C++ compiler rather than with a C compiler
 (ie. you change the extension from .c to .cpp), you need to comment out:
 extern "C" {
@@ -92,7 +97,7 @@ and the corresponding closing bracket:
 extern "C" {
 #endif /* __cplusplus */
 
-extern char tinyfd_version[8];
+extern char tinyfd_version[8]; /* contains tinyfd current version number */
 
 extern int tinyfd_forceConsole ;  /* 0 (default) or 1
 for unix & windows: 0 (graphic mode) or 1 (console mode).
@@ -112,12 +117,6 @@ for the graphic mode:
   xdialog tkinter gdialog gxmessage xmessage
 for the console mode:
   dialog whiptail basicinput */
-
-/* #define TINYFD_NOLIB //*/
-/* On windows, define TINYFD_NOLIB here
-if you don't want to include the code creating the graphic dialogs.
-Then you won't need to link against Comdlg32.lib and Ole32.lib */
-
 
 int tinyfd_messageBox (
 	char const * const aTitle , /* "" */

@@ -553,7 +553,7 @@ swprintf(aoResultHexRGB, 8, L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 
 wchar_t const * tinyfd_utf8to16(char const * const aUtf8string)
 {
-	static wchar_t lUtf16string[4*MAX_PATH_OR_CMD];
+	static wchar_t lUtf16string[16*MAX_PATH_OR_CMD];
 	int lSzeInChar = sizeof lUtf16string / sizeof(wchar_t);
 	int lSize = MultiByteToWideChar(CP_UTF8,
 					MB_ERR_INVALID_CHARS,
@@ -573,7 +573,7 @@ wchar_t const * tinyfd_utf8to16(char const * const aUtf8string)
 #endif
 char const * tinyfd_utf16to8(wchar_t const * const aUtf16string)
 {
-	static char lUtf8string[4*MAX_PATH_OR_CMD];
+	static char lUtf8string[16*MAX_PATH_OR_CMD];
 	int lSize = WideCharToMultiByte(CP_UTF8, 
 		WC_ERR_INVALID_CHARS,
 		aUtf16string, -1, lUtf8string, sizeof lUtf8string,
@@ -760,7 +760,7 @@ int tinyfd_messageBoxW(
 }
 
 
-static int messageBoxWinGuiW(
+static int messageBoxWinGui8(
 	char const * const aTitle, /* NULL or "" */
 	char const * const aMessage, /* NULL or ""  may contain \n and \t */
 	char const * const aDialogType, /* "ok" "okcancel" "yesno" */
@@ -998,7 +998,7 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
 	lDword = runSilentA(lDialogString);
     
-    //lpDialogStringW = tinyfd_utf8to16(lDialogString);
+	//lpDialogStringW = tinyfd_utf8to16(lDialogString);
 	//wcscpy(lDialogStringW, lpDialogStringW);
 	//lDword = runSilentW( lDialogStringW );
 #endif /* TINYFD_NOLIB */
@@ -1129,7 +1129,7 @@ wchar_t const * tinyfd_saveFileDialogW(
 }
 
 
-static char const * saveFileDialogWinGuiW(
+static char const * saveFileDialogWinGui8(
 	char * const aoBuff,
 	char const * const aTitle, /* NULL or "" */
 	char const * const aDefaultPathAndFile, /* NULL or "" */
@@ -1338,7 +1338,7 @@ wchar_t const * tinyfd_openFileDialogW(
 }
 
 
-static char const * openFileDialogWinGuiW(
+static char const * openFileDialogWinGui8(
 	char * const aoBuff,
 	char const * const aTitle, /*  NULL or "" */
 	char const * const aDefaultPathAndFile, /*  NULL or "" */
@@ -1457,7 +1457,7 @@ wchar_t const * tinyfd_selectFolderDialogW(
 }
 
 
-static char const * selectFolderDialogWinGuiW (
+static char const * selectFolderDialogWinGui8 (
 	char * const aoBuff ,
 	char const * const aTitle , /*  NULL or "" */
 	char const * const aDefaultPath ) /* NULL or "" */
@@ -1556,7 +1556,7 @@ wchar_t const * tinyfd_colorChooserW(
 }
 
 
-static char const * colorChooserWinGuiW(
+static char const * colorChooserWinGui8(
 	char const * const aTitle, /* NULL or "" */
 	char const * const aDefaultHexRGB, /* NULL or "#FF0000"*/
 	unsigned char const aDefaultRGB[3], /* { 0 , 255 , 255 } */
@@ -2183,8 +2183,8 @@ static char const * inputBoxWinConsole(
 
 static char const * saveFileDialogWinConsole (
 	char * const aoBuff ,
-    char const * const aTitle , /* NULL or "" */
-    char const * const aDefaultPathAndFile ) /* NULL or "" */
+	char const * const aTitle , /* NULL or "" */
+	char const * const aDefaultPathAndFile ) /* NULL or "" */
 {
 	char lDialogString[MAX_PATH_OR_CMD];
 	char lPathAndFile[MAX_PATH_OR_CMD] = "";
@@ -2247,9 +2247,9 @@ static char const * saveFileDialogWinConsole (
 
 static char const * openFileDialogWinConsole (
 	char * const aoBuff ,
-    char const * const aTitle , /*  NULL or "" */
-    char const * const aDefaultPathAndFile , /*  NULL or "" */
-    int const aAllowMultipleSelects ) /* 0 or 1 */
+	char const * const aTitle , /*  NULL or "" */
+	char const * const aDefaultPathAndFile , /*  NULL or "" */
+	int const aAllowMultipleSelects ) /* 0 or 1 */
 {
 	char lFilterPatterns[MAX_PATH_OR_CMD] = "";
 	char lDialogString[MAX_PATH_OR_CMD] ;
@@ -2366,11 +2366,11 @@ static char const * selectFolderDialogWinConsole (
 
 /* returns 0 for cancel/no , 1 for ok/yes */
 int tinyfd_messageBox (
-    char const * const aTitle , /* NULL or "" */
-    char const * const aMessage , /* NULL or ""  may contain \n and \t */
-    char const * const aDialogType , /* "ok" "okcancel" "yesno" */
-    char const * const aIconType , /* "info" "warning" "error" "question" */
-    int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes */
+	char const * const aTitle , /* NULL or "" */
+	char const * const aMessage , /* NULL or ""  may contain \n and \t */
+	char const * const aDialogType , /* "ok" "okcancel" "yesno" */
+	char const * const aIconType , /* "info" "warning" "error" "question" */
+	int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes */
 {
 	char lChar ;
 
@@ -2379,8 +2379,9 @@ int tinyfd_messageBox (
 	  && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return 1;}
+		
 		return messageBoxWinGuiA(
-					aTitle,aMessage,aDialogType,aIconType,aDefaultButton);
+				aTitle,aMessage,aDialogType,aIconType,aDefaultButton);
 	}
 	else
 #endif /* TINYFD_NOLIB */
@@ -2530,11 +2531,11 @@ char const * tinyfd_inputBox(
 
 
 char const * tinyfd_saveFileDialog (
-    char const * const aTitle , /* NULL or "" */
-    char const * const aDefaultPathAndFile , /* NULL or "" */
-    int const aNumOfFilterPatterns , /* 0 */
-    char const * const * const aFilterPatterns , /* NULL or {"*.jpg","*.png"} */
-    char const * const aSingleFilterDescription ) /* NULL or "image files" */
+	char const * const aTitle , /* NULL or "" */
+	char const * const aDefaultPathAndFile , /* NULL or "" */
+	int const aNumOfFilterPatterns , /* 0 */
+	char const * const * const aFilterPatterns , /* NULL or {"*.jpg","*.png"} */
+	char const * const aSingleFilterDescription ) /* NULL or "image files" */
 {
     static char lBuff [ MAX_PATH_OR_CMD ] ;
 	char lString[MAX_PATH_OR_CMD] ;

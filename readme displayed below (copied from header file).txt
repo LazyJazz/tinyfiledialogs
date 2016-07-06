@@ -74,8 +74,6 @@ char const * tinyfd_colorChooser(
 - If no filter description is provided,
   the list of patterns will become the description.
 - char const * filterPatterns[3] = { "*.obj" , "*.stl" , "*.dxf" } ;
-- On windows, inputbox and passwordbox are not as smooth as they should be:
-  they open a console window for a few seconds.
 - On windows link against Comdlg32.lib and Ole32.lib
   This linking is not compulsary for console mode (see header file).
 - On unix: it tries command line calls, so no such need.

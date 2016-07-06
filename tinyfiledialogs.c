@@ -3164,7 +3164,8 @@ int tinyfd_messageBox (
     int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes */
 {
 	char lBuff [ MAX_PATH_OR_CMD ] ;
-	char lDialogString [ MAX_PATH_OR_CMD ] ;
+	char * lDialogString ;
+	char * lpDialogString;
 	FILE * lIn ;
 	int lWasGraphicDialog = 0 ;
 	int lWasXterm = 0 ;
@@ -3172,7 +3173,17 @@ int tinyfd_messageBox (
 	char lChar ;
 	struct termios infoOri;
 	struct termios info;
-    lBuff[0]='\0';
+	int lTitleLen ;
+	int lMessageLen ;
+
+	lBuff[0]='\0';
+
+	lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
+	lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
+	if ( !aTitle || strcmp(aTitle,"tinyfd_query") )
+	{
+		lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
+	}
 
 	if ( osascriptPresent ( ) )
 	{
@@ -3414,11 +3425,13 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	    }
 		if ( aMessage && strlen(aMessage) )
 		{
-			replaceSubStr ( aMessage , "\n" , "\\n" , lBuff ) ;
 			strcat(lDialogString, "message='") ;
-			strcat(lDialogString, lBuff) ;
+			lpDialogString = lDialogString + strlen(lDialogString);
+			replaceSubStr ( aMessage , "\n" , "\\n" , lpDialogString ) ;
+			//replaceSubStr ( aMessage , "\n" , "\\n" , lBuff ) ;
+			//strcat(lDialogString, lBuff) ;
+			//lBuff[0]='\0';
 			strcat(lDialogString, "'") ;
-			lBuff[0]='\0';
 		}
 		strcat(lDialogString, ");\n\
 if res==False :\n\tprint 0\n\
@@ -3722,29 +3735,32 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 			lResult = 1 ;
 		}
 		tcsetattr(0, TCSANOW, &infoOri);
+		free(lDialogString);
 		return lResult ;
 	}
 
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
-    if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
-    {
-        return 0 ;
-    }
+	if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
+	{
+		free(lDialogString);
+		return 0 ;
+	}
 	while ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
 	{}
 
 	pclose ( lIn ) ;
 
 	/* printf ( "lBuff: %s len: %lu \n" , lBuff , strlen(lBuff) ) ; //*/
-    if ( lBuff[ strlen ( lBuff ) -1 ] == '\n' )
-    {
-    	lBuff[ strlen ( lBuff ) -1 ] = '\0' ;
-    }
+	if ( lBuff[ strlen ( lBuff ) -1 ] == '\n' )
+	{
+		lBuff[ strlen ( lBuff ) -1 ] = '\0' ;
+	}
 	/* printf ( "lBuff1: %s len: %lu \n" , lBuff , strlen(lBuff) ) ; //*/
 
 	lResult =  strcmp ( lBuff , "1" ) ? 0 : 1 ;
 	/* printf ( "lResult: %d\n" , lResult ) ; //*/
-    return lResult ;
+	free(lDialogString);
+	return lResult ;
 }
 
 
@@ -3755,7 +3771,9 @@ char const * tinyfd_inputBox(
 	char const * const aDefaultInput ) /* "" , if NULL it's a passwordBox */
 {
 	static char lBuff[MAX_PATH_OR_CMD];
-	char lDialogString[MAX_PATH_OR_CMD];
+	//char lDialogString[MAX_PATH_OR_CMD];
+	char * lDialogString;
+	char * lpDialogString;
 	FILE * lIn ;
 	int lResult ;
 	int lWasGdialog = 0 ;
@@ -3765,7 +3783,17 @@ char const * tinyfd_inputBox(
 	struct termios oldt ;
 	struct termios newt ;
 	char * lEOF;
+	int lTitleLen ;
+	int lMessageLen ;
+
 	lBuff[0]='\0';
+
+	lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
+	lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
+	if ( !aTitle || strcmp(aTitle,"tinyfd_query") )
+	{
+		lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
+	}
 
   if ( osascriptPresent ( ) )
   {
@@ -3900,11 +3928,14 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 		if ( aMessage && strlen(aMessage) )
 		{
-			replaceSubStr ( aMessage , "\n" , "\\n" , lBuff ) ;
+
 			strcat(lDialogString, "prompt='") ;
-			strcat(lDialogString, lBuff) ;
+			lpDialogString = lDialogString + strlen(lDialogString);
+			replaceSubStr ( aMessage , "\n" , "\\n" , lpDialogString ) ;
+			//replaceSubStr ( aMessage , "\n" , "\\n" , lBuff ) ;
+			//strcat(lDialogString, lBuff) ;
+			//lBuff[0]='\0';
 			strcat(lDialogString, "',") ;
-			lBuff[0]='\0';
 		}
 		if ( aDefaultInput )
 		{
@@ -4122,6 +4153,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		/* printf("lbuff<%c><%d>\n",lBuff[0],lBuff[0]); //*/
 		if ( ! lEOF  || (lBuff[0] == '\0') )
 		{
+			free(lDialogString);
 			return NULL;
 		}
 
@@ -4131,6 +4163,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			/* printf("lbuff<%c><%d>\n",lBuff[0],lBuff[0]); //*/
 			if ( ! lEOF  || (lBuff[0] == '\0') )
 			{
+				free(lDialogString);
 				return NULL;
 			}
 		}
@@ -4143,18 +4176,21 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		printf ("\n");
 		if ( strchr(lBuff,27) )
 		{
+			free(lDialogString);
 			return NULL ;
 		}
 		if ( lBuff[ strlen ( lBuff ) -1 ] == '\n' )
 		{
 			lBuff[ strlen ( lBuff ) -1 ] = '\0' ;
 		}
+		free(lDialogString);
 		return lBuff ;
 	}
 
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
 	if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
 	{
+		free(lDialogString);
 		return NULL ;
 	}
 	while ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
@@ -4173,17 +4209,20 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	{
 		if ( strstr(lBuff,"^[") ) /* esc was pressed */
 		{
+			free(lDialogString);
 			return NULL ;
 		}
 	}
 
 	lResult =  strncmp ( lBuff , "1" , 1) ? 0 : 1 ;
 	/* printf ( "lResult: %d \n" , lResult ) ; //*/
-    if ( ! lResult )
-    {
+	if ( ! lResult )
+	{
+		free(lDialogString);
 		return NULL ;
 	}
 	/* printf ( "lBuff+1: %s\n" , lBuff+1 ) ; //*/
+	free(lDialogString);
 	return lBuff+1 ;
 }
 

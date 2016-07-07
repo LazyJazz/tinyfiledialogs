@@ -22,7 +22,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.5.4 [July 7, 2016] zlib licence
+v2.5.5 [July 7, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 boxes:
 - message / question
@@ -101,7 +101,7 @@ misrepresented as being the original software.
  #endif /* TINYFD_NOLIB */
  #include <sys/stat.h>
  #include <conio.h>
- #include <io.h>
+ /*#include <io.h>*/
  #define SLASH "\\"
  int tinyfd_winUtf8 = 0 ; /* on windows string char can be 0:MBSC or 1:UTF-8 */
 #else
@@ -116,7 +116,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.5.4";
+char tinyfd_version [8] = "2.5.5";
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -688,7 +688,7 @@ static DWORD const runSilentW(wchar_t const * const aString)
 
 	pEnvCMD = utf8to16( getenv("COMSPEC") );
 	if (pEnvCMD)
-  {
+	{
 		wcscpy(lArgs, pEnvCMD);
 		free(pEnvCMD);
 	}
@@ -827,23 +827,20 @@ static char const * inputBoxWinGui(
 	char const * const aMessage , /* NULL or "" may NOT contain \n nor \t */
 	char const * const aDefaultInput ) /* "" , if NULL it's a passwordBox */
 {
-	char * lDialogString = NULL;
-	wchar_t * lDialogStringW;
+	char * lDialogString;
 	FILE * lIn;
 	int lResult;
 	int lTitleLen;
 	int lMessageLen;
+/*	wchar_t * lDialogStringW; */
 
 #ifndef TINYFD_NOLIB
-	DWORD lDword;
+/*	DWORD lDword; */
 #endif
 
 	lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
 	lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
-	if ( !aTitle || strcmp(aTitle,"tinyfd_query") )
-	{
-		lDialogString = (char *) malloc( 3*MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
-	}
+	lDialogString = (char *)malloc(3 * MAX_PATH_OR_CMD + lTitleLen + lMessageLen);
 
 	if (aDefaultInput)
 	{
@@ -2015,7 +2012,6 @@ static int messageBoxWinConsole (
 	else
 	{
 		strcat ( lDialogString , "--msgbox " ) ;
-			
 	}
 
 	strcat ( lDialogString , "\"" ) ;
@@ -3798,16 +3794,16 @@ char const * tinyfd_inputBox(
 		lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
 	}
 
-  if ( osascriptPresent ( ) )
-  {
+	if ( osascriptPresent ( ) )
+	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char const *)1;}
 		strcpy ( lDialogString , "osascript ");
 		if ( ! osx9orBetter() ) strcat ( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
 		strcat ( lDialogString , " -e 'try' -e 'display dialog \"") ;
-    if ( aMessage && strlen(aMessage) )
-    {
-		strcat(lDialogString, aMessage) ;
-    }
+		if ( aMessage && strlen(aMessage) )
+		{
+			strcat(lDialogString, aMessage) ;
+		}
 		strcat(lDialogString, "\" ") ;
 		strcat(lDialogString, "default answer \"") ;
 		if ( aDefaultInput && strlen(aDefaultInput) )
@@ -3832,8 +3828,8 @@ char const * tinyfd_inputBox(
 		strcat(lDialogString, "-e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat(lDialogString, " -e 'end tell'") ;
 	}
-  else if ( zenityPresent() || matedialogPresent() )
-  {
+	else if ( zenityPresent() || matedialogPresent() )
+	{
 		if ( zenityPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}

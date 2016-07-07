@@ -596,7 +596,7 @@ static char * utf16to8(wchar_t const * const aUtf16string)
 {
 	char * lUtf8string ;
 	int lSize = sizeUtf8(aUtf16string);
-	lUtf8string = (char *) malloc( lSize * sizeof(char) );
+	lUtf8string = (char *) malloc( lSize );
 	lSize = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
 		aUtf16string, -1, lUtf8string, lSize, NULL, NULL);
 	if (lSize == 0)
@@ -5154,7 +5154,7 @@ char const * tinyfd_colorChooser(
 {
 	static char lBuff [16] ;
 	char lTmp [16] ;
-    char lDialogString [MAX_PATH_OR_CMD] ;
+	char lDialogString [MAX_PATH_OR_CMD] ;
 	char lDefaultHexRGB[8];
 	char * lpDefaultHexRGB;
 	unsigned char lDefaultRGB[3];

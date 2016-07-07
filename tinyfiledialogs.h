@@ -22,7 +22,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.5.3 [July 6, 2016] zlib licence
+v2.5.4 [July 7, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 boxes:
 - message / question
@@ -91,16 +91,24 @@ Then you won't need to link against Comdlg32.lib and Ole32.lib */
 /* if tinydialogs.c is compiled with a C++ compiler rather than with a C compiler
 (ie. you change the extension from .c to .cpp), you need to comment out:
 extern "C" {
-and the corresponding closing bracket:
-} */
+and the corresponding closing bracket near the end of this file:
+}
+*/
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
 extern char tinyfd_version[8]; /* contains tinyfd current version number */
 
-extern int tinyfd_forceConsole ;  /* 0 (default) or 1
-for unix & windows: 0 (graphic mode) or 1 (console mode).
+#ifdef _WIN32
+extern int tinyfd_winUtf8; /* 0 (default) or 1 */
+/* on windows string char can be 0:MBSC or 1:UTF-8 (work in progress)
+unless your code is really prepared for it, leave this on MBSC.
+for UTF-16 choose the functions at the end of this files */
+#endif
+
+extern int tinyfd_forceConsole ;  /* 0 (default) or 1 */
+/* for unix & windows: 0 (graphic mode) or 1 (console mode).
 0: try to use a graphic solution, if it fails then it uses console mode.
 1: forces all dialogs into console mode even when the X server is present,
   if the package dialog (and a console is present) or dialog.exe is installed.
@@ -170,12 +178,6 @@ char const * tinyfd_colorChooser(
 /************ NOT CROSS PLATFORM SECTION STARTS HERE ************************/
 #ifdef _WIN32
 #ifndef TINYFD_NOLIB
-
-/* windows only */
-wchar_t const * tinyfd_utf8to16(char const * const aUtf8string);
-
-/* windows only */
-char const * tinyfd_utf16to8(wchar_t const * const aUtf16string);
 
 /* windows only - utf-16 version */
 int tinyfd_messageBoxW(
@@ -248,7 +250,6 @@ char const * tinyfd_arrayDialog(
 /*
 - This is not for android nor ios.
 - The code is pure C, perfectly compatible with C++.
-- the utf-16 prototypes are in the header file
 - The API is Fortran ISO_C_BINDING compliant
 - C# via dll, see example file
 - AVOID USING " AND ' IN TITLES AND MESSAGES.

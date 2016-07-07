@@ -22,7 +22,7 @@ tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
-v2.5.3 [July 6, 2016] zlib licence
+v2.5.4 [July 7, 2016] zlib licence
 
 A single C file (add it to your C or C++ project) with 6 boxes:
 - message / question
@@ -103,7 +103,7 @@ misrepresented as being the original software.
  #include <conio.h>
  #include <io.h>
  #define SLASH "\\"
- int tinyfd_winUtf8 = 0 ;
+ int tinyfd_winUtf8 = 0 ; /* on windows string char can be 0:MBSC or 1:UTF-8 */
 #else
  #include <limits.h>
  #include <unistd.h>
@@ -116,10 +116,14 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [ 8 ] = "2.5.3";
+char tinyfd_version [ 8 ] = "2.5.4";
 
-int tinyfd_forceConsole = 0 ; /* 0 (default) or 1
-for unix & windows: 0 (graphic mode) or 1 (console mode).
+#if defined(TINYFD_NOLIB) && defined(_WIN32)
+int tinyfd_forceConsole = 1 ;
+#else
+int tinyfd_forceConsole = 0 ; /* 0 (default) or 1 */
+#endif
+/* for unix & windows: 0 (graphic mode) or 1 (console mode).
 0: try to use a graphic solution, if it fails then it uses console mode.
 1: forces all dialogs into console mode even when the X server is present,
   if the package dialog (and a console is present) or dialog.exe is installed.
@@ -139,7 +143,6 @@ for the console mode:
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 static int gWarningDisplayed = 1 ;
-tinyfd_forceConsole = 1 ;
 #else
 static int gWarningDisplayed = 0 ;
 #endif
@@ -553,16 +556,30 @@ swprintf(aoResultHexRGB, 8, L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 
 #ifndef TINYFD_NOLIB
 
-wchar_t const * tinyfd_utf8to16(char const * const aUtf8string)
+static int sizeUtf16(char const * const aUtf8string)
 {
-	static wchar_t lUtf16string[16*MAX_PATH_OR_CMD];
-	int lSzeInChar = sizeof lUtf16string / sizeof(wchar_t);
-	int lSize = MultiByteToWideChar(CP_UTF8,
-					MB_ERR_INVALID_CHARS,
-					aUtf8string, -1, lUtf16string,
-					lSzeInChar);
+	return MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+					aUtf8string, -1, NULL, 0);
+}
+
+
+static int sizeUtf8(char const * const aUtf8string)
+{
+	return WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
+		aUtf16string, -1, NULL, 0, NULL, NULL);
+}
+
+
+static wchar_t const * utf8to16(char const * const aUtf8string)
+{
+	wchar_t * lUtf16string ;
+	int lSize = sizeUtf16(aUtf8string);	
+	lUtf16string = (wchar_t *) malloc( lSize * sizeof wchar_t );
+	lSize = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+					aUtf8string, -1, lUtf16string, lSize);
 	if (lSize == 0)
 	{
+		free(lUtf16string);
 		return NULL;
 	}
 	return lUtf16string;
@@ -573,15 +590,17 @@ wchar_t const * tinyfd_utf8to16(char const * const aUtf8string)
 /* undefined prior to Vista, so not yet in MINGW header file */
 #define WC_ERR_INVALID_CHARS 0x00000080
 #endif
-char const * tinyfd_utf16to8(wchar_t const * const aUtf16string)
+
+static char const * utf16to8(wchar_t const * const aUtf16string)
 {
-	static char lUtf8string[16*MAX_PATH_OR_CMD];
-	int lSize = WideCharToMultiByte(CP_UTF8, 
-		WC_ERR_INVALID_CHARS,
-		aUtf16string, -1, lUtf8string, sizeof lUtf8string,
-		NULL, NULL);
+	char * lUtf8string ;
+	int lSize = size(aUtf16string);
+	lUtf16string = (char *) malloc( lSize * sizeof char );
+	lSize = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
+		aUtf16string, -1, lUtf8string, lSize, NULL, NULL);
 	if (lSize == 0)
 	{
+		free(lUtf8string);
 		return NULL;
 	}
 	return lUtf8string;
@@ -646,9 +665,9 @@ static DWORD const runSilentW(wchar_t const * const aString)
 	STARTUPINFOW StartupInfo;
 	PROCESS_INFORMATION ProcessInfo;
 	ULONG rc;
-	wchar_t Args[4096];
-	wchar_t const *pEnvCMD = NULL;
-	wchar_t *pDefaultCMD = L"CMD.EXE";
+	wchar_t Args[4*MAX_PATH_OR_CMD];
+	wchar_t const * pEnvCMD;
+	wchar_t const * pDefaultCMD = L"CMD.EXE";
 
 	memset(&StartupInfo, 0, sizeof(StartupInfo));
 	StartupInfo.cb = sizeof(STARTUPINFOW);
@@ -656,30 +675,23 @@ static DWORD const runSilentW(wchar_t const * const aString)
 	StartupInfo.wShowWindow = SW_HIDE;
 
 	Args[0] = 0;
-
-    pEnvCMD = tinyfd_utf8to16( getenv("COMSPEC"));
-
+	pEnvCMD = utf8to16( getenv("COMSPEC") );
 	if (pEnvCMD)
-    {
-		wcscpy(Args, pEnvCMD);
+  {
+		wcscat(Args, pEnvCMD);
+		free(pEnvCMD);
 	}
 	else
-    {
 		wcscpy(Args, pDefaultCMD);
 	}
+	wcscat(Args, L" /c "); /* /c to execute then terminate the command window */
 
-	// "/c" option - Do the command then terminate the command window
-	wcscat(Args, L" /c ");
-	//the application you would like to run from the command window
-	//the parameters passed to the application being run from the command window.
+	/* application and parameters to run from the command window */
 	wcscat(Args, aString);
 
 	if (!CreateProcessW(NULL, Args, NULL, NULL, FALSE,
-		CREATE_NEW_CONSOLE,
-		NULL,
-		NULL,
-		&StartupInfo,
-		&ProcessInfo))
+				CREATE_NEW_CONSOLE, NULL, NULL,
+				&StartupInfo, &ProcessInfo))
 	{
 		return GetLastError();
 	}
@@ -769,43 +781,26 @@ static int messageBoxWinGui8(
 	char const * const aIconType, /* "info" "warning" "error" "question" */
 	int const aDefaultButton) /* 0 for cancel/no , 1 for ok/yes */
 {
-	wchar_t lTitle[MAX_PATH_OR_CMD];
-	wchar_t lMessage[MAX_PATH_OR_CMD];
-	wchar_t lDialogType[16];
-	wchar_t lIconType[16];
-	wchar_t const * lTmp;
+	int lIntRetVal;
+	wchar_t * lTitle;
+	wchar_t * lMessage;
+	wchar_t * lDialogType;
+	wchar_t * lIconType;
 
-	lTitle[0] = L'\0';
-	lMessage[0] = L'\0';
-	lDialogType[0] = L'\0';
-	lIconType[0] = L'\0';
+	lTitle = utf8to16(aTitle);
+	lMessage = utf8to16(aMessage);
+	lDialogType = utf8to16(aDialogType);
+	lIconType = utf8to16(aIconType);
 
-	if (aTitle)
-	{
-		lTmp = tinyfd_utf8to16(aTitle);
-		wcscpy(lTitle, lTmp);
-	}
+	lIntRetVal = tinyfd_messageBoxW(lTitle, lMessage,
+								lDialogType, lIconType, aDefaultButton );
 
-	if (aMessage)
-	{
-		lTmp = tinyfd_utf8to16(aMessage);
-		wcscpy(lMessage, lTmp);
-	}
-	
-	if (aDialogType)
-	{
-		lTmp = tinyfd_utf8to16(aDialogType);
-		wcscpy(lDialogType, lTmp);
-	}
-	
-	if (aIconType)
-	{
-		lTmp = tinyfd_utf8to16(aIconType);
-		wcscpy(lIconType, lTmp);
-	}
+	free(lTitle);
+	free(lMessage);
+	free(lDialogType);
+	free(lIconType);
 
-	return tinyfd_messageBoxW(lTitle, lMessage,
-			lDialogType, lIconType, aDefaultButton );
+	return lIntRetVal ;
 }
 
 #endif /* TINYFD_NOLIB */
@@ -817,8 +812,7 @@ static char const * inputBoxWinGui(
 	char const * const aDefaultInput ) /* "" , if NULL it's a passwordBox */
 {
 	char lDialogString[4*MAX_PATH_OR_CMD];
-	wchar_t const * lpDialogStringW;
-	wchar_t lDialogStringW[4 * MAX_PATH_OR_CMD];
+	wchar_t * lDialogStringW;
 	FILE * lIn;
 	int lResult;
 #ifndef TINYFD_NOLIB
@@ -978,8 +972,9 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 			"mshta.exe %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.hta");
 	}
 
-#ifdef TINYFD_NOLIB
-	if ( ! _isatty(1) ) /* ! GetConsoleWindow() ) */
+/* #ifdef TINYFD_NOLIB */
+
+	if ( ! _isatty(1) )
 	{
 		strcat(lDialogString, "\"");
 	}
@@ -996,19 +991,22 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 	{
 		aoBuff[ strlen ( aoBuff ) -1 ] = '\0' ;
 	}
-#else /* TINYFD_NOLIB */
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+
+/*
+#else 
+	
 	if (tinyfd_winUtf8)
 	{
-		lpDialogStringW = tinyfd_utf8to16(lDialogString);
-		wcscpy(lDialogStringW, lpDialogStringW);
+		lDialogStringW = utf8to16(lDialogString);
 		lDword = runSilentW( lDialogStringW );
+		free(lDialogStringW);
 	}
 	else
 	{
 		lDword = runSilentA(lDialogString);
 	}
-#endif /* TINYFD_NOLIB */
+#endif
+*/
 
 	if (aDefaultInput)
 	{

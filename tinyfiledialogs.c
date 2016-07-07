@@ -814,13 +814,23 @@ static char const * inputBoxWinGui(
 	char const * const aMessage , /* NULL or "" may NOT contain \n nor \t */
 	char const * const aDefaultInput ) /* "" , if NULL it's a passwordBox */
 {
-	char lDialogString[4*MAX_PATH_OR_CMD];
+	char * lDialogString;
 	wchar_t * lDialogStringW;
 	FILE * lIn;
 	int lResult;
+	int lTitleLen;
+	int lMessageLen;
+
 #ifndef TINYFD_NOLIB
 	DWORD lDword;
 #endif
+
+	lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
+	lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
+	if ( !aTitle || strcmp(aTitle,"tinyfd_query") )
+	{
+		lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
+	}
 
 	if (aDefaultInput)
 	{
@@ -835,6 +845,7 @@ static char const * inputBoxWinGui(
 	lIn = fopen(lDialogString, "w");
 	if (!lIn)
 	{
+		free(lDialogString);
 		return NULL;
 	}
 
@@ -985,6 +996,7 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
 	if (!(lIn = _popen(lDialogString, "r")))
 	{
+		free(lDialogString);
 		return NULL ;
 	}
 	while ( fgets ( aoBuff , MAX_PATH_OR_CMD , lIn ) != NULL )
@@ -1025,6 +1037,7 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 			remove(lDialogString);
 			sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.hta",
 				getenv("USERPROFILE"));
+			free(lDialogString);
 			return NULL;
 		}
 		while (fgets(aoBuff, MAX_PATH_OR_CMD, lIn) != NULL)
@@ -1035,6 +1048,7 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 			getenv("USERPROFILE"));
 	}
 	remove(lDialogString);
+	free(lDialogString);
 	/* printf ( "aoBuff: %s\n" , aoBuff ) ; //*/
 	lResult = strncmp(aoBuff, "1", 1) ? 0 : 1;
 	/* printf ( "lResult: %d \n" , lResult ) ; //*/
@@ -3212,7 +3226,7 @@ int tinyfd_messageBox (
     int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes */
 {
 	char lBuff [ MAX_PATH_OR_CMD ] ;
-	char * lDialogString ;
+	char * lDialogString = NULL ;
 	char * lpDialogString;
 	FILE * lIn ;
 	int lWasGraphicDialog = 0 ;
@@ -3819,8 +3833,7 @@ char const * tinyfd_inputBox(
 	char const * const aDefaultInput ) /* "" , if NULL it's a passwordBox */
 {
 	static char lBuff[MAX_PATH_OR_CMD];
-	//char lDialogString[MAX_PATH_OR_CMD];
-	char * lDialogString;
+	char * lDialogString = NULL;
 	char * lpDialogString;
 	FILE * lIn ;
 	int lResult ;

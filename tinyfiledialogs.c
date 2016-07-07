@@ -556,6 +556,12 @@ swprintf(aoResultHexRGB, 8, L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 
 #ifndef TINYFD_NOLIB
 
+#if !defined(WC_ERR_INVALID_CHARS)
+/* undefined prior to Vista, so not yet in MINGW header file */
+#define WC_ERR_INVALID_CHARS 0x00000080
+#endif
+
+
 static int sizeUtf16(char const * const aUtf8string)
 {
 	return MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
@@ -563,18 +569,18 @@ static int sizeUtf16(char const * const aUtf8string)
 }
 
 
-static int sizeUtf8(char const * const aUtf8string)
+static int sizeUtf8(wchar_t const * const aUtf16string)
 {
 	return WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
 		aUtf16string, -1, NULL, 0, NULL, NULL);
 }
 
 
-static wchar_t const * utf8to16(char const * const aUtf8string)
+static wchar_t * utf8to16(char const * const aUtf8string)
 {
 	wchar_t * lUtf16string ;
 	int lSize = sizeUtf16(aUtf8string);	
-	lUtf16string = (wchar_t *) malloc( lSize * sizeof wchar_t );
+	lUtf16string = (wchar_t *) malloc( lSize * sizeof(wchar_t) );
 	lSize = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
 					aUtf8string, -1, lUtf16string, lSize);
 	if (lSize == 0)
@@ -586,16 +592,11 @@ static wchar_t const * utf8to16(char const * const aUtf8string)
 }
 
 
-#if !defined(WC_ERR_INVALID_CHARS)
-/* undefined prior to Vista, so not yet in MINGW header file */
-#define WC_ERR_INVALID_CHARS 0x00000080
-#endif
-
-static char const * utf16to8(wchar_t const * const aUtf16string)
+static char * utf16to8(wchar_t const * const aUtf16string)
 {
 	char * lUtf8string ;
-	int lSize = size(aUtf16string);
-	lUtf16string = (char *) malloc( lSize * sizeof char );
+	int lSize = sizeUtf8(aUtf16string);
+	lUtf8string = (char *) malloc( lSize * sizeof(char) );
 	lSize = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
 		aUtf16string, -1, lUtf8string, lSize, NULL, NULL);
 	if (lSize == 0)
@@ -665,31 +666,33 @@ static DWORD const runSilentW(wchar_t const * const aString)
 	STARTUPINFOW StartupInfo;
 	PROCESS_INFORMATION ProcessInfo;
 	ULONG rc;
-	wchar_t Args[4*MAX_PATH_OR_CMD];
-	wchar_t const * pEnvCMD;
-	wchar_t const * pDefaultCMD = L"CMD.EXE";
+	wchar_t lArgs[4*MAX_PATH_OR_CMD];
+	wchar_t * pEnvCMD;
+	wchar_t * pDefaultCMD = L"CMD.EXE";
 
 	memset(&StartupInfo, 0, sizeof(StartupInfo));
 	StartupInfo.cb = sizeof(STARTUPINFOW);
 	StartupInfo.dwFlags = STARTF_USESHOWWINDOW;
 	StartupInfo.wShowWindow = SW_HIDE;
 
-	Args[0] = 0;
 	pEnvCMD = utf8to16( getenv("COMSPEC") );
 	if (pEnvCMD)
   {
-		wcscat(Args, pEnvCMD);
+		wcscpy(lArgs, pEnvCMD);
 		free(pEnvCMD);
 	}
 	else
-		wcscpy(Args, pDefaultCMD);
+	{
+		wcscpy(lArgs, pDefaultCMD);
 	}
-	wcscat(Args, L" /c "); /* /c to execute then terminate the command window */
+
+	/* c to execute then terminate the command window */
+	wcscat(lArgs, L" /c ");
 
 	/* application and parameters to run from the command window */
-	wcscat(Args, aString);
+	wcscat(lArgs, aString);
 
-	if (!CreateProcessW(NULL, Args, NULL, NULL, FALSE,
+	if (!CreateProcessW(NULL, lArgs, NULL, NULL, FALSE,
 				CREATE_NEW_CONSOLE, NULL, NULL,
 				&StartupInfo, &ProcessInfo))
 	{

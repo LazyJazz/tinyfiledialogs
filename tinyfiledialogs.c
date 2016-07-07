@@ -827,7 +827,7 @@ static char const * inputBoxWinGui(
 	char const * const aMessage , /* NULL or "" may NOT contain \n nor \t */
 	char const * const aDefaultInput ) /* "" , if NULL it's a passwordBox */
 {
-	char * lDialogString;
+	char * lDialogString = NULL;
 	wchar_t * lDialogStringW;
 	FILE * lIn;
 	int lResult;
@@ -842,7 +842,7 @@ static char const * inputBoxWinGui(
 	lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
 	if ( !aTitle || strcmp(aTitle,"tinyfd_query") )
 	{
-		lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
+		lDialogString = (char *) malloc( 3*MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
 	}
 
 	if (aDefaultInput)
@@ -981,12 +981,12 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 
 	strcpy(lDialogString, "");
 
-#ifdef TINYFD_NOLIB
-	if ( ! _isatty(1) ) /* ! GetConsoleWindow() ) */
+/* #ifdef TINYFD_NOLIB */
+	if ( ! GetConsoleWindow() )
 	{
 		strcat(lDialogString, "powershell -WindowStyle Hidden -Command \"");
 	}
-#endif /* TINYFD_NOLIB */
+/* #endif */
 
 	if (aDefaultInput)
 	{
@@ -999,9 +999,7 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 			"mshta.exe %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.hta");
 	}
 
-/* #ifdef TINYFD_NOLIB */
-
-	if ( ! _isatty(1) )
+	if (!GetConsoleWindow())
 	{
 		strcat(lDialogString, "\"");
 	}
@@ -1020,9 +1018,7 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 		aoBuff[strlen ( aoBuff ) -1] = '\0' ;
 	}
 
-/*
-#else 
-	
+/*	
 	if (tinyfd_winUtf8)
 	{
 		lDialogStringW = utf8to16(lDialogString);
@@ -1033,7 +1029,6 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 	{
 		lDword = runSilentA(lDialogString);
 	}
-#endif
 */
 
 	if (aDefaultInput)
@@ -2440,7 +2435,7 @@ char const * tinyfd_inputBox(
 	HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
 #endif /* TINYFD_NOLIB */
 
-	if ( ( !tinyfd_forceConsole || !( _isatty(1) || dialogPresent() ) ) /*_isatty replaces GetConsoleWindow*/
+	if ((!tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent()))
 		&& ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char const *)1;}

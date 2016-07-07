@@ -1159,49 +1159,23 @@ static char const * saveFileDialogWinGui8(
 	char const * const * const aFilterPatterns, /* NULL or {"*.jpg","*.png"} */
 	char const * const aSingleFilterDescription) /* NULL or "image files" */
 {
-	wchar_t lTitle[MAX_PATH_OR_CMD];
-	wchar_t lDefaultPathAndFile[MAX_PATH_OR_CMD];
-	wchar_t lSingleFilterDescription[MAX_PATH_OR_CMD];
+	wchar_t * lTitle;
+	wchar_t * lDefaultPathAndFile;
+	wchar_t * lSingleFilterDescription;
 	wchar_t * * lFilterPatterns;
 	wchar_t const * lTmpWChar;
-	char const * lTmpChar;
+	char * lTmpChar;
 	int i ;
-
-	lTitle[0] = L'\0';
-	lDefaultPathAndFile[0] = L'\0';
-	lSingleFilterDescription[0] = L'\0';
 
 	lFilterPatterns = (wchar_t **) malloc(aNumOfFilterPatterns*sizeof(wchar_t *));
 	for (i = 0; i < aNumOfFilterPatterns; i++)
 	{
-		if (aFilterPatterns[i])
-		{
-			int lSize = strlen(aFilterPatterns[i]);
-			lFilterPatterns[i] = (wchar_t *) malloc(2*lSize*sizeof(wchar_t)); //2*bigger to be sure
-			lTmpWChar = utf8to16(aFilterPatterns[i]);
-			wcscpy(lFilterPatterns[i], lTmpWChar);
-		}
-		else
-		{
-			lFilterPatterns[i] = NULL;
-		}
+		lFilterPatterns[i]  = utf8to16(aFilterPatterns[i]);
 	}
 
-	if (aTitle)
-	{
-		lTmpWChar = utf8to16(aTitle);
-		wcscpy(lTitle, lTmpWChar);
-	}
-	if (aDefaultPathAndFile)
-	{
-		lTmpWChar = utf8to16(aDefaultPathAndFile);
-		wcscpy(lDefaultPathAndFile, lTmpWChar);
-	}
-	if (aSingleFilterDescription)
-	{
-		lTmpWChar = utf8to16(aSingleFilterDescription);
-		wcscpy(lSingleFilterDescription, lTmpWChar);
-	}
+	lTitle = utf8to16(aTitle);
+	lDefaultPathAndFile = utf8to16(aDefaultPathAndFile);
+	lSingleFilterDescription = utf8to16(aSingleFilterDescription);
 
 	lTmpWChar = tinyfd_saveFileDialogW(
 					lTitle,
@@ -1211,12 +1185,12 @@ static char const * saveFileDialogWinGui8(
 					lFilterPatterns,
 					lSingleFilterDescription);
 
+	free(lTitle);
+	free(lDefaultPathAndFile);
+	free(lSingleFilterDescription);
 	for (i = 0; i < aNumOfFilterPatterns; i++)
 	{
-		if (aFilterPatterns[i])
-		{
-			free(lFilterPatterns[i]);
-		}
+		free(lFilterPatterns[i]);
 	}
 	free(lFilterPatterns);
 
@@ -1227,6 +1201,7 @@ static char const * saveFileDialogWinGui8(
 
 	lTmpChar = utf16to8(lTmpWChar);
 	strcpy(aoBuff, lTmpChar);
+	free(lTmpChar);
 
 	return aoBuff;
 }
@@ -1369,49 +1344,23 @@ static char const * openFileDialogWinGui8(
 	char const * const aSingleFilterDescription, /* NULL or "image files" */
 	int const aAllowMultipleSelects) /* 0 or 1 */
 {
-	wchar_t lTitle[MAX_PATH_OR_CMD];
-	wchar_t lDefaultPathAndFile[MAX_PATH_OR_CMD];
-	wchar_t lSingleFilterDescription[MAX_PATH_OR_CMD];
+	wchar_t * lTitle;
+	wchar_t * lDefaultPathAndFile;
+	wchar_t * lSingleFilterDescription;
 	wchar_t * * lFilterPatterns;
 	wchar_t const * lTmpWChar;
-	char const * lTmpChar;
+	char * lTmpChar;
 	int i;
-
-	lTitle[0] = L'\0';
-	lDefaultPathAndFile[0] = L'\0';
-	lSingleFilterDescription[0] = L'\0';
 
 	lFilterPatterns = (wchar_t * *) malloc(aNumOfFilterPatterns*sizeof(wchar_t *));
 	for (i = 0; i < aNumOfFilterPatterns; i++)
 	{
-		if (aFilterPatterns[i])
-		{
-			int lSize = strlen(aFilterPatterns[i]);
-			lFilterPatterns[i] = (wchar_t *) malloc(2 * lSize*sizeof(wchar_t)); //2*bigger to be sure
-			lTmpWChar = utf8to16(aFilterPatterns[i]);
-			wcscpy(lFilterPatterns[i], lTmpWChar);
-		}
-		else
-		{
-			lFilterPatterns[i] = NULL;
-		}
+		lFilterPatterns[i] = utf8to16(aFilterPatterns[i]);
 	}
 
-	if (aTitle)
-	{
-		lTmpWChar = utf8to16(aTitle);
-		wcscpy(lTitle, lTmpWChar);
-	}
-	if (aDefaultPathAndFile)
-	{
-		lTmpWChar = utf8to16(aDefaultPathAndFile);
-		wcscpy(lDefaultPathAndFile, lTmpWChar);
-	}
-	if (aSingleFilterDescription)
-	{
-		lTmpWChar = utf8to16(aSingleFilterDescription);
-		wcscpy(lSingleFilterDescription, lTmpWChar);
-	}
+	lTitle = utf8to16(aTitle);
+	lDefaultPathAndFile = utf8to16(aDefaultPathAndFile);
+	lSingleFilterDescription = utf8to16(aSingleFilterDescription);
 
 	lTmpWChar = tinyfd_openFileDialogW(
 		lTitle,
@@ -1422,12 +1371,12 @@ static char const * openFileDialogWinGui8(
 		lSingleFilterDescription,
 		aAllowMultipleSelects);
 
+	free(lTitle);
+	free(lDefaultPathAndFile);
+	free(lSingleFilterDescription);
 	for (i = 0; i < aNumOfFilterPatterns; i++)
 	{
-		if (aFilterPatterns[i])
-		{
-			free(lFilterPatterns[i]);
-		}
+		free(lFilterPatterns[i]);
 	}
 	free(lFilterPatterns);
 
@@ -1438,6 +1387,7 @@ static char const * openFileDialogWinGui8(
 
 	lTmpChar = utf16to8(lTmpWChar);
 	strcpy(aoBuff, lTmpChar);
+	free(lTmpChar);
 
 	return aoBuff;
 }
@@ -1484,29 +1434,20 @@ static char const * selectFolderDialogWinGui8 (
 	char const * const aTitle , /*  NULL or "" */
 	char const * const aDefaultPath ) /* NULL or "" */
 {
-	wchar_t lTitle[MAX_PATH_OR_CMD];
-	wchar_t lDefaultPath[MAX_PATH_OR_CMD];
+	wchar_t * lTitle;
+	wchar_t * lDefaultPath;
 	wchar_t const * lTmpWChar;
-	char const * lTmpChar;
+	char * lTmpChar;
 
-	lTitle[0] = L'\0';
-	lDefaultPath[0] = L'\0';
-
-	if (aTitle)
-	{
-		lTmpWChar = utf8to16(aTitle);
-		wcscpy(lTitle, lTmpWChar);
-	}
-	if (aDefaultPath)
-	{
-		lTmpWChar = utf8to16(aDefaultPath);
-		wcscpy(lDefaultPath, lTmpWChar);
-	}
+	lTitle = utf8to16(aTitle);
+	lDefaultPath = utf8to16(aDefaultPath);
 
 	lTmpWChar = tinyfd_selectFolderDialogW(
 		lTitle,
 		lDefaultPath);
 
+	free(lTitle);
+	free(lDefaultPath);
 	if (!lTmpWChar)
 	{
 		return NULL;
@@ -1514,6 +1455,7 @@ static char const * selectFolderDialogWinGui8 (
 
 	lTmpChar = utf16to8(lTmpWChar);
 	strcpy(aoBuff, lTmpChar);
+	free(lTmpChar);
 
 	return aoBuff;
 }
@@ -1586,24 +1528,13 @@ static char const * colorChooserWinGui8(
 {
 	static char lResultHexRGB[8];
 
-	wchar_t lTitle[MAX_PATH_OR_CMD];
-	wchar_t lDefaultHexRGB[MAX_PATH_OR_CMD];
+	wchar_t * lTitle;
+	wchar_t * lDefaultHexRGB;
 	wchar_t const * lTmpWChar;
-	char const * lTmpChar;
+	char * lTmpChar;
 
-	lTitle[0] = L'\0';
-	lDefaultHexRGB[0] = L'\0';
-
-	if (aTitle)
-	{
-		lTmpWChar = utf8to16(aTitle);
-		wcscpy(lTitle, lTmpWChar);
-	}
-	if (aDefaultHexRGB)
-	{
-		lTmpWChar = utf8to16(aDefaultHexRGB);
-		wcscpy(lDefaultHexRGB, lTmpWChar);
-	}
+	lTitle = utf8to16(aTitle);
+	lDefaultHexRGB = utf8to16(aDefaultHexRGB);
 
 	lTmpWChar = tinyfd_colorChooserW(
 		lTitle,
@@ -1611,6 +1542,8 @@ static char const * colorChooserWinGui8(
 		aDefaultRGB,
 		aoResultRGB );
 
+	free(lTitle);
+	free(lDefaultHexRGB);
 	if (!lTmpWChar)
 	{
 		return NULL;
@@ -1618,6 +1551,7 @@ static char const * colorChooserWinGui8(
 
 	lTmpChar = utf16to8(lTmpWChar);
 	strcpy(lResultHexRGB, lTmpChar);
+	free(lTmpChar);
 
 	return lResultHexRGB;
 }

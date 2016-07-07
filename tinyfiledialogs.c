@@ -672,7 +672,7 @@ static DWORD const runSilentW(wchar_t const * const aString)
 	ULONG rc;
 	wchar_t * lArgs;
 	wchar_t * pEnvCMD;
-	wchar_t * pDefaultCMD = L"CMD.EXE";
+	wchar_t * pDefaultCMD = L"CMD.EXE"; //powershell.exe
 	int lStringLen = 0;
 
 	memset(&StartupInfo, 0, sizeof(StartupInfo));

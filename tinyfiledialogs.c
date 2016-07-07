@@ -1161,7 +1161,7 @@ static char const * saveFileDialogWinGui8(
 		{
 			int lSize = strlen(aFilterPatterns[i]);
 			lFilterPatterns[i] = (wchar_t *) malloc(2*lSize*sizeof(wchar_t)); //2*bigger to be sure
-			lTmpWChar = tinyfd_utf8to16(aFilterPatterns[i]);
+			lTmpWChar = utf8to16(aFilterPatterns[i]);
 			wcscpy(lFilterPatterns[i], lTmpWChar);
 		}
 		else
@@ -1172,17 +1172,17 @@ static char const * saveFileDialogWinGui8(
 
 	if (aTitle)
 	{
-		lTmpWChar = tinyfd_utf8to16(aTitle);
+		lTmpWChar = utf8to16(aTitle);
 		wcscpy(lTitle, lTmpWChar);
 	}
 	if (aDefaultPathAndFile)
 	{
-		lTmpWChar = tinyfd_utf8to16(aDefaultPathAndFile);
+		lTmpWChar = utf8to16(aDefaultPathAndFile);
 		wcscpy(lDefaultPathAndFile, lTmpWChar);
 	}
 	if (aSingleFilterDescription)
 	{
-		lTmpWChar = tinyfd_utf8to16(aSingleFilterDescription);
+		lTmpWChar = utf8to16(aSingleFilterDescription);
 		wcscpy(lSingleFilterDescription, lTmpWChar);
 	}
 
@@ -1208,7 +1208,7 @@ static char const * saveFileDialogWinGui8(
 		return NULL;
 	}
 
-	lTmpChar = tinyfd_utf16to8(lTmpWChar);
+	lTmpChar = utf16to8(lTmpWChar);
 	strcpy(aoBuff, lTmpChar);
 
 	return aoBuff;
@@ -1371,7 +1371,7 @@ static char const * openFileDialogWinGui8(
 		{
 			int lSize = strlen(aFilterPatterns[i]);
 			lFilterPatterns[i] = (wchar_t *) malloc(2 * lSize*sizeof(wchar_t)); //2*bigger to be sure
-			lTmpWChar = tinyfd_utf8to16(aFilterPatterns[i]);
+			lTmpWChar = utf8to16(aFilterPatterns[i]);
 			wcscpy(lFilterPatterns[i], lTmpWChar);
 		}
 		else
@@ -1382,17 +1382,17 @@ static char const * openFileDialogWinGui8(
 
 	if (aTitle)
 	{
-		lTmpWChar = tinyfd_utf8to16(aTitle);
+		lTmpWChar = utf8to16(aTitle);
 		wcscpy(lTitle, lTmpWChar);
 	}
 	if (aDefaultPathAndFile)
 	{
-		lTmpWChar = tinyfd_utf8to16(aDefaultPathAndFile);
+		lTmpWChar = utf8to16(aDefaultPathAndFile);
 		wcscpy(lDefaultPathAndFile, lTmpWChar);
 	}
 	if (aSingleFilterDescription)
 	{
-		lTmpWChar = tinyfd_utf8to16(aSingleFilterDescription);
+		lTmpWChar = utf8to16(aSingleFilterDescription);
 		wcscpy(lSingleFilterDescription, lTmpWChar);
 	}
 
@@ -1419,7 +1419,7 @@ static char const * openFileDialogWinGui8(
 		return NULL;
 	}
 
-	lTmpChar = tinyfd_utf16to8(lTmpWChar);
+	lTmpChar = utf16to8(lTmpWChar);
 	strcpy(aoBuff, lTmpChar);
 
 	return aoBuff;
@@ -1477,12 +1477,12 @@ static char const * selectFolderDialogWinGui8 (
 
 	if (aTitle)
 	{
-		lTmpWChar = tinyfd_utf8to16(aTitle);
+		lTmpWChar = utf8to16(aTitle);
 		wcscpy(lTitle, lTmpWChar);
 	}
 	if (aDefaultPath)
 	{
-		lTmpWChar = tinyfd_utf8to16(aDefaultPath);
+		lTmpWChar = utf8to16(aDefaultPath);
 		wcscpy(lDefaultPath, lTmpWChar);
 	}
 
@@ -1495,7 +1495,7 @@ static char const * selectFolderDialogWinGui8 (
 		return NULL;
 	}
 
-	lTmpChar = tinyfd_utf16to8(lTmpWChar);
+	lTmpChar = utf16to8(lTmpWChar);
 	strcpy(aoBuff, lTmpChar);
 
 	return aoBuff;
@@ -1579,12 +1579,12 @@ static char const * colorChooserWinGui8(
 
 	if (aTitle)
 	{
-		lTmpWChar = tinyfd_utf8to16(aTitle);
+		lTmpWChar = utf8to16(aTitle);
 		wcscpy(lTitle, lTmpWChar);
 	}
 	if (aDefaultHexRGB)
 	{
-		lTmpWChar = tinyfd_utf8to16(aDefaultHexRGB);
+		lTmpWChar = utf8to16(aDefaultHexRGB);
 		wcscpy(lDefaultHexRGB, lTmpWChar);
 	}
 
@@ -1599,7 +1599,7 @@ static char const * colorChooserWinGui8(
 		return NULL;
 	}
 
-	lTmpChar = tinyfd_utf16to8(lTmpWChar);
+	lTmpChar = utf16to8(lTmpWChar);
 	strcpy(lResultHexRGB, lTmpChar);
 
 	return lResultHexRGB;

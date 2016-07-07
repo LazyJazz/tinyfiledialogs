@@ -612,9 +612,9 @@ static DWORD const runSilentA(char const * const aString)
 {
 	STARTUPINFOA StartupInfo;
 	PROCESS_INFORMATION ProcessInfo;
-	char Args[4096];
-	char *pEnvCMD = NULL;
-	char *pDefaultCMD = "CMD.EXE";
+	char * lArgs;
+	char * pEnvCMD = NULL;
+	char * pDefaultCMD = "CMD.EXE";
 	ULONG rc;
 
 	memset(&StartupInfo, 0, sizeof(StartupInfo));
@@ -622,31 +622,29 @@ static DWORD const runSilentA(char const * const aString)
 	StartupInfo.dwFlags = STARTF_USESHOWWINDOW;
 	StartupInfo.wShowWindow = SW_HIDE;
 
-	Args[0] = 0;
+	lArgs = (char *) malloc( MAX_PATH_OR_CMD + aString );
 
 	pEnvCMD = getenv("COMSPEC");
 
 	if (pEnvCMD){
 
-		strcpy(Args, pEnvCMD);
+		strcpy(lArgs, pEnvCMD);
 	}
 	else{
-		strcpy(Args, pDefaultCMD);
+		strcpy(lArgs, pDefaultCMD);
 	}
 
-	// "/c" option - Do the command then terminate the command window
-	strcat(Args, " /c ");
-	//the application you would like to run from the command window
-	//the parameters passed to the application being run from the command window.
-	strcat(Args, aString);
+	/* c to execute then terminate the command window */
+	strcat(lArgs, " /c ");
 
-	if (!CreateProcessA(NULL, Args, NULL, NULL, FALSE,
-		CREATE_NEW_CONSOLE,
-		NULL,
-		NULL,
-		&StartupInfo,
-		&ProcessInfo))
+	/* application and parameters to run from the command window */
+	strcat(lArgs, aString);
+
+	if (!CreateProcessA(NULL, lArgs, NULL, NULL, FALSE,
+		CREATE_NEW_CONSOLE, NULL, NULL,
+		&StartupInfo, &ProcessInfo))
 	{
+		free(lArgs);
 		return GetLastError();
 	}
 
@@ -657,6 +655,7 @@ static DWORD const runSilentA(char const * const aString)
 	CloseHandle(ProcessInfo.hThread);
 	CloseHandle(ProcessInfo.hProcess);
 
+	free(lArgs);
 	return rc;
 }
 
@@ -666,7 +665,7 @@ static DWORD const runSilentW(wchar_t const * const aString)
 	STARTUPINFOW StartupInfo;
 	PROCESS_INFORMATION ProcessInfo;
 	ULONG rc;
-	wchar_t lArgs[4*MAX_PATH_OR_CMD];
+	wchar_t * lArgs;
 	wchar_t * pEnvCMD;
 	wchar_t * pDefaultCMD = L"CMD.EXE";
 
@@ -674,6 +673,8 @@ static DWORD const runSilentW(wchar_t const * const aString)
 	StartupInfo.cb = sizeof(STARTUPINFOW);
 	StartupInfo.dwFlags = STARTF_USESHOWWINDOW;
 	StartupInfo.wShowWindow = SW_HIDE;
+
+	lArgs = (char *) malloc( (MAX_PATH_OR_CMD + aString) * sizeof(wchar_t) );
 
 	pEnvCMD = utf8to16( getenv("COMSPEC") );
 	if (pEnvCMD)
@@ -696,6 +697,7 @@ static DWORD const runSilentW(wchar_t const * const aString)
 				CREATE_NEW_CONSOLE, NULL, NULL,
 				&StartupInfo, &ProcessInfo))
 	{
+		free(lArgs);
 		return GetLastError();
 	}
 
@@ -708,6 +710,7 @@ static DWORD const runSilentW(wchar_t const * const aString)
 	CloseHandle(ProcessInfo.hThread);
 	CloseHandle(ProcessInfo.hProcess);
 
+	free(lArgs);
 	return rc;
 }
 
@@ -2500,7 +2503,7 @@ char const * tinyfd_saveFileDialog (
 	char const * const * const aFilterPatterns , /* NULL or {"*.jpg","*.png"} */
 	char const * const aSingleFilterDescription ) /* NULL or "image files" */
 {
-    static char lBuff [ MAX_PATH_OR_CMD ] ;
+	static char lBuff [ MAX_PATH_OR_CMD ] ;
 	char lString[MAX_PATH_OR_CMD] ;
 	char const * p ;
 	lBuff[0]='\0';
@@ -2746,8 +2749,8 @@ static int dirExists ( char const * const aDirPath )
 									
 static int detectPresence ( char const * const aExecutable )
 {
-    char lBuff [ MAX_PATH_OR_CMD ] ;
-    char lTestedString [ MAX_PATH_OR_CMD ] = "which " ;
+	char lBuff [ MAX_PATH_OR_CMD ] ;
+	char lTestedString [ MAX_PATH_OR_CMD ] = "which " ;
 	FILE * lIn ;
 
     strcat ( lTestedString , aExecutable ) ;
@@ -2768,20 +2771,20 @@ static int detectPresence ( char const * const aExecutable )
 
 static int tryCommand ( char const * const aCommand )
 {
-    char lBuff [ MAX_PATH_OR_CMD ] ;
-    FILE * lIn ;
+	char lBuff [ MAX_PATH_OR_CMD ] ;
+	FILE * lIn ;
 
-    lIn = popen ( aCommand , "r" ) ;
-    if ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) == NULL )
-    {	/* present */
-    	pclose ( lIn ) ;
-    	return 1 ;
-    }
-    else
-    {
-    	pclose ( lIn ) ;
-    	return 0 ;
-    }
+	lIn = popen ( aCommand , "r" ) ;
+	if ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) == NULL )
+	{	/* present */
+		pclose ( lIn ) ;
+		return 1 ;
+	}
+	else
+	{
+		pclose ( lIn ) ;
+		return 0 ;
+	}
 
 }
 
@@ -3118,17 +3121,17 @@ static int tkinter2Present ( )
 "-c \"try:\n\timport Tkinter;\nexcept:\n\tprint(0);\"";
 	int i;
 
-    if ( lTkinter2Present < 0 )
-    {
+	if ( lTkinter2Present < 0 )
+	{
 		strcpy(gPython2Name , "python" ) ;
 		sprintf ( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
-	    lTkinter2Present = tryCommand(lPythonCommand);		
-        if ( ! lTkinter2Present )
-	    {
+		lTkinter2Present = tryCommand(lPythonCommand);		
+		if ( ! lTkinter2Present )
+		{
 			strcpy(gPython2Name , "python2" ) ;
 			if ( detectPresence(gPython2Name) )
 			{
-sprintf ( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
+		sprintf ( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
 				lTkinter2Present = tryCommand(lPythonCommand);
 			}
 			else
@@ -3138,26 +3141,26 @@ sprintf ( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
 					sprintf ( gPython2Name , "python2.%d" , i ) ;
 					if ( detectPresence(gPython2Name) )
 					{
-sprintf ( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
+		sprintf ( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
 						lTkinter2Present = tryCommand(lPythonCommand);
 						break ;
 					}
 				}
 			}
-	    }
-    }
-    /* printf ("gPython2Name %s\n", gPython2Name) ; //*/
-    return lTkinter2Present && graphicMode ( ) ;
+		}
+	}
+	/* printf ("gPython2Name %s\n", gPython2Name) ; //*/
+	return lTkinter2Present && graphicMode ( ) ;
 }
 
 
 /* returns 0 for cancel/no , 1 for ok/yes */
 int tinyfd_messageBox (
-    char const * const aTitle , /* NULL or "" */
-    char const * const aMessage , /* NULL or ""  may contain \n and \t */
-    char const * const aDialogType , /* "ok" "okcancel" "yesno"*/
-    char const * const aIconType , /* "info" "warning" "error" "question" */
-    int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes */
+	char const * const aTitle , /* NULL or "" */
+	char const * const aMessage , /* NULL or ""  may contain \n and \t */
+	char const * const aDialogType , /* "ok" "okcancel" "yesno"*/
+	char const * const aIconType , /* "info" "warning" "error" "question" */
+	int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes */
 {
 	char lBuff [ MAX_PATH_OR_CMD ] ;
 	char * lDialogString = NULL ;
@@ -3304,8 +3307,8 @@ int tinyfd_messageBox (
 				strcat ( lDialogString , "information" ) ;
 			}
 		}
-        strcat ( lDialogString , ";if [ $? = 0 ];then echo 1;else echo 0;fi");
-    }
+		strcat ( lDialogString , ";if [ $? = 0 ];then echo 1;else echo 0;fi");
+  }
 	else if ( kdialogPresent() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return 1;}
@@ -3352,15 +3355,15 @@ int tinyfd_messageBox (
 		}
 		strcat ( lDialogString , ";if [ $? = 0 ];then echo 1;else echo 0;fi");
 	}
-    else if ( ! xdialogPresent() && tkinter2Present ( ) )
-    {
-			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"tkinter");return 1;}
+	else if ( ! xdialogPresent() && tkinter2Present ( ) )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"tkinter");return 1;}
 
-      strcpy ( lDialogString , gPython2Name ) ;
-      if ( ! isatty ( 1 ) && isDarwin ( ) )
-      {
-       	strcat ( lDialogString , " -i" ) ;  /* for osx without console */
-      }
+		strcpy ( lDialogString , gPython2Name ) ;
+		if ( ! isatty ( 1 ) && isDarwin ( ) )
+		{
+		 	strcat ( lDialogString , " -i" ) ;  /* for osx without console */
+		}
 		
 		strcat ( lDialogString ,
 " -c \"import Tkinter,tkMessageBox;root=Tkinter.Tk();root.withdraw();");
@@ -3373,10 +3376,10 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 
 		strcat ( lDialogString ,"res=tkMessageBox." ) ;
-      if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
-      {
-          strcat ( lDialogString , "askokcancel(" ) ;
-          if ( aDefaultButton )
+    if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
+    {
+      strcat ( lDialogString , "askokcancel(" ) ;
+      if ( aDefaultButton )
 			{
 				strcat ( lDialogString , "default=tkMessageBox.OK," ) ;
 			}
@@ -3384,11 +3387,11 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			{
 				strcat ( lDialogString , "default=tkMessageBox.CANCEL," ) ;
 			}
-        }
-        else if ( aDialogType && ! strcmp( "yesno" , aDialogType ) )
-        {
-            strcat ( lDialogString , "askyesno(" ) ;
-            if ( aDefaultButton )
+    }
+    else if ( aDialogType && ! strcmp( "yesno" , aDialogType ) )
+    {
+      strcat ( lDialogString , "askyesno(" ) ;
+      if ( aDefaultButton )
 			{
 				strcat ( lDialogString , "default=tkMessageBox.YES," ) ;
 			}
@@ -3396,29 +3399,29 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			{
 				strcat ( lDialogString , "default=tkMessageBox.NO," ) ;
 			}
-        }
-        else
-        {
-            strcat ( lDialogString , "showinfo(" ) ;
-        }
-        strcat ( lDialogString , "icon='" ) ;
-        if ( aIconType && (! strcmp( "question" , aIconType )
-          || ! strcmp( "error" , aIconType )
-          || ! strcmp( "warning" , aIconType ) ) )
-        {
-            strcat ( lDialogString , aIconType ) ;
-        }
-        else
-        {
-            strcat ( lDialogString , "info" ) ;
-        }
+    }
+    else
+    {
+			strcat ( lDialogString , "showinfo(" ) ;
+    }
+    strcat ( lDialogString , "icon='" ) ;
+    if ( aIconType && (! strcmp( "question" , aIconType )
+      || ! strcmp( "error" , aIconType )
+      || ! strcmp( "warning" , aIconType ) ) )
+    {
+			strcat ( lDialogString , aIconType ) ;
+    }
+    else
+    {
+			strcat ( lDialogString , "info" ) ;
+    }
 		strcat(lDialogString, "',") ;
-	    if ( aTitle && strlen(aTitle) )
-	    {
+    if ( aTitle && strlen(aTitle) )
+    {
 			strcat(lDialogString, "title='") ;
 			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "',") ;
-	    }
+    }
 		if ( aMessage && strlen(aMessage) )
 		{
 			strcat(lDialogString, "message='") ;

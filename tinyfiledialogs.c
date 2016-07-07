@@ -103,6 +103,7 @@ misrepresented as being the original software.
  #include <conio.h>
  #include <io.h>
  #define SLASH "\\"
+ int tinyfd_winUtf8 = 0 ;
 #else
  #include <limits.h>
  #include <unistd.h>
@@ -138,6 +139,7 @@ for the console mode:
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 static int gWarningDisplayed = 1 ;
+tinyfd_forceConsole = 1 ;
 #else
 static int gWarningDisplayed = 0 ;
 #endif
@@ -815,8 +817,8 @@ static char const * inputBoxWinGui(
 	char const * const aDefaultInput ) /* "" , if NULL it's a passwordBox */
 {
 	char lDialogString[4*MAX_PATH_OR_CMD];
-	//wchar_t const * lpDialogStringW;
-	//wchar_t lDialogStringW[4 * MAX_PATH_OR_CMD];
+	wchar_t const * lpDialogStringW;
+	wchar_t lDialogStringW[4 * MAX_PATH_OR_CMD];
 	FILE * lIn;
 	int lResult;
 #ifndef TINYFD_NOLIB
@@ -996,11 +998,16 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 	}
 #else /* TINYFD_NOLIB */
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
-	lDword = runSilentA(lDialogString);
-    
-	//lpDialogStringW = tinyfd_utf8to16(lDialogString);
-	//wcscpy(lDialogStringW, lpDialogStringW);
-	//lDword = runSilentW( lDialogStringW );
+	if (tinyfd_winUtf8)
+	{
+		lpDialogStringW = tinyfd_utf8to16(lDialogString);
+		wcscpy(lDialogStringW, lpDialogStringW);
+		lDword = runSilentW( lDialogStringW );
+	}
+	else
+	{
+		lDword = runSilentA(lDialogString);
+	}
 #endif /* TINYFD_NOLIB */
 
 	if (aDefaultInput)
@@ -2375,13 +2382,20 @@ int tinyfd_messageBox (
 	char lChar ;
 
 #ifndef TINYFD_NOLIB
-	if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
-	  && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
+	if ((!tinyfd_forceConsole || !(GetConsoleWindow() || dialogPresent()))
+		&& (!getenv("SSH_CLIENT") || getenv("DISPLAY")))
 	{
-		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return 1;}
-		
-		return messageBoxWinGuiA(
-				aTitle,aMessage,aDialogType,aIconType,aDefaultButton);
+		if (aTitle&&!strcmp(aTitle, "tinyfd_query")){ strcpy(tinyfd_response, "windows"); return 1; }
+		if (tinyfd_winUtf8)
+		{
+			return messageBoxWinGui8(
+				aTitle, aMessage, aDialogType, aIconType, aDefaultButton);
+		}
+		else
+		{
+			return messageBoxWinGuiA(
+				aTitle, aMessage, aDialogType, aIconType, aDefaultButton);
+		}
 	}
 	else
 #endif /* TINYFD_NOLIB */
@@ -2472,13 +2486,13 @@ char const * tinyfd_inputBox(
 		return inputBoxWinGui(lBuff,aTitle,aMessage,aDefaultInput);
 	}
 	else if ( dialogPresent() )
-  {
-      if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
-      lBuff[0]='\0';
-      return inputBoxWinConsole(lBuff,aTitle,aMessage,aDefaultInput);
-  }
-  else 
-  {
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
+		lBuff[0]='\0';
+		return inputBoxWinConsole(lBuff,aTitle,aMessage,aDefaultInput);
+	}
+	else 
+	{
       if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return (char const *)0;}
       lBuff[0]='\0';
       if (!gWarningDisplayed && !tinyfd_forceConsole)
@@ -2546,8 +2560,16 @@ char const * tinyfd_saveFileDialog (
 	  && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char const *)1;}
-		p = saveFileDialogWinGuiA(lBuff,
-				aTitle,aDefaultPathAndFile,aNumOfFilterPatterns,aFilterPatterns,aSingleFilterDescription);
+		if (tinyfd_winUtf8)
+		{
+			p = saveFileDialogWinGui8(lBuff,
+				aTitle, aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription);
+		}
+		else
+		{
+			p = saveFileDialogWinGuiA(lBuff,
+				aTitle, aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription);
+		}
 	}
 	else
 #endif /* TINYFD_NOLIB */
@@ -2596,9 +2618,18 @@ char const * tinyfd_openFileDialog (
 	  && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char const *)1;}
-		p = openFileDialogWinGuiA(lBuff,
-				aTitle,aDefaultPathAndFile,aNumOfFilterPatterns,
-				aFilterPatterns,aSingleFilterDescription,aAllowMultipleSelects);
+		if (tinyfd_winUtf8)
+		{
+			p = openFileDialogWinGui8(lBuff,
+				aTitle, aDefaultPathAndFile, aNumOfFilterPatterns,
+				aFilterPatterns, aSingleFilterDescription, aAllowMultipleSelects);
+		}
+		else
+		{
+			p = openFileDialogWinGuiA(lBuff,
+				aTitle, aDefaultPathAndFile, aNumOfFilterPatterns,
+				aFilterPatterns, aSingleFilterDescription, aAllowMultipleSelects);
+		}
 	}
 	else
 #endif /* TINYFD_NOLIB */
@@ -2642,7 +2673,14 @@ char const * tinyfd_selectFolderDialog (
 	  && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char const *)1;}
-		p = selectFolderDialogWinGuiA(lBuff,aTitle,aDefaultPath);
+		if (tinyfd_winUtf8)
+		{
+			p = selectFolderDialogWinGui8(lBuff, aTitle, aDefaultPath);
+		}
+		else
+		{
+			p = selectFolderDialogWinGuiA(lBuff, aTitle, aDefaultPath);
+		}
 	}
 	else
 #endif /* TINYFD_NOLIB */
@@ -2685,8 +2723,16 @@ char const * tinyfd_colorChooser(
 	  && (!getenv("SSH_CLIENT") || getenv("DISPLAY")) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char const *)1;}
-		return colorChooserWinGuiA(
-						aTitle,aDefaultHexRGB,aDefaultRGB,aoResultRGB);
+		if (tinyfd_winUtf8)
+		{
+			return colorChooserWinGui8(
+				aTitle, aDefaultHexRGB, aDefaultRGB, aoResultRGB);
+		}
+		else
+		{
+			return colorChooserWinGuiA(
+				aTitle, aDefaultHexRGB, aDefaultRGB, aoResultRGB);
+		}
 	}
 	else
 #endif /* TINYFD_NOLIB */

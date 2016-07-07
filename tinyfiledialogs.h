@@ -248,6 +248,7 @@ char const * tinyfd_arrayDialog(
 /*
 - This is not for android nor ios.
 - The code is pure C, perfectly compatible with C++.
+- the utf-16 prototypes are in the header file
 - The API is Fortran ISO_C_BINDING compliant
 - C# via dll, see example file
 - AVOID USING " AND ' IN TITLES AND MESSAGES.

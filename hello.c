@@ -1,6 +1,6 @@
 /*
  _________
-/         \ hello.c v2.5.5 [July 7, 2016] zlib licence
+/         \ hello.c v2.5.6 [August 6, 2016] zlib licence
 |tiny file| Hello World file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -18,7 +18,7 @@ Please
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
-Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
+Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 
 A single C file (add it to your C or C++ project) with 6 boxes:
 - message / question

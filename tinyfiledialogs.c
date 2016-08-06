@@ -1,6 +1,6 @@
 /*
  _________
-/         \ tinyfiledialogs.c v2.5.5 [July 7, 2016] zlib licence
+/         \ tinyfiledialogs.c v2.5.6 [August 6, 2016] zlib licence
 |tiny file| Unique code file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -21,7 +21,7 @@ Please
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
-Native dialog library for WINDOWS MAC OSX (10.4~10.11) GTK+ QT CONSOLE & more
+Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 
 A single C file (add it to your C or C++ project) with 6 boxes:
 - message / question
@@ -92,12 +92,12 @@ misrepresented as being the original software.
  #pragma warning(disable:4100) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
  #pragma warning(disable:4706) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
  #ifndef _WIN32_WINNT
- #define _WIN32_WINNT 0x0500
+  #define _WIN32_WINNT 0x0500
  #endif
  #ifndef TINYFD_NOLIB
   #include <Windows.h>
   #include <Shlobj.h>
- #endif /* TINYFD_NOLIB */
+ #endif
  #include <sys/stat.h>
  #include <conio.h>
  /*#include <io.h>*/
@@ -115,7 +115,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.5.5";
+char tinyfd_version [8] = "2.5.6";
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -831,10 +831,10 @@ static char const * inputBoxWinGui(
 	int lResult;
 	int lTitleLen;
 	int lMessageLen;
-/*	wchar_t * lDialogStringW; */
 
 #ifndef TINYFD_NOLIB
-/*	DWORD lDword; */
+	wchar_t * lDialogStringW;
+	DWORD lDword;
 #endif
 
 	lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
@@ -977,12 +977,12 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 
 	strcpy(lDialogString, "");
 
-/* #ifdef TINYFD_NOLIB */
-	if ( ! GetConsoleWindow() )
+#ifndef TINYFD_NOLIB
+	if ( aDefaultInput && !GetConsoleWindow())
 	{
 		strcat(lDialogString, "powershell -WindowStyle Hidden -Command \"");
 	}
-/* #endif */
+#endif
 
 	if (aDefaultInput)
 	{
@@ -995,37 +995,46 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 			"mshta.exe %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.hta");
 	}
 
-	if (!GetConsoleWindow())
+#ifndef TINYFD_NOLIB
+	if (aDefaultInput && !GetConsoleWindow())
 	{
 		strcat(lDialogString, "\"");
 	}
+#endif
 
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
-	if (!(lIn = _popen(lDialogString, "r")))
-	{
-		free(lDialogString);
-		return NULL ;
-	}
-	while ( fgets ( aoBuff , MAX_PATH_OR_CMD , lIn ) != NULL )
-	{}
-	_pclose ( lIn ) ;
-	if ( aoBuff[strlen ( aoBuff ) -1] == '\n' )
-	{
-		aoBuff[strlen ( aoBuff ) -1] = '\0' ;
-	}
 
-/*	
-	if (tinyfd_winUtf8)
+#ifndef TINYFD_NOLIB
+	if ( ! aDefaultInput )
 	{
-		lDialogStringW = utf8to16(lDialogString);
-		lDword = runSilentW( lDialogStringW );
-		free(lDialogStringW);
+		if (tinyfd_winUtf8)
+		{
+			lDialogStringW = utf8to16(lDialogString);
+			lDword = runSilentW(lDialogStringW);
+			free(lDialogStringW);
+		}
+		else
+		{
+			lDword = runSilentA(lDialogString);
+		}
 	}
 	else
+#endif /* TINYFD_NOLIB */
 	{
-		lDword = runSilentA(lDialogString);
+		if (!(lIn = _popen(lDialogString, "r")))
+		{
+			free(lDialogString);
+			return NULL;
+		}
+		while (fgets(aoBuff, MAX_PATH_OR_CMD, lIn) != NULL)
+		{
+		}
+		_pclose(lIn);
+		if (aoBuff[strlen(aoBuff) - 1] == '\n')
+		{
+			aoBuff[strlen(aoBuff) - 1] = '\0';
+		}
 	}
-*/
 
 	if (aDefaultInput)
 	{
@@ -2430,7 +2439,11 @@ char const * tinyfd_inputBox(
 	HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
 #endif /* TINYFD_NOLIB */
 
-	if ((!tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent()))
+	if ((!tinyfd_forceConsole || !( 
+#ifndef TINYFD_NOLIB
+		GetConsoleWindow() || 
+#endif /* TINYFD_NOLIB */
+		dialogPresent()))
 		&& ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char const *)1;}

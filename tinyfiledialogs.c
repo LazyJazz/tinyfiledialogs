@@ -1,6 +1,6 @@
 /*
  _________
-/         \ tinyfiledialogs.c v2.5.6 [August 6, 2016] zlib licence
+/         \ tinyfiledialogs.c v2.5.7 [August 16, 2016] zlib licence
 |tiny file| Unique code file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -39,7 +39,7 @@ NO MAIN LOOP
 
 The dialogs can be forced into console mode
 
-Windows [UTF-8 + UTF-16]
+Windows [MBCS + UTF-8 + UTF-16]
 - native code & some vbs create the graphic dialogs
 - enhanced console mode can use dialog.exe from
 http://andrear.altervista.org/home/cdialog.php
@@ -115,7 +115,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.5.6";
+char tinyfd_version [8] = "2.5.7";
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -3320,7 +3320,7 @@ int tinyfd_messageBox (
 				strcat ( lDialogString , "information" ) ;
 			}
 		}
-		strcat ( lDialogString , ";if [$? = 0];then echo 1;else echo 0;fi");
+		strcat ( lDialogString , ";if [ $? = 0 ];then echo 1;else echo 0;fi");
   }
 	else if ( kdialogPresent() )
 	{
@@ -3366,7 +3366,7 @@ int tinyfd_messageBox (
 			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "\"") ;
 		}
-		strcat ( lDialogString , ";if [$? = 0];then echo 1;else echo 0;fi");
+		strcat ( lDialogString , ";if [ $? = 0 ];then echo 1;else echo 0;fi");
 	}
 	else if ( ! xdialogPresent() && tkinter2Present ( ) )
 	{
@@ -3606,11 +3606,11 @@ else :\n\tprint 1\n\"" ) ;
 		if ( lWasGraphicDialog )
 		{
 			strcat(lDialogString,
-				   "\" 10 60 ) 2>&1;if [$? = 0];then echo 1;else echo 0;fi");
+				   "\" 10 60 ) 2>&1;if [ $? = 0 ];then echo 1;else echo 0;fi");
 		}
 		else
 		{
-			strcat(lDialogString, "\" 10 60 >/dev/tty) 2>&1;if [$? = 0];");
+			strcat(lDialogString, "\" 10 60 >/dev/tty) 2>&1;if [ $? = 0 ];");
 			if ( lWasXterm )
 			{
 				strcat ( lDialogString ,
@@ -3876,7 +3876,7 @@ char const * tinyfd_inputBox(
 			strcat(lDialogString, " --hide-text") ;
 		}
 		strcat ( lDialogString ,
-				");if [$? = 0];then echo 1$szAnswer;else echo 0$szAnswer;fi");
+				");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
 	}
 	else if ( kdialogPresent() )
 	{
@@ -3909,7 +3909,7 @@ char const * tinyfd_inputBox(
 			strcat(lDialogString, "\"") ;
 		}
 		strcat ( lDialogString ,
-				");if [$? = 0];then echo 1$szAnswer;else echo 0$szAnswer;fi");
+				");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
 	}
 	else if ( ! xdialogPresent() && tkinter2Present ( ) )
 	{
@@ -4071,14 +4071,14 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		if ( lWasGraphicDialog )
 		{
 			strcat(lDialogString,") 2>/tmp/tinyfd.txt;\
-	if [$? = 0];then tinyfdBool=1;else tinyfdBool=0;fi;\
+	if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
 	tinyfdRes=$(cat /tmp/tinyfd.txt);\
 	rm /tmp/tinyfd.txt;echo $tinyfdBool$tinyfdRes") ;
 		}
 		else
 		{
 			strcat(lDialogString,">/dev/tty ) 2>/tmp/tinyfd.txt;\
-	if [$? = 0];then tinyfdBool=1;else tinyfdBool=0;fi;\
+	if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
 	tinyfdRes=$(cat /tmp/tinyfd.txt);\
 	rm /tmp/tinyfd.txt;echo $tinyfdBool$tinyfdRes") ;
 			if ( lWasXterm )

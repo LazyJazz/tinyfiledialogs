@@ -1,6 +1,6 @@
 /*
  _________
-/         \ tinyfiledialogs.c v2.5.7 [August 16, 2016] zlib licence
+/         \ tinyfiledialogs.c v2.5.8 [September 13, 2016] zlib licence
 |tiny file| Unique code file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -156,6 +156,11 @@ static char gAsciiArt[] ="\
 \\_____  ____/\n\
       \\|";
 
+#ifdef _WIN32
+static char gMessageWin[] = "tiny file dialogs on Windows needs:\n\t\
+							a graphic display\nor\tdialog.exe (enhanced console mode)\
+							\nor\ta console for basic input";
+#else
 static char gMessageUnix[] = "tiny file dialogs on UNIX needs:\n\tapplescript\
 \nor\tzenity (version 3 for the color chooser)\
 \nor\tmatedialog\nor\tkdialog\
@@ -163,10 +168,7 @@ static char gMessageUnix[] = "tiny file dialogs on UNIX needs:\n\tapplescript\
 \nor\tdialog (opens a console if needed)\
 \nor\twhiptail, gdialog, gxmessage or xmessage (really?)\
 \nor\tit will open a console (if needed) for basic input (you had it comming!)";
-
-static char gMessageWin[] = "tiny file dialogs on Windows needs:\n\t\
-a graphic display\nor\tdialog.exe (enhanced console mode)\
-\nor\ta console for basic input";
+#endif
 
 static char * getPathWithoutFinalSlash(
 	char * const aoDestination, /* make sure it is allocated, use _MAX_PATH */
@@ -607,7 +609,7 @@ static char * utf16to8(wchar_t const * const aUtf16string)
 }
 
 
-static DWORD const runSilentA(char const * const aString)
+static void runSilentA(char const * const aString)
 {
 	STARTUPINFOA StartupInfo;
 	PROCESS_INFORMATION ProcessInfo;
@@ -649,7 +651,7 @@ static DWORD const runSilentA(char const * const aString)
 		&StartupInfo, &ProcessInfo))
 	{
 		free(lArgs);
-		return GetLastError();
+		return; /* GetLastError(); */
 	}
 
 	WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
@@ -660,11 +662,11 @@ static DWORD const runSilentA(char const * const aString)
 	CloseHandle(ProcessInfo.hProcess);
 
 	free(lArgs);
-	return rc;
+	return; /* rc */
 }
 
 
-static DWORD const runSilentW(wchar_t const * const aString)
+static void runSilentW(wchar_t const * const aString)
 {
 	STARTUPINFOW StartupInfo;
 	PROCESS_INFORMATION ProcessInfo;
@@ -707,7 +709,7 @@ static DWORD const runSilentW(wchar_t const * const aString)
 				&StartupInfo, &ProcessInfo))
 	{
 		free(lArgs);
-		return GetLastError();
+		return; /* GetLastError(); */
 	}
 
 	WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
@@ -720,7 +722,7 @@ static DWORD const runSilentW(wchar_t const * const aString)
 	CloseHandle(ProcessInfo.hProcess);
 
 	free(lArgs);
-	return rc;
+	return; /* rc */
 }
 
 
@@ -834,7 +836,6 @@ static char const * inputBoxWinGui(
 
 #ifndef TINYFD_NOLIB
 	wchar_t * lDialogStringW;
-	DWORD lDword;
 #endif
 
 	lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
@@ -1010,12 +1011,12 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 		if (tinyfd_winUtf8)
 		{
 			lDialogStringW = utf8to16(lDialogString);
-			lDword = runSilentW(lDialogStringW);
+			runSilentW(lDialogStringW);
 			free(lDialogStringW);
 		}
 		else
 		{
-			lDword = runSilentA(lDialogString);
+			runSilentA(lDialogString);
 		}
 	}
 	else

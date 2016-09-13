@@ -4,7 +4,7 @@
 |tiny file| Unique header file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
-     \|           	                     mailto:tinfyfiledialogs@ysengrin.com
+     \|           	                     mailto:tinyfiledialogs@ysengrin.com
 
 A big thank you to Don Heyse http://ldglite.sf.net for
                    his code contributions, bug corrections & thorough testing!

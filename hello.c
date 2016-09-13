@@ -4,7 +4,7 @@
 |tiny file| Hello World file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
-     \|           	                     mailto:tinfyfiledialogs@ysengrin.com
+     \|           	                     mailto:tinyfiledialogs@ysengrin.com
 
             git://git.code.sf.net/p/tinyfiledialogs/code
 

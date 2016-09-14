@@ -267,6 +267,8 @@ int main()
 
 	tinyfd_messageBox("The selected hexcolor is",
 		lTheHexColor, "ok", "info", 1);
+
+	return 0;
 }
 
 

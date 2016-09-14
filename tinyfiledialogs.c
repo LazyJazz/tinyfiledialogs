@@ -85,7 +85,7 @@ misrepresented as being the original software.
 #include <ctype.h>
 
 #include "tinyfiledialogs.h"
-/* #define TINYFD_NOLIB */
+/* #define TINYFD_NOLIB // */
 
 #ifdef _WIN32
  #ifndef _WIN32_WINNT
@@ -5607,7 +5607,7 @@ tinyfd_messageBox("The selected hexcolor is",
 
 	return 0;
 }
-*/
+// */
 
 #ifdef _MSC_VER
 #pragma warning(default:4996)

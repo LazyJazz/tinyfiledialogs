@@ -87,7 +87,7 @@ misrepresented as being the original software.
 #include <stdio.h>
 #include <string.h>
 #include "tinyfiledialogs.h"
-int main()
+int main(void)
 {
 	char const * lTmp;
 	char const * lTheSaveFileName;
@@ -245,6 +245,8 @@ int main()
 
 	tinyfd_messageBox("The selected hexcolor is",
 		lTheHexColor, "ok", "info", 1);
+
+	return 0;
 }
 
 /*

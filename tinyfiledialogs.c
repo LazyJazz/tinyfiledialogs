@@ -5446,7 +5446,7 @@ char const * tinyfd_arrayDialog (
 
 
 /*
-int main()
+int main(void)
 {
 char const * lTmp;
 char const * lTheSaveFileName;
@@ -5597,6 +5597,8 @@ if (!lTheHexColor)
 
 tinyfd_messageBox("The selected hexcolor is",
 	lTheHexColor, "ok", "info", 1);
+
+	return 0;
 }
 //*/
 

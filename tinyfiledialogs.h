@@ -100,6 +100,7 @@ extern "C" {
 extern char tinyfd_version[8]; /* contains tinyfd current version number */
 
 #ifdef _WIN32
+/* tinyfd_winUtf8 is not used yet, do not modify */
 extern int tinyfd_winUtf8; /* 0 (default) or 1 */
 /* on windows string char can be 0:MBSC or 1:UTF-8 (work in progress)
 unless your code is really prepared for it, leave this on MBSC.

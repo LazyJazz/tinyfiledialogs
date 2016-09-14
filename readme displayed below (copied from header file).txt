@@ -102,6 +102,7 @@ char const * tinyfd_colorChooser(
   http://andrear.altervista.org/home/cdialog.php
 - If dialog is missing, it will switch to basic console input.
 - You can query the type of dialog that will be use.
+- MinGW needs gcc >= v4.9 otherwise some headers are incomplete.
 
 - Here is the Hello World:
             if a console is missing, it will use graphic dialogs
@@ -276,7 +277,7 @@ UNIX :
 $ gcc -o hello hello.c tinyfiledialogs.c
 ( or clang tcc cc CC )
 
-MinGW (needs gcc v4.9 otherwise some headers are incomplete):
+MinGW (needs gcc >= v4.9 otherwise some headers are incomplete):
 > gcc -o hello.exe hello.c tinyfiledialogs.c -LC:/mingw/lib -lcomdlg32 -lole32
 (unfortunately some headers are missing with tcc)
 

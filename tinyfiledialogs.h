@@ -250,9 +250,11 @@ char const * tinyfd_arrayDialog(
 /*
 - This is not for android nor ios.
 - The code is pure C, perfectly compatible with C++.
+- the utf-16 prototypes are in the header file
 - The API is Fortran ISO_C_BINDING compliant
 - C# via dll, see example file
-- AVOID USING " AND ' IN TITLES AND MESSAGES.
+- OSX supported from 10.4 to 10.11
+- Avoid using " and ' in titles and messages.
 - There's one file filter only, it may contain several patterns.
 - If no filter description is provided,
   the list of patterns will become the description.
@@ -284,6 +286,7 @@ char const * tinyfd_arrayDialog(
   http://andrear.altervista.org/home/cdialog.php
 - If dialog is missing, it will switch to basic console input.
 - You can query the type of dialog that will be use.
+- MinGW needs gcc >= v4.9 otherwise some headers are incomplete.
 - The Hello World (and a bit more) is on the sourceforge site:
 */
 

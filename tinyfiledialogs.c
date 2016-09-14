@@ -85,7 +85,7 @@ misrepresented as being the original software.
 #include <ctype.h>
 
 #include "tinyfiledialogs.h"
-/* #define TINYFD_NOLIB //*/
+/* #define TINYFD_NOLIB */
 
 #ifdef _WIN32
  #ifndef _WIN32_WINNT
@@ -188,7 +188,7 @@ static char * getPathWithoutFinalSlash(
 		}
 		if (lTmp)
 		{
-			strncpy(aoDestination, aSource, lTmp - aSource);
+			strncpy(aoDestination, aSource, lTmp - aSource );
 			aoDestination[lTmp - aSource] = '\0';
 		}
 		else
@@ -261,7 +261,7 @@ static void Hex2RGB( char const aHexRGB [8] ,
 			aoResultRGB[1] = (unsigned char)strtoul(lColorChannel+3,NULL,16);
 			lColorChannel[3] = '\0';
 			aoResultRGB[0] = (unsigned char)strtoul(lColorChannel+1,NULL,16);
-/* printf("%d %d %d\n", aoResultRGB[0], aoResultRGB[1], aoResultRGB[2]); //*/
+/* printf("%d %d %d\n", aoResultRGB[0], aoResultRGB[1], aoResultRGB[2]); */
 		}
 		else
 		{
@@ -285,7 +285,7 @@ static void RGB2Hex( unsigned char const aRGB [3] ,
 			sprintf(aoResultHexRGB, "#%02hhx%02hhx%02hhx",
 #endif
 				aRGB[0], aRGB[1], aRGB[2]);
-			/* printf("aoResultHexRGB %s\n", aoResultHexRGB); //*/
+			/* printf("aoResultHexRGB %s\n", aoResultHexRGB); */
 		}
 		else
 		{
@@ -3096,7 +3096,7 @@ static int osx9orBetter ( )
 			}
 		}
 		pclose ( lIn ) ;
-		/* printf ("Osx10 = %d, %d = <%s>\n", lOsx9orBetter, V, lBuff) ; //*/   
+		/* printf ("Osx10 = %d, %d = <%s>\n", lOsx9orBetter, V, lBuff) ; */   
 	}
 	return lOsx9orBetter ;
 }
@@ -3171,7 +3171,7 @@ static int tkinter2Present ( )
 			}
 		}
 	}
-	/* printf ("gPython2Name %s\n", gPython2Name) ; //*/
+	/* printf ("gPython2Name %s\n", gPython2Name) ; */
 	return lTkinter2Present && graphicMode ( ) ;
 }
 
@@ -3760,7 +3760,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		return lResult ;
 	}
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
 	if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
 	{
 		free(lDialogString);
@@ -3771,15 +3771,15 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 
 	pclose ( lIn ) ;
 
-	/* printf ( "lBuff: %s len: %lu \n" , lBuff , strlen(lBuff) ) ; //*/
+	/* printf ( "lBuff: %s len: %lu \n" , lBuff , strlen(lBuff) ) ; */
 	if ( lBuff[strlen ( lBuff ) -1] == '\n' )
 	{
 		lBuff[strlen ( lBuff ) -1] = '\0' ;
 	}
-	/* printf ( "lBuff1: %s len: %lu \n" , lBuff , strlen(lBuff) ) ; //*/
+	/* printf ( "lBuff1: %s len: %lu \n" , lBuff , strlen(lBuff) ) ; */
 
 	lResult =  strcmp ( lBuff , "1" ) ? 0 : 1 ;
-	/* printf ( "lResult: %d\n" , lResult ) ; //*/
+	/* printf ( "lResult: %d\n" , lResult ) ; */
 	free(lDialogString);
 	return lResult ;
 }
@@ -4170,7 +4170,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 
 		lEOF = fgets(lBuff, MAX_PATH_OR_CMD, stdin);
-		/* printf("lbuff<%c><%d>\n",lBuff[0],lBuff[0]); //*/
+		/* printf("lbuff<%c><%d>\n",lBuff[0],lBuff[0]); */
 		if ( ! lEOF  || (lBuff[0] == '\0') )
 		{
 			free(lDialogString);
@@ -4180,7 +4180,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		if ( lBuff[0] == '\n' )
 		{
 			lEOF = fgets(lBuff, MAX_PATH_OR_CMD, stdin);
-			/* printf("lbuff<%c><%d>\n",lBuff[0],lBuff[0]); //*/
+			/* printf("lbuff<%c><%d>\n",lBuff[0],lBuff[0]); */
 			if ( ! lEOF  || (lBuff[0] == '\0') )
 			{
 				free(lDialogString);
@@ -4207,7 +4207,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		return lBuff ;
 	}
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
 	if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
 	{
 		free(lDialogString);
@@ -4218,13 +4218,13 @@ frontmost of process \\\"Python\\\" to true' ''');");
 
 	pclose ( lIn ) ;
 
-	/* printf ( "len Buff: %lu\n" , strlen(lBuff) ) ; //*/
-	/* printf ( "lBuff0: %s\n" , lBuff ) ; //*/
+	/* printf ( "len Buff: %lu\n" , strlen(lBuff) ) ; */
+	/* printf ( "lBuff0: %s\n" , lBuff ) ; */
 	if ( lBuff[strlen ( lBuff ) -1] == '\n' )
 	{
 		lBuff[strlen ( lBuff ) -1] = '\0' ;
 	}
-	/* printf ( "lBuff1: %s len: %lu \n" , lBuff , strlen(lBuff) ) ; //*/
+	/* printf ( "lBuff1: %s len: %lu \n" , lBuff , strlen(lBuff) ) ; */
 	if ( lWasBasicXterm )
 	{
 		if ( strstr(lBuff,"^[") ) /* esc was pressed */
@@ -4235,13 +4235,13 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	}
 
 	lResult =  strncmp ( lBuff , "1" , 1) ? 0 : 1 ;
-	/* printf ( "lResult: %d \n" , lResult ) ; //*/
+	/* printf ( "lResult: %d \n" , lResult ) ; */
 	if ( ! lResult )
 	{
 		free(lDialogString);
 		return NULL ;
 	}
-	/* printf ( "lBuff+1: %s\n" , lBuff+1 ) ; //*/
+	/* printf ( "lBuff+1: %s\n" , lBuff+1 ) ; */
 	free(lDialogString);
 	return lBuff+1 ;
 }
@@ -4531,7 +4531,7 @@ char const * tinyfd_saveFileDialog (
 		return p ;
 	}
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
     if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
     {
         return NULL ;
@@ -4543,7 +4543,7 @@ char const * tinyfd_saveFileDialog (
     {
     	lBuff[strlen ( lBuff ) -1] = '\0' ;
     }
-	/* printf ( "lBuff: %s\n" , lBuff ) ; //*/
+	/* printf ( "lBuff: %s\n" , lBuff ) ; */
 	if ( ! strlen(lBuff) )
 	{
 		return NULL;
@@ -4890,7 +4890,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		return p2 ;
 	}
 
-     /* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+     /* printf ( "lDialogString: %s\n" , lDialogString ) ; */
     if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
     {
         return NULL ;
@@ -4906,14 +4906,14 @@ frontmost of process \\\"Python\\\" to true' ''');");
     {
     	lBuff[strlen ( lBuff ) -1] = '\0' ;
     }
-    /* printf ( "lBuff: %s\n" , lBuff ) ; //*/
+    /* printf ( "lBuff: %s\n" , lBuff ) ; */
 	if ( lWasKdialog && aAllowMultipleSelects )
 	{
 		p = lBuff ;
 		while ( ( p = strchr ( p , '\n' ) ) )
 			* p = '|' ;
 	}
-	/* printf ( "lBuff2: %s\n" , lBuff ) ; //*/
+	/* printf ( "lBuff2: %s\n" , lBuff ) ; */
 	if ( ! strlen ( lBuff )  )
 	{
 		return NULL;
@@ -4930,7 +4930,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	{
 		return NULL ;
 	}
-	/* printf ( "lBuff3: %s\n" , p2 ) ; //*/
+	/* printf ( "lBuff3: %s\n" , p2 ) ; */
 
 	return p2 ;
 }
@@ -5133,7 +5133,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 		return p ;
 	}
-    /* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+    /* printf ( "lDialogString: %s\n" , lDialogString ) ; */
     if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
     {
         return NULL ;
@@ -5145,7 +5145,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
     {
     	lBuff[strlen ( lBuff ) -1] = '\0' ;
     }
-	/* printf ( "lBuff: %s\n" , lBuff ) ; //*/
+	/* printf ( "lBuff: %s\n" , lBuff ) ; */
 	if ( ! strlen ( lBuff ) || ! dirExists ( lBuff ) )
 	{
 		return NULL ;
@@ -5333,7 +5333,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		return p ;
 	}
 
-    /* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+    /* printf ( "lDialogString: %s\n" , lDialogString ) ; */
     if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
     {
         return NULL ;
@@ -5346,8 +5346,8 @@ frontmost of process \\\"Python\\\" to true' ''');");
     {
         return NULL ;
     }
-	/* printf ( "len Buff: %lu\n" , strlen(lBuff) ) ; //*/
-	/* printf ( "lBuff0: %s\n" , lBuff ) ; //*/
+	/* printf ( "len Buff: %lu\n" , strlen(lBuff) ) ; */
+	/* printf ( "lBuff0: %s\n" , lBuff ) ; */
     if ( lBuff[strlen ( lBuff ) -1] == '\n' )
     {
     	lBuff[strlen ( lBuff ) -1] = '\0' ;
@@ -5371,8 +5371,8 @@ frontmost of process \\\"Python\\\" to true' ''');");
     {
 		Hex2RGB(lBuff,aoResultRGB);
 	}
-	/* printf("%d %d %d\n", aoResultRGB[0],aoResultRGB[1],aoResultRGB[2]); //*/
-	/* printf ( "lBuff: %s\n" , lBuff ) ; //*/
+	/* printf("%d %d %d\n", aoResultRGB[0],aoResultRGB[1],aoResultRGB[2]); */
+	/* printf ( "lBuff: %s\n" , lBuff ) ; */
 	return lBuff ;
 }
 
@@ -5430,7 +5430,7 @@ char const * tinyfd_arrayDialog (
 		return NULL ;
 	}
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
 	if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
 	{
 		return NULL ;
@@ -5442,7 +5442,7 @@ char const * tinyfd_arrayDialog (
 	{
 		lBuff[strlen ( lBuff ) -1] = '\0' ;
 	}
-	/* printf ( "lBuff: %s\n" , lBuff ) ; //*/
+	/* printf ( "lBuff: %s\n" , lBuff ) ; */
 	if ( ! strlen ( lBuff ) )
 	{
 		return NULL ;
@@ -5607,7 +5607,7 @@ tinyfd_messageBox("The selected hexcolor is",
 
 	return 0;
 }
-//*/
+*/
 
 #ifdef _MSC_VER
 #pragma warning(default:4996)

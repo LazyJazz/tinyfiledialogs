@@ -87,15 +87,9 @@ misrepresented as being the original software.
 if you don't want to include the code creating the graphic dialogs.
 Then you won't need to link against Comdlg32.lib and Ole32.lib */
 
-/* if tinydialogs.c is compiled with a C++ compiler rather than with a C compiler
-(ie. you change the extension from .c to .cpp), you need to comment out:
-extern "C" {
-and the corresponding closing bracket near the end of this file:
-}
-*/
 #ifdef	__cplusplus
 extern "C" {
-#endif /* __cplusplus */
+#endif
 
 extern char tinyfd_version[8]; /* contains tinyfd current version number */
 
@@ -243,7 +237,7 @@ char const * tinyfd_arrayDialog(
 
 #ifdef	__cplusplus
 }
-#endif /* __cplusplus */
+#endif
 
 #endif /* TINYFILEDIALOGS_H */
 

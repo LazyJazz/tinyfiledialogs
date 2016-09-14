@@ -103,7 +103,9 @@ int main(void)
 
 	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 
+#ifdef _MSC_VER
 #pragma warning(disable:4996) /* silences warning about strcpy strcat fopen*/
+#endif
 
 	if (lWillBeGraphicMode)
 	{
@@ -190,7 +192,9 @@ int main(void)
 
 	lIn = fopen(lTheOpenFileName, "r");
 
+#ifdef _MSC_VER
 #pragma warning(default:4996)
+#endif
 
 	if (!lIn)
 	{

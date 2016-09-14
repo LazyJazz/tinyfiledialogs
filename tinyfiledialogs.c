@@ -88,9 +88,6 @@ misrepresented as being the original software.
 /* #define TINYFD_NOLIB //*/
 
 #ifdef _WIN32
- #pragma warning(disable:4996) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
- #pragma warning(disable:4100) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
- #pragma warning(disable:4706) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
  #ifndef _WIN32_WINNT
   #define _WIN32_WINNT 0x0500
  #endif
@@ -169,6 +166,12 @@ static char gMessageUnix[] = "tiny file dialogs on UNIX needs:\n\tapplescript\
 \nor\tdialog (opens a console if needed)\
 \nor\twhiptail, gdialog, gxmessage or xmessage (really?)\
 \nor\tit will open a console (if needed) for basic input (you had it comming!)";
+#endif
+
+#ifdef _MSC_VER
+#pragma warning(disable:4996) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
+#pragma warning(disable:4100) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
+#pragma warning(disable:4706) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
 #endif
 
 static char * getPathWithoutFinalSlash(
@@ -276,8 +279,12 @@ static void RGB2Hex( unsigned char const aRGB [3] ,
 	{
 		if ( aRGB )
 		{
-			sprintf(aoResultHexRGB,"#%02hhx%02hhx%02hhx",
-						aRGB[0],aRGB[1],aRGB[2]);
+#if defined(__GNUC__) && defined(_WIN32)
+			sprintf(aoResultHexRGB, "#%02hx%02hx%02hx",
+#else
+			sprintf(aoResultHexRGB, "#%02hhx%02hhx%02hhx",
+#endif
+				aRGB[0], aRGB[1], aRGB[2]);
 			/* printf("aoResultHexRGB %s\n", aoResultHexRGB); //*/
 		}
 		else
@@ -5602,7 +5609,7 @@ tinyfd_messageBox("The selected hexcolor is",
 }
 //*/
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #pragma warning(default:4996)
 #pragma warning(default:4100)
 #pragma warning(default:4706)

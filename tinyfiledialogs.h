@@ -100,17 +100,16 @@ extern "C" {
 extern char tinyfd_version[8]; /* contains tinyfd current version number */
 
 #ifdef _WIN32
-/* tinyfd_winUtf8 is not ready yet, do not modify */
+/* for UTF-16 use the functions at the end of this files */
 extern int tinyfd_winUtf8; /* 0 (default) or 1 */
 /* on windows string char can be 0:MBSC or 1:UTF-8 (work in progress)
-unless your code is really prepared for it, leave this on MBSC.
-for UTF-16 choose the functions at the end of this files */
+unless your code is really prepared for UTF-8 on windows, leave this on MBSC. */
 #endif
 
 extern int tinyfd_forceConsole ;  /* 0 (default) or 1 */
 /* for unix & windows: 0 (graphic mode) or 1 (console mode).
 0: try to use a graphic solution, if it fails then it uses console mode.
-1: forces all dialogs into console mode even when the X server is present,
+1: forces all dialogs into console mode even when an X server is present,
   if the package dialog (and a console is present) or dialog.exe is installed.
   on windows it only make sense for console applications */
 

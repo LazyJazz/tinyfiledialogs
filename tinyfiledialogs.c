@@ -99,7 +99,6 @@ misrepresented as being the original software.
  #include <conio.h>
  /*#include <io.h>*/
  #define SLASH "\\"
- /* tinyfd_winUtf8 is not ready yet, do not modify */
  int tinyfd_winUtf8 = 0 ; /* on windows string char can be 0:MBSC or 1:UTF-8 */
 #else
  #include <limits.h>

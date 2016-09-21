@@ -1,6 +1,6 @@
 /*
  _________
-/         \ tinyfiledialogs.c v2.5.8 [September 13, 2016] zlib licence
+/         \ tinyfiledialogs.c v2.5.9 [September 21, 2016] zlib licence
 |tiny file| Unique code file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -112,7 +112,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.5.8";
+char tinyfd_version [8] = "2.5.9";
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -1097,8 +1097,8 @@ wchar_t const * tinyfd_saveFileDialogW(
 	wchar_t * p;
 	wchar_t * lRetval;
 	int i;
-	OPENFILENAMEW ofn;
 	HRESULT lHResult;
+	OPENFILENAMEW ofn = {0};
 
 	lHResult = CoInitializeEx(NULL, 0);
 
@@ -1136,7 +1136,7 @@ wchar_t const * tinyfd_saveFileDialogW(
 	ofn.lStructSize = sizeof(OPENFILENAMEW);
 	ofn.hwndOwner = 0;
 	ofn.hInstance = 0;
-	ofn.lpstrFilter = lFilterPatterns;
+	ofn.lpstrFilter = lFilterPatterns && wcslen(lFilterPatterns) ? lFilterPatterns : NULL;
 	ofn.lpstrCustomFilter = NULL;
 	ofn.nMaxCustFilter = 0;
 	ofn.nFilterIndex = 1;
@@ -1145,8 +1145,8 @@ wchar_t const * tinyfd_saveFileDialogW(
 	ofn.nMaxFile = MAX_PATH_OR_CMD;
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = _MAX_FNAME + _MAX_EXT;
-	ofn.lpstrInitialDir = lDirname;
-	ofn.lpstrTitle = aTitle;
+	ofn.lpstrInitialDir = lDirname && wcslen(lDirname) ? lDirname : NULL;
+	ofn.lpstrTitle = aTitle && wcslen(aTitle) ? aTitle : NULL;
 	ofn.Flags = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
 	ofn.nFileOffset = 0;
 	ofn.nFileExtension = 0;
@@ -1245,9 +1245,9 @@ wchar_t const * tinyfd_openFileDialogW(
 	wchar_t * lPointers[MAX_MULTIPLE_FILES];
 	wchar_t * lRetval, * p;
 	int i, j;
-	OPENFILENAMEW ofn;
 	size_t lBuffLen;
 	HRESULT lHResult;
+	OPENFILENAMEW ofn = { 0 };
 
 	lHResult = CoInitializeEx(NULL, 0);
 
@@ -1285,7 +1285,7 @@ wchar_t const * tinyfd_openFileDialogW(
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner = 0;
 	ofn.hInstance = 0;
-	ofn.lpstrFilter = lFilterPatterns;
+	ofn.lpstrFilter = lFilterPatterns && wcslen(lFilterPatterns) ? lFilterPatterns : NULL;
 	ofn.lpstrCustomFilter = NULL;
 	ofn.nMaxCustFilter = 0;
 	ofn.nFilterIndex = 1;
@@ -1293,8 +1293,8 @@ wchar_t const * tinyfd_openFileDialogW(
 	ofn.nMaxFile = MAX_PATH_OR_CMD;
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = _MAX_FNAME + _MAX_EXT;
-	ofn.lpstrInitialDir = lDirname;
-	ofn.lpstrTitle = aTitle;
+	ofn.lpstrInitialDir = lDirname && wcslen(lDirname) ? lDirname : NULL;
+	ofn.lpstrTitle = aTitle && wcslen(aTitle) ? aTitle : NULL;
 	ofn.Flags = OFN_EXPLORER | OFN_NOCHANGEDIR;
 	ofn.nFileOffset = 0;
 	ofn.nFileExtension = 0;
@@ -1430,7 +1430,7 @@ wchar_t const * tinyfd_selectFolderDialogW(
 	bInfo.hwndOwner = 0;
 	bInfo.pidlRoot = NULL;
 	bInfo.pszDisplayName = lBuff;
-	bInfo.lpszTitle = aTitle;
+	bInfo.lpszTitle = aTitle && wcslen(aTitle) ? aTitle : NULL;
 	bInfo.ulFlags = BIF_USENEWUI;
 	bInfo.lpfn = NULL;
 	bInfo.lParam = 0;
@@ -1655,9 +1655,9 @@ static char const * saveFileDialogWinGuiA (
 	char lFilterPatterns[MAX_PATH_OR_CMD] = "";
 	int i ;
 	char * p;
-	OPENFILENAMEA ofn ;
 	char * lRetval;
 	HRESULT lHResult;
+	OPENFILENAMEA ofn = { 0 };
 
 	lHResult = CoInitializeEx(NULL,0);
 
@@ -1695,7 +1695,7 @@ static char const * saveFileDialogWinGuiA (
 	ofn.lStructSize     = sizeof(OPENFILENAME) ;
 	ofn.hwndOwner       = 0 ;
 	ofn.hInstance       = 0 ;
-	ofn.lpstrFilter     = lFilterPatterns ;
+	ofn.lpstrFilter		= lFilterPatterns && strlen(lFilterPatterns) ? lFilterPatterns : NULL;
 	ofn.lpstrCustomFilter = NULL ;
 	ofn.nMaxCustFilter  = 0 ;
 	ofn.nFilterIndex    = 1 ;
@@ -1704,8 +1704,8 @@ static char const * saveFileDialogWinGuiA (
 	ofn.nMaxFile        = MAX_PATH_OR_CMD ;
 	ofn.lpstrFileTitle  = NULL ;
 	ofn.nMaxFileTitle   = _MAX_FNAME + _MAX_EXT ;
-	ofn.lpstrInitialDir = lDirname;
-	ofn.lpstrTitle      = aTitle ;
+	ofn.lpstrInitialDir = lDirname && strlen(lDirname) ? lDirname : NULL;
+	ofn.lpstrTitle		= aTitle && strlen(aTitle) ? aTitle : NULL;
 	ofn.Flags           = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR ;
 	ofn.nFileOffset     = 0 ;
 	ofn.nFileExtension  = 0 ;
@@ -1747,11 +1747,11 @@ static char const * openFileDialogWinGuiA (
 	size_t lLengths[MAX_MULTIPLE_FILES];
 	int i , j ;
 	char * p;
-	OPENFILENAMEA ofn;
 	size_t lBuffLen ;
 	char * lRetval;
 	HRESULT lHResult;
-		
+	OPENFILENAMEA ofn = {0};
+
 	lHResult = CoInitializeEx(NULL,0);
 
 	getPathWithoutFinalSlash(lDirname, aDefaultPathAndFile);
@@ -1788,7 +1788,7 @@ static char const * openFileDialogWinGuiA (
 	ofn.lStructSize     = sizeof ( OPENFILENAME ) ;
 	ofn.hwndOwner       = 0 ;
 	ofn.hInstance       = 0 ;
-	ofn.lpstrFilter		= lFilterPatterns;
+	ofn.lpstrFilter		= lFilterPatterns && strlen(lFilterPatterns) ? lFilterPatterns : NULL;
 	ofn.lpstrCustomFilter = NULL ;
 	ofn.nMaxCustFilter  = 0 ;
 	ofn.nFilterIndex    = 1 ;
@@ -1796,8 +1796,8 @@ static char const * openFileDialogWinGuiA (
 	ofn.nMaxFile        = MAX_PATH_OR_CMD ;
 	ofn.lpstrFileTitle  = NULL ;
 	ofn.nMaxFileTitle   = _MAX_FNAME + _MAX_EXT ;
-	ofn.lpstrInitialDir = lDirname ;
-	ofn.lpstrTitle      = aTitle ;
+	ofn.lpstrInitialDir = lDirname && strlen(lDirname) ? lDirname : NULL;
+	ofn.lpstrTitle		= aTitle && strlen(aTitle) ? aTitle : NULL;
 	ofn.Flags			= OFN_EXPLORER  | OFN_NOCHANGEDIR ;
 	ofn.nFileOffset     = 0 ;
 	ofn.nFileExtension  = 0 ;
@@ -1875,7 +1875,7 @@ static char const * selectFolderDialogWinGuiA (
 	bInfo.hwndOwner = 0 ;
 	bInfo.pidlRoot = NULL ;
 	bInfo.pszDisplayName = aoBuff ;
-	bInfo.lpszTitle = aTitle ;
+	bInfo.lpszTitle = aTitle && strlen(aTitle) ? aTitle : NULL;
 	bInfo.ulFlags = BIF_USENEWUI;
 	bInfo.lpfn = NULL ;
 	bInfo.lParam = 0 ;

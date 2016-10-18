@@ -1,6 +1,6 @@
 /*
  _________
-/         \ tinyfiledialogs.c v2.5.10 [October 18, 2016] zlib licence
+/         \ tinyfiledialogs.c v2.6.0 [October 18, 2016] zlib licence
 |tiny file| Unique code file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -112,7 +112,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.5.10";
+char tinyfd_version [8] = "2.6.0";
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -827,7 +827,6 @@ static int messageBoxWinGui8(
 	return lIntRetVal ;
 }
 
-#endif /* TINYFD_NOLIB */
 
 static char const * inputBoxWinGui(
 	char * const aoBuff ,
@@ -840,10 +839,7 @@ static char const * inputBoxWinGui(
 	int lResult;
 	int lTitleLen;
 	int lMessageLen;
-
-#ifndef TINYFD_NOLIB
 	wchar_t * lDialogStringW;
-#endif
 
 	lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
 	lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
@@ -985,17 +981,17 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 
 	strcpy(lDialogString, "");
 
-#ifndef TINYFD_NOLIB
-	if ( aDefaultInput && !GetConsoleWindow())
-	{
-		strcat(lDialogString, "powershell -WindowStyle Hidden -Command \"");
-	}
-#endif
+	//if ( aDefaultInput && !GetConsoleWindow())
+	//{
+	//	strcat(lDialogString, "powershell -WindowStyle Hidden -Command \"");
+	//}
 
 	if (aDefaultInput)
 	{
-		strcat(lDialogString,
-			"cscript.exe %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.vbs");
+		strcat(lDialogString, "cscript.exe ");
+		strcat(lDialogString, "//NoLogo ");
+		strcat(lDialogString,"%USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.vbs");
+		strcat(lDialogString, " > %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.txt");
 	}
 	else
 	{
@@ -1003,49 +999,57 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 			"mshta.exe %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.hta");
 	}
 
-#ifndef TINYFD_NOLIB
-	if (aDefaultInput && !GetConsoleWindow())
-	{
-		strcat(lDialogString, "\"");
-	}
-#endif
+	//if (aDefaultInput && !GetConsoleWindow())
+	//{
+	//	strcat(lDialogString, "\"");
+	//}
 
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
 
-#ifndef TINYFD_NOLIB
-	if ( ! aDefaultInput )
+	if (tinyfd_winUtf8)
 	{
-		if (tinyfd_winUtf8)
-		{
-			lDialogStringW = utf8to16(lDialogString);
-			runSilentW(lDialogStringW);
-			free(lDialogStringW);
-		}
-		else
-		{
-			runSilentA(lDialogString);
-		}
+		lDialogStringW = utf8to16(lDialogString);
+		runSilentW(lDialogStringW);
+		free(lDialogStringW);
 	}
 	else
-#endif /* TINYFD_NOLIB */
 	{
-		if (!(lIn = _popen(lDialogString, "r")))
+		runSilentA(lDialogString);
+	}
+
+	//if (!(lIn = _popen(lDialogString, "r")))
+	//{
+	//	free(lDialogString);
+	//	return NULL;
+	//}
+	//while (fgets(aoBuff, MAX_PATH_OR_CMD, lIn) != NULL)
+	//{
+	//}
+	//_pclose(lIn);
+	//if (aoBuff[strlen(aoBuff) - 1] == '\n')
+	//{
+	//	aoBuff[strlen(aoBuff) - 1] = '\0';
+	//}
+
+
+	if (aDefaultInput)
+	{
+		sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.txt",
+			getenv("USERPROFILE"));
+		if (!(lIn = fopen(lDialogString, "r")))
 		{
+			remove(lDialogString);
+			sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.vbs",
+				getenv("USERPROFILE"));
 			free(lDialogString);
 			return NULL;
 		}
 		while (fgets(aoBuff, MAX_PATH_OR_CMD, lIn) != NULL)
 		{
 		}
-		_pclose(lIn);
-		if (aoBuff[strlen(aoBuff) - 1] == '\n')
-		{
-			aoBuff[strlen(aoBuff) - 1] = '\0';
-		}
-	}
+		fclose(lIn);
+		remove(lDialogString);
 
-	if (aDefaultInput)
-	{
 		sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.vbs",
 			getenv("USERPROFILE"));
 	}
@@ -1081,7 +1085,6 @@ name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
 	return aoBuff + 1;
 }
 
-#ifndef TINYFD_NOLIB
 
 wchar_t const * tinyfd_saveFileDialogW(
 	wchar_t const * const aTitle, /* NULL or "" */
@@ -2445,12 +2448,9 @@ char const * tinyfd_inputBox(
 #ifndef TINYFD_NOLIB
 	DWORD mode = 0;
 	HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
-#endif /* TINYFD_NOLIB */
 
 	if ((!tinyfd_forceConsole || !( 
-#ifndef TINYFD_NOLIB
 		GetConsoleWindow() || 
-#endif /* TINYFD_NOLIB */
 		dialogPresent()))
 		&& ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
 	{
@@ -2458,7 +2458,9 @@ char const * tinyfd_inputBox(
 		lBuff[0]='\0';
 		return inputBoxWinGui(lBuff,aTitle,aMessage,aDefaultInput);
 	}
-	else if ( dialogPresent() )
+	else
+#endif /* TINYFD_NOLIB */
+	if ( dialogPresent() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
 		lBuff[0]='\0';

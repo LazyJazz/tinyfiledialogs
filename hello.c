@@ -1,6 +1,6 @@
 /*
  _________
-/         \ hello.c v2.5.10 [October 18, 2016] zlib licence
+/         \ hello.c v2.6.0 [October 18, 2016] zlib licence
 |tiny file| Hello World file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -130,7 +130,7 @@ int main(void)
 	}
 
 	lTmp = tinyfd_inputBox(
-		"a password box", "your password will be revealed", NULL);
+		"a password box", "your password will be revealed", "lala");
 
 	if (!lTmp) return 1 ;
 

@@ -1,6 +1,6 @@
 /*
  _________
-/         \ tinyfiledialogs.c v2.6.0 [October 18, 2016] zlib licence
+/         \ tinyfiledialogs.c v2.6.1 [October 18, 2016] zlib licence
 |tiny file| Unique code file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -112,7 +112,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.6.0";
+char tinyfd_version [8] = "2.6.1";
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -904,7 +904,7 @@ result = 0\n\
 \n\
 Sub Window_onLoad\n\
 intWidth = 600\n\
-intHeight = 250\n\
+intHeight = 350\n\
 Me.ResizeTo intWidth, intHeight\n\
 Me.MoveTo((Screen.Width/2)-(intWidth/2)),((Screen.Height/2)-(intHeight/2))\n\
 txt_input.Focus\n\
@@ -951,14 +951,14 @@ End Sub\n\
 <body style = 'background-color:#EEEEEE' onkeypress = 'vbs:Default_Buttons' align = 'top'>\n\
 <table width = '100%%' height = '80%%' align = 'center' border = '0'>\n\
 <tr border = '0'>\n\
-<td align = 'left' style = 'font-family: arial; font-size: 11px;'>\n\
+<td align = 'left' style = 'font-family: arial; font-size: 24px;'>\n\
 %s\n\
 </td>\n\
 <td align = 'right' style = 'margin-top: 0em;'>\n\
 <table  align = 'right' style = 'margin-right: 0em;'>\n\
 <tr align = 'right' 'margin-top: 5em;'>\n\
-<input type = 'button' value = 'OK' name = 'btn_OK' onClick = 'vbs:Run_ProgramOK' style = 'font-size: 11px; width: 5em; margin-top: 2em;'><br>\n\
-<input type = 'button' value = 'Cancel' name = 'btn_Cancel' onClick = 'vbs:Run_ProgramCancel' style = 'font-size: 11px; width: 5em;'><br><br>\n\
+<input type = 'button' value = 'OK' name = 'btn_OK' onClick = 'vbs:Run_ProgramOK' style = 'font-size: 24px; width: 5em; margin-top: 2em;'><br>\n\
+<input type = 'button' value = 'Cancel' name = 'btn_Cancel' onClick = 'vbs:Run_ProgramCancel' style = 'font-size: 24px; width: 5em;'><br><br>\n\
 </tr>\n\
 </table>\n\
 </td>\n\
@@ -966,9 +966,9 @@ End Sub\n\
 </table>\n\
 <table width = '100%%' height = '100%%' align = 'center' border = '0'>\n\
 <tr>\n\
-<td align = 'left' style = 'font-family: arial; font-size: 16px; font-weight: bold;'>\n\
-<input type = 'password' size = '61' id = 'txt_input'\n\
-name = 'txt_input' style = 'font-size: 11px;' value = '' ><BR>\n\
+<td align = 'left' style = 'font-family: arial; font-size: 36px; font-weight: bold;'>\n\
+<input type = 'password' size = '45' id = 'txt_input'\n\
+name = 'txt_input' style = 'font-size: 24px;' value = '' ><BR>\n\
 </td>\n\
 </tr>\n\
 </table>\n\

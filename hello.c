@@ -130,7 +130,7 @@ int main(void)
 	}
 
 	lTmp = tinyfd_inputBox(
-		"a password box", "your password will be revealed", "lala");
+		"a password box", "your password will be revealed", NULL);
 
 	if (!lTmp) return 1 ;
 

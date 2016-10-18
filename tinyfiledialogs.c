@@ -1,6 +1,6 @@
 /*
  _________
-/         \ tinyfiledialogs.c v2.5.9 [September 21, 2016] zlib licence
+/         \ tinyfiledialogs.c v2.5.10 [October 18, 2016] zlib licence
 |tiny file| Unique code file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -112,7 +112,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.5.9";
+char tinyfd_version [8] = "2.5.10";
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -5163,8 +5163,8 @@ char const * tinyfd_colorChooser(
 	unsigned char const aDefaultRGB[3] , /* { 0 , 255 , 255 } */
 	unsigned char aoResultRGB[3] ) /* { 0 , 0 , 0 } */
 {
-	static char lBuff [16] ;
-	char lTmp [16] ;
+	static char lBuff [128] ;
+	char lTmp [128] ;
 	char lDialogString [MAX_PATH_OR_CMD] ;
 	char lDefaultHexRGB[8];
 	char * lpDefaultHexRGB;
@@ -5192,9 +5192,9 @@ char const * tinyfd_colorChooser(
 	}
 
 	if ( osascriptPresent ( ) )
-  {
+	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char const *)1;}
-  	lWasOsascript = 1 ;
+		lWasOsascript = 1 ;
 		strcpy ( lDialogString , "osascript");
 		if ( ! osx9orBetter() ) 
 		{
@@ -5203,7 +5203,9 @@ char const * tinyfd_colorChooser(
 		}
 		else 
 		{
-			strcat ( lDialogString , " -e 'try' -e 'tell app (path to frontmost application as Unicode text) to set mycolor to choose color default color {");
+			strcat ( lDialogString ,
+" -e 'try' -e 'tell app (path to frontmost application as Unicode text) \
+to set mycolor to choose color default color {");
 		}
 
 		sprintf(lTmp, "%d", 256 * lDefaultRGB[0] ) ;
@@ -5229,8 +5231,8 @@ char const * tinyfd_colorChooser(
 		strcat(lDialogString, "-e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
-  else if ( zenity3Present() || matedialogPresent() )
-  {
+	else if ( zenity3Present() || matedialogPresent() )
+	{
 		lWasZenity3 = 1 ;
 		if ( zenity3Present() )
 		{
@@ -5353,12 +5355,24 @@ frontmost of process \\\"Python\\\" to true' ''');");
     }
     if ( lWasZenity3 )
     {
-        lBuff[3]=lBuff[5];
-        lBuff[4]=lBuff[6];
-        lBuff[5]=lBuff[9];
-        lBuff[6]=lBuff[10];
-        lBuff[7]='\0';
-        Hex2RGB(lBuff,aoResultRGB);
+		if ( lBuff[0] == '#' ) {
+		    lBuff[3]=lBuff[5];
+		    lBuff[4]=lBuff[6];
+		    lBuff[5]=lBuff[9];
+		    lBuff[6]=lBuff[10];
+		    lBuff[7]='\0';
+	        Hex2RGB(lBuff,aoResultRGB);
+		}
+		else if ( lBuff[3] == '(' ) {
+			sscanf(lBuff,"rgb(%hhu,%hhu,%hhu",
+					& aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
+			RGB2Hex(aoResultRGB,lBuff);
+		}
+		else if ( lBuff[4] == '(' ) {
+			sscanf(lBuff,"rgba(%hhu,%hhu,%hhu",
+					& aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
+			RGB2Hex(aoResultRGB,lBuff);
+		}
     }
     else if ( lWasOsascript || lWasXdialog )
     {

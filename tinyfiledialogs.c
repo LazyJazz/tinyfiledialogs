@@ -945,14 +945,14 @@ End Sub\n\
 <body style = 'background-color:#EEEEEE' onkeypress = 'vbs:Default_Buttons' align = 'top'>\n\
 <table width = '100%%' height = '80%%' align = 'center' border = '0'>\n\
 <tr border = '0'>\n\
-<td align = 'left' style = 'font-family: arial; font-size: 24px;'>\n\
+<td align = 'left' style='Font-Family:Arial'>\n\
 %s\n\
 </td>\n\
 <td align = 'right' style = 'margin-top: 0em;'>\n\
 <table  align = 'right' style = 'margin-right: 0em;'>\n\
 <tr align = 'right' 'margin-top: 5em;'>\n\
-<input type = 'button' value = 'OK' name = 'btn_OK' onClick = 'vbs:Run_ProgramOK' style = 'font-size: 24px; width: 5em; margin-top: 2em;'><br>\n\
-<input type = 'button' value = 'Cancel' name = 'btn_Cancel' onClick = 'vbs:Run_ProgramCancel' style = 'font-size: 24px; width: 5em;'><br><br>\n\
+<input type = 'button' value = 'OK' name = 'btn_OK' onClick = 'vbs:Run_ProgramOK' style = 'width: 5em; margin-top: 2em;'><br>\n\
+<input type = 'button' value = 'Cancel' name = 'btn_Cancel' onClick = 'vbs:Run_ProgramCancel' style = 'width: 5em;'><br><br>\n\
 </tr>\n\
 </table>\n\
 </td>\n\
@@ -960,9 +960,9 @@ End Sub\n\
 </table>\n\
 <table width = '100%%' height = '100%%' align = 'center' border = '0'>\n\
 <tr>\n\
-<td align = 'left' style = 'font-family: arial; font-size: 36px; font-weight: bold;'>\n\
-<input type = 'password' size = '45' id = 'txt_input'\n\
-name = 'txt_input' style = 'font-size: 24px;' value = '' ><BR>\n\
+<td align = 'left'>\n\
+<input type = 'password' id = 'txt_input'\n\
+name = 'txt_input' value = '' size = 41 ><BR>\n\
 </td>\n\
 </tr>\n\
 </table>\n\

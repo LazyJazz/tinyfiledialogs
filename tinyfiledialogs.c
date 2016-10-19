@@ -900,13 +900,13 @@ WINDOWSTATE = 'hidden'>\n\
 \n\
 <script language = 'VBScript'>\n\
 \n\
+intWidth = Screen.Width/4\n\
+intHeight = Screen.Height/6\n\
+ResizeTo intWidth, intHeight\n\
+MoveTo((Screen.Width/2)-(intWidth/2)),((Screen.Height/2)-(intHeight/2))\n\
 result = 0\n\
 \n\
 Sub Window_onLoad\n\
-intWidth = 600\n\
-intHeight = 260\n\
-Me.ResizeTo intWidth, intHeight\n\
-Me.MoveTo((Screen.Width/2)-(intWidth/2)),((Screen.Height/2)-(intHeight/2))\n\
 txt_input.Focus\n\
 End Sub\n\
 \n\
@@ -948,9 +948,9 @@ End Sub\n\
 <td align = 'left' valign = 'bottom' style='Font-Family:Arial'>\n\
 %s\n\
 </td>\n\
-<td align = 'right' style = 'margin-top: 0em;'>\n\
+<td align = 'right' valign = 'bottom' style = 'margin-top: 0em;'>\n\
 <table  align = 'right' style = 'margin-right: 0em;'>\n\
-<tr align = 'right' 'margin-top: 5em;'>\n\
+<tr align = 'right' style = 'margin-top: 5em;'>\n\
 <input type = 'button' value = 'OK' name = 'btn_OK' onClick = 'vbs:Run_ProgramOK' style = 'width: 5em; margin-top: 2em;'><br>\n\
 <input type = 'button' value = 'Cancel' name = 'btn_Cancel' onClick = 'vbs:Run_ProgramCancel' style = 'width: 5em;'><br><br>\n\
 </tr>\n\
@@ -962,7 +962,7 @@ End Sub\n\
 <tr>\n\
 <td align = 'left' valign = 'top'>\n\
 <input type = 'password' id = 'txt_input'\n\
-name = 'txt_input' value = '' size = 41 ><BR>\n\
+name = 'txt_input' value = '' size = 44 ><BR>\n\
 </td>\n\
 </tr>\n\
 </table>\n\

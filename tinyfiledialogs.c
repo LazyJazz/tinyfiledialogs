@@ -948,7 +948,7 @@ End Sub\n\
 <td align = 'left' valign = 'middle' style='Font-Family:Arial'>\n\
 %s\n\
 </td>\n\
-<td align = 'right' valign = 'bottom' style = 'margin-top: 0em'>\n\
+<td align = 'right' valign = 'top' style = 'margin-top: 0em'>\n\
 <table  align = 'right' style = 'margin-right: 0em;'>\n\
 <tr align = 'right' style = 'margin-top: 5em;'>\n\
 <input type = 'button' value = 'OK' name = 'btn_OK' onClick = 'vbs:Run_ProgramOK' style = 'width: 5em; margin-top: 2em;'><br>\n\

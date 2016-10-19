@@ -896,12 +896,10 @@ MAXIMIZEBUTTON = 'no'\n\
 BORDER = 'dialog'\n\
 SCROLL = 'no'\n\
 SINGLEINSTANCE = 'yes'\n\
-WINDOWSTATE = 'hidden'\n\
->\n\
+WINDOWSTATE = 'hidden'>\n\
 \n\
 <script language = 'VBScript'>\n\
 \n\
-'Dim arrCommands\n\
 result = 0\n\
 \n\
 Sub Window_onLoad\n\
@@ -910,11 +908,6 @@ intHeight = 350\n\
 Me.ResizeTo intWidth, intHeight\n\
 Me.MoveTo((Screen.Width/2)-(intWidth/2)),((Screen.Height/2)-(intHeight/2))\n\
 txt_input.Focus\n\
-arrCommands = Split(tinyfdHTA.commandLine, chr(34)) \n\
-'Msgbox arrCommands(0)'\n\
-For i = 1 to (Ubound(arrCommands) - 1) Step 2\n\
-'Msgbox arrCommands(i)'\n\
-Next\n\
 End Sub\n\
 \n\
 Sub Window_onUnload\n\
@@ -982,11 +975,6 @@ name = 'txt_input' style = 'font-size: 24px;' value = '' ><BR>\n\
 
 	strcpy(lDialogString, "");
 
-	//if ( aDefaultInput && !GetConsoleWindow())
-	//{
-	//	strcat(lDialogString, "powershell -WindowStyle Hidden -Command \"");
-	//}
-
 	if (aDefaultInput)
 	{
 		strcat(lDialogString, "cscript.exe ");
@@ -999,11 +987,6 @@ name = 'txt_input' style = 'font-size: 24px;' value = '' ><BR>\n\
 		strcat(lDialogString,
 			"mshta.exe %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.hta");
 	}
-
-	//if (aDefaultInput && !GetConsoleWindow())
-	//{
-	//	strcat(lDialogString, "\"");
-	//}
 
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
 

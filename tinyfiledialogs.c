@@ -891,7 +891,9 @@ static char const * inputBoxWinGui(
 <HTA:APPLICATION\n\
 ID = 'tinyfdHTA'\n\
 APPLICATIONNAME = 'tinyfd_inputBox'\n\
-BORDER = 'thin'\n\
+MINIMIZEBUTTON = 'no'\n\
+MAXIMIZEBUTTON = 'no'\n\
+BORDER = 'dialog'\n\
 SCROLL = 'no'\n\
 SINGLEINSTANCE = 'yes'\n\
 WINDOWSTATE = 'hidden'\n\
@@ -908,12 +910,11 @@ intHeight = 350\n\
 Me.ResizeTo intWidth, intHeight\n\
 Me.MoveTo((Screen.Width/2)-(intWidth/2)),((Screen.Height/2)-(intHeight/2))\n\
 txt_input.Focus\n\
-' if the args are written each in ' ' \n\
-'arrCommands = Split(tinyfdHTA.commandLine, chr(34)) \n\
-'Msgbox arrCommands(0)\n\
-'For i = 1 to (Ubound(arrCommands) - 1) Step 2\n\
-'    Msgbox arrCommands(i)\n\
-'Next\n\
+arrCommands = Split(tinyfdHTA.commandLine, chr(34)) \n\
+'Msgbox arrCommands(0)'\n\
+For i = 1 to (Ubound(arrCommands) - 1) Step 2\n\
+'Msgbox arrCommands(i)'\n\
+Next\n\
 End Sub\n\
 \n\
 Sub Window_onUnload\n\
@@ -989,7 +990,7 @@ name = 'txt_input' style = 'font-size: 24px;' value = '' ><BR>\n\
 	if (aDefaultInput)
 	{
 		strcat(lDialogString, "cscript.exe ");
-		strcat(lDialogString, "//NoLogo ");
+		strcat(lDialogString, "//Nologo ");
 		strcat(lDialogString,"%USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.vbs");
 		strcat(lDialogString, " > %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.txt");
 	}
@@ -1045,8 +1046,7 @@ name = 'txt_input' style = 'font-size: 24px;' value = '' ><BR>\n\
 			return NULL;
 		}
 		while (fgets(aoBuff, MAX_PATH_OR_CMD, lIn) != NULL)
-		{
-		}
+		{}
 		fclose(lIn);
 		remove(lDialogString);
 

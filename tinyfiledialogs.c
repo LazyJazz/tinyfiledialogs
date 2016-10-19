@@ -904,7 +904,7 @@ result = 0\n\
 \n\
 Sub Window_onLoad\n\
 intWidth = 600\n\
-intHeight = 350\n\
+intHeight = 260\n\
 Me.ResizeTo intWidth, intHeight\n\
 Me.MoveTo((Screen.Width/2)-(intWidth/2)),((Screen.Height/2)-(intHeight/2))\n\
 txt_input.Focus\n\
@@ -945,7 +945,7 @@ End Sub\n\
 <body style = 'background-color:#EEEEEE' onkeypress = 'vbs:Default_Buttons' align = 'top'>\n\
 <table width = '100%%' height = '80%%' align = 'center' border = '0'>\n\
 <tr border = '0'>\n\
-<td align = 'left' style='Font-Family:Arial'>\n\
+<td align = 'left' valign = 'bottom' style='Font-Family:Arial'>\n\
 %s\n\
 </td>\n\
 <td align = 'right' style = 'margin-top: 0em;'>\n\
@@ -960,7 +960,7 @@ End Sub\n\
 </table>\n\
 <table width = '100%%' height = '100%%' align = 'center' border = '0'>\n\
 <tr>\n\
-<td align = 'left'>\n\
+<td align = 'left' valign = 'top'>\n\
 <input type = 'password' id = 'txt_input'\n\
 name = 'txt_input' value = '' size = 41 ><BR>\n\
 </td>\n\

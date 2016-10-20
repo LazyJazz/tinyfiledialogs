@@ -3103,8 +3103,8 @@ static int zenity3Present ( )
 		{
 			lIn = popen ( "zenity --version" , "r" ) ;
 			if ( ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
-			  && ( atoi(lBuff) >= 3 )
-			  && ( atoi(strtok(lBuff,".")+1) >= 0 ) )
+			  && ( ( atoi(lBuff) >= 3 )
+			    || ( ( atoi(lBuff) == 2 ) && ( atoi(strtok(lBuff,".")+1) >= 30 ) ) ) )
 			{
 				lZenity3Present = 1 ;
 			}

@@ -948,7 +948,7 @@ End Sub\n\
 <td align = 'left' valign = 'middle' style='Font-Family:Arial'>\n\
 %s\n\
 </td>\n\
-<td align = 'right' valign = 'top' style = 'margin-top: 0em'>\n\
+<td align = 'right' valign = 'middle' style = 'margin-top: 0em'>\n\
 <table  align = 'right' style = 'margin-right: 0em;'>\n\
 <tr align = 'right' style = 'margin-top: 5em;'>\n\
 <input type = 'button' value = 'OK' name = 'btn_OK' onClick = 'vbs:Run_ProgramOK' style = 'width: 5em; margin-top: 2em;'><br>\n\
@@ -3104,7 +3104,7 @@ static int zenity3Present ( )
 			lIn = popen ( "zenity --version" , "r" ) ;
 			if ( ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
 			  && ( ( atoi(lBuff) >= 3 )
-			    || ( ( atoi(lBuff) == 2 ) && ( atoi(strtok(lBuff,".")+1) >= 30 ) ) ) )
+			    || ( ( atoi(lBuff) == 2 ) && ( atoi(strtok(lBuff,".")+1) >= 32 ) ) ) )
 			{
 				lZenity3Present = 1 ;
 			}

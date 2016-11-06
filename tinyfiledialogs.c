@@ -1,6 +1,6 @@
 /*
  _________
-/         \ tinyfiledialogs.c v2.6.1 [October 18, 2016] zlib licence
+/         \ tinyfiledialogs.c v2.6.2 [November 6, 2016] zlib licence
 |tiny file| Unique code file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -112,7 +112,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.6.1";
+char tinyfd_version [8] = "2.6.2";
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -5181,6 +5181,7 @@ char const * tinyfd_colorChooser(
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char const *)1;}
 		lWasOsascript = 1 ;
 		strcpy ( lDialogString , "osascript");
+				
 		if ( ! osx9orBetter() ) 
 		{
 			strcat ( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
@@ -5194,7 +5195,6 @@ to set mycolor to choose color default color {");
 		}
 
 		sprintf(lTmp, "%d", 256 * lDefaultRGB[0] ) ;
-
 		strcat(lDialogString, lTmp ) ;
 		strcat(lDialogString, "," ) ;
 		sprintf(lTmp, "%d", 256 * lDefaultRGB[1] ) ;
@@ -5204,12 +5204,11 @@ to set mycolor to choose color default color {");
 		strcat(lDialogString, lTmp ) ;
 		strcat(lDialogString, "}' " ) ;
 		strcat ( lDialogString ,
-"-e 'set mystring to ((item 1 of mycolor)/256 as integer) as string' " );
+"-e 'set mystring to ((item 1 of mycolor) div 256 as integer) as string' " );
 		strcat ( lDialogString ,
 "-e 'repeat with i from 2 to the count of mycolor' " );
 		strcat ( lDialogString ,
-"-e 'set mystring to mystring & \" \" & \
-((item i of mycolor)/256 as integer) as string' " );
+"-e 'set mystring to mystring & \" \" & ((item i of mycolor) div 256 as integer) as string' " );
 		strcat ( lDialogString , "-e 'end repeat' " );
 		strcat ( lDialogString , "-e 'mystring' ");
 		strcat(lDialogString, "-e 'on error number -128' " ) ;
@@ -5319,10 +5318,10 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		return p ;
 	}
 
-    /* printf ( "lDialogString: %s\n" , lDialogString ) ; */
-    if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
-    {
-        return NULL ;
+	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
+	if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
+	{
+		return NULL ;
     }
 	while ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
 	{
@@ -5361,6 +5360,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
     }
     else if ( lWasOsascript || lWasXdialog )
     {
+		printf ( "lBuff: %s\n" , lBuff ) ; //*/
     	sscanf(lBuff,"%hhu %hhu %hhu",
 			   & aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
     	RGB2Hex(aoResultRGB,lBuff);
@@ -5373,6 +5373,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	/* printf ( "lBuff: %s\n" , lBuff ) ; */
 	return lBuff ;
 }
+
 
 /* not cross platform - zenity only */
 /* contributed by Attila Dusnoki */

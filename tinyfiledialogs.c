@@ -5360,7 +5360,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
     }
     else if ( lWasOsascript || lWasXdialog )
     {
-		printf ( "lBuff: %s\n" , lBuff ) ; //*/
+		/* printf ( "lBuff: %s\n" , lBuff ) ; */
     	sscanf(lBuff,"%hhu %hhu %hhu",
 			   & aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
     	RGB2Hex(aoResultRGB,lBuff);

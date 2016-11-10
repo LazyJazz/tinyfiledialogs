@@ -1,6 +1,6 @@
 /*
  _________
-/         \ tinyfiledialogs.c v2.6.2 [November 6, 2016] zlib licence
+/         \ tinyfiledialogs.c v2.6.3 [November 10, 2016] zlib licence
 |tiny file| Unique code file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -112,7 +112,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.6.2";
+char tinyfd_version [8] = "2.6.3";
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -3091,26 +3091,25 @@ static int zenity3Present ( )
 {
 	static int lZenity3Present = -1 ;
 	char lBuff [MAX_PATH_OR_CMD] ;
+	char * lBuffP ;
 	FILE * lIn ;
 	
 	if ( lZenity3Present < 0 )
 	{
-		if ( ! zenityPresent() )
-		{
-			lZenity3Present = 0 ;
-		}
-	 	else
+		lZenity3Present = 0 ;
+		if ( zenityPresent() )
 		{
 			lIn = popen ( "zenity --version" , "r" ) ;
-			if ( ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
-			  && ( ( atoi(lBuff) >= 3 )
-			    || ( ( atoi(lBuff) == 2 ) && ( atoi(strtok(lBuff,".")+1) >= 32 ) ) ) )
+			if ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
 			{
-				lZenity3Present = 1 ;
-			}
-			else
-			{
-				lZenity3Present = 0 ;
+				if ( atoi(lBuff) >= 3 )
+				{
+					lZenity3Present = 1 ;
+				}
+				else if ( ( atoi(lBuff) == 2 ) && ( atoi(strtok(lBuff,".")+2 ) >= 32 ) )
+				{
+					lZenity3Present = 1 ;
+				}
 			}
 			pclose ( lIn ) ;
 		}

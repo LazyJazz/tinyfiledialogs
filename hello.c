@@ -36,13 +36,13 @@ NO MAIN LOOP
 
 The dialogs can be forced into console mode
 
-Windows [MBCS + UTF-8 + UTF-16]
+Windows (XP to 10) [ASCII + MBCS + UTF-8 + UTF-16]
 - native code & some vbs create the graphic dialogs
 - enhanced console mode can use dialog.exe from
 http://andrear.altervista.org/home/cdialog.php
 - basic console input
 
-Unix [UTF-8] (command line call attempts)
+Unix (command line call attempts) [ASCII + UTF-8]
 - applescript
 - zenity / matedialog
 - kdialog

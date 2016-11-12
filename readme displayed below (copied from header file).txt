@@ -67,6 +67,7 @@ char const * tinyfd_colorChooser(
 - This is not for android nor ios.
 - The code is pure C, perfectly compatible with C++.
 - the utf-16 prototypes are in the header file
+- windows is fully supported from XP to 10
 - C# via dll, see example file
 - OSX supported from 10.4 to 10.12
 - Avoid using " and ' in titles and messages.

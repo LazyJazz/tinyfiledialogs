@@ -1,6 +1,6 @@
 /*
  _________
-/         \ tinyfiledialogs.c v2.6.3 [November 10, 2016] zlib licence
+/         \ tinyfiledialogs.c v2.6.4 [November 21, 2016] zlib licence
 |tiny file| Unique code file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -83,6 +83,7 @@ misrepresented as being the original software.
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <sys/stat.h>
 
 #include "tinyfiledialogs.h"
 /* #define TINYFD_NOLIB // */
@@ -95,7 +96,6 @@ misrepresented as being the original software.
   #include <Windows.h>
   #include <Shlobj.h>
  #endif
- #include <sys/stat.h>
  #include <conio.h>
  /*#include <io.h>*/
  #define SLASH "\\"
@@ -112,7 +112,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.6.3";
+char tinyfd_version [8] = "2.6.4";
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -354,7 +354,6 @@ static int fileExists( char const * const aFilePathAndName )
 	lIn = fopen( aFilePathAndName , "r" ) ;
 	if ( ! lIn )
 	{
-
 		return 0 ;
 	}
 	fclose ( lIn ) ;
@@ -407,6 +406,27 @@ static char const * ensureFilesExist( char * const aDestination ,
 	}
 	return aDestination ;
 }
+
+
+void wipefile(char * const aFilename)
+{
+	int i;
+	struct stat st;
+	FILE * lIn;
+
+	if (stat(aFilename, &st) == 0)
+	{
+		if (lIn = fopen(aFilename, "w"))
+		{
+			for (i = 0; i < st.st_size; i++)
+			{
+				fputc('A', lIn);
+			}
+		}
+		fclose(lIn);
+	}
+}
+
 
 #ifdef _WIN32
 
@@ -1023,8 +1043,8 @@ name = 'txt_input' value = '' style = 'float:left;width:100%%' ><BR>\n\
 		if (!(lIn = fopen(lDialogString, "r")))
 		{
 			remove(lDialogString);
-			sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.vbs",
-				getenv("USERPROFILE"));
+			//sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.vbs",
+			//	getenv("USERPROFILE"));
 			free(lDialogString);
 			return NULL;
 		}
@@ -1043,14 +1063,16 @@ name = 'txt_input' value = '' style = 'float:left;width:100%%' ><BR>\n\
 		if (!(lIn = fopen(lDialogString, "r")))
 		{
 			remove(lDialogString);
-			sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.hta",
-				getenv("USERPROFILE"));
+			//sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.hta",
+			//	getenv("USERPROFILE"));
 			free(lDialogString);
 			return NULL;
 		}
 		while (fgets(aoBuff, MAX_PATH_OR_CMD, lIn) != NULL)
 		{}
 		fclose(lIn);
+		
+		wipefile(lDialogString);
 		remove(lDialogString);
 		sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.hta",
 			getenv("USERPROFILE"));
@@ -2124,6 +2146,8 @@ static char const * inputBoxWinConsole(
 	while (fgets(aoBuff, MAX_PATH_OR_CMD, lIn) != NULL)
 	{}
 	fclose(lIn);
+
+	wipefile(lDialogFile);
 	remove(lDialogFile);
     if ( aoBuff[strlen ( aoBuff ) -1] == '\n' )
     {
@@ -4025,7 +4049,6 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			strcat ( lDialogString , "'(whiptail " ) ;
 		}
 
-
 		if ( aTitle && strlen(aTitle) )
 		{
 			strcat(lDialogString, "--title \"") ;
@@ -4062,21 +4085,28 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 		if ( lWasGraphicDialog )
 		{
+//			strcat(lDialogString,") 2>/tmp/tinyfd.txt;\
+//	if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
+//	tinyfdRes=$(cat /tmp/tinyfd.txt);\
+//	rm /tmp/tinyfd.txt;echo $tinyfdBool$tinyfdRes") ;
 			strcat(lDialogString,") 2>/tmp/tinyfd.txt;\
 	if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
-	tinyfdRes=$(cat /tmp/tinyfd.txt);\
-	rm /tmp/tinyfd.txt;echo $tinyfdBool$tinyfdRes") ;
+	tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 		}
 		else
 		{
+//			strcat(lDialogString,">/dev/tty ) 2>/tmp/tinyfd.txt;\
+//	if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
+//	tinyfdRes=$(cat /tmp/tinyfd.txt);\
+//	rm /tmp/tinyfd.txt;echo $tinyfdBool$tinyfdRes") ;
 			strcat(lDialogString,">/dev/tty ) 2>/tmp/tinyfd.txt;\
 	if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
-	tinyfdRes=$(cat /tmp/tinyfd.txt);\
-	rm /tmp/tinyfd.txt;echo $tinyfdBool$tinyfdRes") ;
+	tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
+
 			if ( lWasXterm )
 			{
-			  strcat ( lDialogString ,
-				" >/tmp/tinyfd0.txt';cat /tmp/tinyfd0.txt;rm /tmp/tinyfd0.txt");
+		//strcat(lDialogString," >/tmp/tinyfd0.txt';cat /tmp/tinyfd0.txt;rm /tmp/tinyfd0.txt");
+		strcat(lDialogString," >/tmp/tinyfd0.txt';cat /tmp/tinyfd0.txt");
 			}
 			else
 			{
@@ -4123,7 +4153,9 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		strcat ( lDialogString , "-p \"" ) ;
 		strcat ( lDialogString , "(esc+enter to cancel): \" ANSWER " ) ;
 		strcat ( lDialogString , ";echo 1$ANSWER >/tmp/tinyfd.txt';" ) ;
-		strcat ( lDialogString , "cat -v /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
+		
+		//strcat ( lDialogString , "cat -v /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
+		strcat ( lDialogString , "cat -v /tmp/tinyfd.txt");
 	}
 	else
 	{
@@ -4191,7 +4223,20 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	}
 
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
-	if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
+	lIn = popen ( lDialogString , "r" );
+
+	if ( fileexist("/tmp/tinyfd.txt") )
+	{
+		filewipe("/tmp/tinyfd.txt");
+		remove("/tmp/tinyfd.txt");
+	}
+	if ( fileexist("/tmp/tinyfd0.txt") )
+	{
+		filewipe("/tmp/tinyfd0.txt");
+		remove("/tmp/tinyfd0.txt");
+	}
+
+	if ( ! lIn  ) )
 	{
 		free(lDialogString);
 		return NULL ;

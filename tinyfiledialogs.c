@@ -4224,6 +4224,25 @@ frontmost of process \\\"Python\\\" to true' ''');");
 
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
 	lIn = popen ( lDialogString , "r" );
+	if ( ! lIn  )
+	{
+		if ( fileExists("/tmp/tinyfd.txt") )
+		{
+			wipefile("/tmp/tinyfd.txt");
+			remove("/tmp/tinyfd.txt");
+		}
+		if ( fileExists("/tmp/tinyfd0.txt") )
+		{
+			wipefile("/tmp/tinyfd0.txt");
+			remove("/tmp/tinyfd0.txt");
+		}
+		free(lDialogString);
+		return NULL ;
+	}
+	while ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
+	{}
+
+	pclose ( lIn ) ;
 
 	if ( fileExists("/tmp/tinyfd.txt") )
 	{
@@ -4235,16 +4254,6 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		wipefile("/tmp/tinyfd0.txt");
 		remove("/tmp/tinyfd0.txt");
 	}
-
-	if ( ! lIn  )
-	{
-		free(lDialogString);
-		return NULL ;
-	}
-	while ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
-	{}
-
-	pclose ( lIn ) ;
 
 	/* printf ( "len Buff: %lu\n" , strlen(lBuff) ) ; */
 	/* printf ( "lBuff0: %s\n" , lBuff ) ; */
@@ -4271,6 +4280,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	}
 	/* printf ( "lBuff+1: %s\n" , lBuff+1 ) ; */
 	free(lDialogString);
+
 	return lBuff+1 ;
 }
 

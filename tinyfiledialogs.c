@@ -4225,18 +4225,18 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
 	lIn = popen ( lDialogString , "r" );
 
-	if ( fileexist("/tmp/tinyfd.txt") )
+	if ( fileExists("/tmp/tinyfd.txt") )
 	{
-		filewipe("/tmp/tinyfd.txt");
+		wipefile("/tmp/tinyfd.txt");
 		remove("/tmp/tinyfd.txt");
 	}
-	if ( fileexist("/tmp/tinyfd0.txt") )
+	if ( fileExists("/tmp/tinyfd0.txt") )
 	{
-		filewipe("/tmp/tinyfd0.txt");
+		wipefile("/tmp/tinyfd0.txt");
 		remove("/tmp/tinyfd0.txt");
 	}
 
-	if ( ! lIn  ) )
+	if ( ! lIn  )
 	{
 		free(lDialogString);
 		return NULL ;

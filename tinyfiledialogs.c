@@ -416,7 +416,7 @@ static void wipefile(char * const aFilename)
 
 	if (stat(aFilename, &st) == 0)
 	{
-		if (lIn = fopen(aFilename, "w"))
+		if ((lIn = fopen(aFilename, "w")))
 		{
 			for (i = 0; i < st.st_size; i++)
 			{

@@ -408,7 +408,7 @@ static char const * ensureFilesExist( char * const aDestination ,
 }
 
 
-void wipefile(char * const aFilename)
+static void wipefile(char * const aFilename)
 {
 	int i;
 	struct stat st;
@@ -3110,7 +3110,6 @@ static int osx9orBetter ( )
 }
 
 
-
 static int zenity3Present ( )
 {
 	static int lZenity3Present = -1 ;
@@ -3337,7 +3336,7 @@ int tinyfd_messageBox (
 			}
 		}
 		strcat ( lDialogString , ";if [ $? = 0 ];then echo 1;else echo 0;fi");
-  }
+	}
 	else if ( kdialogPresent() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return 1;}

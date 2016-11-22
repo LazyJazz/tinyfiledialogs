@@ -1,6 +1,6 @@
 /*
  _________
-/         \ tinyfiledialogs.c v2.7 [November 21, 2016] zlib licence
+/         \ tinyfiledialogs.c v2.7.1 [November 22, 2016] zlib licence
 |tiny file| Unique code file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -112,7 +112,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.7";
+char tinyfd_version [8] = "2.7.1";
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -2980,7 +2980,7 @@ static int whiptailPresent ( )
 static int graphicMode()
 {
 	return !( tinyfd_forceConsole && (isatty(1) || terminalName()) )
-			&& ( getenv ( "DISPLAY" ) || isDarwin() ) ;
+		&& ( getenv("DISPLAY") || (isDarwin() && !(getenv("SSH_TTY") ) ) ) ;
 }
 
 

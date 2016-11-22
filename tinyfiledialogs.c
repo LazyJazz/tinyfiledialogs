@@ -427,7 +427,6 @@ static void wipefile(char * const aFilename)
 	}
 }
 
-
 #ifdef _WIN32
 
 static int replaceChr ( char * const aString ,

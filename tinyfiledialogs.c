@@ -159,12 +159,13 @@ static char gMessageWin[] = "tiny file dialogs on Windows needs:\n\t\
 							\nor\ta console for basic input";
 #else
 static char gMessageUnix[] = "tiny file dialogs on UNIX needs:\n\tapplescript\
-\nor\tzenity (version 3 for the color chooser)\
-\nor\tmatedialog\nor\tkdialog\
-\nor\tXdialog\nor\tpython 2 with tkinter\
+\nor\tzenity / matedialog\
+\nor\tkdialog\
+\nor\tXdialog\
+\nor\tpython 2 with tkinter\
 \nor\tdialog (opens a console if needed)\
-\nor\twhiptail, gdialog, gxmessage or xmessage (really?)\
-\nor\tit will open a console (if needed) for basic input (you had it comming!)";
+\nor\twhiptail, gdialog, gxmessage or xmessage\
+\nor\tit will use/open a console for basic input";
 #endif
 
 #ifdef _MSC_VER

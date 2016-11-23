@@ -1,6 +1,6 @@
 /*
  _________
-/         \ tinyfiledialogs.c v2.7.1 [November 22, 2016] zlib licence
+/         \ tinyfiledialogs.c v2.7.2 [November 23, 2016] zlib licence
 |tiny file| Unique code file of "tiny file dialogs" created [November 9, 2014]
 | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
 \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -86,7 +86,7 @@ misrepresented as being the original software.
 #include <sys/stat.h>
 
 #include "tinyfiledialogs.h"
-/* #define TINYFD_NOLIB // */
+/* #define TINYFD_NOLIB */
 
 #ifdef _WIN32
  #ifndef _WIN32_WINNT
@@ -112,7 +112,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.7.1";
+char tinyfd_version [8] = "2.7.2";
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -470,6 +470,7 @@ static int dirExists ( char const * const aDirPath )
 		return 0 ;
 }
 
+#ifndef TINYFD_NOLIB
 
 static wchar_t * getPathWithoutFinalSlashW(
 	wchar_t * const aoDestination, /* make sure it is allocated, use _MAX_PATH */
@@ -545,7 +546,7 @@ static void Hex2RGBW(wchar_t const aHexRGB[8],
 			aoResultRGB[1] = (unsigned char)wcstoul(lColorChannel + 3, NULL, 16);
 			lColorChannel[3] = '\0';
 			aoResultRGB[0] = (unsigned char)wcstoul(lColorChannel + 1, NULL, 16);
-			/* printf("%d %d %d\n", aoResultRGB[0], aoResultRGB[1], aoResultRGB[2]); //*/
+			/* printf("%d %d %d\n", aoResultRGB[0], aoResultRGB[1], aoResultRGB[2]); */
 		}
 		else
 		{
@@ -570,7 +571,7 @@ swprintf(aoResultHexRGB, L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 #else
 swprintf(aoResultHexRGB, 8, L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 #endif
-		 /* wprintf(L"aoResultHexRGB %s\n", aoResultHexRGB); //*/
+		 /* wprintf(L"aoResultHexRGB %s\n", aoResultHexRGB); */
 		}
 		else
 		{
@@ -581,7 +582,6 @@ swprintf(aoResultHexRGB, 8, L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 	}
 }
 
-#ifndef TINYFD_NOLIB
 
 #if !defined(WC_ERR_INVALID_CHARS)
 /* undefined prior to Vista, so not yet in MINGW header file */
@@ -699,7 +699,7 @@ static void runSilentW(wchar_t const * const aString)
 	ULONG rc;
 	wchar_t * lArgs;
 	wchar_t * pEnvCMD;
-	wchar_t * pDefaultCMD = L"CMD.EXE"; //powershell.exe
+	wchar_t * pDefaultCMD = L"CMD.EXE";
 	int lStringLen = 0;
 
 	memset(&StartupInfo, 0, sizeof(StartupInfo));
@@ -750,7 +750,6 @@ static void runSilentW(wchar_t const * const aString)
 	free(lArgs);
 	return; /* rc */
 }
-
 
 
 int tinyfd_messageBoxW(
@@ -1007,7 +1006,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%%' ><BR>\n\
 			"mshta.exe %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.hta");
 	}
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
 
 	if (tinyfd_winUtf8)
 	{
@@ -1020,20 +1019,21 @@ name = 'txt_input' value = '' style = 'float:left;width:100%%' ><BR>\n\
 		runSilentA(lDialogString);
 	}
 
-	//if (!(lIn = _popen(lDialogString, "r")))
-	//{
-	//	free(lDialogString);
-	//	return NULL;
-	//}
-	//while (fgets(aoBuff, MAX_PATH_OR_CMD, lIn) != NULL)
-	//{
-	//}
-	//_pclose(lIn);
-	//if (aoBuff[strlen(aoBuff) - 1] == '\n')
-	//{
-	//	aoBuff[strlen(aoBuff) - 1] = '\0';
-	//}
-
+	/*
+	if (!(lIn = _popen(lDialogString, "r")))
+	{
+		free(lDialogString);
+		return NULL;
+	}
+	while (fgets(aoBuff, MAX_PATH_OR_CMD, lIn) != NULL)
+	{
+	}
+	_pclose(lIn);
+	if (aoBuff[strlen(aoBuff) - 1] == '\n')
+	{
+		aoBuff[strlen(aoBuff) - 1] = '\0';
+	}
+	*/
 
 	if (aDefaultInput)
 	{
@@ -1042,8 +1042,6 @@ name = 'txt_input' value = '' style = 'float:left;width:100%%' ><BR>\n\
 		if (!(lIn = fopen(lDialogString, "r")))
 		{
 			remove(lDialogString);
-			//sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.vbs",
-			//	getenv("USERPROFILE"));
 			free(lDialogString);
 			return NULL;
 		}
@@ -1062,8 +1060,6 @@ name = 'txt_input' value = '' style = 'float:left;width:100%%' ><BR>\n\
 		if (!(lIn = fopen(lDialogString, "r")))
 		{
 			remove(lDialogString);
-			//sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.hta",
-			//	getenv("USERPROFILE"));
 			free(lDialogString);
 			return NULL;
 		}
@@ -1078,14 +1074,14 @@ name = 'txt_input' value = '' style = 'float:left;width:100%%' ><BR>\n\
 	}
 	remove(lDialogString);
 	free(lDialogString);
-	/* printf ( "aoBuff: %s\n" , aoBuff ) ; //*/
+	/* printf ( "aoBuff: %s\n" , aoBuff ) ; */
 	lResult = strncmp(aoBuff, "1", 1) ? 0 : 1;
-	/* printf ( "lResult: %d \n" , lResult ) ; //*/
+	/* printf ( "lResult: %d \n" , lResult ) ; */
 	if (!lResult)
 	{
 		return NULL ;
 	}
-	/* printf ( "aoBuff+1: %s\n" , aoBuff+1 ) ; //*/
+	/* printf ( "aoBuff+1: %s\n" , aoBuff+1 ) ; */
 	return aoBuff + 1;
 }
 
@@ -1501,8 +1497,10 @@ wchar_t const * tinyfd_colorChooserW(
 	unsigned char lDefaultRGB[3];
 	int lRet;
 
-	//HRESULT lHResult;
-	//lHResult = CoInitializeEx(NULL, 0);
+	/*
+	HRESULT lHResult;
+	lHResult = CoInitializeEx(NULL, 0);
+	*/
 
 	if (aDefaultHexRGB)
 	{
@@ -1539,10 +1537,12 @@ wchar_t const * tinyfd_colorChooserW(
 
 	RGB2HexW(aoResultRGB, lResultHexRGB);
 
-	//if (lHResult == S_OK || lHResult == S_FALSE)
-	//{
-	//	CoUninitialize();
-	//}
+	/*
+	if (lHResult == S_OK || lHResult == S_FALSE)
+	{
+		CoUninitialize();
+	}
+	*/
 
 	return lResultHexRGB;
 }
@@ -2052,7 +2052,7 @@ static int messageBoxWinConsole (
 	strcat(lDialogFile, "\\AppData\\Local\\Temp\\tinyfd.txt");
 	strcat(lDialogString, lDialogFile);
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
 	system ( lDialogString ) ;
 		
 	if (!(lIn = fopen(lDialogFile, "r")))
@@ -2068,7 +2068,7 @@ static int messageBoxWinConsole (
     {
     	lBuff[strlen ( lBuff ) -1] = '\0' ;
     }
-	/* printf ( "lBuff: %s\n" , lBuff ) ; //*/
+	/* printf ( "lBuff: %s\n" , lBuff ) ; */
 	if ( ! strlen(lBuff) )
 	{
 		return 0;
@@ -2134,7 +2134,7 @@ static char const * inputBoxWinConsole(
 	strcat(lDialogString, " || echo 0 > ");
 	strcat(lDialogString, lDialogFile);
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
 	system ( lDialogString ) ;
 
 	if (!(lIn = fopen(lDialogFile, "r")))
@@ -2152,16 +2152,16 @@ static char const * inputBoxWinConsole(
     {
     	aoBuff[strlen ( aoBuff ) -1] = '\0' ;
     }
-	/* printf ( "aoBuff: %s\n" , aoBuff ) ; //*/
+	/* printf ( "aoBuff: %s\n" , aoBuff ) ; */
 
-	/* printf ( "aoBuff: %s len: %lu \n" , aoBuff , strlen(aoBuff) ) ; //*/
+	/* printf ( "aoBuff: %s len: %lu \n" , aoBuff , strlen(aoBuff) ) ; */
     lResult =  strncmp ( aoBuff , "1" , 1) ? 0 : 1 ;
-	/* printf ( "lResult: %d \n" , lResult ) ; //*/
+	/* printf ( "lResult: %d \n" , lResult ) ; */
     if ( ! lResult )
     {
 		return NULL ;
 	}
-	/* printf ( "aoBuff+1: %s\n" , aoBuff+1 ) ; //*/
+	/* printf ( "aoBuff+1: %s\n" , aoBuff+1 ) ; */
 	return aoBuff+3 ;
 }
 
@@ -2207,7 +2207,7 @@ static char const * saveFileDialogWinConsole (
 	strcat(lPathAndFile, "\\AppData\\Local\\Temp\\tinyfd.txt");
 	strcat(lDialogString, lPathAndFile);
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
 	system ( lDialogString ) ;
 
 	if (!(lIn = fopen(lPathAndFile, "r")))
@@ -2220,7 +2220,7 @@ static char const * saveFileDialogWinConsole (
 	fclose(lIn);
 	remove(lPathAndFile);
 	replaceChr ( aoBuff , '/' , '\\' ) ;
-	/* printf ( "aoBuff: %s\n" , aoBuff ) ; //*/
+	/* printf ( "aoBuff: %s\n" , aoBuff ) ; */
 	getLastName(lDialogString,aoBuff);
 	if ( ! strlen(lDialogString) )
 	{
@@ -2272,7 +2272,7 @@ static char const * openFileDialogWinConsole (
 	strcat(lFilterPatterns, "\\AppData\\Local\\Temp\\tinyfd.txt");
 	strcat(lDialogString, lFilterPatterns);
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
 	system ( lDialogString ) ;
 
 	if (!(lIn = fopen(lFilterPatterns, "r")))
@@ -2285,7 +2285,7 @@ static char const * openFileDialogWinConsole (
 	fclose(lIn);
 	remove(lFilterPatterns);
 	replaceChr ( aoBuff , '/' , '\\' ) ;
-	/* printf ( "aoBuff: %s\n" , aoBuff ) ; //*/
+	/* printf ( "aoBuff: %s\n" , aoBuff ) ; */
 	return aoBuff;
 }
 
@@ -2331,7 +2331,7 @@ static char const * selectFolderDialogWinConsole (
 	strcat(lString, "\\AppData\\Local\\Temp\\tinyfd.txt");
 	strcat(lDialogString, lString);
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; //*/
+	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
 	system ( lDialogString ) ;
 
 	if (!(lIn = fopen(lString, "r")))
@@ -2344,7 +2344,7 @@ static char const * selectFolderDialogWinConsole (
 	fclose(lIn);
 	remove(lString);
 	replaceChr ( aoBuff , '/' , '\\' ) ;
-	/* printf ( "aoBuff: %s\n" , aoBuff ) ; //*/
+	/* printf ( "aoBuff: %s\n" , aoBuff ) ; */
 	return aoBuff;
 }
 
@@ -2638,7 +2638,7 @@ char const * tinyfd_openFileDialog (
 	{
 		return NULL ;
 	}
-	/* printf ( "lBuff3: %s\n" , p ) ; //*/
+	/* printf ( "lBuff3: %s\n" , p ) ; */
 	return p ;
 }
 
@@ -3113,7 +3113,6 @@ static int zenity3Present ( )
 {
 	static int lZenity3Present = -1 ;
 	char lBuff [MAX_PATH_OR_CMD] ;
-	char * lBuffP ;
 	FILE * lIn ;
 	
 	if ( lZenity3Present < 0 )
@@ -3454,9 +3453,6 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			strcat(lDialogString, "message='") ;
 			lpDialogString = lDialogString + strlen(lDialogString);
 			replaceSubStr ( aMessage , "\n" , "\\n" , lpDialogString ) ;
-			//replaceSubStr ( aMessage , "\n" , "\\n" , lBuff ) ;
-			//strcat(lDialogString, lBuff) ;
-			//lBuff[0]='\0';
 			strcat(lDialogString, "'") ;
 		}
 		strcat(lDialogString, ");\n\
@@ -3957,9 +3953,6 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			strcat(lDialogString, "prompt='") ;
 			lpDialogString = lDialogString + strlen(lDialogString);
 			replaceSubStr ( aMessage , "\n" , "\\n" , lpDialogString ) ;
-			//replaceSubStr ( aMessage , "\n" , "\\n" , lBuff ) ;
-			//strcat(lDialogString, lBuff) ;
-			//lBuff[0]='\0';
 			strcat(lDialogString, "',") ;
 		}
 		if ( aDefaultInput )
@@ -4083,27 +4076,18 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 		if ( lWasGraphicDialog )
 		{
-//			strcat(lDialogString,") 2>/tmp/tinyfd.txt;\
-//	if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
-//	tinyfdRes=$(cat /tmp/tinyfd.txt);\
-//	rm /tmp/tinyfd.txt;echo $tinyfdBool$tinyfdRes") ;
 			strcat(lDialogString,") 2>/tmp/tinyfd.txt;\
 	if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
 	tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 		}
 		else
 		{
-//			strcat(lDialogString,">/dev/tty ) 2>/tmp/tinyfd.txt;\
-//	if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
-//	tinyfdRes=$(cat /tmp/tinyfd.txt);\
-//	rm /tmp/tinyfd.txt;echo $tinyfdBool$tinyfdRes") ;
 			strcat(lDialogString,">/dev/tty ) 2>/tmp/tinyfd.txt;\
 	if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
 	tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 
 			if ( lWasXterm )
 			{
-		//strcat(lDialogString," >/tmp/tinyfd0.txt';cat /tmp/tinyfd0.txt;rm /tmp/tinyfd0.txt");
 		strcat(lDialogString," >/tmp/tinyfd0.txt';cat /tmp/tinyfd0.txt");
 			}
 			else
@@ -4151,8 +4135,6 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		strcat ( lDialogString , "-p \"" ) ;
 		strcat ( lDialogString , "(esc+enter to cancel): \" ANSWER " ) ;
 		strcat ( lDialogString , ";echo 1$ANSWER >/tmp/tinyfd.txt';" ) ;
-		
-		//strcat ( lDialogString , "cat -v /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		strcat ( lDialogString , "cat -v /tmp/tinyfd.txt");
 	}
 	else
@@ -5658,7 +5640,7 @@ tinyfd_messageBox("The selected hexcolor is",
 
 	return 0;
 }
-// */
+*/
 
 #ifdef _MSC_VER
 #pragma warning(default:4996)

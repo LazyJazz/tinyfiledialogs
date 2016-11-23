@@ -408,7 +408,7 @@ static char const * ensureFilesExist( char * const aDestination ,
 }
 
 
-static void wipefile(char * const aFilename)
+static void wipefile(char const * const aFilename)
 {
 	int i;
 	struct stat st;

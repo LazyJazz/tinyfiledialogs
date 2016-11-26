@@ -56,9 +56,11 @@ Unix (command line call attempts) [ASCII + UTF-8]
 The same executable can run across desktops & distributions
 
 tested with C & C++ compilers
-on VisualStudio MinGW Mac Linux Bsd Solaris Minix Raspbian C# fortran (iso_c)
+on VisualStudio MinGW Mac Linux Bsd Solaris Minix Raspbian
 using Gnome Kde Enlightenment Mate Cinnamon Unity
 Lxde Lxqt Xfce WindowMaker IceWm Cde Jds OpenBox
+
+bindings for LUA and C# dll
 
 - License -
 

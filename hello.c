@@ -57,6 +57,8 @@ on VisualStudio MinGW Mac Linux Bsd Solaris Minix Raspbian C# fortran (iso_c)
 using Gnome Kde Enlightenment Mate Cinnamon Unity
 Lxde Lxqt Xfce WindowMaker IceWm Cde Jds OpenBox
 
+bindings for LUA and C# dll
+
 - License -
 
 This software is provided 'as-is', without any express or implied

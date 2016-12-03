@@ -15,8 +15,10 @@ using
 bindings for LUA and C# dll
 
                 git://git.code.sf.net/p/tinyfiledialogs/code
-
-CONTACT me directly via the email address at the top of the header file
+ _________________________________________________________________________
+|                                                                         |
+| CONTACT me directly via the email address at the top of the header file |
+|_________________________________________________________________________|
 
 int tinyfd_messageBox (
     char const * const aTitle , // ""

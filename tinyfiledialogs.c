@@ -18,7 +18,7 @@ Please
 	- if you are including tiny file dialogs,
 	  I'll be happy to add your link to the list of projects using it.
 	- If you are using it on different hardware / OS / compiler.
-	2) Be the first to leave a review on Sourceforge. Thanks.
+	2) leave a review on Sourceforge. Thanks.
 
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker

@@ -5,7 +5,7 @@
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|
                                 git://git.code.sf.net/p/tinyfiledialogs/code
-	 _____________________________________________________
+	  ______________________________________________________
 	 |                                                      |
 	 | direct CONTACT:  mailto:tinyfiledialogs@ysengrin.com |
 	 |______________________________________________________|

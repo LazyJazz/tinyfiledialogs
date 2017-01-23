@@ -1,14 +1,14 @@
 /*_________
- /         \ tinyfiledialogs.h v2.7.2 [November 23, 2016] zlib licence
+ /         \ tinyfiledialogs.h v2.7.3 [January 23, 2017] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
- | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
+ | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|
                                 git://git.code.sf.net/p/tinyfiledialogs/code
-	  ______________________________________________________
-	 |                                                      |
-	 | direct CONTACT:  mailto:tinyfiledialogs@ysengrin.com |
-	 |______________________________________________________|
+	 ______________________________________________________
+	|                                                      |
+	| direct CONTACT:  mailto:tinyfiledialogs@ysengrin.com |
+	|______________________________________________________|
 
 A big thank you to Don Heyse http://ldglite.sf.net for
                    his code contributions, bug corrections & thorough testing!
@@ -27,29 +27,29 @@ InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 
-A single C file (add it to your C or C++ project) with 6 boxes:
-- message / question
-- input / password
+A single C file (add it to your C or C++ project) with 6 functions:
+- message & question
+- input & password
 - save file
-- open file & multiple files
+- open file(s)
 - select folder
 - color picker.
 
 Complements OpenGL GLFW GLUT GLUI VTK SFML SDL Ogre Unity ION
-CEGUI MathGL CPW GLOW IMGUI GLT NGL STB & GUI less programs
+CEGUI MathGL CPW GLOW IMGUI MyGUI GLT NGL STB & GUI less programs
 
 NO INIT
 NO MAIN LOOP
 
 The dialogs can be forced into console mode
 
-Windows (XP to 10) [ASCII + MBCS + UTF-8 + UTF-16]
-- native code & some vbs create the graphic dialogs
+Windows (XP to 10) ASCII + MBCS + UTF-8 + UTF-16
+- native code & vbs create the graphic dialogs
 - enhanced console mode can use dialog.exe from
 http://andrear.altervista.org/home/cdialog.php
 - basic console input
 
-Unix (command line call attempts) [ASCII + UTF-8]
+Unix (command line call attempts) ASCII + UTF-8
 - applescript
 - zenity / matedialog
 - kdialog

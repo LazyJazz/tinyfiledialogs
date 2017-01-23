@@ -1,14 +1,14 @@
 /*_________
- /         \ tinyfiledialogs.c v2.7.2 [November 23, 2016] zlib licence
+ /         \ tinyfiledialogs.c v2.7.3 [January 23, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
- | dialogs | Copyright (c) 2014 - 2016 Guillaume Vareille http://ysengrin.com
+ | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|
                                 git://git.code.sf.net/p/tinyfiledialogs/code
-	  ______________________________________________________
-	 |                                                      |
-	 | direct CONTACT:  mailto:tinyfiledialogs@ysengrin.com |
-	 |______________________________________________________|
+	 ______________________________________________________
+	|                                                      |
+	| direct CONTACT:  mailto:tinyfiledialogs@ysengrin.com |
+	|______________________________________________________|
 
 A big thank you to Don Heyse http://ldglite.sf.net for
                    his code contributions, bug corrections & thorough testing!
@@ -25,29 +25,29 @@ InputBox PasswordBox MessageBox ColorPicker
 OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 
-A single C file (add it to your C or C++ project) with 6 boxes:
-- message / question
-- input / password
+A single C file (add it to your C or C++ project) with 6 functions:
+- message & question
+- input & password
 - save file
-- open file & multiple files
+- open file(s)
 - select folder
 - color picker.
 
 Complements OpenGL GLFW GLUT GLUI VTK SFML SDL Ogre Unity ION
-CEGUI MathGL CPW GLOW IMGUI GLT NGL STB & GUI less programs
+CEGUI MathGL CPW GLOW IMGUI MyGUI GLT NGL STB & GUI less programs
 
 NO INIT
 NO MAIN LOOP
 
 The dialogs can be forced into console mode
 
-Windows (XP to 10) [ASCII + MBCS + UTF-8 + UTF-16]
-- native code & some vbs create the graphic dialogs
+Windows (XP to 10) ASCII + MBCS + UTF-8 + UTF-16
+- native code & vbs create the graphic dialogs
 - enhanced console mode can use dialog.exe from
 http://andrear.altervista.org/home/cdialog.php
 - basic console input
 
-Unix (command line call attempts) [ASCII + UTF-8]
+Unix (command line call attempts) ASCII + UTF-8
 - applescript
 - zenity / matedialog
 - kdialog
@@ -116,7 +116,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.7.2";
+char tinyfd_version [8] = "2.7.3";
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -1439,7 +1439,10 @@ wchar_t const * tinyfd_selectFolderDialogW(
 	bInfo.pidlRoot = NULL;
 	bInfo.pszDisplayName = lBuff;
 	bInfo.lpszTitle = aTitle && wcslen(aTitle) ? aTitle : NULL;
-	bInfo.ulFlags = BIF_USENEWUI;
+	if (lHResult == S_OK || lHResult == S_FALSE)
+	{
+		bInfo.ulFlags = BIF_USENEWUI;
+	}
 	bInfo.lpfn = NULL;
 	bInfo.lParam = 0;
 	bInfo.iImage = -1;
@@ -1502,10 +1505,8 @@ wchar_t const * tinyfd_colorChooserW(
 	unsigned char lDefaultRGB[3];
 	int lRet;
 
-	/*
 	HRESULT lHResult;
 	lHResult = CoInitializeEx(NULL, 0);
-	*/
 
 	if (aDefaultHexRGB)
 	{
@@ -1542,12 +1543,10 @@ wchar_t const * tinyfd_colorChooserW(
 
 	RGB2HexW(aoResultRGB, lResultHexRGB);
 
-	/*
 	if (lHResult == S_OK || lHResult == S_FALSE)
 	{
 		CoUninitialize();
 	}
-	*/
 
 	return lResultHexRGB;
 }
@@ -1888,7 +1887,10 @@ static char const * selectFolderDialogWinGuiA (
 	bInfo.pidlRoot = NULL ;
 	bInfo.pszDisplayName = aoBuff ;
 	bInfo.lpszTitle = aTitle && strlen(aTitle) ? aTitle : NULL;
-	bInfo.ulFlags = BIF_USENEWUI;
+	if (lHResult == S_OK || lHResult == S_FALSE)
+	{
+		bInfo.ulFlags = BIF_USENEWUI;
+	}
 	bInfo.lpfn = NULL ;
 	bInfo.lParam = 0 ;
 	bInfo.iImage = -1 ;

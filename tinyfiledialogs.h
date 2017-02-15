@@ -109,7 +109,8 @@ extern char tinyfd_version[8]; /* contains tinyfd current version number */
 /* for UTF-16 use the functions at the end of this files */
 extern int tinyfd_winUtf8; /* 0 (default) or 1 */
 /* on windows string char can be 0:MBSC or 1:UTF-8
-unless your code is really prepared for UTF-8 on windows, leave this on MBSC. */
+unless your code is really prepared for UTF-8 on windows, leave this on MBSC.
+Or you can use the UTF-16 (wchar) prototypes at the end of ths file.*/
 #endif
 
 extern int tinyfd_forceConsole ;  /* 0 (default) or 1 */

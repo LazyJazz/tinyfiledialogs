@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v2.7.3 [January 23, 2017] zlib licence
+ /         \ tinyfiledialogs.c v2.8 [February 15, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -116,7 +116,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.7.3";
+char tinyfd_version [8] = "2.8";
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -1422,6 +1422,24 @@ static char const * openFileDialogWinGui8(
 }
 
 
+static int __stdcall BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lp, LPARAM pData)
+{
+	if (uMsg == BFFM_INITIALIZED)
+	{
+		SendMessage(hwnd, BFFM_SETSELECTION, TRUE, pData);
+	}
+	return 0;
+}
+
+static int __stdcall BrowseCallbackProcW(HWND hwnd, UINT uMsg, LPARAM lp, LPARAM pData)
+{
+	if (uMsg == BFFM_INITIALIZED)
+	{
+		SendMessage(hwnd, BFFM_SETSELECTIONW, TRUE, (LPARAM)pData);
+	}
+	return 0;
+}
+
 wchar_t const * tinyfd_selectFolderDialogW(
 	wchar_t const * const aTitle, /*  NULL or "" */
 	wchar_t const * const aDefaultPath) /* NULL or "" */
@@ -1434,7 +1452,6 @@ wchar_t const * tinyfd_selectFolderDialogW(
 
 	lHResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 
-	/* we can't use aDefaultPath */
 	bInfo.hwndOwner = 0;
 	bInfo.pidlRoot = NULL;
 	bInfo.pszDisplayName = lBuff;
@@ -1443,8 +1460,8 @@ wchar_t const * tinyfd_selectFolderDialogW(
 	{
 		bInfo.ulFlags = BIF_USENEWUI;
 	}
-	bInfo.lpfn = NULL;
-	bInfo.lParam = 0;
+	bInfo.lpfn = BrowseCallbackProcW;
+	bInfo.lParam = (LPARAM)aDefaultPath;
 	bInfo.iImage = -1;
 
 	lpItem = SHBrowseForFolderW(&bInfo);
@@ -1891,8 +1908,8 @@ static char const * selectFolderDialogWinGuiA (
 	{
 		bInfo.ulFlags = BIF_USENEWUI;
 	}
-	bInfo.lpfn = NULL ;
-	bInfo.lParam = 0 ;
+	bInfo.lpfn = BrowseCallbackProc;
+	bInfo.lParam = (LPARAM)aDefaultPath;
 	bInfo.iImage = -1 ;
 
 	lpItem = SHBrowseForFolderA ( & bInfo ) ;

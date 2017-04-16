@@ -73,7 +73,7 @@ char const * tinyfd_colorChooser(
 - The code is pure C, perfectly compatible with C++.
 - the windows utf-16 prototypes are in the header file
 - windows is fully supported from XP to 10 (maybe even older versions)
-- C# via dll, see example file
+- C# & LUA via dll, see example files
 - OSX supported from 10.4 to 10.12 (maybe even older versions)
 - Avoid using " and ' in titles and messages.
 - There's one file filter only, it may contain several patterns.

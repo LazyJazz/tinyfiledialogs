@@ -5,10 +5,10 @@
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|
                                 git://git.code.sf.net/p/tinyfiledialogs/code
-	 ______________________________________________________
-	|                                                      |
-	| direct CONTACT:  mailto:tinyfiledialogs@ysengrin.com |
-	|______________________________________________________|
+		 ______________________________________________
+		|                                              |
+		| DIRECT CONTACT: tinyfiledialogs@ysengrin.com |
+		|______________________________________________|
 
 A big thank you to Don Heyse http://ldglite.sf.net for
                    his code contributions, bug corrections & thorough testing!

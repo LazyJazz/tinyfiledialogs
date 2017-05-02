@@ -5,10 +5,10 @@
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|
                                 git://git.code.sf.net/p/tinyfiledialogs/code
-	 ______________________________________________________
-	|                                                      |
-	| direct CONTACT:  mailto:tinyfiledialogs@ysengrin.com |
-	|______________________________________________________|
+		 ______________________________________________
+		|                                              |
+		| direct CONTACT: tinyfiledialogs@ysengrin.com |
+		|______________________________________________|
 
 Please
 	1) let me know

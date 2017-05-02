@@ -217,7 +217,7 @@ int main(void)
 	tinyfd_messageBox("your password is",
 			lBuffer, "ok", "info", 1);
 
-	lTheSelectFolderName = tinyfd_selectFolderDialogW(
+	lTheSelectFolderName = tinyfd_selectFolderDialog(
 		"let us just select a directory", NULL);
 
 	if (!lTheSelectFolderName)

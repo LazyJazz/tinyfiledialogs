@@ -7,7 +7,7 @@
                                 git://git.code.sf.net/p/tinyfiledialogs/code
 		 ______________________________________________
 		|                                              |
-		| direct CONTACT: tinyfiledialogs@ysengrin.com |
+		| DIRECT CONTACT: tinyfiledialogs@ysengrin.com |
 		|______________________________________________|
 
 Please

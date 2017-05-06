@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v2.8 [February 15, 2017] zlib licence
+ /         \ tinyfiledialogs.c v2.8.1 [May 6, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -116,7 +116,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.8";
+char tinyfd_version [8] = "2.8.1";
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -146,6 +146,8 @@ static int gWarningDisplayed = 1 ;
 #else
 static int gWarningDisplayed = 0 ;
 #endif
+
+static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
 static char gTitle[]="missing software! (so we switch to basic console input)";
 
@@ -2809,7 +2811,8 @@ static int detectPresence ( char const * const aExecutable )
     strcat ( lTestedString , aExecutable ) ;
     lIn = popen ( lTestedString , "r" ) ;
     if ( ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
-        && ( ! strchr ( lBuff , ':' ) ) )
+        && ( ! strchr ( lBuff , ':' ) )
+		&& ( strncmp(lBuff, "no ", 3) ) )
     {	/* present */
     	pclose ( lIn ) ;
     	return 1 ;
@@ -3149,11 +3152,11 @@ static int zenity3Present ( )
 			{
 				if ( atoi(lBuff) >= 3 )
 				{
-					lZenity3Present = 1 ;
+					lZenity3Present = 3 ;
 				}
 				else if ( ( atoi(lBuff) == 2 ) && ( atoi(strtok(lBuff,".")+2 ) >= 32 ) )
 				{
-					lZenity3Present = 1 ;
+					lZenity3Present = 2 ;
 				}
 			}
 			pclose ( lIn ) ;
@@ -3343,7 +3346,7 @@ int tinyfd_messageBox (
 			strcat(lDialogString, aMessage) ;
 			strcat(lDialogString, "\"") ;
 		}
-		if ( zenity3Present ( ) )
+		if ( zenity3Present ( ) >= 3 )
 		{
 			strcat ( lDialogString , " --icon-name=dialog-" ) ;
 			if ( aIconType && (! strcmp( "question" , aIconType )
@@ -3785,7 +3788,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		return lResult ;
 	}
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
+	if (tinyfd_verbose) printf ( "lDialogString: %s\n" , lDialogString ) ;
 	if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
 	{
 		free(lDialogString);
@@ -4226,7 +4229,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		return lBuff ;
 	}
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
+	if (tinyfd_verbose) printf ( "lDialogString: %s\n" , lDialogString ) ;
 	lIn = popen ( lDialogString , "r" );
 	if ( ! lIn  )
 	{
@@ -4573,7 +4576,7 @@ char const * tinyfd_saveFileDialog (
 		return p ;
 	}
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
+	if (tinyfd_verbose) printf ( "lDialogString: %s\n" , lDialogString ) ;
     if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
     {
         return NULL ;
@@ -4932,7 +4935,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		return p2 ;
 	}
 
-     /* printf ( "lDialogString: %s\n" , lDialogString ) ; */
+    if (tinyfd_verbose) printf ( "lDialogString: %s\n" , lDialogString ) ;
     if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
     {
         return NULL ;
@@ -5175,7 +5178,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 		return p ;
 	}
-    /* printf ( "lDialogString: %s\n" , lDialogString ) ; */
+    if (tinyfd_verbose) printf ( "lDialogString: %s\n" , lDialogString ) ;
     if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
     {
         return NULL ;
@@ -5376,7 +5379,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		return p ;
 	}
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
+	if (tinyfd_verbose) printf ( "lDialogString: %s\n" , lDialogString ) ;
 	if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
 	{
 		return NULL ;
@@ -5487,7 +5490,7 @@ char const * tinyfd_arrayDialog (
 		return NULL ;
 	}
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
+	if (tinyfd_verbose) printf ( "lDialogString: %s\n" , lDialogString ) ;
 	if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
 	{
 		return NULL ;

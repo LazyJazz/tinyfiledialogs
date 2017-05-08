@@ -2848,27 +2848,9 @@ static int tryCommand ( char const * const aCommand )
 static char const * terminalName ( )
 {
 	static char lTerminalName[64] = "*" ;
-	char lShellName[64] = "bash" ;
+	char const lShellName[64] = "sh" ;
 	if ( lTerminalName[0] == '*' )
 	{
-		if ( detectPresence ( "bash" ) ) {}
-		else if ( detectPresence ( "csh" ) )
-		{
-			strcpy ( lShellName , "csh" ) ;
-		}
-		else if ( detectPresence ( "ksh" ) )
-		{
-			strcpy ( lShellName , "ksh" ) ;
-		}
-		else if ( detectPresence ( "zsh" ) )
-		{
-			strcpy ( lShellName , "zsh" ) ;
-		}
-		else
-		{
-			strcpy ( lShellName , "sh" ) ;
-		}
-
 		if ( isDarwin() )
 		{
 			if ( strcpy(lTerminalName , "/opt/X11/bin/xterm" )
@@ -3013,8 +2995,8 @@ static char const * terminalName ( )
 		{
 			strcpy(lTerminalName , "" ) ;
 		}
-		/* bad: koi8rxterm xfce4-terminal gnome-terminal guake tilda
-				vala-terminal Eterm aterm Terminal terminology sakura lilyterm*/
+		/* bad: koi8rxterm xfce4-terminal guake tilda vala-terminal
+                Eterm aterm Terminal terminology sakura lilyterm */
 	}
 	if ( strlen(lTerminalName) )
 	{

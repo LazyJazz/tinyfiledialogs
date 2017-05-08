@@ -118,6 +118,8 @@ misrepresented as being the original software.
 
 char tinyfd_version [8] = "2.8.2";
 
+static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
+
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
 #else
@@ -146,8 +148,6 @@ static int gWarningDisplayed = 1 ;
 #else
 static int gWarningDisplayed = 0 ;
 #endif
-
-static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
 static char gTitle[]="missing software! (so we switch to basic console input)";
 
@@ -5607,10 +5607,9 @@ tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
 
 if (lWillBeGraphicMode && !tinyfd_forceConsole)
 {
-	tinyfd_forceConsole = tinyfd_messageBox("Hello World",
-		"force dialogs into console mode?\
-						\n\t(it is better if dialog is installed)",
-						"yesno", "question", 0);
+	tinyfd_forceConsole = ! tinyfd_messageBox("Hello World",
+		"graphic dialogs [yes] / console mode [no]?",
+		"yesno", "question", 1);
 }
 
 lTmp = tinyfd_inputBox(

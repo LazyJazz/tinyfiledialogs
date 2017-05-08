@@ -127,10 +127,9 @@ int main(void)
 
 	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )
 	{
-		tinyfd_forceConsole = tinyfd_messageBox("Hello World",
-			"force dialogs into console mode?\
-				\n\t(it is better if dialog is installed)",
-				"yesno", "question", 0);
+		tinyfd_forceConsole = ! tinyfd_messageBox("Hello World",
+			"graphic dialogs [yes] / console mode [no]?",
+			"yesno", "question", 1);
 	}
 
 	lTmp = tinyfd_inputBox(

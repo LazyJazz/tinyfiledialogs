@@ -2856,7 +2856,7 @@ static char const * terminalName ( )
 			if ( strcpy(lTerminalName , "/opt/X11/bin/xterm" )
 		      && detectPresence ( lTerminalName ) )
 			{
-				strcat(lTerminalName , " -e sh -c " ) ;
+				strcat(lTerminalName , " -e bash -c " ) ;
 			}
 			else
 			{
@@ -2866,87 +2866,87 @@ static char const * terminalName ( )
 		else if ( strcpy(lTerminalName,"terminator") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -x sh -c " ) ;
+			strcat(lTerminalName , " -x bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"lxterminal") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -e sh -c " ) ;
+			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"mate-terminal") /*good even if gnome terminal is not*/
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -x sh -c " ) ;
+			strcat(lTerminalName , " -x bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"konsole")
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -e sh -c " ) ;
+			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"rxvt") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -e sh -c " ) ;
+			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"urxvt") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -e sh -c " ) ;
+			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"mrxvt") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -e sh -c " ) ;
+			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"evilvte") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -e sh -c " ) ;
+			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"termit") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -e sh -c " ) ;
+			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"kterm") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -e sh -c " ) ;
+			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"roxterm") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -e sh -c " ) ;
+			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"xterm") /*good small*/
 			&& detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -e sh -c " ) ;
+			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"lxterm") /*good small*/
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -e sh -c " ) ;
+			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"xvt") /*good B&W*/
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -e sh -c " ) ;
+			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"pterm") /*good only letters*/
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -e sh -c " ) ;
+			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"x-terminal-emulator") /*alias*/
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -e sh -c " ) ;
+			strcat(lTerminalName , " -e bash -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"$TERM") /*alias*/
 			  && detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -x sh -c " ) ;
+			strcat(lTerminalName , " -x bash -c " ) ;
 		}
 		else
 		{

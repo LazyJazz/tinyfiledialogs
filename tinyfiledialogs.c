@@ -2917,11 +2917,6 @@ static char const * terminalName ( )
 		{
 			strcat(lTerminalName , " -e sh -c " ) ;
 		}
-		else if ( strcpy(lTerminalName,"gnome-terminal") /*good*/
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " --disable-factory -x sh -c " ) ;
-		}
 		else if ( strcpy(lTerminalName,"xterm") /*good small*/
 			&& detectPresence(lTerminalName) )
 		{
@@ -2931,6 +2926,16 @@ static char const * terminalName ( )
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e sh -c " ) ;
+		}
+		else if ( strcpy(lTerminalName,"gnome-terminal") /*good*/
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " --disable-factory -x sh -c " ) ;
+		}
+		else if ( strcpy(lTerminalName,"xfce4-terminal") /*bad but mayce corrected*/
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -x sh -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"xvt") /*good B&W*/
 			  && detectPresence(lTerminalName) )

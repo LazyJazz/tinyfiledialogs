@@ -2812,7 +2812,6 @@ static int detectPresence ( char const * const aExecutable )
     lIn = popen ( lTestedString , "r" ) ;
     if ( ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
 		&& ( ! strchr ( lBuff , ':' ) )
-		&& ( strncmp(lBuff, "which: ", 7) )
 		&& ( strncmp(lBuff, "no ", 3) ) )
     {	/* present */
     	pclose ( lIn ) ;

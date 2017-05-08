@@ -2898,7 +2898,7 @@ static char const * terminalName ( )
 			strcat(lTerminalName , lShellName ) ;
 			strcat(lTerminalName , " -c " ) ;
 		}
-		else if ( strcpy(lTerminalName,"mate-terminal") /*good even if gnome terminal is not*/
+		else if ( strcpy(lTerminalName,"mate-terminal") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -x " ) ;
@@ -2958,6 +2958,13 @@ static char const * terminalName ( )
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+			strcat(lTerminalName , " -c " ) ;
+		}
+		else if ( strcpy(lTerminalName,"gnome-terminal") /*good*/
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " --disable-factory -x " ) ;
 			strcat(lTerminalName , lShellName ) ;
 			strcat(lTerminalName , " -c " ) ;
 		}

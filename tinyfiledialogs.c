@@ -118,6 +118,8 @@ misrepresented as being the original software.
 
 char tinyfd_version [8] = "2.8.2";
 
+static int tinyfd_verbose = 1 ; /* print on unix the command line calls */
+
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
 #else
@@ -146,8 +148,6 @@ static int gWarningDisplayed = 1 ;
 #else
 static int gWarningDisplayed = 0 ;
 #endif
-
-static int tinyfd_verbose = 1 ; /* print on unix the command line calls */
 
 static char gTitle[]="missing software! (so we switch to basic console input)";
 

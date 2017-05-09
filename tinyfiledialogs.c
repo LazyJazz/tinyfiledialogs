@@ -2887,6 +2887,13 @@ static char const * terminalName ( )
 				strcpy(lTerminalName , "" ) ;
 			}
 		}
+		else if ( strcpy(lTerminalName,"xterm") /*good small*/
+			&& detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+			strcat(lTerminalName , " -c " ) ;
+		}
 		else if ( strcpy(lTerminalName,"terminator") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
@@ -2959,13 +2966,6 @@ static char const * terminalName ( )
 		}
 		else if ( strcpy(lTerminalName,"roxterm") /*good*/
 			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
-		}
-		else if ( strcpy(lTerminalName,"xterm") /*good small*/
-			&& detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;

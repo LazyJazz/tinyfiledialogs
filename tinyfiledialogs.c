@@ -3767,7 +3767,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		if ( aDialogType && !strcmp("yesno",aDialogType) )
 		{
 			strcat ( lDialogString , "echo -n \"y/n: \"; " ) ;
-			strcat ( lDialogString , "stty raw -echo;" ) ;
+			strcat ( lDialogString , "stty sane -echo;" ) ;
 			strcat ( lDialogString ,
 				"answer=$( while ! head -c 1 | grep -i [ny];do true ;done);");
 			strcat ( lDialogString ,
@@ -3777,7 +3777,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		else if ( aDialogType && !strcmp("okcancel",aDialogType) )
 		{
 			strcat ( lDialogString , "echo -n \"[O]kay/[C]ancel: \"; " ) ;
-			strcat ( lDialogString , "stty raw -echo;" ) ;
+			strcat ( lDialogString , "stty sane -echo;" ) ;
 			strcat ( lDialogString ,
 				"answer=$( while ! head -c 1 | grep -i [oc];do true ;done);");
 			strcat ( lDialogString ,
@@ -3787,7 +3787,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		else
 		{
 			strcat(lDialogString , "echo -n \"press enter to continue \"; ");
-			strcat ( lDialogString , "stty raw -echo;" ) ;
+			strcat ( lDialogString , "stty sane -echo;" ) ;
 			strcat ( lDialogString ,
 				"answer=$( while ! head -c 1;do true ;done);echo 1");
 		}

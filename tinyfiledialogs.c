@@ -3264,9 +3264,12 @@ static int tkinter2Present ( )
 	if ( lTkinter2Present < 0 )
 	{
 		strcpy(gPython2Name , "python" ) ;
-		sprintf ( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
-		lTkinter2Present = tryCommand(lPythonCommand);		
-		if ( ! lTkinter2Present )
+		if ( detectPresence(gPython2Name) )
+		{
+			sprintf ( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
+			lTkinter2Present = tryCommand(lPythonCommand);
+		}
+		else
 		{
 			strcpy(gPython2Name , "python2" ) ;
 			if ( detectPresence(gPython2Name) )

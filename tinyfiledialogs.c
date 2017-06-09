@@ -2852,6 +2852,12 @@ static int tryCommand ( char const * const aCommand )
 }
 
 
+static int isTerminalRunning()
+{
+	return isatty(1);
+}
+
+
 static char const * terminalName ( )
 {
 	static char lTerminalName[64] = "*" ;
@@ -3068,7 +3074,7 @@ static char const * dialogName ( )
 			strcpy(lDialogName , "" ) ;
 		}
 	}
-	if ( strlen(lDialogName) && ( isatty(1) || terminalName() ) )
+	if ( strlen(lDialogName) && ( isTerminalRunning() || terminalName() ) )
 	{
 		return lDialogName ;
 	}
@@ -3086,13 +3092,13 @@ static int whiptailPresent ( )
 	{
 		lWhiptailPresent = detectPresence ( "whiptail" ) ;
 	}
-	return lWhiptailPresent && ( isatty(1) || terminalName() ) ;
+	return lWhiptailPresent && ( isTerminalRunning() || terminalName() ) ;
 }
 
 
 static int graphicMode()
 {
-	return !( tinyfd_forceConsole && (isatty(1) || terminalName()) )
+	return !( tinyfd_forceConsole && (isTerminalRunning() || terminalName()) )
 		&& ( getenv("DISPLAY") || (isDarwin() && !(getenv("SSH_TTY") ) ) ) ;
 }
 
@@ -3503,7 +3509,7 @@ int tinyfd_messageBox (
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"tkinter");return 1;}
 
 		strcpy ( lDialogString , gPython2Name ) ;
-		if ( ! isatty ( 1 ) && isDarwin ( ) )
+		if ( ! isTerminalRunning ( ) && isDarwin ( ) )
 		{
 		 	strcat ( lDialogString , " -i" ) ;  /* for osx without console */
 		}
@@ -3659,7 +3665,7 @@ else :\n\tprint 1\n\"" ) ;
 		else if ( dialogName ( ) )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return 0;}
-			if ( isatty ( 1 ) )
+			if ( isTerminalRunning ( ) )
 			{
 				strcpy ( lDialogString , "(dialog " ) ;
 			}
@@ -3672,7 +3678,7 @@ else :\n\tprint 1\n\"" ) ;
 				strcat ( lDialogString , " " ) ;
 			}
 		}
-		else if ( isatty ( 1 ) )
+		else if ( isTerminalRunning ( ) )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"whiptail");return 0;}
 			strcpy ( lDialogString , "(whiptail " ) ;
@@ -3751,7 +3757,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 			}
 		}
 	}
-	else if ( ! isatty ( 1 ) && terminalName() )
+	else if ( ! isTerminalRunning ( ) && terminalName() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return 0;}
 		strcpy ( lDialogString , terminalName() ) ;
@@ -4042,7 +4048,7 @@ char const * tinyfd_inputBox(
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"tkinter");return (char const *)1;}
 		strcpy ( lDialogString , gPython2Name ) ;
-		if ( ! isatty ( 1 ) && isDarwin ( ) )
+		if ( ! isTerminalRunning ( ) && isDarwin ( ) )
 		{
         	strcat ( lDialogString , " -i" ) ;  /* for osx without console */
 		}
@@ -4131,7 +4137,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		else if ( dialogName ( ) )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
-			if ( isatty ( 1 ) )
+			if ( isTerminalRunning ( ) )
 			{
 				strcpy ( lDialogString , "(dialog " ) ;
 			}
@@ -4144,7 +4150,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 				strcat ( lDialogString , " " ) ;
 			}
 		}
-		else if ( isatty ( 1 ) )
+		else if ( isTerminalRunning ( ) )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"whiptail");return (char const *)0;}
 			strcpy ( lDialogString , "(whiptail " ) ;
@@ -4213,7 +4219,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			}
 		}
 	}
-	else if ( ! isatty ( 1 ) && terminalName() )
+	else if ( ! isTerminalRunning ( ) && terminalName() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return (char const *)0;}
 		lWasBasicXterm = 1 ;
@@ -4514,7 +4520,7 @@ char const * tinyfd_saveFileDialog (
   {
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"tkinter");return (char const *)1;}
 		strcpy ( lDialogString , gPython2Name ) ;
-		if ( ! isatty ( 1 ) && isDarwin ( ))
+		if ( ! isTerminalRunning ( ) && isDarwin ( ))
 		{
         	strcat ( lDialogString , " -i" ) ;  /* for osx without console */
 		}
@@ -4582,7 +4588,7 @@ char const * tinyfd_saveFileDialog (
 			lWasGraphicDialog = 1 ;
 			strcpy ( lDialogString , "(Xdialog " ) ;
 		}
-		else if ( isatty ( 1 ) )
+		else if ( isTerminalRunning ( ) )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
 			strcpy ( lDialogString , "@echo lala;(dialog " ) ;
@@ -4621,7 +4627,7 @@ char const * tinyfd_saveFileDialog (
 			}
 			strcat(lDialogString, aDefaultPathAndFile) ;
 		}
-		else if ( ! isatty ( 1 ) && !lWasGraphicDialog )
+		else if ( ! isTerminalRunning ( ) && !lWasGraphicDialog )
 		{
 			strcat(lDialogString, getenv("HOME")) ;
 			strcat(lDialogString, "/") ;
@@ -4873,7 +4879,7 @@ char const * tinyfd_openFileDialog (
   {
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"tkinter");return (char const *)1;}
 		strcpy ( lDialogString , gPython2Name ) ;
-		if ( ! isatty ( 1 ) && isDarwin ( ) )
+		if ( ! isTerminalRunning ( ) && isDarwin ( ) )
 		{
         	strcat ( lDialogString , " -i" ) ;  /* for osx without console */
 		}
@@ -4947,7 +4953,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			lWasGraphicDialog = 1 ;
 			strcpy ( lDialogString , "(Xdialog " ) ;
 		}
-		else if ( isatty ( 1 ) )
+		else if ( isTerminalRunning ( ) )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
 			strcpy ( lDialogString , "(dialog " ) ;
@@ -4986,7 +4992,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			}
 			strcat(lDialogString, aDefaultPathAndFile) ;
 		}
-		else if ( ! isatty ( 1 ) && !lWasGraphicDialog )
+		else if ( ! isTerminalRunning ( ) && !lWasGraphicDialog )
 		{
 			strcat(lDialogString, getenv("HOME")) ;
 			strcat(lDialogString, "/");
@@ -5157,7 +5163,7 @@ char const * tinyfd_selectFolderDialog (
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"tkinter");return (char const *)1;}
 		strcpy ( lDialogString , gPython2Name ) ;
-		if ( ! isatty ( 1 ) && isDarwin ( ) )
+		if ( ! isTerminalRunning ( ) && isDarwin ( ) )
 		{
         	strcat ( lDialogString , " -i" ) ;  /* for osx without console */
 		}
@@ -5194,7 +5200,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			lWasGraphicDialog = 1 ;
 			strcpy ( lDialogString , "(Xdialog " ) ;
 		}
-		else if ( isatty ( 1 ) )
+		else if ( isTerminalRunning ( ) )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
 			strcpy ( lDialogString , "(dialog " ) ;
@@ -5230,7 +5236,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			strcat(lDialogString, aDefaultPath) ;
 			ensureFinalSlash(lDialogString);
 		}
-		else if ( ! isatty ( 1 ) && !lWasGraphicDialog )
+		else if ( ! isTerminalRunning ( ) && !lWasGraphicDialog )
 		{
 			strcat(lDialogString, getenv("HOME")) ;
 			strcat(lDialogString, "/");
@@ -5420,7 +5426,7 @@ to set mycolor to choose color default color {");
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"tkinter");return (char const *)1;}
 		strcpy ( lDialogString , gPython2Name ) ;
-		if ( ! isatty ( 1 ) && isDarwin ( ) )
+		if ( ! isTerminalRunning ( ) && isDarwin ( ) )
 		{
         	strcat ( lDialogString , " -i" ) ;  /* for osx without console */
 		}

@@ -2935,13 +2935,6 @@ static char const * terminalName ( )
 			strcat(lTerminalName , lShellName ) ;
 			strcat(lTerminalName , " -c " ) ;
 		}
-		else if ( strcpy(lTerminalName,"qterminal") /*good*/
-			&& detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
-		}
 		else if ( strcpy(lTerminalName,"rxvt") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
@@ -3005,7 +2998,7 @@ static char const * terminalName ( )
 			strcat(lTerminalName , lShellName ) ;
 			strcat(lTerminalName , " -c " ) ;
 		}
-		else if ( strcpy(lTerminalName,"xfce4-terminal") /*bad but mayce corrected*/
+		else if ( strcpy(lTerminalName,"xfce4-terminal") /*bad but maybe corrected*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -x " ) ;
@@ -3044,7 +3037,7 @@ static char const * terminalName ( )
 		{
 			strcpy(lTerminalName , "" ) ;
 		}
-		/* bad: koi8rxterm xfce4-terminal guake tilda vala-terminal
+		/* bad: koi8rxterm xfce4-terminal guake tilda vala-terminal qterminal
                 Eterm aterm Terminal terminology sakura lilyterm */
 	}
 	if ( strlen(lTerminalName) )

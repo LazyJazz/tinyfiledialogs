@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v2.8.3 [May 10, 2017] zlib licence
+ /         \ tinyfiledialogs.c v2.8.4 [Jun 09, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -98,7 +98,10 @@ misrepresented as being the original software.
  #endif
  #ifndef TINYFD_NOLIB
   #include <Windows.h>
-  #include <Shlobj.h>
+  /*#define TINYFD_NOSELECTFOLDERWIN*/
+  #ifndef TINYFD_NOSELECTFOLDERWIN
+	#include <Shlobj.h>
+  #endif /*TINYFD_NOSELECTFOLDERWIN*/
  #endif
  #include <conio.h>
  /*#include <io.h>*/
@@ -116,7 +119,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.8.3";
+char tinyfd_version [8] = "2.8.4";
 
 static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
@@ -1423,7 +1426,7 @@ static char const * openFileDialogWinGui8(
 	return aoBuff;
 }
 
-
+#ifndef TINYFD_NOSELECTFOLDERWIN
 static int __stdcall BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lp, LPARAM pData)
 {
 	if (uMsg == BFFM_INITIALIZED)
@@ -1510,6 +1513,7 @@ static char const * selectFolderDialogWinGui8 (
 
 	return aoBuff;
 }
+#endif /*TINYFD_NOSELECTFOLDERWIN*/
 
 
 wchar_t const * tinyfd_colorChooserW(
@@ -1889,7 +1893,7 @@ static char const * openFileDialogWinGuiA (
 	return lRetval;
 }
 
-
+#ifndef TINYFD_NOSELECTFOLDERWIN
 static char const * selectFolderDialogWinGuiA (
 	char * const aoBuff ,
 	char const * const aTitle , /*  NULL or "" */
@@ -1926,6 +1930,7 @@ static char const * selectFolderDialogWinGuiA (
 	}
 	return aoBuff ;
 }
+#endif /*TINYFD_NOSELECTFOLDERWIN*/
 
 
 static char const * colorChooserWinGuiA(
@@ -2682,11 +2687,13 @@ char const * tinyfd_selectFolderDialog (
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char const *)1;}
 		if (tinyfd_winUtf8)
 		{
+#ifndef TINYFD_NOSELECTFOLDERWIN
 			p = selectFolderDialogWinGui8(lBuff, aTitle, aDefaultPath);
 		}
 		else
 		{
 			p = selectFolderDialogWinGuiA(lBuff, aTitle, aDefaultPath);
+#endif /*TINYFD_NOSELECTFOLDERWIN*/
 		}
 	}
 	else
@@ -2917,6 +2924,13 @@ static char const * terminalName ( )
 		}
 		else if ( strcpy(lTerminalName,"konsole")
 			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+			strcat(lTerminalName , " -c " ) ;
+		}
+		else if ( strcpy(lTerminalName,"qterminal") /*good*/
+			&& detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;

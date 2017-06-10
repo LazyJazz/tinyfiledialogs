@@ -152,7 +152,7 @@ static int gWarningDisplayed = 1 ;
 static int gWarningDisplayed = 0 ;
 #endif
 
-static char gTitle[]="missing software! (so we switch to basic console input)";
+static char gTitle[]="missing software! (we will try basic console input)";
 
 static char gAsciiArt[] ="\
  ___________\n\
@@ -169,11 +169,11 @@ static char gMessageWin[] = "tiny file dialogs on Windows needs:\n\t\
 #else
 static char gMessageUnix[] = "tiny file dialogs on UNIX needs:\n\tapplescript\
 \nor\tzenity / matedialog\
+\nor\tqarma (zenity clone for qt)\
 \nor\tkdialog\
 \nor\tXdialog\
-\nor\tpython 2 with tkinter\
+\nor\tpython 2 + tkinter\
 \nor\tdialog (opens a bash xterm if needed)\
-\nor\twhiptail, gdialog, gxmessage or xmessage\
 \nor\txterm + bash (opens a bash xterm for basic input)\
 \nor\tit will use the existing console for basic input";
 #endif
@@ -4190,7 +4190,8 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		if ( !gWarningDisplayed && !tinyfd_forceConsole)
 		{
 			gWarningDisplayed = 1 ;
-			strcat ( lDialogString , "echo \"" ) ;
+			tinyfd_messageBox(gTitle,gMessageUnix,"ok","warning",0);
+			/*strcat ( lDialogString , "echo \"" ) ;
 			strcat ( lDialogString, gAsciiArt) ;
 			strcat ( lDialogString , "\";" ) ;
 			strcat ( lDialogString , "echo \"" ) ;
@@ -4198,7 +4199,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			strcat ( lDialogString , "\";" ) ;
 			strcat ( lDialogString , "echo \"" ) ;
 			strcat ( lDialogString, gMessageUnix) ;
-			strcat ( lDialogString , "\";echo;echo;" ) ;
+			strcat ( lDialogString , "\";echo;echo;" ) ;*/
 		}
 		if ( aTitle && strlen(aTitle) && !tinyfd_forceConsole)
 		{
@@ -4228,9 +4229,10 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		if ( !gWarningDisplayed && !tinyfd_forceConsole)
 		{
 			gWarningDisplayed = 1 ;
-			printf ("\n\n%s", gAsciiArt);
+			tinyfd_messageBox(gTitle,gMessageUnix,"ok","warning",0);
+			/*printf ("\n\n%s", gAsciiArt);
 			printf ("\n%s\n", gTitle);
-			printf ("%s\n\n\n", gMessageUnix);
+			printf ("%s\n\n\n", gMessageUnix);*/
 		}
 		if ( aTitle && strlen(aTitle) )
 		{

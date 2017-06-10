@@ -4189,8 +4189,8 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		strcat ( lDialogString , "'" ) ;
 		if ( !gWarningDisplayed && !tinyfd_forceConsole)
 		{
-			gWarningDisplayed = 1 ;
 			tinyfd_messageBox(gTitle,gMessageUnix,"ok","warning",0);
+			gWarningDisplayed = 1 ;
 			/*strcat ( lDialogString , "echo \"" ) ;
 			strcat ( lDialogString, gAsciiArt) ;
 			strcat ( lDialogString , "\";" ) ;
@@ -4228,8 +4228,8 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return (char const *)0;}
 		if ( !gWarningDisplayed && !tinyfd_forceConsole)
 		{
-			gWarningDisplayed = 1 ;
 			tinyfd_messageBox(gTitle,gMessageUnix,"ok","warning",0);
+			gWarningDisplayed = 1 ;
 			/*printf ("\n\n%s", gAsciiArt);
 			printf ("\n%s\n", gTitle);
 			printf ("%s\n\n\n", gMessageUnix);*/

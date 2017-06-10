@@ -2867,24 +2867,12 @@ static char const * terminalName ( )
 	{
 		if ( detectPresence ( "bash" ) )
 		{
-			strcpy(lShellName , "bash" ) ;
+			strcpy(lShellName , "bash -c " ) ; /*good*/
 		}
-		else if ( detectPresence ( "csh" ) )
-		{
-			strcpy(lShellName , "csh" ) ;
-		}
-		else if ( detectPresence ( "ksh" ) )
-		{
-			strcpy(lShellName , "ksh" ) ;
-		}
-		else if ( detectPresence ( "zsh" ) )
-		{
-			strcpy(lShellName , "zsh" ) ;
-		}
-		else
-		{
-			strcpy(lShellName , "sh" ) ;
-		}
+        else
+        {
+            return NULL ;
+        }
 
 		if ( isDarwin() )
 		{
@@ -2893,7 +2881,6 @@ static char const * terminalName ( )
 			{
 				strcat(lTerminalName , " -e " ) ;
 				strcat(lTerminalName , lShellName ) ;
-				strcat(lTerminalName , " -c " ) ;
 			}
 			else
 			{
@@ -2905,139 +2892,126 @@ static char const * terminalName ( )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"terminator") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -x " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"lxterminal") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"mate-terminal") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -x " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"konsole")
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"rxvt") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"urxvt") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"mrxvt") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"evilvte") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"termit") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"kterm") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"roxterm") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"lxterm") /*good small*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"gnome-terminal") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " --disable-factory -x " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"xfce4-terminal") /*bad but maybe corrected*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -x " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"xvt") /*good B&W*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"pterm") /*good only letters*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
+		}
+		else if ( strcpy(lTerminalName,"qterminal")
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
 		}
 		else if ( strcpy(lTerminalName,"x-terminal-emulator") /*alias*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else if ( strcpy(lTerminalName,"$TERM") /*alias*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-			strcat(lTerminalName , " -c " ) ;
 		}
 		else
 		{
 			strcpy(lTerminalName , "" ) ;
 		}
-		/* bad: koi8rxterm xfce4-terminal guake tilda vala-terminal qterminal
+		/* bad: koi8rxterm xfce4-terminal guake tilda vala-terminal 
                 Eterm aterm Terminal terminology sakura lilyterm */
 	}
 	if ( strlen(lTerminalName) )

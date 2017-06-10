@@ -172,10 +172,10 @@ static char gMessageUnix[] = "tiny file dialogs on UNIX needs:\n\tapplescript\
 \nor\tkdialog\
 \nor\tXdialog\
 \nor\tpython 2 with tkinter\
-\nor\tdialog (opens a Bash console if needed)\
+\nor\tdialog (opens a bash xterm if needed)\
 \nor\twhiptail, gdialog, gxmessage or xmessage\
-\nor\tbash (it will open a Bash console for basic input)\
-\nor\tit will use existing console for basic input";
+\nor\txterm + bash (opens a bash xterm for basic input)\
+\nor\tit will use the existing console for basic input";
 #endif
 
 #ifdef _MSC_VER
@@ -2990,12 +2990,6 @@ static char const * terminalName ( )
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
 		}
-		else if ( strcpy(lTerminalName,"qterminal")
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
 		else if ( strcpy(lTerminalName,"x-terminal-emulator") /*alias*/
 			  && detectPresence(lTerminalName) )
 		{
@@ -3012,7 +3006,7 @@ static char const * terminalName ( )
 		{
 			strcpy(lTerminalName , "" ) ;
 		}
-		/* bad: koi8rxterm xfce4-terminal guake tilda vala-terminal 
+		/* bad: koi8rxterm xfce4-terminal guake tilda vala-terminal qterminal
                 Eterm aterm Terminal terminology sakura lilyterm */
 	}
 	if ( strlen(lTerminalName) )

@@ -1,17 +1,16 @@
  _________
-/         \    tiny file dialogs ( cross-platform C C++ )
-|tiny file|       v2.8.4 [Jun 11, 2017] zlib licence
+/         \   tiny file dialogs ( cross-platform C C++ )
+|tiny file|   v2.8.4 [Jun 11, 2017] zlib licence
 | dialogs |   InputBox PasswordBox MessageBox ColorPicker
-\____  ___/ OpenFileDialog SaveFileDialog SelectFolderDialog		
-     \|        Unicode UTF-8 (and also MBCS UTF-16 for windows)
-Native dialog library for
-                WINDOWS MAC OSX GTK+ QT CONSOLE
+\____  ___/   OpenFileDialog SaveFileDialog SelectFolderDialog		
+     \|       ASCII UTF-8 (and also MBCS UTF-16 for windows)
+              Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE
+
 tested with C & C++ compilers on 
     Visual Studio MinGW OSX LINUX FREEBSD ILLUMOS SOLARIS MINIX RASPBIAN
 using
-        Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment
-		WindowMaker IceWm Cde Jds OpenBox Awesome
-
+    Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment
+	WindowMaker IceWm Cde Jds OpenBox Awesome
 bindings for LUA and C# dll
 
                    http://tinyfiledialogs.sourceforge.net
@@ -71,7 +70,7 @@ char const * tinyfd_colorChooser(
 
 - This is not for android nor ios.
 - The code is pure C, perfectly compatible with C++.
-- the windows utf-16 prototypes are in the header file
+- the windows wchar_t (utf-16) prototypes are in the header file
 - windows is fully supported from XP to 10 (maybe even older versions)
 - C# & LUA via dll, see example files
 - OSX supported from 10.4 to 10.12 (maybe even older versions)

@@ -10,7 +10,7 @@ tested with C & C++ compilers on
     Visual Studio MinGW OSX LINUX FREEBSD ILLUMOS SOLARIS MINIX RASPBIAN
 using
     Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment
-	WindowMaker IceWm Cde Jds OpenBox Awesome
+    WindowMaker IceWm Cde Jds OpenBox Awesome
 bindings for LUA and C# dll
 
                    http://tinyfiledialogs.sourceforge.net

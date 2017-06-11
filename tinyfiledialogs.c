@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v2.8.4 [Jun 10, 2017] zlib licence
+ /         \ tinyfiledialogs.c v2.8.4 [Jun 11, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -169,7 +169,7 @@ static char gMessageWin[] = "tiny file dialogs on Windows needs:\n\t\
 #else
 static char gMessageUnix[] = "tiny file dialogs on UNIX needs:\n\tapplescript\
 \nor\tzenity / matedialog\
-\nor\tqarma (zenity clone for qt)\
+\nor\tqarma (zenity for qt)\
 \nor\tkdialog\
 \nor\tXdialog\
 \nor\tpython 2 + tkinter\
@@ -3232,12 +3232,9 @@ static int tkinter2Present ( )
 	if ( lTkinter2Present < 0 )
 	{
 		strcpy(gPython2Name , "python" ) ;
-		if ( detectPresence(gPython2Name) )
-		{
-			sprintf ( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
-			lTkinter2Present = tryCommand(lPythonCommand);
-		}
-		else
+		sprintf ( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
+		if ( ! detectPresence(gPython2Name)
+                 || ! (lTkinter2Present = tryCommand(lPythonCommand)) )
 		{
 			strcpy(gPython2Name , "python2" ) ;
 			if ( detectPresence(gPython2Name) )

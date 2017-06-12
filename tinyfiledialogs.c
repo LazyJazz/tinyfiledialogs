@@ -3062,7 +3062,8 @@ static int whiptailPresent ( )
 static int graphicMode()
 {
 	return !( tinyfd_forceConsole && (isTerminalRunning() || terminalName()) )
-		&& ( getenv("DISPLAY") || (isDarwin() && !(getenv("SSH_TTY") ) ) ) ;
+	  && ( getenv("DISPLAY")
+	    || (isDarwin() && (!getenv("SSH_TTY") || getenv("DISPLAY") ) ) ) ;
 }
 
 
@@ -3128,7 +3129,7 @@ static int osascriptPresent ( )
     {
         lOsascriptPresent = detectPresence ( "osascript" ) ;
     }
-	return lOsascriptPresent && graphicMode ( ) ;
+	return lOsascriptPresent && graphicMode() && (!getenv("SSH_TTY") || getenv("DISPLAY") ) ;
 }
 
 
@@ -3259,7 +3260,8 @@ static int tkinter2Present ( )
 		}
 	}
 	/* printf ("gPython2Name %s\n", gPython2Name) ; */
-	return lTkinter2Present && graphicMode ( ) ;
+	return lTkinter2Present && graphicMode ( )
+		&& (!getenv("SSH_TTY") || getenv("DISPLAY") );
 }
 
 

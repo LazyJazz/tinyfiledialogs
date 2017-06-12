@@ -5,6 +5,8 @@
 \____  ___/   OpenFileDialog SaveFileDialog SelectFolderDialog		
      \|       ASCII UTF-8 (and also MBCS UTF-16 for windows)
               Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE
+  
+SSH supported via automatic switch to console mode or X11 forwarding
 
 tested with C & C++ compilers on 
     Visual Studio MinGW OSX LINUX FREEBSD ILLUMOS SOLARIS MINIX RASPBIAN

@@ -3129,7 +3129,7 @@ static int osascriptPresent ( )
     {
         lOsascriptPresent = detectPresence ( "osascript" ) ;
     }
-	return lOsascriptPresent && graphicMode() && (!getenv("SSH_TTY") || getenv("DISPLAY") ) ;
+	return lOsascriptPresent && graphicMode() && !getenv("SSH_TTY") ;
 }
 
 
@@ -3261,7 +3261,7 @@ static int tkinter2Present ( )
 	}
 	/* printf ("gPython2Name %s\n", gPython2Name) ; */
 	return lTkinter2Present && graphicMode ( )
-		&& (!getenv("SSH_TTY") || getenv("DISPLAY") );
+		&& !(isDarwin() && getenv("SSH_TTY") );
 }
 
 

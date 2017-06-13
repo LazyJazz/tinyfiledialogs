@@ -3072,6 +3072,7 @@ static int xmessagePresent ( )
 	static int lXmessagePresent = -1 ;
 	if ( lXmessagePresent < 0 )
 	{
+		gWarningDisplayed |= !!getenv("SSH_TTY");
 		lXmessagePresent = detectPresence("xmessage");/*if not tty,not on osxpath*/
 	}
 	return lXmessagePresent && graphicMode ( ) ;
@@ -3260,8 +3261,7 @@ static int tkinter2Present ( )
 		}
 	}
 	/* printf ("gPython2Name %s\n", gPython2Name) ; */
-	return lTkinter2Present && graphicMode ( )
-		&& !(isDarwin() && getenv("SSH_TTY") );
+    return lTkinter2Present && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
 }
 
 

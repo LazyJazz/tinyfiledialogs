@@ -48,6 +48,7 @@ http://andrear.altervista.org/home/cdialog.php
 Unix (command line call attempts) [ASCII + UTF-8]
 - applescript
 - zenity / matedialog
+- qarma (zenity for qt)
 - kdialog
 - Xdialog
 - python2 tkinter

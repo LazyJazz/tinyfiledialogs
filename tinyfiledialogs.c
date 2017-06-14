@@ -51,6 +51,7 @@ http://andrear.altervista.org/home/cdialog.php
 Unix (command line call attempts) ASCII + UTF-8
 - applescript
 - zenity / matedialog
+- qarma (zenity for qt)
 - kdialog
 - Xdialog
 - python2 tkinter
@@ -142,7 +143,7 @@ but and return 0 for console mode, 1 for graphic mode.
 tinyfd_response is then filled with the retain solution.
 possible values for tinyfd_response are (all lowercase)
 for the graphic mode:
-  windows applescript zenity zenity3 matedialog kdialog
+  windows applescript zenity zenity3 matedialog qarma kdialog
   xdialog tkinter gdialog gxmessage xmessage
 for the console mode:
   dialog whiptail basicinput */
@@ -3145,6 +3146,17 @@ static int kdialogPresent ( )
 }
 
 
+static int qarmaPresent ( )
+{
+	static int lQarmaPresent = -1 ;
+	if ( lQarmaPresent < 0 )
+	{
+		lQarmaPresent = detectPresence("qarma") ;
+	}
+	return lQarmaPresent && graphicMode ( ) ;
+}
+
+
 static int matedialogPresent ( )
 {
 	static int lMatedialogPresent = -1 ;
@@ -3358,17 +3370,22 @@ int tinyfd_messageBox (
 		strcat ( lDialogString, "-e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
-	else if ( zenityPresent() || matedialogPresent() )
+	else if ( zenityPresent() || matedialogPresent() || qarmaPresent() )
 	{
 		if ( zenityPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
 		  strcpy ( lDialogString , "zenity --" ) ;
 		}
-		else
+		else if ( matedialogPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return 1;}
 			strcpy ( lDialogString , "matedialog --" ) ;
+		}
+		else
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return 1;}
+			strcpy ( lDialogString , "qarma --" ) ;
 		}
 
 		if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
@@ -3935,17 +3952,22 @@ char const * tinyfd_inputBox(
 		strcat(lDialogString, "-e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat(lDialogString, " -e 'end tell'") ;
 	}
-	else if ( zenityPresent() || matedialogPresent() )
+	else if ( zenityPresent() || matedialogPresent() || qarmaPresent() )
 	{
 		if ( zenityPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
       strcpy ( lDialogString ,  "szAnswer=$(zenity --entry" ) ;
 		}
-		else
+		else if ( matedialogPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char const *)1;}
 			strcpy ( lDialogString ,  "szAnswer=$(matedialog --entry" ) ;
+		}
+		else
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
+			strcpy ( lDialogString ,  "szAnswer=$(qarma --entry" ) ;
 		}
 
 		if ( aTitle && strlen(aTitle) )
@@ -4401,17 +4423,23 @@ char const * tinyfd_saveFileDialog (
 		strcat(lDialogString, "-e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
-  else if ( zenityPresent() || matedialogPresent() )
+  else if ( zenityPresent() || matedialogPresent() || qarmaPresent() )
   {
 		if ( zenityPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
       strcpy ( lDialogString , "zenity" ) ;
 		}
-		else
+		else if ( matedialogPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char const *)1;}
 			strcpy ( lDialogString , "matedialog" ) ;
+
+		}
+		else
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
+			strcpy ( lDialogString , "qarma" ) ;
 
 		}
 		strcat(lDialogString, " --file-selection --save --confirm-overwrite" ) ;
@@ -4752,17 +4780,22 @@ char const * tinyfd_openFileDialog (
 		strcat(lDialogString, "-e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
-  else if ( zenityPresent() || matedialogPresent() )
+  else if ( zenityPresent() || matedialogPresent() || qarmaPresent() )
   {
 		if ( zenityPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
       strcpy ( lDialogString , "zenity --file-selection" ) ;
 		}
-		else
+		else if ( matedialogPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char const *)1;}
 			strcpy ( lDialogString , "matedialog --file-selection" ) ;
+		}
+		else
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
+			strcpy ( lDialogString , "qarma --file-selection" ) ;
 		}
 
 		if ( aAllowMultipleSelects )
@@ -5076,17 +5109,22 @@ char const * tinyfd_selectFolderDialog (
 		strcat(lDialogString, "-e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
-  else if ( zenityPresent() || matedialogPresent() )
+  else if ( zenityPresent() || matedialogPresent() || qarmaPresent() )
   {
 		if ( zenityPresent() )
 		{
 	 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
 			strcpy ( lDialogString , "zenity --file-selection --directory" ) ;
 		}
-		else
+		else if ( matedialogPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char const *)1;}
 			strcpy ( lDialogString , "matedialog --file-selection --directory" ) ;
+		}
+		else
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
+			strcpy ( lDialogString , "qarma --file-selection --directory" ) ;
 		}
 
 		if ( aTitle && strlen(aTitle) ) 
@@ -5336,7 +5374,7 @@ to set mycolor to choose color default color {");
 		strcat(lDialogString, "-e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
-	else if ( zenity3Present() || matedialogPresent() )
+	else if ( zenity3Present() || matedialogPresent() || qarmaPresent() )
 	{
 		lWasZenity3 = 1 ;
 		if ( zenity3Present() )
@@ -5345,11 +5383,17 @@ to set mycolor to choose color default color {");
 			sprintf ( lDialogString ,
 "zenity --color-selection --show-palette --color=%s" , lpDefaultHexRGB ) ;
 		}
-		else
+		else if ( matedialogPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char const *)1;}
 			sprintf ( lDialogString ,
 "matedialog --color-selection --show-palette --color=%s" , lpDefaultHexRGB ) ;
+		}
+		else
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
+			sprintf ( lDialogString ,
+"qarma --color-selection --show-palette --color=%s" , lpDefaultHexRGB ) ;
 		}
 
 		if ( aTitle && strlen(aTitle) ) 

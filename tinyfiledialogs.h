@@ -53,6 +53,7 @@ http://andrear.altervista.org/home/cdialog.php
 Unix (command line call attempts) ASCII + UTF-8
 - applescript
 - zenity / matedialog
+- qarma (zenity for qt)
 - kdialog
 - Xdialog
 - python2 tkinter
@@ -128,7 +129,7 @@ but will return 0 for console mode, 1 for graphic mode.
 tinyfd_response is then filled with the retain solution.
 possible values for tinyfd_response are (all lowercase)
 for the graphic mode:
-  windows applescript zenity zenity3 matedialog kdialog
+  windows applescript zenity zenity3 matedialog qarma kdialog
   xdialog tkinter gdialog gxmessage xmessage
 for the console mode:
   dialog whiptail basicinput */

@@ -3280,6 +3280,7 @@ static int tkinter2Present ( )
 
 	if ( lTkinter2Present < 0 )
 	{
+		lTkinter2Present = 0 ;
 		strcpy(gPython2Name , "python" ) ;
 		sprintf ( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
 		if ( ! detectPresence(gPython2Name)
@@ -3288,7 +3289,7 @@ static int tkinter2Present ( )
 			strcpy(gPython2Name , "python2" ) ;
 			if ( detectPresence(gPython2Name) )
 			{
-		sprintf ( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
+				sprintf ( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
 				lTkinter2Present = tryCommand(lPythonCommand);
 			}
 			else
@@ -3298,7 +3299,7 @@ static int tkinter2Present ( )
 					sprintf ( gPython2Name , "python2.%d" , i ) ;
 					if ( detectPresence(gPython2Name) )
 					{
-		sprintf ( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
+						sprintf ( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
 						lTkinter2Present = tryCommand(lPythonCommand);
 						break ;
 					}
@@ -3306,6 +3307,7 @@ static int tkinter2Present ( )
 			}
 		}
 	}
+	/* printf ("lTkinter2Present %d\n", lTkinter2Present) ; */
 	/* printf ("gPython2Name %s\n", gPython2Name) ; */
     return lTkinter2Present && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
 }

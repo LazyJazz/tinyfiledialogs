@@ -182,7 +182,7 @@ static char gMessageUnix[] = "\
 \nor\tkdialog\
 \nor\tXdialog\
 \nor\tpython 2 + tkinter\
-\nor\tdialog (opens a console xterm + bash if needed)\
+\nor\tdialog (opens a console xterm if needed)\
 \nor\txterm + bash (opens a console for basic input)\
 \nor\tit will use the existing console for basic input";
 #endif
@@ -2866,6 +2866,37 @@ static int isTerminalRunning()
 }
 
 
+static char const * dialogNameOnly ( )
+{
+	static char lDialogName[64] = "*" ;
+	if ( lDialogName[0] == '*' )
+	{
+		if ( isDarwin() && strcpy(lDialogName , "/opt/local/bin/dialog" )
+			&& detectPresence ( lDialogName ) )
+		{}
+		else if ( strcpy(lDialogName , "dialog" )
+			&& detectPresence ( lDialogName ) )
+		{}
+		else
+		{
+			strcpy(lDialogName , "" ) ;
+		}
+	}
+    return lDialogName ;
+}
+
+
+static int whiptailPresentOnly ( )
+{
+	static int lWhiptailPresent = -1 ;
+	if ( lWhiptailPresent < 0 )
+	{
+		lWhiptailPresent = detectPresence ( "whiptail" ) ;
+	}
+	return lWhiptailPresent ;
+}
+
+
 static char const * terminalName ( )
 {
 	static char lTerminalName[128] = "*" ;
@@ -2875,8 +2906,12 @@ static char const * terminalName ( )
 	{
 		if ( detectPresence ( "bash" ) )
 		{
-			strcpy(lShellName , "bash -c " ) ; /*good*/
+			strcpy(lShellName , "bash -c " ) ; /*good for basic input*/
 		}
+        else if ( dialogNameOnly() || whiptailPresentOnly() )
+        {
+    		strcpy(lShellName , "sh -c " ) ; /*good enough for dialog & whiptail*/
+        }
         else
         {
             return NULL ;
@@ -2895,7 +2930,7 @@ static char const * terminalName ( )
 				strcpy(lTerminalName , "" ) ;
 			}
 		}
-		else if ( strcpy(lTerminalName,"xterm") /*good small*/
+		else if ( strcpy(lTerminalName,"xterm") /*good small without parameters*/
 			&& detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -fa 'DejaVu Sans Mono' -fs 10 -title tinyfiledialogs -e " ) ;
@@ -2997,18 +3032,19 @@ static char const * terminalName ( )
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
 		}
-		else if ( strcpy(lTerminalName,"x-terminal-emulator") /*alias*/
+		/* aliases:
+        else if ( strcpy(lTerminalName,"x-terminal-emulator")
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
 		}
-		else if ( strcpy(lTerminalName,"$TERM") /*alias*/
+		else if ( strcpy(lTerminalName,"$TERM")
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
-		}
+		}*/
 		else
 		{
 			strcpy(lTerminalName , "" ) ;
@@ -3029,20 +3065,8 @@ static char const * terminalName ( )
 
 static char const * dialogName ( )
 {
-	static char lDialogName[64] = "*" ;
-	if ( lDialogName[0] == '*' )
-	{
-		if ( isDarwin() && strcpy(lDialogName , "/opt/local/bin/dialog" )
-			&& detectPresence ( lDialogName ) )
-		{}
-		else if ( strcpy(lDialogName , "dialog" )
-			&& detectPresence ( lDialogName ) )
-		{}
-		else
-		{
-			strcpy(lDialogName , "" ) ;
-		}
-	}
+    char const * lDialogName ;
+    lDialogName = dialogNameOnly ( ) ;
 	if ( strlen(lDialogName) && ( isTerminalRunning() || terminalName() ) )
 	{
 		return lDialogName ;
@@ -3056,13 +3080,18 @@ static char const * dialogName ( )
 
 static int whiptailPresent ( )
 {
-	static int lWhiptailPresent = -1 ;
-	if ( lWhiptailPresent < 0 )
+	int lWhiptailPresent ;
+    lWhiptailPresent = whiptailPresentOnly ( ) ;
+	if ( lWhiptailPresent && ( isTerminalRunning() || terminalName() ) )
 	{
-		lWhiptailPresent = detectPresence ( "whiptail" ) ;
+		return lWhiptailPresent ;
 	}
-	return lWhiptailPresent && ( isTerminalRunning() || terminalName() ) ;
+	else
+	{
+		return 0 ;
+	}
 }
+
 
 
 static int graphicMode()

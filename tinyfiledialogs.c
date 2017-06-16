@@ -2863,7 +2863,7 @@ static int isTerminalRunning()
 
 static char const * terminalName ( )
 {
-	static char lTerminalName[64] = "*" ;
+	static char lTerminalName[128] = "*" ;
 	char lShellName[64] = "*" ;
 
 	if ( lTerminalName[0] == '*' )
@@ -2893,7 +2893,7 @@ static char const * terminalName ( )
 		else if ( strcpy(lTerminalName,"xterm") /*good small*/
 			&& detectPresence(lTerminalName) )
 		{
-			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , " -fa 'DejaVu Sans Mono' -fs 10 -title tinyfiledialogs -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
 		}
 		else if ( strcpy(lTerminalName,"terminator") /*good*/

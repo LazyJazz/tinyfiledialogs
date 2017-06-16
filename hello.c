@@ -1,5 +1,5 @@
 /*_________
- /         \ hello.c v2.8.5 [Jun 15, 2017] zlib licence
+ /         \ hello.c v2.8.6 [Jun 16, 2017] zlib licence
  |tiny file| Hello World file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -7,7 +7,7 @@
                                 git://git.code.sf.net/p/tinyfiledialogs/code
 		 ______________________________________________
 		|                                              |
-		| DIRECT CONTACT: tinyfiledialogs@ysengrin.com |
+		|     email: tinyfiledialogs@ysengrin.com      |
 		|______________________________________________|
 
 Please

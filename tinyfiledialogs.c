@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v2.8.5 [Jun 15, 2017] zlib licence
+ /         \ tinyfiledialogs.c v2.8.6 [Jun 16, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -7,7 +7,7 @@
                                 git://git.code.sf.net/p/tinyfiledialogs/code
 		 ______________________________________________
 		|                                              |
-		| DIRECT CONTACT: tinyfiledialogs@ysengrin.com |
+		|     email: tinyfiledialogs@ysengrin.com      |
 		|______________________________________________|
 
 A big thank you to Don Heyse http://ldglite.sf.net for
@@ -121,7 +121,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.8.5";
+char tinyfd_version [8] = "2.8.6";
 
 static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
@@ -2431,11 +2431,11 @@ int tinyfd_messageBox (
 		{
 			gWarningDisplayed = 1; 
 			printf("\n\n%s\n", gTitle);
-			printf("%s\n\n\n", gMessageWin);
+			printf("%s\n\n", gMessageWin);
 		}
  		if ( aTitle && strlen(aTitle) )
 		{
-			printf ("%s\n\n", aTitle);
+			printf ("\n%s\n\n", aTitle);
 		}
 		if ( aDialogType && !strcmp("yesno",aDialogType) )
 		{
@@ -2520,11 +2520,11 @@ char const * tinyfd_inputBox(
       {
           gWarningDisplayed = 1 ;
           printf("\n\n%s\n", gTitle);
-          printf("%s\n\n\n", gMessageWin);
+          printf("%s\n\n", gMessageWin);
       }
       if ( aTitle && strlen(aTitle) )
       {
-          printf ("%s\n\n", aTitle);
+          printf ("\n%s\n\n", aTitle);
       }
       if ( aMessage && strlen(aMessage) )
       {

@@ -156,20 +156,27 @@ static int gWarningDisplayed = 0 ;
 
 static char gTitle[]="missing software! (we will try basic console input)";
 
-static char gAsciiArt[] ="\
+#ifdef _WIN32
+static char gMessageWin[] = "\
  ___________\n\
 /           \\ \n\
 | tiny file |\n\
 |  dialogs  |\n\
 \\_____  ____/\n\
-      \\|";
-
-#ifdef _WIN32
-static char gMessageWin[] = "tiny file dialogs on Windows needs:\n\t\
-							a graphic display\nor\tdialog.exe (enhanced console mode)\
-							\nor\ta console for basic input";
+      \\|\
+tiny file dialogs on Windows needs:\
+\n\ta graphic display\
+\nor\tdialog.exe (enhanced console mode)\
+\nor\ta console for basic input";
 #else
-static char gMessageUnix[] = "tiny file dialogs on UNIX needs:\n\tapplescript\
+static char gMessageUnix[] = "\
+ ___________\n\
+/           \\ \n\
+| tiny file |\n\
+|  dialogs  |\n\
+\\_____  ____/\n\
+      \\|\
+\ntiny file dialogs on UNIX needs:\n\tapplescript\
 \nor\tzenity / matedialog\
 \nor\tqarma (zenity for qt)\
 \nor\tkdialog\
@@ -2423,8 +2430,7 @@ int tinyfd_messageBox (
 		if (!gWarningDisplayed && !tinyfd_forceConsole )
 		{
 			gWarningDisplayed = 1; 
-			printf("\n\n%s", gAsciiArt);
-			printf("\n%s\n", gTitle);
+			printf("\n\n%s\n", gTitle);
 			printf("%s\n\n\n", gMessageWin);
 		}
  		if ( aTitle && strlen(aTitle) )
@@ -2513,8 +2519,7 @@ char const * tinyfd_inputBox(
       if (!gWarningDisplayed && !tinyfd_forceConsole)
       {
           gWarningDisplayed = 1 ;
-          printf("\n\n%s", gAsciiArt);
-          printf("\n%s\n", gTitle);
+          printf("\n\n%s\n", gTitle);
           printf("%s\n\n\n", gMessageWin);
       }
       if ( aTitle && strlen(aTitle) )
@@ -3745,9 +3750,6 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		{
 			gWarningDisplayed = 1 ;
 			strcat ( lDialogString , "echo \"" ) ;
-			strcat ( lDialogString, gAsciiArt) ;
-			strcat ( lDialogString , " \";" ) ;
-			strcat ( lDialogString , "echo \"" ) ;
 			strcat ( lDialogString, gTitle) ;
 			strcat ( lDialogString , "\";" ) ;
 			strcat ( lDialogString , "echo \"" ) ;
@@ -3802,13 +3804,12 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		if ( !gWarningDisplayed && !tinyfd_forceConsole)
 		{
 			gWarningDisplayed = 1 ;
-			printf("\n\n%s", gAsciiArt);
-			printf ("\n%s\n", gTitle);
-			printf ("%s\n\n\n", gMessageUnix);
+			printf ("\n\n%s\n", gTitle);
+			printf ("%s\n\n", gMessageUnix);
 		}
  		if ( aTitle && strlen(aTitle) )
 		{
-			printf ("%s\n\n", aTitle);
+			printf ("\n%s\n", aTitle);
 		}
 
 		tcgetattr(0, &infoOri);
@@ -3823,7 +3824,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 			{
 				if ( aMessage && strlen(aMessage) )
 				{
-					printf("%s\n",aMessage);
+					printf("\n%s\n",aMessage);
 				}
 				printf("y/n: "); fflush(stdout);
 				lChar = tolower ( getchar() ) ;
@@ -3838,7 +3839,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 			{
 				if ( aMessage && strlen(aMessage) )
 				{
-					printf("%s\n",aMessage);
+					printf("\n%s\n",aMessage);
 				}
 				printf("[O]kay/[C]ancel: "); fflush(stdout);
 				lChar = tolower ( getchar() ) ;
@@ -3851,7 +3852,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		{
 			if ( aMessage && strlen(aMessage) )
 			{
-				printf("%s\n\n",aMessage);
+				printf("\n%s\n\n",aMessage);
 			}
 			printf("press enter to continue "); fflush(stdout);
 			getchar() ;
@@ -4213,15 +4214,6 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		{
 			tinyfd_messageBox(gTitle,gMessageUnix,"ok","warning",0);
 			gWarningDisplayed = 1 ;
-			/*strcat ( lDialogString , "echo \"" ) ;
-			strcat ( lDialogString, gAsciiArt) ;
-			strcat ( lDialogString , "\";" ) ;
-			strcat ( lDialogString , "echo \"" ) ;
-			strcat ( lDialogString, gTitle) ;
-			strcat ( lDialogString , "\";" ) ;
-			strcat ( lDialogString , "echo \"" ) ;
-			strcat ( lDialogString, gMessageUnix) ;
-			strcat ( lDialogString , "\";echo;echo;" ) ;*/
 		}
 		if ( aTitle && strlen(aTitle) && !tinyfd_forceConsole)
 		{
@@ -4252,17 +4244,14 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		{
 			tinyfd_messageBox(gTitle,gMessageUnix,"ok","warning",0);
 			gWarningDisplayed = 1 ;
-			/*printf ("\n\n%s", gAsciiArt);
-			printf ("\n%s\n", gTitle);
-			printf ("%s\n\n\n", gMessageUnix);*/
 		}
 		if ( aTitle && strlen(aTitle) )
 		{
-			printf ("%s\n\n", aTitle);
+			printf ("\n%s\n", aTitle);
 		}
 		if ( aMessage && strlen(aMessage) )
 		{
-			printf("%s\n",aMessage);
+			printf("\n%s\n",aMessage);
 		}
 		printf("(esc+enter to cancel): "); fflush(stdout);
 		if ( ! aDefaultInput )

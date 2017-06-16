@@ -2887,7 +2887,7 @@ static char const * terminalName ( )
 			if ( strcpy(lTerminalName , "/opt/X11/bin/xterm" )
 		      && detectPresence ( lTerminalName ) )
 			{
-				strcat(lTerminalName , " -e " ) ;
+				strcat(lTerminalName , " -fa 'DejaVu Sans Mono' -fs 10 -title tinyfiledialogs -e " ) ;
 				strcat(lTerminalName , lShellName ) ;
 			}
 			else

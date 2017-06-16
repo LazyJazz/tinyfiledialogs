@@ -175,8 +175,8 @@ static char gMessageUnix[] = "tiny file dialogs on UNIX needs:\n\tapplescript\
 \nor\tkdialog\
 \nor\tXdialog\
 \nor\tpython 2 + tkinter\
-\nor\tdialog (opens a bash xterm if needed)\
-\nor\txterm + bash (opens a bash xterm for basic input)\
+\nor\tdialog (opens a console (xterm + bash) if needed)\
+\nor\txterm + bash (opens a console for basic input)\
 \nor\tit will use the existing console for basic input";
 #endif
 

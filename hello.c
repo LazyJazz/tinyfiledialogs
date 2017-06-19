@@ -95,6 +95,7 @@ misrepresented as being the original software.
 #include "tinyfiledialogs.h"
 int main(void)
 {
+	int lIntValue;
 	char const * lTmp;
 	char const * lTheSaveFileName;
 	char const * lTheOpenFileName;
@@ -129,9 +130,15 @@ int main(void)
 
 	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )
 	{
+
 		tinyfd_forceConsole = ! tinyfd_messageBox("Hello World",
 			"graphic dialogs [yes] / console mode [no]?",
 			"yesno", "question", 1);
+
+		/*lIntValue = tinyfd_messageBox("Hello World",
+			"graphic dialogs [yes] / console mode [no]?",
+			"yesnocancel", "question", 1);
+		tinyfd_forceConsole = (lIntValue == 2) ;*/
 	}
 
 	lTmp = tinyfd_inputBox(

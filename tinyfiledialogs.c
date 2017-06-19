@@ -144,7 +144,7 @@ tinyfd_response is then filled with the retain solution.
 possible values for tinyfd_response are (all lowercase)
 for the graphic mode:
   windows applescript zenity zenity3 matedialog qarma kdialog
-  xdialog tkinter gdialog gxmessage xmessage
+  tkinter gxmessage xmessage xdialog gdialog
 for the console mode:
   dialog whiptail basicinput */
 
@@ -3121,7 +3121,7 @@ static int gxmessagePresent ( )
     {
         lGxmessagePresent = detectPresence("gxmessage") ;
     }
-    return lGxmessagePresent && graphicMode ( ) ;
+    return 0;//lGxmessagePresent && graphicMode ( ) ;
 }
 
 
@@ -3317,7 +3317,7 @@ static int tkinter2Present ( )
 int tinyfd_messageBox (
 	char const * const aTitle , /* NULL or "" */
 	char const * const aMessage , /* NULL or ""  may contain \n and \t */
-	char const * const aDialogType , /* "ok" "okcancel" "yesno"*/
+	char const * const aDialogType , /* "ok" "okcancel" "yesno" "yesnocancel" */
 	char const * const aIconType , /* "info" "warning" "error" "question" */
 	int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes */
 {
@@ -3349,7 +3349,7 @@ int tinyfd_messageBox (
 
 		strcpy ( lDialogString , "osascript ");
 		if ( ! osx9orBetter() ) strcat ( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
-		strcat ( lDialogString , " -e 'try' -e 'display dialog \"") ;
+		strcat ( lDialogString , " -e 'try' -e 'set {vButton} to {button returned} of ( display dialog \"") ;
 		if ( aMessage && strlen(aMessage) )
 		{
 			strcat(lDialogString, aMessage) ;
@@ -3394,19 +3394,39 @@ int tinyfd_messageBox (
 			}
 			strcat ( lDialogString ,"cancel button \"No\"" ) ;
 		}
+		else if ( aDialogType && ! strcmp( "yesnocancel" , aDialogType ) )
+		{
+			strcat ( lDialogString ,"buttons {\"No\", \"Yes\", \"Cancel\"} " ) ;
+			switch (aDefaultButton) 
+			{
+				case 1: strcat ( lDialogString ,"default button \"Yes\" " ) ; break;
+				case 2: strcat ( lDialogString ,"default button \"No\" " ) ; break;
+				case 0: strcat ( lDialogString ,"default button \"Cancel\" " ) ; break;
+			}
+			strcat ( lDialogString ,"cancel button \"Cancel\"" ) ;
+		}
 		else
 		{
 			strcat ( lDialogString ,"buttons {\"OK\"} " ) ;
 			strcat ( lDialogString ,"default button \"OK\" " ) ;
 		}
-		strcat ( lDialogString, "' ") ;
-		strcat ( lDialogString, "-e '1' " );
+		strcat ( lDialogString, ")' ") ;
+
+		/*strcat ( lDialogString, "-e '1' " );
+		strcat ( lDialogString, "-e 'on error number -128' " ) ;
+		strcat ( lDialogString, "-e '0' " );*/
+
+		strcat ( lDialogString,
+"-e 'if vButton is \"Yes\" then' -e 'return 1' -e 'else if vButton is \"No\" then' -e 'return 2' -e 'else' -e 'return 0' -e 'end if' " );
+
 		strcat ( lDialogString, "-e 'on error number -128' " ) ;
 		strcat ( lDialogString, "-e '0' " );
+
 		strcat ( lDialogString, "-e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
-	else if ( zenityPresent() || matedialogPresent() || qarmaPresent() )
+	else if ( ( (!aDialogType || (aDialogType && strcmp( "yesnocancel" , aDialogType ) ) ) )
+		&& ( zenityPresent() || matedialogPresent() || qarmaPresent() ) )
 	{
 		if ( zenityPresent() )
 		{
@@ -3479,14 +3499,21 @@ int tinyfd_messageBox (
 
 		strcpy ( lDialogString , "kdialog --" ) ;
 		if ( aDialogType && ( ! strcmp( "okcancel" , aDialogType )
-		  || ! strcmp( "yesno" , aDialogType ) ) )
+		  || ! strcmp( "yesno" , aDialogType ) || ! strcmp( "yesnocancel" , aDialogType ) ) )
 		{
 			if ( aIconType && ( ! strcmp( "warning" , aIconType )
 			  || ! strcmp( "error" , aIconType ) ) )
 			{
 				strcat ( lDialogString , "warning" ) ;
 			}
-			strcat ( lDialogString , "yesno" ) ;
+			if ( ! strcmp( "yesnocancel" , aDialogType ) )
+			{
+				strcat ( lDialogString , "yesnocancel" ) ;
+			}
+			else
+			{
+				strcat ( lDialogString , "yesno" ) ;
+			}
 		}
 		else if ( aIconType && ! strcmp( "error" , aIconType ) )
 		{
@@ -3517,9 +3544,17 @@ int tinyfd_messageBox (
 			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "\"") ;
 		}
-		strcat ( lDialogString , ";if [ $? = 0 ];then echo 1;else echo 0;fi");
+
+		if ( ! strcmp( "yesnocancel" , aDialogType ) )
+		{
+			strcat ( lDialogString , ";if [ $? = 0 ];then echo 1;elif [ $? = 1 ];then echo 2;else echo 0;fi");
+		}
+		else
+		{
+			strcat ( lDialogString , ";if [ $? = 0 ];then echo 1;else echo 0;fi");
+		}
 	}
-	else if ( ! xdialogPresent() && tkinter2Present ( ) )
+	else if ( !gxmessagePresent() && tkinter2Present ( ) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"tkinter");return 1;}
 
@@ -3540,10 +3575,10 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 
 		strcat ( lDialogString ,"res=tkMessageBox." ) ;
-    if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
-    {
-      strcat ( lDialogString , "askokcancel(" ) ;
-      if ( aDefaultButton )
+		if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
+		{
+		  strcat ( lDialogString , "askokcancel(" ) ;
+		  if ( aDefaultButton )
 			{
 				strcat ( lDialogString , "default=tkMessageBox.OK," ) ;
 			}
@@ -3551,11 +3586,11 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			{
 				strcat ( lDialogString , "default=tkMessageBox.CANCEL," ) ;
 			}
-    }
-    else if ( aDialogType && ! strcmp( "yesno" , aDialogType ) )
-    {
-      strcat ( lDialogString , "askyesno(" ) ;
-      if ( aDefaultButton )
+		}
+		else if ( aDialogType && ! strcmp( "yesno" , aDialogType ) )
+		{
+			strcat ( lDialogString , "askyesno(" ) ;
+			if ( aDefaultButton )
 			{
 				strcat ( lDialogString , "default=tkMessageBox.YES," ) ;
 			}
@@ -3563,29 +3598,41 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			{
 				strcat ( lDialogString , "default=tkMessageBox.NO," ) ;
 			}
-    }
-    else
-    {
-			strcat ( lDialogString , "showinfo(" ) ;
-    }
-    strcat ( lDialogString , "icon='" ) ;
-    if ( aIconType && (! strcmp( "question" , aIconType )
-      || ! strcmp( "error" , aIconType )
-      || ! strcmp( "warning" , aIconType ) ) )
-    {
-			strcat ( lDialogString , aIconType ) ;
-    }
-    else
-    {
-			strcat ( lDialogString , "info" ) ;
-    }
+		}
+		else if ( aDialogType && ! strcmp( "yesnocancel" , aDialogType ) )
+		{
+			strcat ( lDialogString , "askyesnocancel(" ) ;
+			switch ( aDefaultButton )
+			{
+				case 1: strcat ( lDialogString , "default=tkMessageBox.YES," ); break;
+				case 2: strcat ( lDialogString , "default=tkMessageBox.NO," ); break;
+				case 0: strcat ( lDialogString , "default=tkMessageBox.CANCEL," ); break;
+			}
+		}
+		else
+		{
+				strcat ( lDialogString , "showinfo(" ) ;
+		}
+
+		strcat ( lDialogString , "icon='" ) ;
+		if ( aIconType && (! strcmp( "question" , aIconType )
+		  || ! strcmp( "error" , aIconType )
+		  || ! strcmp( "warning" , aIconType ) ) )
+		{
+				strcat ( lDialogString , aIconType ) ;
+		}
+		else
+		{
+				strcat ( lDialogString , "info" ) ;
+		}
+		
 		strcat(lDialogString, "',") ;
-    if ( aTitle && strlen(aTitle) )
-    {
-			strcat(lDialogString, "title='") ;
-			strcat(lDialogString, aTitle) ;
-			strcat(lDialogString, "',") ;
-    }
+		if ( aTitle && strlen(aTitle) )
+		{
+				strcat(lDialogString, "title='") ;
+				strcat(lDialogString, aTitle) ;
+				strcat(lDialogString, "',") ;
+		}
 		if ( aMessage && strlen(aMessage) )
 		{
 			strcat(lDialogString, "message='") ;
@@ -3593,25 +3640,68 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			replaceSubStr ( aMessage , "\n" , "\\n" , lpDialogString ) ;
 			strcat(lDialogString, "'") ;
 		}
-		strcat(lDialogString, ");\n\
-if res==False :\n\tprint 0\n\
-else :\n\tprint 1\n\"" ) ;
-    }
-	else if (!xdialogPresent() && !gdialogPresent() && gxmessagePresent() )
-	{
-		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gxmessage");return 1;}
 
-		strcpy ( lDialogString , "gxmessage");
+		if ( aDialogType && ! strcmp( "yesnocancel" , aDialogType ) )
+		{
+			strcat(lDialogString, ");\n\
+if res is None :\n\tprint 0\n\
+elif res is False :\n\tprint 2\n\
+else :\n\tprint 1\n\"" ) ;
+		}
+		else
+		{
+			strcat(lDialogString, ");\n\
+if res is False :\n\tprint 0\n\
+else :\n\tprint 1\n\"" ) ;
+		}
+    }
+	else if ( gxmessagePresent() || xmessagePresent() )
+	{
+		if ( gxmessagePresent() )
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gxmessage");return 1;}
+			strcpy ( lDialogString , "gxmessage");
+		}
+		else
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"xmessage");return 1;}
+			strcpy ( lDialogString , "xmessage");
+		}
 
 		if ( aDialogType && ! strcmp("okcancel" , aDialogType) )
 		{
 			strcat ( lDialogString , " -buttons Ok:1,Cancel:0");
+			switch ( aDefaultButton )
+			{
+				case 1: strcat ( lDialogString , " -default Ok"); break;
+				case 0: strcat ( lDialogString , " -default Cancel"); break;
+			}
 		}
 		else if ( aDialogType && ! strcmp("yesno" , aDialogType) )
 		{
 			strcat ( lDialogString , " -buttons Yes:1,No:0");
+			switch ( aDefaultButton )
+			{
+				case 1: strcat ( lDialogString , " -default Yes"); break;
+				case 0: strcat ( lDialogString , " -default No"); break;
+			}
 		}
-	
+		else if ( aDialogType && ! strcmp("yesnocancel" , aDialogType) )
+		{
+			strcat ( lDialogString , " -buttons Yes:1,No:2,Cancel:0");
+			switch ( aDefaultButton )
+			{
+				case 1: strcat ( lDialogString , " -default Yes"); break;
+				case 2: strcat ( lDialogString , " -default No"); break;
+				case 0: strcat ( lDialogString , " -default Cancel"); break;
+			}
+		}
+		else
+		{
+			strcat ( lDialogString , " -buttons Ok:1");
+			strcat ( lDialogString , " -default Ok");
+		}
+
 		strcat ( lDialogString , " -center \"");
 		if ( aMessage && strlen(aMessage) )
 		{
@@ -3625,42 +3715,6 @@ else :\n\tprint 1\n\"" ) ;
 			strcat ( lDialogString, "\"" ) ;
 		}
 		strcat ( lDialogString , " ; echo $? ");
-	}
-	else if (!xdialogPresent() && !gdialogPresent() && notifysendPresent()
-			 && strcmp("okcancel" , aDialogType)
-			 && strcmp("yesno" , aDialogType) )
-	{
-		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notify");return 1;}
-
-		strcpy ( lDialogString , "notify-send \"" ) ;
-		if ( aTitle && strlen(aTitle) )
-		{
-			strcat(lDialogString, aTitle) ;
-			strcat ( lDialogString , " | " ) ;
-		}
-		if ( aMessage && strlen(aMessage) )
-		{
-			strcat(lDialogString, aMessage) ;
-		}
-		strcat ( lDialogString , "\"" ) ;
-	}
-	else if (!xdialogPresent() && !gdialogPresent() && xmessagePresent() 
-		&& strcmp("okcancel" , aDialogType)
-		&& strcmp("yesno" , aDialogType) )
-	{
-		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"xmessage");return 1;}
-
-		strcpy ( lDialogString , "xmessage -center \"");
-		if ( aTitle && strlen(aTitle) )
-		{
-			strcat(lDialogString, aTitle) ;
-			strcat(lDialogString, "\n\n" ) ;
-		}
-		if ( aMessage && strlen(aMessage) )
-		{
-			strcat(lDialogString, aMessage) ;
-		}
-		strcat(lDialogString, "\"" ) ;
 	}
 	else if ( xdialogPresent() || gdialogPresent()
 		   || dialogName() || whiptailPresent() )
@@ -3771,6 +3825,22 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 					  "then echo 1;else echo 0;fi;clear >/dev/tty");
 			}
 		}
+	}
+	else if ( notifysendPresent() && !strcmp("ok" , aDialogType) )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notify");return 1;}
+
+		strcpy ( lDialogString , "notify-send \"" ) ;
+		if ( aTitle && strlen(aTitle) )
+		{
+			strcat(lDialogString, aTitle) ;
+			strcat ( lDialogString , " | " ) ;
+		}
+		if ( aMessage && strlen(aMessage) )
+		{
+			strcat(lDialogString, aMessage) ;
+		}
+		strcat ( lDialogString , "\"" ) ;
 	}
 	else if ( ! isTerminalRunning ( ) && terminalName() )
 	{
@@ -3913,7 +3983,8 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 	}
 	/* printf ( "lBuff1: %s len: %lu \n" , lBuff , strlen(lBuff) ) ; */
 
-	lResult =  strcmp ( lBuff , "1" ) ? 0 : 1 ;
+	lResult =  !strcmp ( lBuff , "2" ) ? 2 : strcmp ( lBuff , "1" ) ? 0 : 1;
+
 	/* printf ( "lResult: %d\n" , lResult ) ; */
 	free(lDialogString);
 	return lResult ;
@@ -4060,7 +4131,7 @@ char const * tinyfd_inputBox(
 		strcat ( lDialogString ,
 				");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
 	}
-	else if ( ! xdialogPresent() && tkinter2Present ( ) )
+	else if ( tkinter2Present ( ) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"tkinter");return (char const *)1;}
 		strcpy ( lDialogString , gPython2Name ) ;

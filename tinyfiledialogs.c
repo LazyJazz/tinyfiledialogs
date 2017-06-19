@@ -2145,6 +2145,11 @@ static char const * inputBoxWinConsole(
 
 	strcat(lDialogString, "--backtitle \"") ;
 	strcat(lDialogString, "tab -> move focus") ;
+	if ( ! aDefaultInput )
+	{
+		strcat(lDialogString, " (no blink or stars, nothing will be shown in text field)") ;
+	}
+
 	strcat(lDialogString, "\" ") ;
 
 	if ( ! aDefaultInput )
@@ -4261,6 +4266,10 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		{
 			strcat(lDialogString, "--backtitle \"") ;
 			strcat(lDialogString, "tab -> move focus") ;
+			if ( ! aDefaultInput && !lWasGdialog )
+			{
+				strcat(lDialogString, " (no blink or stars, nothing will be shown in text field)") ;
+			}
 			strcat(lDialogString, "\" ") ;
 		}
 
@@ -4674,7 +4683,7 @@ char const * tinyfd_saveFileDialog (
 		else if ( isTerminalRunning ( ) )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
-			strcpy ( lDialogString , "@echo lala;(dialog " ) ;
+			strcpy ( lDialogString , "(dialog " ) ;
 		}
 		else
 		{

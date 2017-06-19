@@ -2147,7 +2147,7 @@ static char const * inputBoxWinConsole(
 	strcat(lDialogString, "tab -> move focus") ;
 	if ( ! aDefaultInput )
 	{
-		strcat(lDialogString, " (no blink or stars, nothing will be shown in text field)") ;
+		strcat(lDialogString, " (no blink or stars, nothing may be shown in text field)") ;
 	}
 
 	strcat(lDialogString, "\" ") ;
@@ -4268,7 +4268,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 			strcat(lDialogString, "tab -> move focus") ;
 			if ( ! aDefaultInput && !lWasGdialog )
 			{
-				strcat(lDialogString, " (no blink or stars, nothing will be shown in text field)") ;
+				strcat(lDialogString, " (no blink or stars, nothing may be shown in text field)") ;
 			}
 			strcat(lDialogString, "\" ") ;
 		}

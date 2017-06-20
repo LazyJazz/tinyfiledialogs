@@ -1666,15 +1666,35 @@ static int messageBoxWinGuiA (
 			aCode += MB_DEFBUTTON2 ;
 		}
 	}
+	else if (aDialogType && !strcmp("yesnocancel", aDialogType))
+	{
+		aCode += MB_YESNOCANCEL;
+		if (!aDefaultButton)
+		{
+			aCode += MB_DEFBUTTON3;
+		}
+		else if (aDefaultButton == 2)
+		{
+			aCode += MB_DEFBUTTON2;
+		}
+	}
 	else
 	{
 		aCode += MB_OK ;
 	}
 
 	lBoxReturnValue = MessageBoxA(NULL, aMessage, aTitle, aCode);
+
+	if (((aDialogType && !strcmp("yesnocancel", aDialogType))
+		&& (lBoxReturnValue == IDNO)))
+	{
+		return 2;
+	}
+
 	if ( ( ( aDialogType
-		  && strcmp("okcancel", aDialogType)
-		  && strcmp("yesno", aDialogType) ) )
+		&& strcmp("yesnocancel", aDialogType)
+		&& strcmp("okcancel", aDialogType)
+		&& strcmp("yesno", aDialogType)))
 		|| (lBoxReturnValue == IDOK)
 		|| (lBoxReturnValue == IDYES) )
 	{
@@ -2026,7 +2046,7 @@ static int dialogPresent ( )
 			lDialogPresent = 1 ;
 		}
 	}
-	return lDialogPresent ;
+	return lDialogPresent;
 }
 
 
@@ -2498,6 +2518,20 @@ int tinyfd_messageBox (
 			}
 			while ( lChar != 'o' && lChar != 'c' ) ;
 			return lChar == 'o' ? 1 : 0 ;
+		}
+		else if (aDialogType && !strcmp("yesnocancel", aDialogType))
+		{
+			do
+			{
+				if (aMessage && strlen(aMessage))
+				{
+					printf("%s\n", aMessage);
+				}
+				printf("[Y]es/[N]o/[C]ancel: ");
+				lChar = (char)tolower(_getch());
+				printf("\n\n");
+			} while (lChar != 'y' && lChar != 'n' && lChar != 'c');
+			return (lChar == 'y') ? 1 : (lChar == 'n') ? 2 : 0 ;
 		}
 		else
 		{

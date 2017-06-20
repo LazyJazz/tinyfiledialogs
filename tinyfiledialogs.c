@@ -3464,23 +3464,22 @@ int tinyfd_messageBox (
 		strcat ( lDialogString, "-e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat ( lDialogString, " -e 'end tell'") ;
 	}
-	else if ( ( (!aDialogType || (aDialogType && strcmp( "yesnocancel" , aDialogType ) ) ) )
-		&& ( zenityPresent() || matedialogPresent() || qarmaPresent() ) )
+	else if ( zenityPresent() || matedialogPresent() || qarmaPresent() )
 	{
 		if ( zenityPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
-		  strcpy ( lDialogString , "zenity --" ) ;
+			strcpy ( lDialogString , "szAnswer=$(zenity --" ) ;
 		}
 		else if ( matedialogPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return 1;}
-			strcpy ( lDialogString , "matedialog --" ) ;
+			strcpy ( lDialogString , "szAnswer=$(matedialog --" ) ;
 		}
 		else
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return 1;}
-			strcpy ( lDialogString , "qarma --" ) ;
+			strcpy ( lDialogString , "szAnswer=$(qarma --" ) ;
 		}
 
 		if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
@@ -3491,6 +3490,10 @@ int tinyfd_messageBox (
 		else if ( aDialogType && ! strcmp( "yesno" , aDialogType ) )
 		{
 				strcat ( lDialogString , "question" ) ;
+		}
+		else if ( aDialogType && ! strcmp( "yesnocancel" , aDialogType ) )
+		{
+			strcat ( lDialogString , "list --column \"\" --hide-header \"Yes\" \"No\"" ) ;
 		}
 		else if ( aIconType && ! strcmp( "error" , aIconType ) )
 		{
@@ -3530,7 +3533,16 @@ int tinyfd_messageBox (
 				strcat ( lDialogString , "information" ) ;
 			}
 		}
-		strcat ( lDialogString , ";if [ $? = 0 ];then echo 1;else echo 0;fi");
+
+		if ( ! strcmp( "yesnocancel" , aDialogType ) )
+		{
+			strcat ( lDialogString ,
+");if [ $? = 1 ];then echo 0;elif [ $szAnswer = \"No\" ];then echo 2;else echo 1;fi");
+		}
+		else
+		{
+			strcat ( lDialogString , ");if [ $? = 0 ];then echo 1;else echo 0;fi");
+		}
 	}
 	else if ( kdialogPresent() )
 	{
@@ -4176,7 +4188,7 @@ char const * tinyfd_inputBox(
 		if ( zenityPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
-      strcpy ( lDialogString ,  "szAnswer=$(zenity --entry" ) ;
+			strcpy ( lDialogString ,  "szAnswer=$(zenity --entry" ) ;
 		}
 		else if ( matedialogPresent() )
 		{

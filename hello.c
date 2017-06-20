@@ -129,6 +129,7 @@ int main(void)
 	strcat(lThePassword, tinyfd_version);
 	tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
 
+//tinyfd_forceConsole = 1;
 	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )
 	{
 		/*lIntValue = tinyfd_messageBox("Hello World",

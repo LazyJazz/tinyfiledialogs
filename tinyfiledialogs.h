@@ -138,10 +138,11 @@ for the console mode:
 int tinyfd_messageBox (
 	char const * const aTitle , /* "" */
 	char const * const aMessage , /* "" may contain \n \t */
-	char const * const aDialogType , /* "ok" "okcancel" "yesno" */
+	char const * const aDialogType , /* "ok" "okcancel" "yesno" "yesnocancel" */
 	char const * const aIconType , /* "info" "warning" "error" "question" */
 	int const aDefaultButton ) ; /* 0 for cancel/no , 1 for ok/yes */
 		/* returns 0 for Cancel/No , 1 for Ok/Yes */
+		/* no is 2 for yesnocancel */
 
 char const * tinyfd_inputBox (
 	char const * const aTitle , /* "" */

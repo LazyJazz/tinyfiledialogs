@@ -139,7 +139,7 @@ int main(void)
 		/*lIntValue = tinyfd_messageBox("Hello World",
 			"graphic dialogs [yes] / console mode [no]?",
 			"yesnocancel", "question", 1);
-		tinyfd_forceConsole = (lIntValue == 2);*/ 
+		tinyfd_forceConsole = (lIntValue == 2);*/
 	}
 
 	lTmp = tinyfd_inputBox(

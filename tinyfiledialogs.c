@@ -3952,6 +3952,17 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 				"if echo \"$answer\" | grep -iq \"^o\";then\n");
 			strcat ( lDialogString , "\techo 1\nelse\n\techo 0\nfi" ) ;
 		}
+		else if ( aDialogType && !strcmp("yesnocancel",aDialogType) )
+		{
+			strcat ( lDialogString , "echo -n \"[Y]es/[N]o/[C]ancel: \"; " ) ;
+			strcat ( lDialogString , "stty sane -echo;" ) ;
+			strcat ( lDialogString ,
+				"answer=$( while ! head -c 1 | grep -i [nyc];do true ;done);");
+			strcat ( lDialogString ,
+				"if echo \"$answer\" | grep -iq \"^y\";then\n\techo 1\n");
+			strcat ( lDialogString , "elif echo \"$answer\" | grep -iq \"^n\";then\n\techo 2\n" ) ;
+			strcat ( lDialogString , "else\n\techo 0\nfi" ) ;
+		}
 		else
 		{
 			strcat(lDialogString , "echo -n \"press enter to continue \"; ");
@@ -3962,7 +3973,7 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 		strcat ( lDialogString ,
 			" >/tmp/tinyfd.txt';cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 	}
-	else if ( notifysendPresent() && !strcmp("ok" , aDialogType) )
+	else if ( !isTerminalRunning() && notifysendPresent() && !strcmp("ok" , aDialogType) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notify");return 1;}
 
@@ -4027,6 +4038,21 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 			}
 			while ( lChar != 'o' && lChar != 'c' );
 			lResult = lChar == 'o' ? 1 : 0 ;
+		}
+		else if ( aDialogType && !strcmp("yesnocancel",aDialogType) )
+		{
+			do
+			{
+				if ( aMessage && strlen(aMessage) )
+				{
+					printf("\n%s\n",aMessage);
+				}
+				printf("[Y]es/[N]o/[C]ancel: "); fflush(stdout);
+				lChar = tolower ( getchar() ) ;
+				printf("\n\n");
+			}
+			while ( lChar != 'y' && lChar != 'n' && lChar != 'c' );
+			lResult = (lChar == 'y') ? 1 : (lChar == 'n') ? 2 : 0 ;
 		}
 		else
 		{

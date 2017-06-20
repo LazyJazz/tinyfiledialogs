@@ -145,7 +145,7 @@ tinyfd_response is then filled with the retain solution.
 possible values for tinyfd_response are (all lowercase)
 for the graphic mode:
   windows applescript zenity zenity3 matedialog qarma kdialog
-  tkinter gxmessage xmessage xdialog gdialog
+  tkinter gxmessage gmessage xmessage xdialog gdialog
 for the console mode:
   dialog whiptail basicinput */
 
@@ -3455,10 +3455,6 @@ int tinyfd_messageBox (
 		}
 		strcat ( lDialogString, ")' ") ;
 
-		/*strcat ( lDialogString, "-e '1' " );
-		strcat ( lDialogString, "-e 'on error number -128' " ) ;
-		strcat ( lDialogString, "-e '0' " );*/
-
 		strcat ( lDialogString,
 "-e 'if vButton is \"Yes\" then' -e 'return 1' -e 'else if vButton is \"No\" then' -e 'return 2' -e 'else' -e 'return 0' -e 'end if' " );
 
@@ -3862,33 +3858,50 @@ else :\n\tprint 1\n\"" ) ;
 		}
 		strcat(lDialogString, "\" ");
 
-//		if (aDialogType && !strcmp("yesnocancel", aDialogType))
-//		{
-//			strcat(lDialogString, "0 60 0 Yes \"\" No \"\" 2>>");
-//		}
-//		else
-//		{
-//			strcat(lDialogString, "10 60 && echo 1 > ");
-//		}
-
 		if ( lWasGraphicDialog )
 		{
-			strcat(lDialogString,
-				   "10 60 ) 2>&1;if [ $? = 0 ];then echo 1;else echo 0;fi");
-		}
-		else
-		{
-			strcat(lDialogString, "10 60 >/dev/tty) 2>&1;if [ $? = 0 ];");
-			if ( lWasXterm )
+			if (aDialogType && !strcmp("yesnocancel", aDialogType))
 			{
-				strcat ( lDialogString ,
-					"then\n\techo 1\nelse\n\techo 0\nfi >/tmp/tinyfd.txt';\
-cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
+				strcat(lDialogString,"0 60 0 Yes \"\" No \"\") 2>/tmp/tinyfd.txt;\
+if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
+tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 			}
 			else
 			{
-			   strcat(lDialogString,
-					  "then echo 1;else echo 0;fi;clear >/dev/tty");
+				strcat(lDialogString,
+				   "10 60 ) 2>&1;if [ $? = 0 ];then echo 1;else echo 0;fi");
+			}
+		}
+		else
+		{
+			if (aDialogType && !strcmp("yesnocancel", aDialogType))
+			{
+				strcat(lDialogString,"0 60 0 Yes \"\" No \"\" >/dev/tty ) 2>/tmp/tinyfd.txt;\
+		if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
+		tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
+
+				if ( lWasXterm )
+				{
+					strcat(lDialogString," >/tmp/tinyfd0.txt';cat /tmp/tinyfd0.txt");
+				}
+				else
+				{
+					strcat(lDialogString, "; clear >/dev/tty") ;
+				}
+			}
+			else
+			{
+				strcat(lDialogString, "10 60 >/dev/tty) 2>&1;if [ $? = 0 ];");
+				if ( lWasXterm )
+				{
+					strcat ( lDialogString ,
+"then\n\techo 1\nelse\n\techo 0\nfi >/tmp/tinyfd.txt';cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
+				}
+				else
+				{
+				   strcat(lDialogString,
+						  "then echo 1;else echo 0;fi;clear >/dev/tty");
+				}
 			}
 		}
 	}
@@ -4032,6 +4045,7 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 	}
 
 	if (tinyfd_verbose) printf ( "lDialogString: %s\n" , lDialogString ) ;
+
 	if ( ! ( lIn = popen ( lDialogString , "r" ) ) )
 	{
 		free(lDialogString);
@@ -4049,7 +4063,17 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 	}
 	/* printf ( "lBuff1: %s len: %lu \n" , lBuff , strlen(lBuff) ) ; */
 
-	lResult =  !strcmp ( lBuff , "2" ) ? 2 : strcmp ( lBuff , "1" ) ? 0 : 1;
+	if (aDialogType && !strcmp("yesnocancel", aDialogType))	
+	{
+		if ( lBuff[0]=='1' )
+		{ 
+			if ( !strcmp ( lBuff+1 , "Yes" )) strcpy(lBuff,"1");
+			else if ( !strcmp ( lBuff+1 , "No" )) strcpy(lBuff,"2");
+		}
+	}
+	/* printf ( "lBuff2: %s len: %lu \n" , lBuff , strlen(lBuff) ) ; */
+
+	lResult =  !strcmp ( lBuff , "2" ) ? 2 : !strcmp ( lBuff , "1" ) ? 1 : 0;
 
 	/* printf ( "lResult: %d\n" , lResult ) ; */
 	free(lDialogString);

@@ -131,15 +131,15 @@ int main(void)
 
 	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )
 	{
-		lIntValue = tinyfd_messageBox("Hello World",
-			"graphic dialogs [yes] / console mode [no]?",
-			"okcancel", "question", 1);
-		tinyfd_forceConsole = ! lIntValue ;
-		
 		/*lIntValue = tinyfd_messageBox("Hello World",
 			"graphic dialogs [yes] / console mode [no]?",
+			"yesno", "question", 1);
+		tinyfd_forceConsole = ! lIntValue ;*/
+		
+		lIntValue = tinyfd_messageBox("Hello World",
+			"graphic dialogs [yes] / console mode [no]?",
 			"yesnocancel", "question", 1);
-		tinyfd_forceConsole = (lIntValue == 2) ; */
+		tinyfd_forceConsole = (lIntValue == 2) ; 
 	}
 
 	lTmp = tinyfd_inputBox(

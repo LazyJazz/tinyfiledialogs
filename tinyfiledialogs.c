@@ -3139,7 +3139,6 @@ static int xmessagePresent ( )
 	static int lXmessagePresent = -1 ;
 	if ( lXmessagePresent < 0 )
 	{
-		gWarningDisplayed |= !!getenv("SSH_TTY");
 		lXmessagePresent = detectPresence("xmessage");/*if not tty,not on osxpath*/
 	}
 	return lXmessagePresent && graphicMode ( ) ;
@@ -3153,7 +3152,18 @@ static int gxmessagePresent ( )
     {
         lGxmessagePresent = detectPresence("gxmessage") ;
     }
-    return 0;//lGxmessagePresent && graphicMode ( ) ;
+    return lGxmessagePresent && graphicMode ( ) ;
+}
+
+
+static int gmessagePresent ( )
+{
+	static int lGmessagePresent = -1 ;
+	if ( lGmessagePresent < 0 )
+	{
+		lGmessagePresent = detectPresence("gmessage") ;
+	}
+	return lGmessagePresent && graphicMode ( ) ;
 }
 
 
@@ -3195,7 +3205,8 @@ static int osascriptPresent ( )
     static int lOsascriptPresent = -1 ;
     if ( lOsascriptPresent < 0 )
     {
-        lOsascriptPresent = detectPresence ( "osascript" ) ;
+		gWarningDisplayed |= !!getenv("SSH_TTY");
+		lOsascriptPresent = detectPresence ( "osascript" ) ;
     }
 	return lOsascriptPresent && graphicMode() && !getenv("SSH_TTY") ;
 }
@@ -3586,7 +3597,7 @@ int tinyfd_messageBox (
 			strcat ( lDialogString , ";if [ $? = 0 ];then echo 1;else echo 0;fi");
 		}
 	}
-	else if ( !gxmessagePresent() && tkinter2Present ( ) )
+	else if ( !gxmessagePresent() && !gmessagePresent() && !gdialogPresent() && !xdialogPresent() && tkinter2Present ( ) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"tkinter");return 1;}
 
@@ -3687,12 +3698,17 @@ if res is False :\n\tprint 0\n\
 else :\n\tprint 1\n\"" ) ;
 		}
     }
-	else if ( gxmessagePresent() || xmessagePresent() )
+	else if ( gxmessagePresent() || gmessagePresent() || (!gdialogPresent() && !xdialogPresent() && xmessagePresent()) )
 	{
 		if ( gxmessagePresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gxmessage");return 1;}
 			strcpy ( lDialogString , "gxmessage");
+		}
+		else if ( gmessagePresent() )
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gmessage");return 1;}
+			strcpy ( lDialogString , "gmessage");
 		}
 		else
 		{
@@ -3748,20 +3764,19 @@ else :\n\tprint 1\n\"" ) ;
 		}
 		strcat ( lDialogString , " ; echo $? ");
 	}
-	else if ( xdialogPresent() || gdialogPresent()
-		   || dialogName() || whiptailPresent() )
+	else if ( xdialogPresent() || gdialogPresent() || dialogName() || whiptailPresent() )
 	{
-		if ( xdialogPresent ( ) )
-		{
-			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"xdialog");return 1;}
-			lWasGraphicDialog = 1 ;
-			strcpy ( lDialogString , "(Xdialog " ) ;
-		}
-		else if ( gdialogPresent ( ) )
+		if ( gdialogPresent ( ) )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gdialog");return 1;}
 			lWasGraphicDialog = 1 ;
 			strcpy ( lDialogString , "(gdialog " ) ;
+		}
+		else if ( xdialogPresent ( ) )
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"xdialog");return 1;}
+			lWasGraphicDialog = 1 ;
+			strcpy ( lDialogString , "(Xdialog " ) ;
 		}
 		else if ( dialogName ( ) )
 		{
@@ -3801,7 +3816,8 @@ else :\n\tprint 1\n\"" ) ;
 
 		if ( !xdialogPresent() && !gdialogPresent() )
 		{
-			if ( aDialogType && ( !strcmp( "okcancel" , aDialogType ) || !strcmp( "yesno" , aDialogType ) ) )
+			if ( aDialogType && ( !strcmp( "okcancel" , aDialogType ) || !strcmp( "yesno" , aDialogType ) 
+				|| !strcmp( "yesnocancel" , aDialogType ) ) )
 			{
 				strcat(lDialogString, "--backtitle \"") ;
 				strcat(lDialogString, "tab -> move focus") ;
@@ -3826,6 +3842,14 @@ else :\n\tprint 1\n\"" ) ;
 			}
 			strcat ( lDialogString , "--yesno " ) ;
 		}
+		else if (aDialogType && !strcmp("yesnocancel", aDialogType))
+		{
+			if (!aDefaultButton)
+			{
+				strcat(lDialogString, "--defaultno ");
+			}
+			strcat(lDialogString, "--menu ");
+		}
 		else
 		{
 			strcat ( lDialogString , "--msgbox " ) ;
@@ -3836,15 +3860,25 @@ else :\n\tprint 1\n\"" ) ;
 		{
 			strcat(lDialogString, aMessage) ;
 		}
+		strcat(lDialogString, "\" ");
+
+//		if (aDialogType && !strcmp("yesnocancel", aDialogType))
+//		{
+//			strcat(lDialogString, "0 60 0 Yes \"\" No \"\" 2>>");
+//		}
+//		else
+//		{
+//			strcat(lDialogString, "10 60 && echo 1 > ");
+//		}
 
 		if ( lWasGraphicDialog )
 		{
 			strcat(lDialogString,
-				   "\" 10 60 ) 2>&1;if [ $? = 0 ];then echo 1;else echo 0;fi");
+				   "10 60 ) 2>&1;if [ $? = 0 ];then echo 1;else echo 0;fi");
 		}
 		else
 		{
-			strcat(lDialogString, "\" 10 60 >/dev/tty) 2>&1;if [ $? = 0 ];");
+			strcat(lDialogString, "10 60 >/dev/tty) 2>&1;if [ $? = 0 ];");
 			if ( lWasXterm )
 			{
 				strcat ( lDialogString ,
@@ -3857,22 +3891,6 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 					  "then echo 1;else echo 0;fi;clear >/dev/tty");
 			}
 		}
-	}
-	else if ( notifysendPresent() && !strcmp("ok" , aDialogType) )
-	{
-		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notify");return 1;}
-
-		strcpy ( lDialogString , "notify-send \"" ) ;
-		if ( aTitle && strlen(aTitle) )
-		{
-			strcat(lDialogString, aTitle) ;
-			strcat ( lDialogString , " | " ) ;
-		}
-		if ( aMessage && strlen(aMessage) )
-		{
-			strcat(lDialogString, aMessage) ;
-		}
-		strcat ( lDialogString , "\"" ) ;
 	}
 	else if ( ! isTerminalRunning ( ) && terminalName() )
 	{
@@ -3930,6 +3948,22 @@ cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 		}
 		strcat ( lDialogString ,
 			" >/tmp/tinyfd.txt';cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
+	}
+	else if ( notifysendPresent() && !strcmp("ok" , aDialogType) )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notify");return 1;}
+
+		strcpy ( lDialogString , "notify-send \"" ) ;
+		if ( aTitle && strlen(aTitle) )
+		{
+			strcat(lDialogString, aTitle) ;
+			strcat ( lDialogString , " | " ) ;
+		}
+		if ( aMessage && strlen(aMessage) )
+		{
+			strcat(lDialogString, aMessage) ;
+		}
+		strcat ( lDialogString , "\"" ) ;
 	}
 	else
 	{
@@ -4163,7 +4197,38 @@ char const * tinyfd_inputBox(
 		strcat ( lDialogString ,
 				");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
 	}
-	else if ( tkinter2Present ( ) )
+	else if ( gxmessagePresent() || gmessagePresent() )
+	{
+		if ( gxmessagePresent() ) {
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gxmessage");return (char const *)1;}
+			strcpy ( lDialogString , "szAnswer=$(gxmessage -buttons Ok:1,Cancel:0 -center \"");
+		}
+		else
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gmessage");return (char const *)1;}
+			strcpy ( lDialogString , "szAnswer=$(gmessage -buttons Ok:1,Cancel:0 -center \"");
+		}
+
+		if ( aMessage && strlen(aMessage) )
+		{
+			strcat ( lDialogString , aMessage ) ;
+		}
+		strcat(lDialogString, "\"" ) ;
+		if ( aTitle && strlen(aTitle) )
+		{
+			strcat ( lDialogString , " -title  \"");
+			strcat ( lDialogString , aTitle ) ;
+			strcat(lDialogString, "\" " ) ;
+		}
+		strcat(lDialogString, " -entrytext \"" ) ;
+		if ( aDefaultInput && strlen(aDefaultInput) )
+		{
+			strcat ( lDialogString , aDefaultInput ) ;
+		}
+		strcat(lDialogString, "\"" ) ;
+		strcat ( lDialogString , ");echo $?$szAnswer");
+	}
+	else if ( !gdialogPresent() && tkinter2Present ( ) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"tkinter");return (char const *)1;}
 		strcpy ( lDialogString , gPython2Name ) ;
@@ -4213,45 +4278,21 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		strcat(lDialogString, ");\nif res is None :\n\tprint 0");
 		strcat(lDialogString, "\nelse :\n\tprint '1'+res\n\"" ) ;
 	}
-	else if (!xdialogPresent() && !gdialogPresent() && gxmessagePresent() )
-	{
-		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gxmessage");return (char const *)1;}
-		strcpy ( lDialogString , "szAnswer=$(gxmessage -buttons Ok:1,Cancel:0 -center \"");
-
-		if ( aMessage && strlen(aMessage) )
-		{
-			strcat ( lDialogString , aMessage ) ;
-		}
-		strcat(lDialogString, "\"" ) ;
-		if ( aTitle && strlen(aTitle) )
-		{
-			strcat ( lDialogString , " -title  \"");
-			strcat ( lDialogString , aTitle ) ;
-			strcat(lDialogString, "\" " ) ;
-		}
-		strcat(lDialogString, " -entrytext \"" ) ;
-		if ( aDefaultInput && strlen(aDefaultInput) )
-		{
-			strcat ( lDialogString , aDefaultInput ) ;
-		}
-		strcat(lDialogString, "\"" ) ;
-		strcat ( lDialogString , ");echo $?$szAnswer");
-	}
-	else if ( xdialogPresent() || gdialogPresent()
+	else if ( gdialogPresent() || xdialogPresent()
 		   || dialogName() || whiptailPresent() )
 	{
-		if ( xdialogPresent ( ) )
-		{
-			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"xdialog");return (char const *)1;}
-			lWasGraphicDialog = 1 ;
-			strcpy ( lDialogString , "(Xdialog " ) ;
-		}
-		else if ( gdialogPresent ( ) )
+		if ( gdialogPresent ( ) )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gdialog");return (char const *)1;}
 			lWasGraphicDialog = 1 ;
 			lWasGdialog = 1 ;
 			strcpy ( lDialogString , "(gdialog " ) ;
+		}
+		else if ( xdialogPresent ( ) )
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"xdialog");return (char const *)1;}
+			lWasGraphicDialog = 1 ;
+			strcpy ( lDialogString , "(Xdialog " ) ;
 		}
 		else if ( dialogName ( ) )
 		{

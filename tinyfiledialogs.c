@@ -2074,7 +2074,7 @@ static int messageBoxWinConsole (
 		|| !strcmp("yesno", aDialogType) || !strcmp("yesnocancel", aDialogType) ) )
 	{
 		strcat(lDialogString, "--backtitle \"") ;
-		strcat(lDialogString, "tab -> move focus") ;
+		strcat(lDialogString, "tab: move focus") ;
 		strcat(lDialogString, "\" ") ;
 	}
 
@@ -2191,7 +2191,7 @@ static char const * inputBoxWinConsole(
 	}
 
 	strcat(lDialogString, "--backtitle \"") ;
-	strcat(lDialogString, "tab -> move focus") ;
+	strcat(lDialogString, "tab: move focus") ;
 	if ( ! aDefaultInput )
 	{
 		strcat(lDialogString, " (no blink or stars, nothing may be shown in text field)") ;
@@ -2278,7 +2278,7 @@ static char const * saveFileDialogWinConsole (
 	
 	strcat(lDialogString, "--backtitle \"") ;
 	strcat(lDialogString,
-		"tab -> focus | spacebar -> select | / -> populate | enter -> ok input line") ;
+		"tab: focus | /: populate | spacebar: fill text field | ok: TEXT FIELD ONLY") ;
 	strcat(lDialogString, "\" ") ;
 
 	strcat ( lDialogString , "--fselect \"" ) ;
@@ -2343,7 +2343,7 @@ static char const * openFileDialogWinConsole (
 
 	strcat(lDialogString, "--backtitle \"") ;
 	strcat(lDialogString,
-		"tab -> focus | spacebar -> select | / -> populate | enter -> ok input line") ;
+		"tab: focus | /: populate | spacebar: fill text field | ok: TEXT FIELD ONLY") ;
 	strcat(lDialogString, "\" ") ;
 
 	strcat ( lDialogString , "--fselect \"" ) ;
@@ -2402,7 +2402,7 @@ static char const * selectFolderDialogWinConsole (
 
 	strcat(lDialogString, "--backtitle \"") ;
 	strcat(lDialogString,
-		"tab -> focus | spacebar -> select | / -> populate | enter -> ok input line") ;
+		"tab: focus | /: populate | spacebar: fill text field | ok: TEXT FIELD ONLY") ;
 	strcat(lDialogString, "\" ") ;
 
 	strcat ( lDialogString , "--dselect \"" ) ;
@@ -3862,7 +3862,7 @@ else :\n\tprint 1\n\"" ) ;
 				|| !strcmp( "yesnocancel" , aDialogType ) ) )
 			{
 				strcat(lDialogString, "--backtitle \"") ;
-				strcat(lDialogString, "tab -> move focus") ;
+				strcat(lDialogString, "tab: move focus") ;
 				strcat(lDialogString, "\" ") ;
 			}
 		}
@@ -4429,7 +4429,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		if ( !xdialogPresent() && !gdialogPresent() )
 		{
 			strcat(lDialogString, "--backtitle \"") ;
-			strcat(lDialogString, "tab -> move focus") ;
+			strcat(lDialogString, "tab: move focus") ;
 			if ( ! aDefaultInput && !lWasGdialog )
 			{
 				strcat(lDialogString, " (no blink or stars, nothing may be shown in text field)") ;
@@ -4870,7 +4870,7 @@ char const * tinyfd_saveFileDialog (
 		{
 			strcat(lDialogString, "--backtitle \"") ;
 			strcat(lDialogString,
-				"tab -> focus | spacebar -> select | / -> populate | enter -> ok input line") ;
+				"tab: focus | /: populate | spacebar: fill text field | ok: TEXT FIELD ONLY") ;
 			strcat(lDialogString, "\" ") ;
 		}
 
@@ -5240,7 +5240,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		{
 			strcat(lDialogString, "--backtitle \"") ;
 			strcat(lDialogString,
-				"tab -> focus | spacebar -> select | / -> populate | enter -> ok input line") ;
+				"tab: focus | /: populate | spacebar: fill text field | ok: TEXT FIELD ONLY") ;
 			strcat(lDialogString, "\" ") ;
 		}
 
@@ -5492,7 +5492,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		{
 			strcat(lDialogString, "--backtitle \"") ;
 			strcat(lDialogString,
-				"tab -> focus | spacebar -> select | / -> populate | enter -> ok input line") ;
+				"tab: focus | /: populate | spacebar: fill text field | ok: TEXT FIELD ONLY") ;
 			strcat(lDialogString, "\" ") ;
 		}
 

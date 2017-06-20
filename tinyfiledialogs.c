@@ -39,6 +39,7 @@ CEGUI MathGL CPW GLOW IMGUI MyGUI GLT NGL STB & GUI less programs
 
 NO INIT
 NO MAIN LOOP
+NO LINKING (true on unix, almost true on windows)
 
 The dialogs can be forced into console mode
 
@@ -2049,7 +2050,8 @@ static int messageBoxWinConsole (
 		strcat(lDialogString, "\" ") ;
 	}
 
-	if ( aDialogType && ( !strcmp( "okcancel" , aDialogType ) || !strcmp( "yesno" , aDialogType ) ) )
+	if ( aDialogType && ( !strcmp( "okcancel" , aDialogType )
+		|| !strcmp("yesno", aDialogType) || !strcmp("yesnocancel", aDialogType) ) )
 	{
 		strcat(lDialogString, "--backtitle \"") ;
 		strcat(lDialogString, "tab -> move focus") ;
@@ -2073,6 +2075,14 @@ static int messageBoxWinConsole (
 		}
 		strcat ( lDialogString , "--yesno " ) ;
 	}
+	else if (aDialogType && !strcmp("yesnocancel", aDialogType))
+	{
+		if (!aDefaultButton)
+		{
+			strcat(lDialogString, "--defaultno ");
+		}
+		strcat(lDialogString, "--menu ");
+	}
 	else
 	{
 		strcat ( lDialogString , "--msgbox " ) ;
@@ -2085,15 +2095,24 @@ static int messageBoxWinConsole (
 		strcat(lDialogString, lBuff) ;
 		lBuff[0]='\0';
 	}
+	strcat(lDialogString, "\" ");
 
-	strcat(lDialogString, "\" 10 60");
-	strcat(lDialogString, " && echo 1 > ");
+	if (aDialogType && !strcmp("yesnocancel", aDialogType))
+	{
+		strcat(lDialogString, "0 60 0 Yes \"\" No \"\"");
+		strcat(lDialogString, "2>>");
+	}
+	else
+	{
+		strcat(lDialogString, "10 60");
+		strcat(lDialogString, " && echo 1 > ");
+	}
 
 	strcpy(lDialogFile, getenv("USERPROFILE"));
 	strcat(lDialogFile, "\\AppData\\Local\\Temp\\tinyfd.txt");
 	strcat(lDialogString, lDialogFile);
 
-	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
+	/*if (tinyfd_verbose) printf ( "lDialogString: %s\n" , lDialogString ) ;*/
 	system ( lDialogString ) ;
 		
 	if (!(lIn = fopen(lDialogFile, "r")))
@@ -2109,11 +2128,19 @@ static int messageBoxWinConsole (
     {
     	lBuff[strlen ( lBuff ) -1] = '\0' ;
     }
-	/* printf ( "lBuff: %s\n" , lBuff ) ; */
+
+	/* if (tinyfd_verbose) printf("lBuff: %s\n", lBuff); */
 	if ( ! strlen(lBuff) )
 	{
 		return 0;
 	}
+
+	if (aDialogType && !strcmp("yesnocancel", aDialogType))
+	{
+		if (lBuff[0] == 'Y') return 1;
+		else return 2;
+	}
+
 	return 1;
 }
 

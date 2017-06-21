@@ -2201,7 +2201,7 @@ static char const * inputBoxWinConsole(
 
 	if ( ! aDefaultInput )
 	{
-		strcat ( lDialogString , "--passwordbox" ) ;
+		strcat ( lDialogString , "--insecure --passwordbox" ) ;
 	}
 	else
 	{
@@ -4443,6 +4443,10 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 		else
 		{
+			if ( !lWasGraphicDialog && dialogName() )
+			{
+				strcat ( lDialogString , "--insecure " ) ;
+			}
 			strcat ( lDialogString , "--passwordbox" ) ;
 		}
 		strcat ( lDialogString , " \"" ) ;

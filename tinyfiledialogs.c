@@ -2191,10 +2191,10 @@ static char const * inputBoxWinConsole(
 	}
 
 	strcat(lDialogString, "--backtitle \"") ;
-	strcat(lDialogString, "tab: move blink focus") ;
+	strcat(lDialogString, "tab: move focus") ;
 	if ( ! aDefaultInput )
 	{
-		strcat(lDialogString, " (no blink nor stars, nothing may be shown in text field)") ;
+		strcat(lDialogString, " (sometimes nothing, no blink nor star, is shown in text field)") ;
 	}
 
 	strcat(lDialogString, "\" ") ;
@@ -2906,6 +2906,26 @@ static int detectPresence ( char const * const aExecutable )
 }
 
 
+static char const * getVersion ( char const * const aExecutable ) /*version # must follow :*/
+{
+	static char lBuff [MAX_PATH_OR_CMD] ;
+	char lTestedString [MAX_PATH_OR_CMD] ;
+	FILE * lIn ;
+	char * lTmp ;
+
+    strcpy ( lTestedString , aExecutable ) ;
+    strcat ( lTestedString , " --version" ) ;
+
+    lIn = popen ( lTestedString , "r" ) ;
+	lTmp = fgets ( lBuff , sizeof ( lBuff ) , lIn ) ;
+	pclose ( lIn ) ;
+    if ( ! lTmp || !(lTmp = strchr ( lBuff , ':' )) ) return 0 ;
+	lTmp ++ ;
+	/* printf("lTmp %s\n", lTmp); */
+   	return lTmp ;
+}
+
+
 static int tryCommand ( char const * const aCommand )
 {
 	char lBuff [MAX_PATH_OR_CMD] ;
@@ -2934,7 +2954,7 @@ static int isTerminalRunning()
 
 static char const * dialogNameOnly ( )
 {
-	static char lDialogName[64] = "*" ;
+	static char lDialogName[128] = "*" ;
 	if ( lDialogName[0] == '*' )
 	{
 		if ( isDarwin() && strcpy(lDialogName , "/opt/local/bin/dialog" )
@@ -2949,6 +2969,37 @@ static char const * dialogNameOnly ( )
 		}
 	}
     return lDialogName ;
+}
+
+
+int isDialogVersionBetter09b ( )
+{
+	char const * lDialogName ;
+	char * lVersion ;
+	int lMajor ;
+	int lMinor ;
+	char * lMinorP ;
+	char * lLetter ;
+
+	char lBuff[128] ;
+
+	/* char lTest[128] = " 0.9b-23455" ;*/
+
+	lDialogName = dialogNameOnly ( ) ;
+	if ( ! lDialogName || !(lVersion = (char *) getVersion(lDialogName)) ) return 0 ;
+	/*lVersion = lTest ;*/
+	/*printf("lVersion %s\n", lVersion);*/
+	strcpy(lBuff,lVersion);
+	lMajor = atoi ( strtok(lVersion," ,.-") ) ;
+	/*printf("lMajor %d\n", lMajor);*/
+	lMinorP = strtok(0," ,.-abcdefghijklmnopqrstuvxyz");
+	lMinor = atoi ( lMinorP ) ;
+	/*printf("lMinor %d\n", lMinor );*/
+	lLetter = lMinorP + strlen(lMinorP) ;
+	strcpy(lVersion,lBuff);
+	strtok(lLetter," ,.-");
+	/*printf("lLetter %s\n", lLetter);*/
+   	return (lMajor > 0) || ( ( lMinor == 9 ) && ((*lLetter == 'b')||(*lLetter == 'c')) );
 }
 
 
@@ -3080,7 +3131,7 @@ static char const * terminalName ( )
 			strcat(lTerminalName , " --disable-factory -x " ) ;
 			strcat(lTerminalName , lShellName ) ;
 		}
-		else if ( strcpy(lTerminalName,"xfce4-terminal") /*bad but maybe corrected*/
+		else if ( strcpy(lTerminalName,"xfce4-terminal") /*was bad but maybe corrected now*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -x " ) ;
@@ -3098,25 +3149,13 @@ static char const * terminalName ( )
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
 		}
-		/* aliases:
-        else if ( strcpy(lTerminalName,"x-terminal-emulator")
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"$TERM")
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}*/
 		else
 		{
 			strcpy(lTerminalName , "" ) ;
 		}
 		/* bad: koi8rxterm xfce4-terminal guake tilda vala-terminal qterminal
-                Eterm aterm Terminal terminology sakura lilyterm */
+                Eterm aterm Terminal terminology sakura lilyterm
+		   aliases: x-terminal-emulator $TERM */
 	}
 	if ( strlen(lTerminalName) )
 	{
@@ -3410,6 +3449,8 @@ int tinyfd_messageBox (
 	struct termios info;
 	int lTitleLen ;
 	int lMessageLen ;
+
+isDialogVersionBetter09b();
 
 	lBuff[0]='\0';
 
@@ -4429,10 +4470,10 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		if ( !xdialogPresent() && !gdialogPresent() )
 		{
 			strcat(lDialogString, "--backtitle \"") ;
-			strcat(lDialogString, "tab: move blink focus") ;
+			strcat(lDialogString, "tab: move focus") ;
 			if ( ! aDefaultInput && !lWasGdialog )
 			{
-				strcat(lDialogString, " (no blink nor stars, nothing may be shown in text field)") ;
+				strcat(lDialogString, " (sometimes nothing, no blink nor star, is shown in text field)") ;
 			}
 			strcat(lDialogString, "\" ") ;
 		}
@@ -4443,7 +4484,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 		else
 		{
-			if ( !lWasGraphicDialog && dialogName() )
+			if ( !lWasGraphicDialog && dialogName() && isDialogVersionBetter09b )
 			{
 				strcat ( lDialogString , "--insecure " ) ;
 			}

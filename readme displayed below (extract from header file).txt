@@ -13,7 +13,9 @@ tested with C & C++ compilers on
 using
     Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment
     WindowMaker IceWm Cde Jds OpenBox Awesome
+
 bindings for LUA and C# dll
+Unity3d wrapper - http://github.com/doitian/unity3d-tinyfiledialogs
 
                    http://tinyfiledialogs.sourceforge.net
                 git://git.code.sf.net/p/tinyfiledialogs/code
@@ -74,7 +76,7 @@ char const * tinyfd_colorChooser(
 - The code is pure C, perfectly compatible with C++.
 - the windows wchar_t (utf-16) prototypes are in the header file
 - windows is fully supported from XP to 10 (maybe even older versions)
-- C# & LUA via dll, see example files
+- C# & LUA via dll, see files in the folder EXTRAS 
 - OSX supported from 10.4 to 10.12 (maybe even older versions)
 - Avoid using " and ' in titles and messages.
 - There's one file filter only, it may contain several patterns.
@@ -82,8 +84,9 @@ char const * tinyfd_colorChooser(
   the list of patterns will become the description.
 - char const * filterPatterns[3] = { "*.obj" , "*.stl" , "*.dxf" } ;
 - On windows link against Comdlg32.lib and Ole32.lib
+  (on windows the no linking claim is a lie)
   This linking is not compulsary for console mode (see header file).
-- On unix: it tries command line calls, so no such need.
+- On unix: it tries command line calls, so no such need (NO LINKING).
 - On unix you need applescript, zenity, matedialog, kdialog, Xdialog,
   python2/tkinter or dialog (will open a terminal if running without console).
 - One of those is already included on most (if not all) desktops.

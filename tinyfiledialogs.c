@@ -2978,12 +2978,13 @@ int isDialogVersionBetter09b ( )
 	char * lVersion ;
 	int lMajor ;
 	int lMinor ;
+	int lDate ;
+	int lResult ;
 	char * lMinorP ;
 	char * lLetter ;
-
 	char lBuff[128] ;
 
-	/* char lTest[128] = " 0.9b-23455" ;*/
+	/*char lTest[128] = " 0.9b-20031126" ;*/
 
 	lDialogName = dialogNameOnly ( ) ;
 	if ( ! lDialogName || !(lVersion = (char *) getVersion(lDialogName)) ) return 0 ;
@@ -2995,11 +2996,16 @@ int isDialogVersionBetter09b ( )
 	lMinorP = strtok(0," ,.-abcdefghijklmnopqrstuvxyz");
 	lMinor = atoi ( lMinorP ) ;
 	/*printf("lMinor %d\n", lMinor );*/
+	lDate = atoi ( strtok(0," ,.-") ) ;
+	if (lDate<0) lDate = - lDate;
+	/*printf("lDate %d\n", lDate);*/
 	lLetter = lMinorP + strlen(lMinorP) ;
 	strcpy(lVersion,lBuff);
 	strtok(lLetter," ,.-");
 	/*printf("lLetter %s\n", lLetter);*/
-   	return (lMajor > 0) || ( ( lMinor == 9 ) && ((*lLetter == 'b')||(*lLetter == 'c')) );
+   	lResult = (lMajor > 0) || ( ( lMinor == 9 ) && (*lLetter == 'b') && (lDate >= 20031126) );
+	/*printf("lResult %d\n", lResult);*/
+	return lResult;
 }
 
 
@@ -4484,7 +4490,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 		else
 		{
-			if ( !lWasGraphicDialog && dialogName() && isDialogVersionBetter09b )
+			if ( !lWasGraphicDialog && dialogName() && isDialogVersionBetter09b() )
 			{
 				strcat ( lDialogString , "--insecure " ) ;
 			}

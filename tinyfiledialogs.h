@@ -271,13 +271,13 @@ char const * tinyfd_arrayDialog(
 - On windows link against Comdlg32.lib and Ole32.lib
   This linking is not compulsary for console mode (see above).
 - On unix: it tries command line calls, so no such need.
-- On unix you need applescript, zenity, matedialog, kdialog, Xdialog,
+- On unix you need applescript, zenity, matedialog, qarma, kdialog, Xdialog,
   python2/tkinter or dialog (will open a terminal if running without console).
 - One of those is already included on most (if not all) desktops.
 - In the absence of those it will use gdialog, gxmessage or whiptail
   with a textinputbox.
 - If nothing is found, it switches to basic console input,
-  it opens a console if needed.
+  it opens a console if needed (requires xterm + bash).
 - Use windows separators on windows and unix separators on unix.
 - String memory is preallocated statically for all the returned values.
 - File and path names are tested before return, they are valid.

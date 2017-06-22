@@ -3456,8 +3456,6 @@ int tinyfd_messageBox (
 	int lTitleLen ;
 	int lMessageLen ;
 
-isDialogVersionBetter09b();
-
 	lBuff[0]='\0';
 
 	lTitleLen =  aTitle ? strlen(aTitle) : 0 ;

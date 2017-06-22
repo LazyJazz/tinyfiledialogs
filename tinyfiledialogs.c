@@ -3675,7 +3675,7 @@ int tinyfd_messageBox (
 
 		if ( ! strcmp( "yesnocancel" , aDialogType ) )
 		{
-			strcat ( lDialogString , ";if [ $? = 0 ];then echo 1;elif [ $? = 1 ];then echo 2;else echo 0;fi");
+			strcat ( lDialogString , "; x=$? ;if [[ $x = 0 ]] ;then echo 1;elif [[ $x = 1 ]] ;then echo 2;else echo 0;fi");
 		}
 		else
 		{

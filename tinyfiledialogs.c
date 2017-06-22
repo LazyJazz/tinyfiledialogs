@@ -778,7 +778,7 @@ int tinyfd_messageBoxW(
 	wchar_t const * const aMessage, /* NULL or ""  may contain \n and \t */
 	wchar_t const * const aDialogType, /* "ok" "okcancel" "yesno" "yesnocancel" */
 	wchar_t const * const aIconType, /* "info" "warning" "error" "question" */
-	int const aDefaultButton) /* 0 for cancel/no , 1 for ok/yes , no is 2 for yesnocancel */
+	int const aDefaultButton) /* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */
 {
 	int lBoxReturnValue;
 	UINT aCode;
@@ -842,7 +842,7 @@ static int messageBoxWinGui8(
 	char const * const aMessage, /* NULL or ""  may contain \n and \t */
 	char const * const aDialogType, /* "ok" "okcancel" "yesno" "yesnocancel" */
 	char const * const aIconType, /* "info" "warning" "error" "question" */
-	int const aDefaultButton) /* 0 for cancel/no , 1 for ok/yes , no is 2 for yesnocancel */
+	int const aDefaultButton) /* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */
 {
 	int lIntRetVal;
 	wchar_t * lTitle;
@@ -1628,7 +1628,7 @@ static int messageBoxWinGuiA (
     char const * const aMessage , /* NULL or ""  may contain \n and \t */
     char const * const aDialogType , /* "ok" "okcancel" "yesno" "yesnocancel" */
     char const * const aIconType , /* "info" "warning" "error" "question" */
-    int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes , no is 2 for yesnocancel */
+    int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */
 {
 	int lBoxReturnValue;
     UINT aCode ;
@@ -2055,7 +2055,7 @@ static int messageBoxWinConsole (
     char const * const aMessage , /* NULL or ""  may contain \n and \t */
     char const * const aDialogType , /* "ok" "okcancel" "yesno" "yesnocancel" */
     char const * const aIconType , /* "info" "warning" "error" "question" */
-    int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes , no is 2 for yesnocancel */
+    int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */
 {
 	char lDialogString[MAX_PATH_OR_CMD];
 	char lDialogFile[MAX_PATH_OR_CMD];
@@ -2442,13 +2442,12 @@ static char const * selectFolderDialogWinConsole (
 }
 
 
-/* returns 0 for cancel/no , 1 for ok/yes */
 int tinyfd_messageBox (
 	char const * const aTitle , /* NULL or "" */
 	char const * const aMessage , /* NULL or ""  may contain \n and \t */
 	char const * const aDialogType , /* "ok" "okcancel" "yesno" "yesnocancel" */
 	char const * const aIconType , /* "info" "warning" "error" "question" */
-	int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes , no is 2 for yesnocancel */
+	int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */
 {
 	char lChar ;
 
@@ -3435,13 +3434,12 @@ static int tkinter2Present ( )
 }
 
 
-/* returns 0 for cancel/no , 1 for ok/yes */
 int tinyfd_messageBox (
 	char const * const aTitle , /* NULL or "" */
 	char const * const aMessage , /* NULL or ""  may contain \n and \t */
 	char const * const aDialogType , /* "ok" "okcancel" "yesno" "yesnocancel" */
 	char const * const aIconType , /* "info" "warning" "error" "question" */
-	int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes , no is 2 for yesnocancel */
+	int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */
 {
 	char lBuff [MAX_PATH_OR_CMD] ;
 	char * lDialogString = NULL ;

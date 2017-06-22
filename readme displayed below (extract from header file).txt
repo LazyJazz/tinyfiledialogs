@@ -15,7 +15,8 @@ using
     WindowMaker IceWm Cde Jds OpenBox Awesome
 
 bindings for LUA and C# dll
-Unity3d wrapper - http://github.com/doitian/unity3d-tinyfiledialogs
+included in LWJGL(java), rust, Allegrobasic 
+wrapper for unity - http://github.com/doitian/unity3d-tinyfiledialogs
 
                    http://tinyfiledialogs.sourceforge.net
                 git://git.code.sf.net/p/tinyfiledialogs/code
@@ -29,8 +30,8 @@ int tinyfd_messageBox (
     char const * const aMessage , // "" may contain \n \t
     char const * const aDialogType , // "ok" "okcancel" "yesno" "yesnocancel"
     char const * const aIconType , // "info" "warning" "error" "question"
-    int const aDefaultButton ) ; // 0 for cancel/no , 1 for ok/yes
-        // returns 0 for cancel/no , 1 for ok/yes , no is 2 for yesnocancel
+    int const aDefaultButton ) ;
+        // 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel
 
 char const * tinyfd_inputBox (
     char const * const aTitle , // ""

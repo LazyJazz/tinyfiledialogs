@@ -25,6 +25,8 @@ wrapper for unity - http://github.com/doitian/unity3d-tinyfiledialogs
 | CONTACT me directly via the email address at the top of the header file |
 |_________________________________________________________________________|
 
+- the windows only wchar_t (utf-16) prototypes are in the header file
+
 int tinyfd_messageBox (
     char const * const aTitle , // ""
     char const * const aMessage , // "" may contain \n \t
@@ -75,7 +77,7 @@ char const * tinyfd_colorChooser(
 
 - This is not for android nor ios.
 - The code is pure C, perfectly compatible with C++.
-- the windows wchar_t (utf-16) prototypes are in the header file
+- the windows only wchar_t (utf-16) prototypes are in the header file
 - windows is fully supported from XP to 10 (maybe even older versions)
 - C# & LUA via dll, see files in the folder EXTRAS 
 - OSX supported from 10.4 to 10.12 (maybe even older versions)

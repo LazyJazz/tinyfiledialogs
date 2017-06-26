@@ -3076,7 +3076,7 @@ static char const * terminalName ( )
 			strcat(lTerminalName , " -x " ) ;
 			strcat(lTerminalName , lShellName ) ;
 		}
-		else if ( strcpy(lTerminalName,"konsole")
+		else if ( strcpy(lTerminalName,"konsole") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;

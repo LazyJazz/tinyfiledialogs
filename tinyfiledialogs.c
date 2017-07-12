@@ -2891,22 +2891,24 @@ static int dirExists ( char const * const aDirPath )
 static int detectPresence ( char const * const aExecutable )
 {
 	char lBuff [MAX_PATH_OR_CMD] ;
-	char lTestedString [MAX_PATH_OR_CMD] = "which " ;
+	char lTestedString [MAX_PATH_OR_CMD] = "which -a " ;
 	FILE * lIn ;
 
     strcat ( lTestedString , aExecutable ) ;
-	/*strcat( lDialogString, " 2>/dev/null ");*/
+	/*strcat( lTestedString, " 3>/dev/null ");*/
     lIn = popen ( lTestedString , "r" ) ;
     if ( ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
 		&& ( ! strchr ( lBuff , ':' ) )
 		&& ( strncmp(lBuff, "no ", 3) ) )
     {	/* present */
     	pclose ( lIn ) ;
+		/*printf("detectPresence %s %d\n", aExecutable, 1);*/
     	return 1 ;
     }
     else
     {
     	pclose ( lIn ) ;
+		/*printf("detectPresence %s %d\n", aExecutable, 0);*/
     	return 0 ;
     }
 }

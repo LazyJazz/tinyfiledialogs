@@ -2891,11 +2891,11 @@ static int dirExists ( char const * const aDirPath )
 static int detectPresence ( char const * const aExecutable )
 {
 	char lBuff [MAX_PATH_OR_CMD] ;
-	char lTestedString [MAX_PATH_OR_CMD] = "which -a " ;
+	char lTestedString [MAX_PATH_OR_CMD] = "which " ;
 	FILE * lIn ;
 
     strcat ( lTestedString , aExecutable ) ;
-	/*strcat( lTestedString, " 3>/dev/null ");*/
+	strcat( lTestedString, " 2>/dev/null ");
     lIn = popen ( lTestedString , "r" ) ;
     if ( ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
 		&& ( ! strchr ( lBuff , ':' ) )

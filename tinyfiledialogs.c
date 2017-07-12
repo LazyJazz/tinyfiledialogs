@@ -2895,6 +2895,7 @@ static int detectPresence ( char const * const aExecutable )
 	FILE * lIn ;
 
     strcat ( lTestedString , aExecutable ) ;
+	/*strcat( lDialogString, " 2>/dev/null ");*/
     lIn = popen ( lTestedString , "r" ) ;
     if ( ( fgets ( lBuff , sizeof ( lBuff ) , lIn ) != NULL )
 		&& ( ! strchr ( lBuff , ':' ) )

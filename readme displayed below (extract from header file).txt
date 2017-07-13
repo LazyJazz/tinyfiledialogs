@@ -25,7 +25,7 @@ wrapper for unity - http://github.com/doitian/unity3d-tinyfiledialogs
 | CONTACT me directly via the email address at the top of the header file |
 |_________________________________________________________________________|
 
-if you absolutely need them, the windows only wchar_t (utf-16) prototypes are in the header file
+if you absolutely want them, the windows only wchar_t prototypes are in the header file
 
 int tinyfd_messageBox (
     char const * const aTitle , // ""

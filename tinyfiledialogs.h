@@ -28,33 +28,32 @@ OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 SSH supported via automatic switch to console mode or X11 forwarding
 
-A single C file (add it to your C or C++ project) with 6 functions:
+One C file (add it to your C or C++ project) with 6 functions:
 - message & question
 - input & password
 - save file
 - open file(s)
 - select folder
-- color picker.
+- color picker
 
-Complements OpenGL GLFW GLUT GLUI VTK SFML SDL Ogre Unity ION
-CEGUI MathGL CPW GLOW IMGUI MyGUI GLT NGL STB & GUI less programs
+Complements OpenGL GLFW GLUT GLUI VTK SFML TGUI SDL Ogre Unity3d ION OpenCV
+CEGUI MathGL GLM CPW GLOW IMGUI MyGUI GLT NGL STB & GUI less programs
 
 NO INIT
 NO MAIN LOOP
-NO LINKING (true on unix, almost true on windows)
+NO LINKING
 
 The dialogs can be forced into console mode
 
-Windows (XP to 10) ASCII + MBCS + UTF-8 + UTF-16
+Windows (XP to 10) ASCII MBCS UTF-8 UTF-16
 - native code & vbs create the graphic dialogs
 - enhanced console mode can use dialog.exe from
 http://andrear.altervista.org/home/cdialog.php
 - basic console input
 
-Unix (command line call attempts) ASCII + UTF-8
+Unix (command line calls) ASCII UTF-8
 - applescript
-- zenity / matedialog
-- qarma (zenity for qt)
+- zenity / matedialog / qarma (zenity for qt)
 - kdialog
 - Xdialog
 - python2 tkinter
@@ -68,6 +67,8 @@ using Gnome Kde Enlightenment Mate Cinnamon Unity
 Lxde Lxqt Xfce WindowMaker IceWm Cde Jds OpenBox
 
 bindings for LUA and C# dll
+included in LWJGL(java), rust, Allegrobasic
+wrapper for unity - http://github.com/doitian/unity3d-tinyfiledialogs
 
 - License -
 

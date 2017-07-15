@@ -12,7 +12,7 @@ tested with C & C++ compilers on
     Visual Studio MinGW OSX LINUX FREEBSD OPENBSD ILLUMOS SOLARIS MINIX RASPBIAN
 using
     Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment
-    WindowMaker IceWm Cde Jds OpenBox Awesome
+    WindowMaker IceWm Cde Jds OpenBox Awesome Jwm
 
 bindings for LUA and C# dll
 included in LWJGL(java), rust, Allegrobasic 

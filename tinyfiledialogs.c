@@ -62,7 +62,7 @@ The same executable can run across desktops & distributions
 tested with C & C++ compilers
 on VisualStudio MinGW Mac Linux Bsd Solaris Minix Raspbian
 using Gnome Kde Enlightenment Mate Cinnamon Unity
-Lxde Lxqt Xfce WindowMaker IceWm Cde Jds OpenBox
+Lxde Lxqt Xfce WindowMaker IceWm Cde Jds OpenBox Awesome Jwm
 
 bindings for LUA and C# dll
 included in LWJGL(java), rust, Allegrobasic

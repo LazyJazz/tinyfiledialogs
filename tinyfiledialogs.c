@@ -2903,13 +2903,13 @@ static int detectPresence ( char const * const aExecutable )
 		&& ( strncmp(lBuff, "no ", 3) ) )
     {	/* present */
     	pclose ( lIn ) ;
-		/*printf("detectPresence %s %d\n", aExecutable, 1);*/
+	if (tinyfd_verbose) printf("detectPresence %s %d\n", aExecutable, 1);
     	return 1 ;
     }
     else
     {
     	pclose ( lIn ) ;
-		/*printf("detectPresence %s %d\n", aExecutable, 0);*/
+	if (tinyfd_verbose) printf("detectPresence %s %d\n", aExecutable, 0);
     	return 0 ;
     }
 }
@@ -3140,12 +3140,6 @@ static char const * terminalName ( )
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
 		}
-		else if ( strcpy(lTerminalName,"gnome-terminal") /*good*/
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " --disable-factory -x " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
 		else if ( strcpy(lTerminalName,"xfce4-terminal") /*was bad but maybe corrected now*/
 			  && detectPresence(lTerminalName) )
 		{
@@ -3171,6 +3165,14 @@ static char const * terminalName ( )
 		/* bad: koi8rxterm xfce4-terminal guake tilda vala-terminal qterminal
                 Eterm aterm Terminal terminology sakura lilyterm
 		   aliases: x-terminal-emulator $TERM */
+
+		/*else if ( strcpy(lTerminalName,"gnome-terminal") //bad (good if version < 3)
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " --disable-factory -x " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}*/
+
 	}
 	if ( strlen(lTerminalName) )
 	{

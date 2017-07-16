@@ -3080,73 +3080,7 @@ static char const * terminalName ( )
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
 		}
-		else if ( strcpy(lTerminalName,"mate-terminal") /*good*/
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -x " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
 		else if ( strcpy(lTerminalName,"konsole") /*good*/
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"rxvt") /*good*/
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"urxvt") /*good*/
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"mrxvt") /*good*/
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"evilvte") /*good*/
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"termit") /*good*/
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"kterm") /*good*/
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"roxterm") /*good*/
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"lxterm") /*good small*/
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"xfce4-terminal") /*was bad but maybe corrected now*/
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -x " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"xvt") /*good B&W*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
@@ -3162,17 +3096,81 @@ static char const * terminalName ( )
 		{
 			strcpy(lTerminalName , "" ) ;
 		}
-		/* bad: koi8rxterm xfce4-terminal guake tilda vala-terminal qterminal
-                Eterm aterm Terminal terminology sakura lilyterm
-		   aliases: x-terminal-emulator $TERM */
-
 		/*else if ( strcpy(lTerminalName,"gnome-terminal") //bad (good if version < 3)
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " --disable-factory -x " ) ;
 			strcat(lTerminalName , lShellName ) ;
-		}*/
-
+		}
+		else if ( strcpy(lTerminalName,"mate-terminal") //good
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -x " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		else if ( strcpy(lTerminalName,"rxvt") //good (bad on wayland)
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		else if ( strcpy(lTerminalName,"urxvt") //good
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		else if ( strcpy(lTerminalName,"mrxvt") //good
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		else if ( strcpy(lTerminalName,"xvt") //good B&W (bad on wayland)
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		else if ( strcpy(lTerminalName,"evilvte") //good
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		else if ( strcpy(lTerminalName,"termit") //good (bad on wayland)
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		else if ( strcpy(lTerminalName,"kterm") //good
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		else if ( strcpy(lTerminalName,"roxterm") //good (bad on wayland)
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		else if ( strcpy(lTerminalName,"lxterm") //good small
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		else if ( strcpy(lTerminalName,"xfce4-terminal") //was bad but maybe corrected now
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -x " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		/* bad: koi8rxterm xfce4-terminal guake tilda vala-terminal qterminal
+                Eterm aterm Terminal terminology sakura lilyterm
+		   aliases: x-terminal-emulator $TERM */
 	}
 	if ( strlen(lTerminalName) )
 	{

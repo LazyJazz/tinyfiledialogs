@@ -3086,6 +3086,12 @@ static char const * terminalName ( )
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
 		}
+		else if ( strcpy(lTerminalName,"kterm") //good
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
 		else if ( strcpy(lTerminalName,"pterm") /*good only letters*/
 			  && detectPresence(lTerminalName) )
 		{
@@ -3139,12 +3145,6 @@ static char const * terminalName ( )
 			strcat(lTerminalName , lShellName ) ;
 		}
 		else if ( strcpy(lTerminalName,"termit") //good (bad on wayland)
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"kterm") //good
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;

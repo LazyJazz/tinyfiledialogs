@@ -3062,7 +3062,7 @@ static char const * terminalName ( )
 				strcpy(lTerminalName , "" ) ;
 			}
 		}
-		else if ( strcpy(lTerminalName,"xterm") /*good small without parameters*/
+		else if ( strcpy(lTerminalName,"xterm") /*good (small without parameters)*/
 			&& detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -fa 'DejaVu Sans Mono' -fs 10 -title tinyfiledialogs -e " ) ;
@@ -3086,13 +3086,43 @@ static char const * terminalName ( )
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
 		}
-		else if ( strcpy(lTerminalName,"kterm") //good
+		else if ( strcpy(lTerminalName,"kterm") /*good*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
 		}
-		else if ( strcpy(lTerminalName,"pterm") /*good only letters*/
+		else if ( strcpy(lTerminalName,"xfce4-terminal") /*good*/
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -x " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		else if ( strcpy(lTerminalName,"mate-terminal") /*good*/
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -x " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		else if ( strcpy(lTerminalName,"Eterm") /*good*/
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		else if ( strcpy(lTerminalName,"evilvte") /*good*/
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		else if ( strcpy(lTerminalName,"pterm") /*good (only letters)*/
+			  && detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " -e " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
+		else if ( strcpy(lTerminalName,"lxterm") /*good (small)*/
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " -e " ) ;
@@ -3108,69 +3138,9 @@ static char const * terminalName ( )
 			strcat(lTerminalName , " --disable-factory -x " ) ;
 			strcat(lTerminalName , lShellName ) ;
 		}
-		else if ( strcpy(lTerminalName,"mate-terminal") //good
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -x " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"rxvt") //good (bad on wayland)
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"urxvt") //good
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"mrxvt") //good
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"xvt") //good B&W (bad on wayland)
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"evilvte") //good
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"termit") //good (bad on wayland)
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"roxterm") //good (bad on wayland)
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"lxterm") //good small
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		else if ( strcpy(lTerminalName,"xfce4-terminal") //was bad but maybe corrected now
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -x " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
-		/* bad: koi8rxterm xfce4-terminal guake tilda vala-terminal qterminal
-                Eterm aterm Terminal terminology sakura lilyterm
-		   aliases: x-terminal-emulator $TERM */
+		/* bad: koi rxterm guake tilda vala-terminal qterminal
+                aterm Terminal terminology sakura lilyterm weston-terminal
+		roxterm termit xvt rxvt mrxvt urxvt */
 	}
 	if ( strlen(lTerminalName) )
 	{

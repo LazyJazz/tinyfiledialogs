@@ -3122,12 +3122,6 @@ static char const * terminalName ( )
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
 		}
-		else if ( strcpy(lTerminalName,"lxterm") /*good (small)*/
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " -e " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}
 		else
 		{
 			strcpy(lTerminalName , "" ) ;

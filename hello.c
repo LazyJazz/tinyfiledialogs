@@ -63,7 +63,6 @@ Lxde Lxqt Xfce WindowMaker IceWm Cde Jds OpenBox Awesome Jwm
 
 bindings for LUA and C# dll
 included in LWJGL(java), rust, Allegrobasic
-wrapper for unity - http://github.com/doitian/unity3d-tinyfiledialogs
 
 - License -
 

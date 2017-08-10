@@ -42,6 +42,7 @@ CEGUI MathGL GLM CPW GLOW IMGUI MyGUI GLT NGL STB & GUI less programs
 NO INIT
 NO MAIN LOOP
 NO LINKING
+NO INCLUDE
 
 The dialogs can be forced into console mode
 

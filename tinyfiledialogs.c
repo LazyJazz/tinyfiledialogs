@@ -3131,7 +3131,7 @@ static char const * terminalName ( )
 		{
 			strcat(lTerminalName , " --disable-factory -x " ) ;
 			strcat(lTerminalName , lShellName ) ;
-		}
+		}*/
 		/* bad: koi rxterm guake tilda vala-terminal qterminal
                 aterm Terminal terminology sakura lilyterm weston-terminal
 		roxterm termit xvt rxvt mrxvt urxvt */

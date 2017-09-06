@@ -2974,7 +2974,7 @@ static char const * dialogNameOnly ( )
 		{}
 		else
 		{
-			strcpy(lDialogName , NULL ) ;
+			strcpy(lDialogName , "" ) ;
 		}
 	}
     return lDialogName ;
@@ -2995,8 +2995,8 @@ int isDialogVersionBetter09b ( )
 
 	/*char lTest[128] = " 0.9b-20031126" ;*/
 
-	lDialogName = dialogNameOnly ( ) ;
-	if ( ! lDialogName || !(lVersion = (char *) getVersion(lDialogName)) ) return 0 ;
+	lDialogName = dialogNameOnly() ;
+	if ( ! strlen(lDialogName) || !(lVersion = (char *) getVersion(lDialogName)) ) return 0 ;
 	/*lVersion = lTest ;*/
 	/*printf("lVersion %s\n", lVersion);*/
 	strcpy(lBuff,lVersion);
@@ -3040,7 +3040,7 @@ static char const * terminalName ( )
 		{
 			strcpy(lShellName , "bash -c " ) ; /*good for basic input*/
 		}
-        else if ( dialogNameOnly() || whiptailPresentOnly() )
+        else if ( strlen(dialogNameOnly()) || whiptailPresentOnly() )
         {
     		strcpy(lShellName , "sh -c " ) ; /*good enough for dialog & whiptail*/
         }
@@ -3151,7 +3151,7 @@ static char const * dialogName ( )
 {
     char const * lDialogName ;
     lDialogName = dialogNameOnly ( ) ;
-	if ( lDialogName && strlen(lDialogName) && ( isTerminalRunning() || terminalName() ) )
+	if ( strlen(lDialogName) && ( isTerminalRunning() || terminalName() ) )
 	{
 		return lDialogName ;
 	}

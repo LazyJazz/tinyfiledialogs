@@ -3193,7 +3193,7 @@ static int xmessagePresent ( )
 	{
 		lXmessagePresent = detectPresence("xmessage");/*if not tty,not on osxpath*/
 	}
-	return lXmessagePresent && graphicMode ( ) ;
+	return lXmessagePresent && graphicMode ( )  && !(isDarwin() && getenv("SSH_TTY") ) ;
 }
 
 

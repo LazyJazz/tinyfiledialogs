@@ -2974,7 +2974,7 @@ static char const * dialogNameOnly ( )
 		{}
 		else
 		{
-			strcpy(lDialogName , "" ) ;
+			strcpy(lDialogName , NULL ) ;
 		}
 	}
     return lDialogName ;
@@ -3151,7 +3151,7 @@ static char const * dialogName ( )
 {
     char const * lDialogName ;
     lDialogName = dialogNameOnly ( ) ;
-	if ( strlen(lDialogName) && ( isTerminalRunning() || terminalName() ) )
+	if ( lDialogName && strlen(lDialogName) && ( isTerminalRunning() || terminalName() ) )
 	{
 		return lDialogName ;
 	}
@@ -4532,6 +4532,11 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		strcat ( lDialogString , "(esc+enter to cancel): \" ANSWER " ) ;
 		strcat ( lDialogString , ";echo 1$ANSWER >/tmp/tinyfd.txt';" ) ;
 		strcat ( lDialogString , "cat -v /tmp/tinyfd.txt");
+	}
+	else if ( !gWarningDisplayed && ! isTerminalRunning ( ) && ! terminalName() ) {
+	  tinyfd_messageBox(gTitle,gMessageUnix,"ok","warning",0);
+	  gWarningDisplayed = 1 ;
+	  return NULL;
 	}
 	else
 	{

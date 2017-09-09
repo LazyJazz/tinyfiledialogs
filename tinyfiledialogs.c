@@ -1,24 +1,24 @@
 /*_________
- /         \ tinyfiledialogs.c v2.9.4 [Sep 7, 2017] zlib licence
+ /         \ tinyfiledialogs.c v3.0.0 [Sep 9, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|
-                                git://git.code.sf.net/p/tinyfiledialogs/code
-		 ______________________________________________
-		|                                              |
-		|     email: tinyfiledialogs@ysengrin.com      |
-		|______________________________________________|
+             git://git.code.sf.net/p/tinyfiledialogs/code
+         _________________________________________
+        |                                         |
+        |   email: tinyfiledialogs@ysengrin.com   |
+        |_________________________________________|
+     ___________________________________________________________________
+    |                                                                   |
+    | the windows only wchar_t UTF-16 prototypes are in the header file |
+    |___________________________________________________________________|
 
 A big thank you to Don Heyse http://ldglite.sf.net for
                    his code contributions, bug corrections & thorough testing!
 		
-Please
-	1) let me know
-	- if you are including tiny file dialogs,
-	  I'll be happy to add your link to the list of projects using it.
-	- If you are using it on different hardware / OS / compiler.
-	2) leave a review on Sourceforge. Thanks.
+Please 1) let me know If you are using it on different hardware / OS / compiler
+       2) leave a very short review on Sourceforge. It helps the ranking in google.
 
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
@@ -110,7 +110,7 @@ misrepresented as being the original software.
  #include <conio.h>
  /*#include <io.h>*/
  #define SLASH "\\"
- int tinyfd_winUtf8 = 0 ; /* on windows string char can be 0:MBSC or 1:UTF-8 */
+ int tinyfd_winUtf8 = 0 ; /* on windows string char can be 0:MBCS or 1:UTF-8 */
 #else
  #include <limits.h>
  #include <unistd.h>
@@ -123,7 +123,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "2.9.4";
+char tinyfd_version [8] = "3.0.0";
 
 static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
@@ -449,6 +449,27 @@ static void wipefile(char const * const aFilename)
 	}
 }
 
+
+static void wipefileW(wchar_t const * const aFilename)
+{
+	int i;
+	struct _stat st;
+	FILE * lIn;
+
+	if (_wstat(aFilename, &st) == 0)
+	{
+		if ((lIn = _wfopen(aFilename, L"w")))
+		{
+			for (i = 0; i < st.st_size; i++)
+			{
+				fputc('A', lIn);
+			}
+		}
+		fclose(lIn);
+	}
+}
+
+
 #ifdef _WIN32
 
 static int replaceChr ( char * const aString ,
@@ -625,6 +646,15 @@ static int sizeUtf8(wchar_t const * const aUtf16string)
 }
 
 
+static int sizeMbcs(wchar_t const * const aMbcsString)
+{
+	int lRes = WideCharToMultiByte(CP_ACP, 0,
+		aMbcsString, -1, NULL, 0, NULL, NULL);
+	/* DWORD licic = GetLastError(); */
+	return lRes;
+}
+
+
 static wchar_t * utf8to16(char const * const aUtf8string)
 {
 	wchar_t * lUtf16string ;
@@ -641,6 +671,22 @@ static wchar_t * utf8to16(char const * const aUtf8string)
 }
 
 
+static wchar_t * mbcsTo16(char const * const aMbcsString)
+{
+	wchar_t * lMbcsString;
+	int lSize = sizeUtf16(aMbcsString);
+	lMbcsString = (wchar_t *)malloc(lSize * sizeof(wchar_t));
+	lSize = MultiByteToWideChar(CP_ACP, 0,
+		aMbcsString, -1, lMbcsString, lSize);
+	if (lSize == 0)
+	{
+		free(lMbcsString);
+		return NULL;
+	}
+	return lMbcsString;
+}
+
+
 static char * utf16to8(wchar_t const * const aUtf16string)
 {
 	char * lUtf8string ;
@@ -654,6 +700,22 @@ static char * utf16to8(wchar_t const * const aUtf16string)
 		return NULL;
 	}
 	return lUtf8string;
+}
+
+
+static char * utf16toMbcs(wchar_t const * const aUtf16string)
+{
+	char * lMbcsString;
+	int lSize = sizeMbcs(aUtf16string);
+	lMbcsString = (char *)malloc(lSize);
+	lSize = WideCharToMultiByte(CP_ACP, 0,
+		aUtf16string, -1, lMbcsString, lSize, NULL, NULL);
+	if (lSize == 0)
+	{
+		free(lMbcsString);
+		return NULL;
+	}
+	return lMbcsString;
 }
 
 
@@ -868,34 +930,41 @@ static int messageBoxWinGui8(
 }
 
 
-static char const * inputBoxWinGui(
-	char * const aoBuff ,
-	char const * const aTitle , /* NULL or "" */
-	char const * const aMessage , /* NULL or "" may NOT contain \n nor \t */
-	char const * const aDefaultInput ) /* "" , if NULL it's a passwordBox */
+static wchar_t const * tinyfd_inputBoxW(
+	wchar_t const * const aTitle, /* NULL or L"" */
+	wchar_t const * const aMessage, /* NULL or L"" may NOT contain \n nor \t */
+	wchar_t const * const aDefaultInput) /* L"" , if NULL it's a passwordBox */
 {
-	char * lDialogString;
+	static wchar_t lBuff[MAX_PATH_OR_CMD];
+	wchar_t * lDialogString;
 	FILE * lIn;
 	int lResult;
 	int lTitleLen;
 	int lMessageLen;
-	wchar_t * lDialogStringW;
+	int lDialogStringLen;
 
-	lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
-	lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
-	lDialogString = (char *)malloc(3 * MAX_PATH_OR_CMD + lTitleLen + lMessageLen);
+	lTitleLen =  aTitle ? wcslen(aTitle) : 0 ;
+	lMessageLen =  aMessage ? wcslen(aMessage) : 0 ;
+	lDialogStringLen = 3 * MAX_PATH_OR_CMD + lTitleLen + lMessageLen;
+	lDialogString = (wchar_t *)malloc(2 * lDialogStringLen);
 
 	if (aDefaultInput)
 	{
-		sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.vbs",
-			getenv("USERPROFILE"));
+	swprintf(lDialogString,
+#if !defined(__GNUC__) || (__GNUC__) >= 5
+		lDialogStringLen,
+#endif
+		L"%ls\\AppData\\Local\\Temp\\tinyfd.vbs", _wgetenv(L"USERPROFILE"));
 	}
 	else
 	{
-		sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.hta",
-			getenv("USERPROFILE"));
+		swprintf(lDialogString,
+#if !defined(__GNUC__) || (__GNUC__) >= 5
+			lDialogStringLen,
+#endif
+			L"%ls\\AppData\\Local\\Temp\\tinyfd.hta", _wgetenv(L"USERPROFILE"));
 	}
-	lIn = fopen(lDialogString, "w");
+	lIn = _wfopen(lDialogString, L"w");
 	if (!lIn)
 	{
 		free(lDialogString);
@@ -904,30 +973,34 @@ static char const * inputBoxWinGui(
 
 	if ( aDefaultInput )
 	{
-		strcpy(lDialogString, "Dim result:result=InputBox(\"");
-		if (aMessage && strlen(aMessage))
+		wcscpy(lDialogString, L"Dim result:result=InputBox(\"");
+		if (aMessage && wcslen(aMessage))
 		{
-			strcat(lDialogString, aMessage);
+			wcscat(lDialogString, aMessage);
 		}
-		strcat(lDialogString, "\",\"");
-		if (aTitle && strlen(aTitle))
+		wcscat(lDialogString, L"\",\"");
+		if (aTitle && wcslen(aTitle))
 		{
-			strcat(lDialogString, aTitle);
+			wcscat(lDialogString, aTitle);
 		}
-		strcat(lDialogString, "\",\"");
-		if (aDefaultInput && strlen(aDefaultInput))
+		wcscat(lDialogString, L"\",\"");
+		if (aDefaultInput && wcslen(aDefaultInput))
 		{
-			strcat(lDialogString, aDefaultInput);
+			wcscat(lDialogString, aDefaultInput);
 		}
-		strcat(lDialogString, "\"):If IsEmpty(result) then:WScript.Echo 0");
-		strcat(lDialogString, ":Else: WScript.Echo \"1\" & result : End If");
+		wcscat(lDialogString, L"\"):If IsEmpty(result) then:WScript.Echo 0");
+		wcscat(lDialogString, L":Else: WScript.Echo \"1\" & result : End If");
 	}
 	else
 	{
-		sprintf(lDialogString, "\n\
+		swprintf(lDialogString,
+#if !defined(__GNUC__) || (__GNUC__) >= 5
+			lDialogStringLen,
+#endif
+L"\n\
 <html>\n\
 <head>\n\
-<title>%s</title>\n\
+<title>%ls</title>\n\
 <HTA:APPLICATION\n\
 ID = 'tinyfdHTA'\n\
 APPLICATIONNAME = 'tinyfd_inputBox'\n\
@@ -954,7 +1027,7 @@ Sub Window_onUnload\n\
 Set objFSO = CreateObject(\"Scripting.FileSystemObject\")\n\
 Set oShell = CreateObject(\"WScript.Shell\")\n\
 strHomeFolder = oShell.ExpandEnvironmentStrings(\"%%USERPROFILE%%\")\n\
-Set objFile = objFSO.CreateTextFile(strHomeFolder & \"\\AppData\\Local\\Temp\\tinyfd.txt\",True)\n\
+Set objFile = objFSO.CreateTextFile(strHomeFolder & \"\\AppData\\Local\\Temp\\tinyfd.txt\",True,True)\n\
 If result = 1 Then\n\
 objFile.Write 1 & txt_input.Value\n\
 Else\n\
@@ -986,7 +1059,7 @@ End Sub\n\
 <table width = '100%%' height = '80%%' align = 'center' border = '0'>\n\
 <tr border = '0'>\n\
 <td align = 'left' valign = 'middle' style='Font-Family:Arial'>\n\
-%s\n\
+%ls\n\
 </td>\n\
 <td align = 'right' valign = 'middle' style = 'margin-top: 0em'>\n\
 <table  align = 'right' style = 'margin-right: 0em;'>\n\
@@ -1008,109 +1081,182 @@ name = 'txt_input' value = '' style = 'float:left;width:100%%' ><BR>\n\
 </table>\n\
 </body>\n\
 </html>\n\
-"		, aTitle ? aTitle : "", aMessage ? aMessage : "") ;
+"		, aTitle ? aTitle : L"", aMessage ? aMessage : L"") ;
 	}
-	fputs(lDialogString, lIn);
+	fputws(lDialogString, lIn);
 	fclose(lIn);
-
-	strcpy(lDialogString, "");
 
 	if (aDefaultInput)
 	{
-		strcat(lDialogString, "cscript.exe ");
-		strcat(lDialogString, "//Nologo ");
-		strcat(lDialogString,"%USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.vbs");
-		strcat(lDialogString, " > %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.txt");
+		swprintf(lDialogString,
+#if !defined(__GNUC__) || (__GNUC__) >= 5
+			lDialogStringLen,
+#endif
+			L"%ls\\AppData\\Local\\Temp\\tinyfd.txt",_wgetenv(L"USERPROFILE"));
+		FILE * lala = _wfopen(lDialogString, L"wt, ccs=UNICODE");
+		fclose(lala);
+
+		wcscpy(lDialogString, L"cscript.exe ");
+		wcscat(lDialogString, L"//U //Nologo ");
+		wcscat(lDialogString, L"%USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.vbs");
+		wcscat(lDialogString, L" >> %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.txt");
 	}
 	else
 	{
-		strcat(lDialogString,
-			"mshta.exe %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.hta");
+		wcscpy(lDialogString,
+			L"mshta.exe %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.hta");
 	}
 
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
 
-	if (tinyfd_winUtf8)
-	{
-		lDialogStringW = utf8to16(lDialogString);
-		runSilentW(lDialogStringW);
-		free(lDialogStringW);
-	}
-	else
-	{
-		runSilentA(lDialogString);
-	}
-
-	/*
-	if (!(lIn = _popen(lDialogString, "r")))
-	{
-		free(lDialogString);
-		return NULL;
-	}
-	while (fgets(aoBuff, MAX_PATH_OR_CMD, lIn) != NULL)
-	{
-	}
-	_pclose(lIn);
-	if (aoBuff[strlen(aoBuff) - 1] == '\n')
-	{
-		aoBuff[strlen(aoBuff) - 1] = '\0';
-	}
-	*/
+	runSilentW(lDialogString);
 
 	if (aDefaultInput)
 	{
-		sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.txt",
-			getenv("USERPROFILE"));
-		if (!(lIn = fopen(lDialogString, "r")))
+		swprintf(lDialogString,
+#if !defined(__GNUC__) || (__GNUC__) >= 5
+			lDialogStringLen,
+#endif
+			L"%s\\AppData\\Local\\Temp\\tinyfd.txt", _wgetenv(L"USERPROFILE"));
+		if (!(lIn = _wfopen(lDialogString, L"rt, ccs=UNICODE")))
 		{
-			remove(lDialogString);
+			_wremove(lDialogString);
 			free(lDialogString);
 			return NULL;
 		}
-		while (fgets(aoBuff, MAX_PATH_OR_CMD, lIn) != NULL)
-		{}
-		fclose(lIn);
-		remove(lDialogString);
 
-		sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.vbs",
-			getenv("USERPROFILE"));
+		fgetws(lBuff, MAX_PATH_OR_CMD, lIn);
+		fclose(lIn);
+		_wremove(lDialogString);
+
+		swprintf(lDialogString,
+#if !defined(__GNUC__) || (__GNUC__) >= 5
+			lDialogStringLen,
+#endif
+			L"%ls\\AppData\\Local\\Temp\\tinyfd.vbs",
+			_wgetenv(L"USERPROFILE"));
 	}
 	else
 	{
-		sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.txt",
-			getenv("USERPROFILE"));
-		if (!(lIn = fopen(lDialogString, "r")))
+		swprintf(lDialogString,
+#if !defined(__GNUC__) || (__GNUC__) >= 5
+			lDialogStringLen,
+#endif
+			L"%ls\\AppData\\Local\\Temp\\tinyfd.txt",
+			_wgetenv(L"USERPROFILE"));
+		if (!(lIn = _wfopen(lDialogString, L"rt, ccs=UNICODE")))
 		{
-			remove(lDialogString);
+			_wremove(lDialogString);
 			free(lDialogString);
 			return NULL;
 		}
-		while (fgets(aoBuff, MAX_PATH_OR_CMD, lIn) != NULL)
-		{}
+		
+		fgetws(lBuff, MAX_PATH_OR_CMD, lIn);
 		fclose(lIn);
 		
-		wipefile(lDialogString);
-		remove(lDialogString);
-		sprintf(lDialogString, "%s\\AppData\\Local\\Temp\\tinyfd.hta",
-			getenv("USERPROFILE"));
+		wipefileW(lDialogString);
+		_wremove(lDialogString);
+		swprintf(lDialogString,
+#if !defined(__GNUC__) || (__GNUC__) >= 5
+			lDialogStringLen,
+#endif
+			L"%s\\AppData\\Local\\Temp\\tinyfd.hta",
+			_wgetenv(L"USERPROFILE"));
 	}
-	remove(lDialogString);
+	_wremove(lDialogString);
 	free(lDialogString);
 	/* printf ( "aoBuff: %s\n" , aoBuff ) ; */
-	lResult = strncmp(aoBuff, "1", 1) ? 0 : 1;
+	lResult = wcsncmp(lBuff, L"1", 1) ? 0 : 1;
+	
 	/* printf ( "lResult: %d \n" , lResult ) ; */
 	if (!lResult)
 	{
 		return NULL ;
 	}
 
-	if (aoBuff[strlen(aoBuff) - 1] == '\n')
-	{
-		aoBuff[strlen(aoBuff) - 1] = '\0';
-	}
+//	if (aoBuff[wcslen(aoBuff) - 1] == '\n')
+//	{
+//		aoBuff[wcslen(aoBuff) - 1] = '\0';
+//	}
 
 	/* printf ( "aoBuff+1: %s\n" , aoBuff+1 ) ; */
-	return aoBuff + 1;
+	return lBuff + 1 ;
+}
+
+
+static char const * inputBoxWinGui8(
+	char * const aoBuff,
+	char const * const aTitle, /* NULL or "" */
+	char const * const aMessage, /* NULL or "" may NOT contain \n nor \t */
+	char const * const aDefaultInput) /* "" , if NULL it's a passwordBox */
+{
+	wchar_t * lTitle;
+	wchar_t * lMessage;
+	wchar_t * lDefaultInput;
+	wchar_t const * lTmpWChar;
+	char * lTmpChar;
+
+	lTitle = utf8to16(aTitle);
+	lMessage = utf8to16(aMessage);
+	lDefaultInput = utf8to16(aDefaultInput);
+
+	lTmpWChar = tinyfd_inputBoxW(
+		lTitle,
+		lMessage,
+		lDefaultInput);
+
+	free(lTitle);
+	free(lMessage);
+	free(lDefaultInput);
+
+	if (!lTmpWChar)
+	{
+		return NULL;
+	}
+
+	lTmpChar = utf16to8(lTmpWChar);
+	strcpy(aoBuff, lTmpChar);
+	free(lTmpChar);
+
+	return aoBuff;
+}
+
+
+static char const * inputBoxWinGuiA(
+	char * const aoBuff,
+	char const * const aTitle, /* NULL or "" */
+	char const * const aMessage, /* NULL or "" may NOT contain \n nor \t */
+	char const * const aDefaultInput) /* "" , if NULL it's a passwordBox */
+{
+	wchar_t * lTitle;
+	wchar_t * lMessage;
+	wchar_t * lDefaultInput;
+	wchar_t const * lTmpWChar;
+	char * lTmpChar;
+
+	lTitle = mbcsTo16(aTitle);
+	lMessage = mbcsTo16(aMessage);
+	lDefaultInput = mbcsTo16(aDefaultInput);
+
+	lTmpWChar = tinyfd_inputBoxW(
+		lTitle,
+		lMessage,
+		lDefaultInput);
+
+	free(lTitle);
+	free(lMessage);
+	free(lDefaultInput);
+
+	if (!lTmpWChar)
+	{
+		return NULL;
+	}
+
+	lTmpChar = utf16toMbcs(lTmpWChar);
+	strcpy(aoBuff, lTmpChar);
+	free(lTmpChar);
+
+	return aoBuff;
 }
 
 
@@ -2574,7 +2720,14 @@ char const * tinyfd_inputBox(
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char const *)1;}
 		lBuff[0]='\0';
-		return inputBoxWinGui(lBuff,aTitle,aMessage,aDefaultInput);
+		if (tinyfd_winUtf8)
+		{
+			return inputBoxWinGui8(lBuff, aTitle, aMessage, aDefaultInput);
+		}
+		else
+		{
+			return inputBoxWinGuiA(lBuff, aTitle, aMessage, aDefaultInput);
+		}
 	}
 	else
 #endif /* TINYFD_NOLIB */

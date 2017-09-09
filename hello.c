@@ -1,21 +1,21 @@
 /*_________
- /         \ hello.c v2.9.4 [Sep 7, 2017] zlib licence
+ /         \ hello.c v3.0.0 [Sep 9, 2017] zlib licence
  |tiny file| Hello World file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|
-                                git://git.code.sf.net/p/tinyfiledialogs/code
-		 ______________________________________________
-		|                                              |
-		|     email: tinyfiledialogs@ysengrin.com      |
-		|______________________________________________|
-
-Please
-	1) let me know
-	- if you are including tiny file dialogs,
-	  I'll be happy to add your link to the list of projects using it.
-	- If you are using it on different hardware / OS / compiler.
-	2) leave a review on Sourceforge. Thanks.
+	         git://git.code.sf.net/p/tinyfiledialogs/code
+         _________________________________________
+	    |                                         |
+	    |   email: tinyfiledialogs@ysengrin.com   |
+	    |_________________________________________|
+     ___________________________________________________________________
+    |                                                                   |
+    | the windows only wchar_t UTF-16 prototypes are in the header file |
+    |___________________________________________________________________|
+	  
+Please 1) let me know If you are using it on different hardware / OS / compiler
+       2) leave a very short review on Sourceforge. It helps the ranking in google.
 
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker

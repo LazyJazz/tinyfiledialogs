@@ -1,26 +1,24 @@
 /*_________
- /         \ tinyfiledialogs.h v2.9.4 [Sep 7, 2017] zlib licence
+ /         \ tinyfiledialogs.h v3.0.0 [Sep 9, 2017] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|
-                                git://git.code.sf.net/p/tinyfiledialogs/code
-		 ______________________________________________
-		|                                              |
-		|     email: tinyfiledialogs@ysengrin.com      |
-		|______________________________________________|
+             git://git.code.sf.net/p/tinyfiledialogs/code
+         _________________________________________
+        |                                         |
+        |   email: tinyfiledialogs@ysengrin.com   |
+        |_________________________________________|
+     ___________________________________________________________________
+    |                                                                   |
+    | the windows only wchar_t UTF-16 prototypes are in the header file |
+    |___________________________________________________________________|
 
 A big thank you to Don Heyse http://ldglite.sf.net for
                    his code contributions, bug corrections & thorough testing!
-		
-            git://git.code.sf.net/p/tinyfiledialogs/code
 
-Please
-	1) let me know
-	- if you are including tiny file dialogs,
-	  I'll be happy to add your link to the list of projects using it.
-	- If you are using it on different hardware / OS / compiler.
-	2) leave a review on Sourceforge. Thanks.
+Please 1) let me know If you are using it on different hardware / OS / compiler
+       2) leave a very short review on Sourceforge. It helps the ranking in google.
 
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
@@ -112,7 +110,7 @@ extern char tinyfd_version[8]; /* contains tinyfd current version number */
 #ifdef _WIN32
 /* for UTF-16 use the functions at the end of this files */
 extern int tinyfd_winUtf8; /* 0 (default) or 1 */
-/* on windows string char can be 0:MBSC or 1:UTF-8
+/* on windows string char can be 0:MBCS or 1:UTF-8
 unless your code is really prepared for UTF-8 on windows, leave this on MBSC.
 Or you can use the UTF-16 (wchar) prototypes at the end of ths file.*/
 #endif
@@ -191,46 +189,52 @@ char const * tinyfd_colorChooser(
 
 /* windows only - utf-16 version */
 int tinyfd_messageBoxW(
-	wchar_t const * const aTitle ,
-	wchar_t const * const aMessage, /* "" may contain \n \t */
+	wchar_t const * const aTitle , /* NULL or L"" */
+	wchar_t const * const aMessage, /* L"" may contain \n \t */
 	wchar_t const * const aDialogType, /* "ok" "okcancel" "yesno" */
 	wchar_t const * const aIconType, /* "info" "warning" "error" "question" */
 	int const aDefaultButton ); /* 0 for cancel/no , 1 for ok/yes */
 		/* returns 0 for cancel/no , 1 for ok/yes */
 
 /* windows only - utf-16 version */
+static wchar_t const * tinyfd_inputBoxW(
+	wchar_t const * const aTitle, /* NULL or L"" */
+	wchar_t const * const aMessage, /* NULL or L"" may NOT contain \n nor \t */
+	wchar_t const * const aDefaultInput ); /* L"" , if NULL it's a passwordBox */
+	
+/* windows only - utf-16 version */
 wchar_t const * tinyfd_saveFileDialogW(
-	wchar_t const * const aTitle, /* NULL or "" */
-	wchar_t const * const aDefaultPathAndFile, /* NULL or "" */
+	wchar_t const * const aTitle, /* NULL or L"" */
+	wchar_t const * const aDefaultPathAndFile, /* NULL or L"" */
 	int const aNumOfFilterPatterns, /* 0 */
-	wchar_t const * const * const aFilterPatterns, /* NULL or {"*.jpg","*.png"} */
-	wchar_t const * const aSingleFilterDescription); /* NULL or "image files" */
+	wchar_t const * const * const aFilterPatterns, /* NULL or {L"*.jpg",L"*.png"} */
+	wchar_t const * const aSingleFilterDescription); /* NULL or L"image files" */
 		/* returns NULL on cancel */
 
 /* windows only - utf-16 version */
 wchar_t const * tinyfd_openFileDialogW(
-	wchar_t const * const aTitle, /* "" */
-	wchar_t const * const aDefaultPathAndFile, /* "" */
+	wchar_t const * const aTitle, /* L"" */
+	wchar_t const * const aDefaultPathAndFile, /* L"" */
 	int const aNumOfFilterPatterns , /* 0 */
-	wchar_t const * const * const aFilterPatterns, /* NULL {"*.jpg","*.png"} */
-	wchar_t const * const aSingleFilterDescription, /* NULL | "image files" */
+	wchar_t const * const * const aFilterPatterns, /* NULL {L"*.jpg",L"*.png"} */
+	wchar_t const * const aSingleFilterDescription, /* NULL or L"image files" */
 	int const aAllowMultipleSelects ) ; /* 0 or 1 */
 		/* in case of multiple files, the separator is | */
 		/* returns NULL on cancel */
 
 /* windows only - utf-16 version */
-	wchar_t const * tinyfd_selectFolderDialogW(
-	wchar_t const * const aTitle, /* "" */
-	wchar_t const * const aDefaultPath); /* "" */
+wchar_t const * tinyfd_selectFolderDialogW(
+	wchar_t const * const aTitle, /* L"" */
+	wchar_t const * const aDefaultPath); /* L"" */
 		/* returns NULL on cancel */
 
 /* windows only - utf-16 version */
 wchar_t const * tinyfd_colorChooserW(
-	wchar_t const * const aTitle, /* "" */
-	wchar_t const * const aDefaultHexRGB, /* NULL or "#FF0000" */
+	wchar_t const * const aTitle, /* L"" */
+	wchar_t const * const aDefaultHexRGB, /* NULL or L"#FF0000" */
 	unsigned char const aDefaultRGB[3] , /* { 0 , 255 , 255 } */
 	unsigned char aoResultRGB[3] ) ; /* { 0 , 0 , 0 } */
-		/* returns the hexcolor as a string "#FF0000" */
+		/* returns the hexcolor as a string L"#FF0000" */
 		/* aoResultRGB also contains the result */
 		/* aDefaultRGB is used only if aDefaultHexRGB is NULL */
 		/* aDefaultRGB and aoResultRGB can be the same array */

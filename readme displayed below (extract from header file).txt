@@ -1,6 +1,6 @@
  _________
 /         \   tiny file dialogs ( cross-platform C C++ )
-|tiny file|   v2.9.4 [Sep 7, 2017] zlib licence
+|tiny file|   v3.0.0 [Sep 9, 2017] zlib licence
 | dialogs |   InputBox PasswordBox MessageBox ColorPicker
 \____  ___/   OpenFileDialog SaveFileDialog SelectFolderDialog		
      \|       ASCII UTF-8 (and also MBCS UTF-16 for windows)
@@ -14,17 +14,22 @@ using
     Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment
     WindowMaker IceWm Cde Jds OpenBox Awesome Jwm
 
-bindings for LUA and C# dll
-included in LWJGL(java), rust, Allegrobasic
+bindings for LUA and C# dll ; included in LWJGL(java), rust, Allegrobasic
 
-                   http://tinyfiledialogs.sourceforge.net
-                git://git.code.sf.net/p/tinyfiledialogs/code
+                 http://tinyfiledialogs.sourceforge.net
+              git://git.code.sf.net/p/tinyfiledialogs/code
  _________________________________________________________________________
 |                                                                         |
 | CONTACT me directly via the email address at the top of the header file |
 |_________________________________________________________________________|
-
-if you absolutely want them, the windows only wchar_t prototypes are in the header file
+    ___________________________________________________________________
+   |                                                                   |
+   | the windows only wchar_t UTF-16 prototypes are in the header file |
+   |___________________________________________________________________|
+        _____________________________________
+       |                                     |
+       | version 3 has the same good old API |
+       |_____________________________________|
 
 int tinyfd_messageBox (
     char const * const aTitle , // ""

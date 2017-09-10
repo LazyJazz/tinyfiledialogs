@@ -450,6 +450,8 @@ static void wipefile(char const * const aFilename)
 }
 
 
+#ifdef _WIN32
+
 static void wipefileW(wchar_t const * const aFilename)
 {
 	int i;
@@ -469,8 +471,6 @@ static void wipefileW(wchar_t const * const aFilename)
 	}
 }
 
-
-#ifdef _WIN32
 
 static int replaceChr ( char * const aString ,
 						char const aOldChr ,

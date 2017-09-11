@@ -25,11 +25,12 @@ bindings for LUA and C# dll ; included in LWJGL(java), rust, Allegrobasic
     ___________________________________________________________________
    |                                                                   |
    | the windows only wchar_t UTF-16 prototypes are in the header file |
+   |                  NOW ALSO FOR THE INPUT BOX                       |
    |___________________________________________________________________|
-        _____________________________________
-       |                                     |
-       | version 3 has the same good old API |
-       |_____________________________________|
+                   _____________________________________
+                  |                                     |
+                  | version 3 has the same good old API |
+                  |_____________________________________|
 
 int tinyfd_messageBox (
     char const * const aTitle , // ""

@@ -90,6 +90,7 @@ char const * tinyfd_colorChooser(
 - If no filter description is provided,
   the list of patterns will become the description.
 - char const * filterPatterns[3] = { "*.obj" , "*.stl" , "*.dxf" } ;
+- On windows char defaults to MBCS, set tinyfd_winUtf8=1 to use UTF-8
 - On windows link against Comdlg32.lib and Ole32.lib
   (on windows the no linking claim is a lie)
   This linking is not compulsary for console mode (see header file).

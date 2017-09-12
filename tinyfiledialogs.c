@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.0.1 [Sep 10, 2017] zlib licence
+ /         \ tinyfiledialogs.c v3.0.2 [Sep 12, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -123,7 +123,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "3.0.1";
+char tinyfd_version [8] = "3.0.2";
 
 static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
@@ -930,7 +930,7 @@ static int messageBoxWinGui8(
 }
 
 
-static wchar_t const * tinyfd_inputBoxW(
+wchar_t const * tinyfd_inputBoxW(
 	wchar_t const * const aTitle, /* NULL or L"" */
 	wchar_t const * const aMessage, /* NULL or L"" may NOT contain \n nor \t */
 	wchar_t const * const aDefaultInput) /* L"" , if NULL it's a passwordBox */

@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.h v3.0.1 [Sep 10, 2017] zlib licence
+ /         \ tinyfiledialogs.h v3.0.2 [Sep 12, 2017] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -197,7 +197,7 @@ int tinyfd_messageBoxW(
 		/* returns 0 for cancel/no , 1 for ok/yes */
 
 /* windows only - utf-16 version */
-static wchar_t const * tinyfd_inputBoxW(
+wchar_t const * tinyfd_inputBoxW(
 	wchar_t const * const aTitle, /* NULL or L"" */
 	wchar_t const * const aMessage, /* NULL or L"" may NOT contain \n nor \t */
 	wchar_t const * const aDefaultInput ); /* L"" , if NULL it's a passwordBox */

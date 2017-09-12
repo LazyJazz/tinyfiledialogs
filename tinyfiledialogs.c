@@ -452,26 +452,6 @@ static void wipefile(char const * const aFilename)
 
 #ifdef _WIN32
 
-static void wipefileW(wchar_t const * const aFilename)
-{
-	int i;
-	struct _stat st;
-	FILE * lIn;
-
-	if (_wstat(aFilename, &st) == 0)
-	{
-		if ((lIn = _wfopen(aFilename, L"w")))
-		{
-			for (i = 0; i < st.st_size; i++)
-			{
-				fputc('A', lIn);
-			}
-		}
-		fclose(lIn);
-	}
-}
-
-
 static int replaceChr ( char * const aString ,
 						char const aOldChr ,
 						char const aNewChr )
@@ -514,6 +494,26 @@ static int dirExists ( char const * const aDirPath )
 }
 
 #ifndef TINYFD_NOLIB
+
+static void wipefileW(wchar_t const * const aFilename)
+{
+	int i;
+	struct _stat st;
+	FILE * lIn;
+
+	if (_wstat(aFilename, &st) == 0)
+	{
+		if ((lIn = _wfopen(aFilename, L"w")))
+		{
+			for (i = 0; i < st.st_size; i++)
+			{
+				fputc('A', lIn);
+			}
+		}
+		fclose(lIn);
+	}
+}
+
 
 static wchar_t * getPathWithoutFinalSlashW(
 	wchar_t * const aoDestination, /* make sure it is allocated, use _MAX_PATH */

@@ -943,6 +943,8 @@ wchar_t const * tinyfd_inputBoxW(
 	int lMessageLen;
 	int lDialogStringLen;
 
+	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windowsW"); return (wchar_t const *)1; }
+
 	lTitleLen =  aTitle ? wcslen(aTitle) : 0 ;
 	lMessageLen =  aMessage ? wcslen(aMessage) : 0 ;
 	lDialogStringLen = 3 * MAX_PATH_OR_CMD + lTitleLen + lMessageLen;

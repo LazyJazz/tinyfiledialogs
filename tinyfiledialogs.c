@@ -846,6 +846,8 @@ int tinyfd_messageBoxW(
 	int lBoxReturnValue;
 	UINT aCode;
 
+	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windowsW"); return 1; }
+
 	if (aIconType && !wcscmp(L"warning", aIconType))
 	{
 		aCode = MB_ICONWARNING;
@@ -1279,6 +1281,8 @@ wchar_t const * tinyfd_saveFileDialogW(
 	HRESULT lHResult;
 	OPENFILENAMEW ofn = {0};
 
+	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windowsW"); return (wchar_t const *)1; }
+
 	lHResult = CoInitializeEx(NULL, 0);
 
 	getPathWithoutFinalSlashW(lDirname, aDefaultPathAndFile);
@@ -1427,6 +1431,8 @@ wchar_t const * tinyfd_openFileDialogW(
 	size_t lBuffLen;
 	HRESULT lHResult;
 	OPENFILENAMEW ofn = { 0 };
+
+	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windowsW"); return (wchar_t const *)1; }
 
 	lHResult = CoInitializeEx(NULL, 0);
 
@@ -1621,6 +1627,8 @@ wchar_t const * tinyfd_selectFolderDialogW(
 	LPITEMIDLIST lpItem;
 	HRESULT lHResult;
 
+	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windowsW"); return (wchar_t const *)1; }
+
 	lHResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 
 	bInfo.hwndOwner = 0;
@@ -1695,6 +1703,9 @@ wchar_t const * tinyfd_colorChooserW(
 	int lRet;
 
 	HRESULT lHResult;
+
+	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windowsW"); return (wchar_t const *)1; }
+
 	lHResult = CoInitializeEx(NULL, 0);
 
 	if (aDefaultHexRGB)

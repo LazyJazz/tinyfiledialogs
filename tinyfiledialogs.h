@@ -9,10 +9,10 @@
         |                                         |
         |   email: tinyfiledialogs@ysengrin.com   |
         |_________________________________________|
-     ___________________________________________________________________
-    |                                                                   |
-    | the windows only wchar_t UTF-16 prototypes are in the header file |
-    |___________________________________________________________________|
+     ________________________________________________________________________
+    |                                                                        |
+    | the windows only wchar_t UTF-16 prototypes are at the end of this file |
+    |________________________________________________________________________|
 
 A big thank you to Don Heyse http://ldglite.sf.net for
                    his code contributions, bug corrections & thorough testing!
@@ -273,6 +273,7 @@ char const * tinyfd_arrayDialog(
 - If no filter description is provided,
   the list of patterns will become the description.
 - char const * filterPatterns[3] = { "*.obj" , "*.stl" , "*.dxf" } ;
+- On windows char defaults to MBCS, set tinyfd_winUtf8=1 to use UTF-8
 - On windows link against Comdlg32.lib and Ole32.lib
   This linking is not compulsary for console mode (see above).
 - On unix: it tries command line calls, so no such need.
@@ -290,6 +291,7 @@ char const * tinyfd_arrayDialog(
   make sure it ends with a separator.
 - tinyfd_forceConsole=1; at run time, forces dialogs into console mode.
 - On windows, console mode only make sense for console applications.
+- On windows, Console mode is not implemented for wchar_T UTF-16.
 - Mutiple selects are not allowed in console mode.
 - The package dialog must be installed to run in enhanced console mode.
   It is already installed on most unix systems.

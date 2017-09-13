@@ -138,8 +138,8 @@ int main(void)
 	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )
 	{
 		lIntValue = tinyfd_messageBoxW(L"Hello World",
-			L"Console mode is not implemented yet for wchar_T UTF-16",
-			L"ok", L"warning", 1);
+			L"Console mode is not implemented for wchar_T UTF-16",
+			L"ok", L"info", 1);
 		tinyfd_forceConsole = ! lIntValue ;		
 	}
 

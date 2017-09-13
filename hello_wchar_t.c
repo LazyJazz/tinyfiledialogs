@@ -127,10 +127,10 @@ int main(void)
 		wcscpy(lBuffer, L"console mode: ");
 	}
 
-	mbstowcs(lWcharBuff, tinyfd_response, -1 );
+	mbstowcs(lWcharBuff, tinyfd_response, strlen(tinyfd_response)+1);
 	wcscat(lBuffer, lWcharBuff);
 	wcscpy(lThePassword, L"tinyfiledialogs v");
-	mbstowcs(lWcharBuff, tinyfd_version, -1 );
+	mbstowcs(lWcharBuff, tinyfd_version, strlen(tinyfd_version) + 1);
 	wcscat(lThePassword, lWcharBuff);
 	tinyfd_messageBoxW(lThePassword, lBuffer, L"ok", L"info", 0);
 
@@ -268,15 +268,8 @@ int main(void)
 }
 
 /*
-OSX :
-$ gcc -o hello.app hello.c tinyfiledialogs.c
-
-UNIX :
-$ gcc -o hello hello.c tinyfiledialogs.c
-( or clang tcc cc CC )
-
 MinGW (needs gcc >= v4.9 otherwise some headers are incomplete):
-> gcc -o hello.exe hello.c tinyfiledialogs.c -LC:/mingw/lib -lcomdlg32 -lole32
+> gcc -o hello.exe hello_wchar_t.c tinyfiledialogs.c -LC:/mingw/lib -lcomdlg32 -lole32
 (unfortunately some headers are missing with tcc)
 
 VisualStudio :

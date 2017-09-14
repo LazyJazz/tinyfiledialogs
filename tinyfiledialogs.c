@@ -3501,42 +3501,12 @@ static int osx9orBetter( )
 }
 
 
-static int zenity232Present( )
-{
-	static int lZenity232Present = -1 ;
-	char lBuff [MAX_PATH_OR_CMD] ;
-	FILE * lIn ;
-
-	if ( lZenity232Present < 0 )
-	{
-		lZenity232Present = 0 ;
-		if ( zenityPresent() )
-		{
-			lIn = popen( "zenity --version" , "r" ) ;
-			if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
-			{
-				if ( atoi(lBuff) >= 3 )
-				{
-					lZenity232Present = 3 ;
-				}
-				else if ( ( atoi(lBuff) == 2 ) && ( atoi(strtok(lBuff,".")+2 ) >= 32 ) )
-				{
-					lZenity3Present = 2 ;
-				}
-			}
-			pclose( lIn ) ;
-		}
-	}
-	return lZenity3Present && graphicMode( ) ;
-}
-
-
 static int zenity3Present( )
 {
 	static int lZenity3Present = -1 ;
 	char lBuff [MAX_PATH_OR_CMD] ;
 	FILE * lIn ;
-	
+
 	if ( lZenity3Present < 0 )
 	{
 		lZenity3Present = 0 ;
@@ -3548,6 +3518,10 @@ static int zenity3Present( )
 				if ( atoi(lBuff) >= 3 )
 				{
 					lZenity3Present = 3 ;
+				}
+				else if ( ( atoi(lBuff) == 2 ) && ( atoi(strtok(lBuff,".")+2 ) >= 32 ) )
+				{
+					lZenity3Present = 2 ;
 				}
 			}
 			pclose( lIn ) ;
@@ -3713,7 +3687,10 @@ int tinyfd_messageBox(
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
 			strcpy( lDialogString , "szAnswer=$(zenity" ) ;
-			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+			if ( zenity3Present ( ) >= 3 )
+			{
+				strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+			}
 		}
 		else if ( matedialogPresent() )
 		{
@@ -4435,7 +4412,10 @@ char const * tinyfd_inputBox(
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
 			strcpy( lDialogString , "szAnswer=$(zenity" ) ;
-			strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+			if ( zenity3Present ( ) >= 3 )
+			{
+				strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+			}
 		}
 		else if ( matedialogPresent() )
 		{
@@ -4917,7 +4897,10 @@ char const * tinyfd_saveFileDialog(
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
 			strcpy( lDialogString , "zenity" ) ;
-			strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+			if ( zenity3Present ( ) >= 3 )
+			{
+				strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+			}
 		}
 		else if ( matedialogPresent() )
 		{
@@ -5274,7 +5257,10 @@ char const * tinyfd_openFileDialog(
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
 			strcpy( lDialogString , "zenity" ) ;
-			strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+			if ( zenity3Present ( ) >= 3 )
+			{
+				strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+			}
 		}
 		else if ( matedialogPresent() )
 		{
@@ -5606,7 +5592,10 @@ char const * tinyfd_selectFolderDialog(
 		{
 	 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
 			strcpy( lDialogString , "zenity" ) ;
-			strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+			if ( zenity3Present ( ) >= 3 )
+			{
+				strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+			}
 		}
 		else if ( matedialogPresent() )
 		{
@@ -5875,7 +5864,10 @@ to set mycolor to choose color default color {");
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity3");return (char const *)1;}
 			strcpy( lDialogString , "zenity" );
-			strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+			if ( zenity3Present ( ) >= 3 )
+			{
+				strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+			}
 		}
 		else if ( matedialogPresent() )
 		{
@@ -6055,7 +6047,10 @@ char const * tinyfd_arrayDialog(
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
 		strcpy( lDialogString , "zenity" ) ;
-		strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+		if ( zenity3Present ( ) >= 3 )
+		{
+			strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+		}
 		strcat( lDialogString , " --list --print-column=ALL" ) ;
 
 		if ( aTitle && strlen(aTitle) )

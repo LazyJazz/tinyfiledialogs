@@ -5861,7 +5861,7 @@ to set mycolor to choose color default color {");
 			strcpy ( lDialogString , "qarma" ) ;
 			strcat ( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); 
 		}
-		strcat ( lDialogString , --color-selection --show-palette ) ;
+		strcat ( lDialogString , " --color-selection --show-palette" ) ;
 		sprintf ( lDialogString + strlen(lDialogString), " --color=%s" , lpDefaultHexRGB ) ;
 
 		if ( aTitle && strlen(aTitle) ) 

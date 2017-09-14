@@ -3701,7 +3701,7 @@ int tinyfd_messageBox(
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return 1;}
 			strcpy( lDialogString , "szAnswer=$(qarma" ) ;
-			strcat(lDialogString, "-- attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 		}
 		strcat(lDialogString, " --"); 
 

@@ -3686,20 +3686,21 @@ int tinyfd_messageBox (
 		if ( zenityPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
-			strcpy ( lDialogString , "szAnswer=$(zenity --" ) ;
-			strcat(lDialogString, " attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2) --"); 
+			strcpy ( lDialogString , "szAnswer=$(zenity" ) ;
+			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); 
 		}
 		else if ( matedialogPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return 1;}
-			strcpy ( lDialogString , "szAnswer=$(matedialog --" ) ;
+			strcpy ( lDialogString , "szAnswer=$(matedialog" ) ;
 		}
 		else
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return 1;}
-			strcpy ( lDialogString , "szAnswer=$(qarma --" ) ;
-			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2) --"); 
+			strcpy ( lDialogString , "szAnswer=$(qarma" ) ;
+			strcat(lDialogString, "-- attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); 
 		}
+		strcat(lDialogString, " --"); 
 
 		if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
 		{

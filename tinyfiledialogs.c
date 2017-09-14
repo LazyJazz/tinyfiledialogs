@@ -3687,6 +3687,7 @@ int tinyfd_messageBox (
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
 			strcpy ( lDialogString , "szAnswer=$(zenity --" ) ;
+			strcat(lDialogString, " attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2) --"); 
 		}
 		else if ( matedialogPresent() )
 		{
@@ -3697,6 +3698,7 @@ int tinyfd_messageBox (
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return 1;}
 			strcpy ( lDialogString , "szAnswer=$(qarma --" ) ;
+			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2) --"); 
 		}
 
 		if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
@@ -4405,19 +4407,21 @@ char const * tinyfd_inputBox(
 		if ( zenityPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
-			strcpy ( lDialogString ,
-"szAnswer=$(zenity --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2) --entry" ) ;
+			strcpy ( lDialogString , "szAnswer=$(zenity" ) ;
+			strcat ( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); 
 		}
 		else if ( matedialogPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char const *)1;}
-			strcpy ( lDialogString ,  "szAnswer=$(matedialog --entry" ) ;
+			strcpy ( lDialogString ,  "szAnswer=$(matedialog" ) ;
 		}
 		else
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
-			strcpy ( lDialogString ,  "szAnswer=$(qarma --entry" ) ;
+			strcpy ( lDialogString ,  "szAnswer=$(qarma" ) ;
+			strcat ( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); 
 		}
+		strcat ( lDialogString ," --entry" ) ;
 
 		if ( aTitle && strlen(aTitle) )
 		{
@@ -4885,19 +4889,19 @@ char const * tinyfd_saveFileDialog (
 		if ( zenityPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
-      strcpy ( lDialogString , "zenity" ) ;
+			strcpy ( lDialogString , "zenity" ) ;
+			strcat ( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)");
 		}
 		else if ( matedialogPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char const *)1;}
 			strcpy ( lDialogString , "matedialog" ) ;
-
 		}
 		else
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
 			strcpy ( lDialogString , "qarma" ) ;
-
+			strcat ( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); 
 		}
 		strcat(lDialogString, " --file-selection --save --confirm-overwrite" ) ;
 
@@ -5242,18 +5246,21 @@ char const * tinyfd_openFileDialog (
 		if ( zenityPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
-      strcpy ( lDialogString , "zenity --file-selection" ) ;
+			strcpy ( lDialogString , "zenity" ) ;
+			strcat ( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); 
 		}
 		else if ( matedialogPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char const *)1;}
-			strcpy ( lDialogString , "matedialog --file-selection" ) ;
+			strcpy ( lDialogString , "matedialog" ) ;
 		}
 		else
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
-			strcpy ( lDialogString , "qarma --file-selection" ) ;
+			strcpy ( lDialogString , "qarma" ) ;
+			strcat ( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); 
 		}
+		strcat ( lDialogString , " --file-selection" ) ;
 
 		if ( aAllowMultipleSelects )
 		{
@@ -5571,18 +5578,21 @@ char const * tinyfd_selectFolderDialog (
 		if ( zenityPresent() )
 		{
 	 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
-			strcpy ( lDialogString , "zenity --file-selection --directory" ) ;
+			strcpy ( lDialogString , "zenity" ) ;
+			strcat ( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); 
 		}
 		else if ( matedialogPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char const *)1;}
-			strcpy ( lDialogString , "matedialog --file-selection --directory" ) ;
+			strcpy ( lDialogString , "matedialog" ) ;
 		}
 		else
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
-			strcpy ( lDialogString , "qarma --file-selection --directory" ) ;
+			strcpy ( lDialogString , "qarma" ) ;
+			strcat ( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); 
 		}
+		strcat ( lDialogString , " --file-selection --directory" ) ;
 
 		if ( aTitle && strlen(aTitle) ) 
 		{
@@ -5837,21 +5847,22 @@ to set mycolor to choose color default color {");
 		if ( zenity3Present() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity3");return (char const *)1;}
-			sprintf ( lDialogString ,
-"zenity --color-selection --show-palette --color=%s" , lpDefaultHexRGB ) ;
+			strcpy ( lDialogString , "zenity" );
+			strcat ( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); 
 		}
 		else if ( matedialogPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char const *)1;}
-			sprintf ( lDialogString ,
-"matedialog --color-selection --show-palette --color=%s" , lpDefaultHexRGB ) ;
+			strcpy ( lDialogString , "matedialog" ) ;
 		}
 		else
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
-			sprintf ( lDialogString ,
-"qarma --color-selection --show-palette --color=%s" , lpDefaultHexRGB ) ;
+			strcpy ( lDialogString , "qarma" ) ;
+			strcat ( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); 
 		}
+		strcat ( lDialogString , --color-selection --show-palette ) ;
+		sprintf ( lDialogString + strlen(lDialogString), " --color=%s" , lpDefaultHexRGB ) ;
 
 		if ( aTitle && strlen(aTitle) ) 
 		{
@@ -6016,7 +6027,10 @@ char const * tinyfd_arrayDialog (
 	if ( zenityPresent() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
-		strcpy ( lDialogString , "zenity --list --print-column=ALL" ) ;
+		strcpy ( lDialogString , "zenity" ) ;
+		strcat ( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); 
+		strcat ( lDialogString , " --list --print-column=ALL" ) ;
+
 		if ( aTitle && strlen(aTitle) )
 		{
 			strcat(lDialogString, " --title=\"") ;

@@ -6043,7 +6043,7 @@ char const * tinyfd_arrayDialog(
 	lBuff[0]='\0';
 	int i ;
 
-	else if ( zenityPresent() || matedialogPresent() || qarmaPresent() )
+	if ( zenityPresent() || matedialogPresent() || qarmaPresent() )
 	{
 		if ( zenityPresent() )
 		{

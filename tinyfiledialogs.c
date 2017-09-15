@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.0.3 [Sep 14, 2017] zlib licence
+ /         \ tinyfiledialogs.c v3.0.4 [Sep 15, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -123,7 +123,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "3.0.3";
+char tinyfd_version [8] = "3.0.4";
 
 static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
@@ -3501,7 +3501,7 @@ static int osx9orBetter( )
 }
 
 
-static int zenity3Present( )
+static int zenity3Present()
 {
 	static int lZenity3Present = -1 ;
 	char lBuff [MAX_PATH_OR_CMD] ;
@@ -3527,7 +3527,8 @@ static int zenity3Present( )
 			pclose( lIn ) ;
 		}
 	}
-	return lZenity3Present && graphicMode( ) ;
+
+	return graphicMode() ? lZenity3Present : 0 ;
 }
 
 
@@ -3687,7 +3688,7 @@ int tinyfd_messageBox(
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
 			strcpy( lDialogString , "szAnswer=$(zenity" ) ;
-			if ( zenity3Present ( ) >= 3 )
+			if ( zenity3Present() >= 3 )
 			{
 				strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 			}
@@ -3742,7 +3743,7 @@ int tinyfd_messageBox(
 			strcat(lDialogString, aMessage) ;
 			strcat(lDialogString, "\"") ;
 		}
-		if ( zenity3Present ( ) >= 3 )
+		if ( zenity3Present() >= 3 )
 		{
 			strcat( lDialogString , " --icon-name=dialog-" ) ;
 			if ( aIconType && (! strcmp( "question" , aIconType )
@@ -4412,7 +4413,7 @@ char const * tinyfd_inputBox(
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
 			strcpy( lDialogString , "szAnswer=$(zenity" ) ;
-			if ( zenity3Present ( ) >= 3 )
+			if ( zenity3Present() >= 3 )
 			{
 				strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 			}
@@ -4897,7 +4898,7 @@ char const * tinyfd_saveFileDialog(
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
 			strcpy( lDialogString , "zenity" ) ;
-			if ( zenity3Present ( ) >= 3 )
+			if ( zenity3Present() >= 3 )
 			{
 				strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 			}
@@ -5257,7 +5258,7 @@ char const * tinyfd_openFileDialog(
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
 			strcpy( lDialogString , "zenity" ) ;
-			if ( zenity3Present ( ) >= 3 )
+			if ( zenity3Present() >= 3 )
 			{
 				strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 			}
@@ -5592,7 +5593,7 @@ char const * tinyfd_selectFolderDialog(
 		{
 	 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
 			strcpy( lDialogString , "zenity" ) ;
-			if ( zenity3Present ( ) >= 3 )
+			if ( zenity3Present() >= 3 )
 			{
 				strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 			}
@@ -5864,7 +5865,7 @@ to set mycolor to choose color default color {");
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity3");return (char const *)1;}
 			strcpy( lDialogString , "zenity" );
-			if ( zenity3Present ( ) >= 3 )
+			if ( zenity3Present() >= 3 )
 			{
 				strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 			}
@@ -5893,8 +5894,7 @@ to set mycolor to choose color default color {");
 	else if ( kdialogPresent() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return (char const *)1;}
-		sprintf( lDialogString ,
-"kdialog --getcolor --default '%s'" , lpDefaultHexRGB ) ;
+		sprintf( lDialogString , "kdialog --getcolor --default '%s'" , lpDefaultHexRGB ) ;
 		if ( aTitle && strlen(aTitle) )
 		{
 			strcat(lDialogString, " --title \"") ;
@@ -6043,12 +6043,26 @@ char const * tinyfd_arrayDialog(
 	lBuff[0]='\0';
 	int i ;
 
-	if ( zenityPresent() )
+	else if ( zenityPresent() || matedialogPresent() || qarmaPresent() )
 	{
-		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
-		strcpy( lDialogString , "zenity" ) ;
-		if ( zenity3Present ( ) >= 3 )
+		if ( zenityPresent() )
 		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
+			strcpy( lDialogString , "zenity" ) ;
+			if ( zenity3Present() >= 3 )
+			{
+				strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+			}
+		}
+		else if ( matedialogPresent() )
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char const *)1;}
+			strcpy( lDialogString , "matedialog" ) ;
+		}
+		else
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
+			strcpy( lDialogString , "qarma" ) ;
 			strcat( lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 		}
 		strcat( lDialogString , " --list --print-column=ALL" ) ;

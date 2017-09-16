@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.0.4 [Sep 15, 2017] zlib licence
+ /         \ tinyfiledialogs.c v3.0.5 [Sep 16, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -123,7 +123,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "3.0.4";
+char tinyfd_version [8] = "3.0.5";
 
 static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
@@ -3436,8 +3436,20 @@ static int kdialogPresent( )
 	if ( lKdialogPresent < 0 )
 	{
 		lKdialogPresent = detectPresence("kdialog") ;
+		if ( lKdialogPresent )
+		{
+			lIn = popen( "kdialog --attach" , "r" ) ;
+			if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
+			{
+				if ( ! strstr( "Unknown" , lBuff ) )
+				{
+					lKdialogPresent = 2 ;
+				}
+			}
+			pclose( lIn ) ;
+		}
 	}
-	return lKdialogPresent && graphicMode( ) ;
+	return graphicMode() ? lKdialogPresent : 0 ;
 }
 
 
@@ -3772,7 +3784,13 @@ int tinyfd_messageBox(
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return 1;}
 
-		strcpy( lDialogString , "kdialog --" ) ;
+		strcpy( lDialogString , "kdialog" ) ;
+		if ( kdialogPresent() == 2 )
+		{
+			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+		}
+
+		strcat( lDialogString , " --" ) ;
 		if ( aDialogType && ( ! strcmp( "okcancel" , aDialogType )
 		  || ! strcmp( "yesno" , aDialogType ) || ! strcmp( "yesnocancel" , aDialogType ) ) )
 		{
@@ -4460,6 +4478,12 @@ char const * tinyfd_inputBox(
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return (char const *)1;}
 		strcpy( lDialogString , "szAnswer=$(kdialog" ) ;
+
+		if ( kdialogPresent() == 2 )
+		{
+			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+		}
+
 		if ( ! aDefaultInput )
 		{
 			strcat(lDialogString, " --password ") ;
@@ -4947,9 +4971,16 @@ char const * tinyfd_saveFileDialog(
   else if ( kdialogPresent() )
   {
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return (char const *)1;}
-		strcpy ( lDialogString , "kdialog --getsavefilename" ) ;
-    if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
-    {
+
+		strcpy( lDialogString , "kdialog" ) ;
+		if ( kdialogPresent() == 2 )
+		{
+			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+		}
+		strcat( lDialogString , " --getsavefilename" ) ;
+
+		if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
+		{
 			strcat(lDialogString, " \"") ;
 			strcat(lDialogString, aDefaultPathAndFile ) ;
 			strcat(lDialogString , "\"" ) ;
@@ -5312,7 +5343,14 @@ char const * tinyfd_openFileDialog(
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return (char const *)1;}
 		lWasKdialog = 1 ;
-		strcpy( lDialogString , "kdialog --getopenfilename" ) ;
+
+		strcpy( lDialogString , "kdialog" ) ;
+		if ( kdialogPresent() == 2 )
+		{
+			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+		}
+		strcat( lDialogString , " --getopenfilename" ) ;
+
 		if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
 		{
 			strcat(lDialogString, " \"") ;
@@ -5627,7 +5665,13 @@ char const * tinyfd_selectFolderDialog(
 	else if ( kdialogPresent() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return (char const *)1;}
-		strcpy( lDialogString , "kdialog --getexistingdirectory" ) ;
+		strcpy( lDialogString , "kdialog" ) ;
+		if ( kdialogPresent() == 2 )
+		{
+			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+		}
+		strcat( lDialogString , " --getexistingdirectory" ) ;
+
 		if ( aDefaultPath && strlen(aDefaultPath) )
 		{
 			strcat(lDialogString, " \"") ;
@@ -5894,7 +5938,13 @@ to set mycolor to choose color default color {");
 	else if ( kdialogPresent() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return (char const *)1;}
-		sprintf( lDialogString , "kdialog --getcolor --default '%s'" , lpDefaultHexRGB ) ;
+		strcpy( lDialogString , "kdialog" ) ;
+		if ( kdialogPresent() == 2 )
+		{
+			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+		}
+		sprintf( lDialogString + strlen(lDialogString) , " --getcolor --default '%s'" , lpDefaultHexRGB ) ;
+
 		if ( aTitle && strlen(aTitle) )
 		{
 			strcat(lDialogString, " --title \"") ;

@@ -125,7 +125,7 @@ misrepresented as being the original software.
 
 char tinyfd_version [8] = "3.0.5";
 
-static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
+static int tinyfd_verbose = 1 ; /* print on unix the command line calls */
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -3441,7 +3441,7 @@ static int kdialogPresent( )
 		lKdialogPresent = detectPresence("kdialog") ;
 		if ( lKdialogPresent )
 		{
-			lIn = popen( "kdialog --attach" , "r" ) ;
+			lIn = popen( "kdialog --attach 2>/dev/null" , "r" ) ;
 			if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
 			{
 				if ( ! strstr( "Unknown" , lBuff ) )
@@ -3500,7 +3500,7 @@ static int zenity3Present()
 		lZenity3Present = 0 ;
 		if ( zenityPresent() )
 		{
-			lIn = popen( "zenity --version" , "r" ) ;
+			lIn = popen( "zenity --version 2>/dev/null" , "r" ) ;
 			if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
 			{
 				if ( atoi(lBuff) >= 3 )

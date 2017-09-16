@@ -3433,6 +3433,9 @@ static int osascriptPresent( )
 static int kdialogPresent( )
 {
 	static int lKdialogPresent = -1 ;
+	char lBuff [MAX_PATH_OR_CMD] ;
+	FILE * lIn ;
+
 	if ( lKdialogPresent < 0 )
 	{
 		lKdialogPresent = detectPresence("kdialog") ;
@@ -3486,33 +3489,6 @@ static int zenityPresent( )
 }
 
 
-static int osx9orBetter( )
-{
-	static int lOsx9orBetter = -1 ;
-	char lBuff [MAX_PATH_OR_CMD] ;
-	FILE * lIn ;
-	int V,v;
-
-	if ( lOsx9orBetter < 0 )
-	{
-		lOsx9orBetter = 0 ;
-		lIn = popen( "osascript -e 'set osver to system version of (system info)'" , "r" ) ;
-		if ( ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
-			&& ( 2 == sscanf(lBuff, "%d.%d", &V, &v) ) )
-		{
-			V = V * 100 + v;
-			if ( V >= 1009 )
-			{
-				lOsx9orBetter = 1 ;
-			}
-		}
-		pclose( lIn ) ;
-		/* printf("Osx10 = %d, %d = <%s>\n", lOsx9orBetter, V, lBuff) ; */   
-	}
-	return lOsx9orBetter ;
-}
-
-
 static int zenity3Present()
 {
 	static int lZenity3Present = -1 ;
@@ -3541,6 +3517,33 @@ static int zenity3Present()
 	}
 
 	return graphicMode() ? lZenity3Present : 0 ;
+}
+
+
+static int osx9orBetter( )
+{
+	static int lOsx9orBetter = -1 ;
+	char lBuff [MAX_PATH_OR_CMD] ;
+	FILE * lIn ;
+	int V,v;
+
+	if ( lOsx9orBetter < 0 )
+	{
+		lOsx9orBetter = 0 ;
+		lIn = popen( "osascript -e 'set osver to system version of (system info)'" , "r" ) ;
+		if ( ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
+			&& ( 2 == sscanf(lBuff, "%d.%d", &V, &v) ) )
+		{
+			V = V * 100 + v;
+			if ( V >= 1009 )
+			{
+				lOsx9orBetter = 1 ;
+			}
+		}
+		pclose( lIn ) ;
+		/* printf("Osx10 = %d, %d = <%s>\n", lOsx9orBetter, V, lBuff) ; */   
+	}
+	return lOsx9orBetter ;
 }
 
 

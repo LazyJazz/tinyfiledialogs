@@ -3447,12 +3447,12 @@ static int kdialogPresent( )
 				if ( ! strstr( "Unknown" , lBuff ) )
 				{
 					lKdialogPresent = 2 ;
+					if (tinyfd_verbose) printf("kdialog %d\n", lKdialogPresent);
 				}
 			}
 			pclose( lIn ) ;
 		}
 	}
-	if (tinyfd_verbose) printf("kdialog %d\n", lKdialogPresent);
 	return graphicMode() ? lKdialogPresent : 0 ;
 }
 

@@ -3452,6 +3452,7 @@ static int kdialogPresent( )
 			pclose( lIn ) ;
 		}
 	}
+	if (tinyfd_verbose) printf("kdialog %d\n", lKdialogPresent);
 	return graphicMode() ? lKdialogPresent : 0 ;
 }
 
@@ -3515,7 +3516,7 @@ static int zenity3Present()
 			pclose( lIn ) ;
 		}
 	}
-
+	if (tinyfd_verbose) printf("zenity %d\n", lKdialogPresent);
 	return graphicMode() ? lZenity3Present : 0 ;
 }
 

@@ -3512,11 +3512,11 @@ static int zenity3Present()
 				{
 					lZenity3Present = 2 ;
 				}
+				if (tinyfd_verbose) printf("zenity %d\n", lZenity3Present);
 			}
 			pclose( lIn ) ;
 		}
 	}
-	if (tinyfd_verbose) printf("zenity %d\n", lZenity3Present);
 	return graphicMode() ? lZenity3Present : 0 ;
 }
 

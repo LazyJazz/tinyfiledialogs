@@ -5,10 +5,10 @@
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|
 	         git://git.code.sf.net/p/tinyfiledialogs/code
-         _________________________________________
-	    |                                         |
-	    |   email: tinyfiledialogs@ysengrin.com   |
-	    |_________________________________________|
+         ____________________________________________
+	    |                                            |
+	    |   email: tinyfiledialogs at ysengrin.com   |
+	    |____________________________________________|
      ___________________________________________________________________
     |                                                                   |
     | the windows only wchar_t UTF-16 prototypes are in the header file |

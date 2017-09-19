@@ -903,6 +903,8 @@ int tinyfd_messageBoxW(
 		aCode += MB_OK;
 	}
 
+	aCode += MB_TOPMOST;
+
 	lBoxReturnValue = MessageBoxW(GetForegroundWindow(), aMessage, aTitle, aCode);
 	if (((aDialogType
 		&& wcscmp(L"okcancel", aDialogType)
@@ -1865,6 +1867,8 @@ static int messageBoxWinGuiA(
 	{
 		aCode += MB_OK ;
 	}
+
+	aCode += MB_TOPMOST;
 
 	lBoxReturnValue = MessageBoxA(GetForegroundWindow(), aMessage, aTitle, aCode);
 

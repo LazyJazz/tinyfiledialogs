@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.0.6 [Sep 19, 2017] zlib licence
+ /         \ tinyfiledialogs.c v3.0.7 [Sep 19, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -123,7 +123,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "3.0.6";
+char tinyfd_version [8] = "3.0.7";
 
 static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
@@ -756,7 +756,7 @@ static void runSilentA(char const * const aString)
 	/* application and parameters to run from the command window */
 	strcat(lArgs, aString);
 
-	if (!CreateProcessA(NULL, lArgs, NULL, NULL, FALSE,
+	if (!CreateProcessA(NULL, lArgs, NULL, NULL, TRUE,
 		CREATE_NEW_CONSOLE, NULL, NULL,
 		&StartupInfo, &ProcessInfo))
 	{
@@ -775,8 +775,21 @@ static void runSilentA(char const * const aString)
 	return; /* rc */
 }
 
+static BOOL CALLBACK EnumThreadWndProc(HWND hwnd, LPARAM lParam)
+{ 
+	wchar_t lTitleName[MAX_PATH];
+	GetWindowTextW(hwnd, lTitleName, MAX_PATH);
+	/* wprintf(L"lTitleName %s \n", lTitleName);  */
+	if (wcscmp(L"tinyfiledialogs", lTitleName) == 0)
+	{
+		SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+		return FALSE;
+	}
+	return TRUE;
+}
 
-static void runSilentW(wchar_t const * const aString)
+
+static void runSilentW(wchar_t const * const aString, wchar_t const * const aDialogTitle)
 {
 	STARTUPINFOW StartupInfo;
 	PROCESS_INFORMATION ProcessInfo;
@@ -821,6 +834,10 @@ static void runSilentW(wchar_t const * const aString)
 		free(lArgs);
 		return; /* GetLastError(); */
 	}
+
+	WaitForInputIdle(ProcessInfo.hProcess, INFINITE);
+	while ( EnumWindows(EnumThreadWndProc, (LPARAM)NULL) ) {}
+	SetWindowTextW(GetForegroundWindow(), aDialogTitle);
 
 	WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
 	if (!GetExitCodeProcess(ProcessInfo.hProcess, &rc))
@@ -985,7 +1002,7 @@ wchar_t const * tinyfd_inputBoxW(
 		wcscat(lDialogString, L"\",\"");
 		if (aTitle && wcslen(aTitle))
 		{
-			wcscat(lDialogString, aTitle);
+			wcscat(lDialogString, L"tinyfiledialogs");
 		}
 		wcscat(lDialogString, L"\",\"");
 		if (aDefaultInput && wcslen(aDefaultInput))
@@ -1085,7 +1102,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%%' ><BR>\n\
 </table>\n\
 </body>\n\
 </html>\n\
-"		, aTitle ? aTitle : L"", aMessage ? aMessage : L"") ;
+"		, L"tinyfiledialogs", aMessage ? aMessage : L"") ;
 	}
 	fputws(lDialogString, lIn);
 	fclose(lIn);
@@ -1113,7 +1130,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%%' ><BR>\n\
 
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
 
-	runSilentW(lDialogString);
+	runSilentW(lDialogString, aTitle);
 
 	if (aDefaultInput)
 	{

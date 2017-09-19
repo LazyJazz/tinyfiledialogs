@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.0.5 [Sep 16, 2017] zlib licence
+ /         \ tinyfiledialogs.c v3.0.6 [Sep 19, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -123,7 +123,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "3.0.5";
+char tinyfd_version [8] = "3.0.6";
 
 static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
@@ -886,7 +886,7 @@ int tinyfd_messageBoxW(
 		aCode += MB_OK;
 	}
 
-	lBoxReturnValue = MessageBoxW(NULL, aMessage, aTitle, aCode);
+	lBoxReturnValue = MessageBoxW(GetForegroundWindow(), aMessage, aTitle, aCode);
 	if (((aDialogType
 		&& wcscmp(L"okcancel", aDialogType)
 		&& wcscmp(L"yesno", aDialogType)))
@@ -1317,7 +1317,7 @@ wchar_t const * tinyfd_saveFileDialogW(
 	}
 
 	ofn.lStructSize = sizeof(OPENFILENAMEW);
-	ofn.hwndOwner = 0;
+	ofn.hwndOwner = GetForegroundWindow();
 	ofn.hInstance = 0;
 	ofn.lpstrFilter = lFilterPatterns && wcslen(lFilterPatterns) ? lFilterPatterns : NULL;
 	ofn.lpstrCustomFilter = NULL;
@@ -1468,7 +1468,7 @@ wchar_t const * tinyfd_openFileDialogW(
 	}
 
 	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = 0;
+	ofn.hwndOwner = GetForegroundWindow();
 	ofn.hInstance = 0;
 	ofn.lpstrFilter = lFilterPatterns && wcslen(lFilterPatterns) ? lFilterPatterns : NULL;
 	ofn.lpstrCustomFilter = NULL;
@@ -1631,7 +1631,7 @@ wchar_t const * tinyfd_selectFolderDialogW(
 
 	lHResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 
-	bInfo.hwndOwner = 0;
+	bInfo.hwndOwner = GetForegroundWindow();
 	bInfo.pidlRoot = NULL;
 	bInfo.pszDisplayName = lBuff;
 	bInfo.lpszTitle = aTitle && wcslen(aTitle) ? aTitle : NULL;
@@ -1721,7 +1721,7 @@ wchar_t const * tinyfd_colorChooserW(
 
 	/* we can't use aTitle */
 	cc.lStructSize = sizeof(CHOOSECOLOR);
-	cc.hwndOwner = NULL;
+	cc.hwndOwner = GetForegroundWindow();
 	cc.hInstance = NULL;
 	cc.rgbResult = RGB(lDefaultRGB[0], lDefaultRGB[1], lDefaultRGB[2]);
 	cc.lpCustColors = crCustColors;
@@ -1849,7 +1849,7 @@ static int messageBoxWinGuiA(
 		aCode += MB_OK ;
 	}
 
-	lBoxReturnValue = MessageBoxA(NULL, aMessage, aTitle, aCode);
+	lBoxReturnValue = MessageBoxA(GetForegroundWindow(), aMessage, aTitle, aCode);
 
 	if (((aDialogType && !strcmp("yesnocancel", aDialogType))
 		&& (lBoxReturnValue == IDNO)))
@@ -1924,7 +1924,7 @@ static char const * saveFileDialogWinGuiA(
 	}
     
 	ofn.lStructSize     = sizeof(OPENFILENAME) ;
-	ofn.hwndOwner       = 0 ;
+	ofn.hwndOwner		= GetForegroundWindow();
 	ofn.hInstance       = 0 ;
 	ofn.lpstrFilter		= lFilterPatterns && strlen(lFilterPatterns) ? lFilterPatterns : NULL;
 	ofn.lpstrCustomFilter = NULL ;
@@ -2017,7 +2017,7 @@ static char const * openFileDialogWinGuiA(
 	}
 
 	ofn.lStructSize     = sizeof( OPENFILENAME ) ;
-	ofn.hwndOwner       = 0 ;
+	ofn.hwndOwner		= GetForegroundWindow();
 	ofn.hInstance       = 0 ;
 	ofn.lpstrFilter		= lFilterPatterns && strlen(lFilterPatterns) ? lFilterPatterns : NULL;
 	ofn.lpstrCustomFilter = NULL ;
@@ -2103,7 +2103,7 @@ static char const * selectFolderDialogWinGuiA(
 	lHResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 
 	/* we can't use aDefaultPath */
-	bInfo.hwndOwner = 0 ;
+	bInfo.hwndOwner = GetForegroundWindow();
 	bInfo.pidlRoot = NULL ;
 	bInfo.pszDisplayName = aoBuff ;
 	bInfo.lpszTitle = aTitle && strlen(aTitle) ? aTitle : NULL;
@@ -2156,7 +2156,7 @@ static char const * colorChooserWinGuiA(
 
 	/* we can't use aTitle */
 	cc.lStructSize = sizeof( CHOOSECOLOR ) ;
-	cc.hwndOwner = NULL ;
+	cc.hwndOwner = GetForegroundWindow();
 	cc.hInstance = NULL ;
 	cc.rgbResult = RGB(lDefaultRGB[0], lDefaultRGB[1], lDefaultRGB[2]);
 	cc.lpCustColors = crCustColors;

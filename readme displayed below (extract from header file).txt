@@ -158,8 +158,9 @@ int main()
 	}
 
 	strcat(lBuffer, tinyfd_response);
-	strcpy(lThePassword, "tinyfiledialogs v");
+	strcpy(lThePassword, "v");
 	strcat(lThePassword, tinyfd_version);
+	strcat(lThePassword, " tinyfiledialogs");
 	tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
 
 	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )

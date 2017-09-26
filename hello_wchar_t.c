@@ -9,10 +9,10 @@
 	    |                                            |
 	    |   email: tinyfiledialogs at ysengrin.com   |
 	    |____________________________________________|
-     ___________________________________________________________________
-    |                                                                   |
-    | the windows only wchar_t UTF-16 prototypes are in the header file |
-    |___________________________________________________________________|
+                _______________________________
+               |                               |
+               | this file is for windows only |
+               |_______________________________|
 	  
 Please 1) let me know If you are using it on different hardware / OS / compiler
        2) leave a very short review on Sourceforge. It helps the ranking in google.

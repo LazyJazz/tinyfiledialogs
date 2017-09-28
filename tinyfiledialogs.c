@@ -753,7 +753,7 @@ static int dirExists(char const * const aDirPath)
 }
 
 
-static BOOL CALLBACK EnumThreadWndProc(HWND hwnd, LPARAM lParam)
+static int __stdcall EnumThreadWndProc(HWND hwnd, LPARAM lParam)
 { 
 	wchar_t lTitleName[MAX_PATH];
 	GetWindowTextW(hwnd, lTitleName, MAX_PATH);
@@ -761,9 +761,9 @@ static BOOL CALLBACK EnumThreadWndProc(HWND hwnd, LPARAM lParam)
 	if (wcscmp(L"tinyfiledialogs", lTitleName) == 0)
 	{
 		SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-		return FALSE;
+		return 0;
 	}
-	return TRUE;
+	return 1;
 }
 
 

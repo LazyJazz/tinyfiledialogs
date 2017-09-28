@@ -507,26 +507,11 @@ static int dirExists(char const * const aDirPath)
 	struct stat lInfo;
 
 	if (!aDirPath || !strlen(aDirPath))
-		return 0;
-
-	/*if (tinyfd_winUtf8)
-	{
-		wchar_t * lTmpWChar;
-		int lStatRet;
-		lTmpWChar = utf8to16(aDirPath);
-		lStatRet = _swstat(lTmpWChar, &lInfo);
-		free(lTmpWChar);
-
-		if (lStatRet != 0)
-			return 0;
-		else if (lInfo.st_mode & S_IFDIR)
-			return 1;
-		else
-			return 0;
-	}*/
-	
+		return 0;	
 	if (stat(aDirPath, &lInfo) != 0)
 		return 0;
+	else if ( tinyfd_winUtf8 )
+		return 1; /* we cannot test */
 	else if (lInfo.st_mode & S_IFDIR)
 		return 1;
 	else

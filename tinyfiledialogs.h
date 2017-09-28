@@ -90,7 +90,7 @@ misrepresented as being the original software.
 #ifndef TINYFILEDIALOGS_H
 #define TINYFILEDIALOGS_H
 
-/* #define TINYFD_NOLIB */
+ #define TINYFD_NOLIB
 /* On windows, define TINYFD_NOLIB here
 if you don't want to include the code creating the graphic dialogs.
 Then you won't need to link against Comdlg32.lib and Ole32.lib */

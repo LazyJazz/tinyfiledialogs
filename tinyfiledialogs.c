@@ -479,6 +479,25 @@ static int replaceChr( char * const aString ,
 	return lRes ;
 }
 
+#ifdef TINYFD_NOLIB
+
+static int dirExists(char const * const aDirPath)
+{
+	struct stat lInfo;
+
+	if (!aDirPath || !strlen(aDirPath))
+		return 0;	
+	if (stat(aDirPath, &lInfo) != 0)
+		return 0;
+	else if ( tinyfd_winUtf8 )
+		return 1; /* we cannot test */
+	else if (lInfo.st_mode & S_IFDIR)
+		return 1;
+	else
+		return 0;
+}
+
+#else /* ndef TINYFD_NOLIB */
 
 static void wipefileW(wchar_t const * const aFilename)
 {
@@ -499,26 +518,6 @@ static void wipefileW(wchar_t const * const aFilename)
 	}
 }
 
-
-#ifdef TINYFD_NOLIB
-
-static int dirExists(char const * const aDirPath)
-{
-	struct stat lInfo;
-
-	if (!aDirPath || !strlen(aDirPath))
-		return 0;	
-	if (stat(aDirPath, &lInfo) != 0)
-		return 0;
-	else if ( tinyfd_winUtf8 )
-		return 1; /* we cannot test */
-	else if (lInfo.st_mode & S_IFDIR)
-		return 1;
-	else
-		return 0;
-}
-
-#else /* ndef TINYFD_NOLIB */
 
 static wchar_t * getPathWithoutFinalSlashW(
 	wchar_t * const aoDestination, /* make sure it is allocated, use _MAX_PATH */

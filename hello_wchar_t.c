@@ -1,5 +1,5 @@
 /*_________
- /         \ hello_wchar_t.c v3.0.7 [Sep 19, 2017] zlib licence
+ /         \ hello_wchar_t.c v3.0.8 [Sep 28, 2017] zlib licence
  |tiny file| Hello WCHAR_T file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -81,14 +81,6 @@ appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be
 misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
-
-/*
-- Here is the Hello World:
-    if a console is missing, it will use graphic dialogs
-    if a graphical display is absent, it will use console dialogs
-		(on windows the input box may take some time to open the first time)
 */
 
 

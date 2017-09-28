@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.h v3.0.7 [Sep 19, 2017] zlib licence
+ /         \ tinyfiledialogs.h v3.0.8 [Sep 28, 2017] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -109,7 +109,7 @@ extern char tinyfd_version[8]; /* contains tinyfd current version number */
 
 #ifdef _WIN32
 /* for UTF-16 use the functions at the end of this files */
-extern int tinyfd_winUtf8; /* 0 (default) or 1 */
+extern int tinyfd_winUtf8; /* 0 (default MBCS) or 1 (UTF-8)*/
 /* on windows string char can be 0:MBCS or 1:UTF-8
 unless your code is really prepared for UTF-8 on windows, leave this on MBSC.
 Or you can use the UTF-16 (wchar) prototypes at the end of ths file.*/

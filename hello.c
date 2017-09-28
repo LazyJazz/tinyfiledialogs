@@ -1,5 +1,5 @@
 /*_________
- /         \ hello.c v3.0.7 [Sep 19, 2017] zlib licence
+ /         \ hello.c v3.0.8 [Sep 28, 2017] zlib licence
  |tiny file| Hello World file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -109,6 +109,10 @@ int main(void)
 	char lBuffer[1024];
 	char lThePassword[1024];
 	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
+
+#ifdef _WIN32
+	tinyfd_winUtf8 = 1; /* on windows, you decide if char holds MBCS(0) or UTF8(1) */
+#endif
 
 	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 

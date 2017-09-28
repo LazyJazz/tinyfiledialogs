@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.0.7 [Sep 19, 2017] zlib licence
+ /         \ tinyfiledialogs.c v3.0.8 [Sep 28, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -123,7 +123,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "3.0.7";
+char tinyfd_version [8] = "3.0.8";
 
 static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
@@ -480,21 +480,6 @@ static int replaceChr( char * const aString ,
 }
 
 
-static int dirExists( char const * const aDirPath )
-{
-	struct stat lInfo;
-	if ( ! aDirPath || ! strlen( aDirPath ) )
-		return 0 ;
-	if ( stat( aDirPath , & lInfo ) != 0 )
-		return 0 ;
-	else if ( lInfo.st_mode & S_IFDIR )
-		return 1 ;
-	else
-		return 0 ;
-}
-
-#ifndef TINYFD_NOLIB
-
 static void wipefileW(wchar_t const * const aFilename)
 {
 	int i;
@@ -514,6 +499,41 @@ static void wipefileW(wchar_t const * const aFilename)
 	}
 }
 
+
+#ifdef TINYFD_NOLIB
+
+static int dirExists(char const * const aDirPath)
+{
+	struct stat lInfo;
+
+	if (!aDirPath || !strlen(aDirPath))
+		return 0;
+
+	/*if (tinyfd_winUtf8)
+	{
+		wchar_t * lTmpWChar;
+		int lStatRet;
+		lTmpWChar = utf8to16(aDirPath);
+		lStatRet = _swstat(lTmpWChar, &lInfo);
+		free(lTmpWChar);
+
+		if (lStatRet != 0)
+			return 0;
+		else if (lInfo.st_mode & S_IFDIR)
+			return 1;
+		else
+			return 0;
+	}*/
+	
+	if (stat(aDirPath, &lInfo) != 0)
+		return 0;
+	else if (lInfo.st_mode & S_IFDIR)
+		return 1;
+	else
+		return 0;
+}
+
+#else /* ndef TINYFD_NOLIB */
 
 static wchar_t * getPathWithoutFinalSlashW(
 	wchar_t * const aoDestination, /* make sure it is allocated, use _MAX_PATH */
@@ -716,6 +736,36 @@ static char * utf16toMbcs(wchar_t const * const aUtf16string)
 		return NULL;
 	}
 	return lMbcsString;
+}
+
+
+static int dirExists(char const * const aDirPath)
+{
+	struct _stat lInfo;
+	wchar_t * lTmpWChar;
+	int lStatRet;
+
+	if (!aDirPath || !strlen(aDirPath))
+		return 0;
+
+	if (tinyfd_winUtf8)
+	{
+		lTmpWChar = utf8to16(aDirPath);
+		lStatRet = _wstat(lTmpWChar, &lInfo);
+		free(lTmpWChar);
+		if (lStatRet != 0)
+			return 0;
+		else if (lInfo.st_mode & S_IFDIR)
+			return 1;
+		else
+			return 0;
+	}
+	else if (_stat(aDirPath, &lInfo) != 0)
+		return 0;
+	else if (lInfo.st_mode & S_IFDIR)
+		return 1;
+	else
+		return 0;
 }
 
 

@@ -30,7 +30,8 @@ bindings for LUA and C# dll ; included in LWJGL(java), rust, Allegrobasic
                    _____________________________________
                   |                                     |
                   | version 3 has the same good old API |
-                  |       dialogs now stay on top       | 
+                  |       dialogs now stay on top       |
+                  |       better UNICODE handling       |
                   |_____________________________________|
 
 int tinyfd_messageBox (

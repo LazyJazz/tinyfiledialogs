@@ -111,7 +111,7 @@ int main(void)
 	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
 #ifdef _WIN32
-	tinyfd_winUtf8 = 1; /* on windows, you decide if char holds MBCS(0) or UTF8(1) */
+	tinyfd_winUtf8 = 0; /* on windows, you decide if char holds MBCS(0) or UTF8(1) */
 #endif
 
 	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);

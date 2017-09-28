@@ -753,62 +753,6 @@ static int dirExists(char const * const aDirPath)
 }
 
 
-static void runSilentA(char const * const aString)
-{
-	STARTUPINFOA StartupInfo;
-	PROCESS_INFORMATION ProcessInfo;
-	char * lArgs;
-	char * pEnvCMD = NULL;
-	char * pDefaultCMD = "CMD.EXE";
-	ULONG rc;
-	int lStringLen = 0;
-
-	memset(&StartupInfo, 0, sizeof(StartupInfo));
-	StartupInfo.cb = sizeof(STARTUPINFOA);
-	StartupInfo.dwFlags = STARTF_USESHOWWINDOW;
-	StartupInfo.wShowWindow = SW_HIDE;
-
-	if ( aString )
-	{
-		lStringLen = strlen(aString);
-	}
-	lArgs = (char *) malloc( MAX_PATH_OR_CMD + lStringLen );
-
-	pEnvCMD = getenv("COMSPEC");
-
-	if (pEnvCMD){
-
-		strcpy(lArgs, pEnvCMD);
-	}
-	else{
-		strcpy(lArgs, pDefaultCMD);
-	}
-
-	/* c to execute then terminate the command window */
-	strcat(lArgs, " /c ");
-
-	/* application and parameters to run from the command window */
-	strcat(lArgs, aString);
-
-	if (!CreateProcessA(NULL, lArgs, NULL, NULL, TRUE,
-		CREATE_NEW_CONSOLE, NULL, NULL,
-		&StartupInfo, &ProcessInfo))
-	{
-		free(lArgs);
-		return; /* GetLastError(); */
-	}
-
-	WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
-	if (!GetExitCodeProcess(ProcessInfo.hProcess, &rc))
-		rc = 0;
-
-	CloseHandle(ProcessInfo.hThread);
-	CloseHandle(ProcessInfo.hProcess);
-
-	free(lArgs);
-	return; /* rc */
-}
-
 static BOOL CALLBACK EnumThreadWndProc(HWND hwnd, LPARAM lParam)
 { 
 	wchar_t lTitleName[MAX_PATH];

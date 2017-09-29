@@ -145,7 +145,7 @@ but and return 0 for console mode, 1 for graphic mode.
 tinyfd_response is then filled with the retain solution.
 possible values for tinyfd_response are (all lowercase)
 for the graphic mode:
-  windows applescript zenity zenity3 matedialog qarma kdialog
+  windowsW windows applescript zenity zenity3 matedialog qarma kdialog
   tkinter gxmessage gmessage xmessage xdialog gdialog
 for the console mode:
   dialog whiptail basicinput */

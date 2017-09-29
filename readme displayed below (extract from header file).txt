@@ -14,7 +14,7 @@ using
     Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment
     WindowMaker IceWm Cde Jds OpenBox Awesome Jwm
 
-bindings for LUA and C# dll ; included in LWJGL(java), rust, Allegrobasic
+bindings for LUA and C# dll, Haskell; included in LWJGL(java), Rust, Allegrobasic
 
                  http://tinyfiledialogs.sourceforge.net
               git://git.code.sf.net/p/tinyfiledialogs/code

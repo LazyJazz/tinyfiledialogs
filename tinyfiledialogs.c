@@ -365,7 +365,7 @@ static int filenameValid( char const * const aFileNameWithoutPath )
 	return 1 ;
 }
 
-#if defined(TINYFD_NOLIB) || !defined(_WIN32)
+#ifndef _WIN32
 
 static int fileExists( char const * const aFilePathAndName )
 {
@@ -374,6 +374,28 @@ static int fileExists( char const * const aFilePathAndName )
 	{
 		return 0 ;
 	}
+	lIn = fopen( aFilePathAndName , "r" ) ;
+	if ( ! lIn )
+	{
+		return 0 ;
+	}
+	fclose( lIn ) ;
+	return 1 ;
+}
+
+#elif defined(TINYFD_NOLIB)
+
+static int fileExists( char const * const aFilePathAndName )
+{
+	FILE * lIn ;
+	if ( ! aFilePathAndName || ! strlen(aFilePathAndName) )
+	{
+		return 0 ;
+	}
+
+	if ( tinyfd_winUtf8 )
+		return 1; /* we cannot test */
+
 	lIn = fopen( aFilePathAndName , "r" ) ;
 	if ( ! lIn )
 	{

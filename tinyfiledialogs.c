@@ -146,7 +146,7 @@ but and return 0 for console mode, 1 for graphic mode.
 tinyfd_response is then filled with the retain solution.
 possible values for tinyfd_response are (all lowercase)
 for the graphic mode:
-  windowsW windows applescript zenity zenity3 matedialog qarma kdialog
+  windows_wchar windows applescript zenity zenity3 matedialog qarma kdialog
   tkinter gxmessage gmessage xmessage xdialog gdialog
 for the console mode:
   dialog whiptail basicinput */
@@ -908,7 +908,7 @@ int tinyfd_messageBoxW(
 	int lBoxReturnValue;
 	UINT aCode;
 
-	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windowsW"); return 1; }
+	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return 1; }
 
 	if (aIconType && !wcscmp(L"warning", aIconType))
 	{
@@ -1009,7 +1009,7 @@ wchar_t const * tinyfd_inputBoxW(
 	int lMessageLen;
 	int lDialogStringLen;
 
-	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windowsW"); return (wchar_t const *)1; }
+	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t const *)1; }
 
 	lTitleLen =  aTitle ? wcslen(aTitle) : 0 ;
 	lMessageLen =  aMessage ? wcslen(aMessage) : 0 ;
@@ -1345,7 +1345,7 @@ wchar_t const * tinyfd_saveFileDialogW(
 	HRESULT lHResult;
 	OPENFILENAMEW ofn = {0};
 
-	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windowsW"); return (wchar_t const *)1; }
+	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t const *)1; }
 
 	lHResult = CoInitializeEx(NULL, 0);
 
@@ -1496,7 +1496,7 @@ wchar_t const * tinyfd_openFileDialogW(
 	HRESULT lHResult;
 	OPENFILENAMEW ofn = { 0 };
 
-	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windowsW"); return (wchar_t const *)1; }
+	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t const *)1; }
 
 	lHResult = CoInitializeEx(NULL, 0);
 
@@ -1691,7 +1691,7 @@ wchar_t const * tinyfd_selectFolderDialogW(
 	LPITEMIDLIST lpItem;
 	HRESULT lHResult;
 
-	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windowsW"); return (wchar_t const *)1; }
+	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t const *)1; }
 
 	lHResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 
@@ -1768,7 +1768,7 @@ wchar_t const * tinyfd_colorChooserW(
 
 	HRESULT lHResult;
 
-	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windowsW"); return (wchar_t const *)1; }
+	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t const *)1; }
 
 	lHResult = CoInitializeEx(NULL, 0);
 

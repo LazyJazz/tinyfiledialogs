@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.0.8 [Sep 28, 2017] zlib licence
+ /         \ tinyfiledialogs.c v3.0.9 [Sep 29, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -123,7 +123,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "3.0.8";
+char tinyfd_version [8] = "3.0.9";
 
 static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
@@ -365,6 +365,7 @@ static int filenameValid( char const * const aFileNameWithoutPath )
 	return 1 ;
 }
 
+#if defined(TINYFD_NOLIB) || !defined(_WIN32)
 
 static int fileExists( char const * const aFilePathAndName )
 {
@@ -382,52 +383,7 @@ static int fileExists( char const * const aFilePathAndName )
 	return 1 ;
 }
 
-
-/* source and destination can be the same or ovelap*/
-static char const * ensureFilesExist( char * const aDestination ,
-							 		  char const * const aSourcePathsAndNames)
-{
-	char * lDestination = aDestination ;
-	char const * p ;
-	char const * p2 ;
-	int lLen ;
-
-	if ( ! aSourcePathsAndNames )
-	{
-		return NULL ;
-	}
-	lLen = strlen( aSourcePathsAndNames ) ;
-	if ( ! lLen )
-	{
-		return NULL ;
-	}
-	
-	p = aSourcePathsAndNames ;
-	while ( (p2 = strchr(p, '|')) != NULL )
-	{
-		lLen = p2-p ;		
-		memmove(lDestination,p,lLen);
-		lDestination[lLen] = '\0';
-		if ( fileExists( lDestination ) )
-		{
-			lDestination += lLen ;
-			* lDestination = '|';
-			lDestination ++ ;
-		}
-		p = p2 + 1 ;
-	}
-	if ( fileExists( p ) )
-	{
-		lLen = strlen(p) ;		
-		memmove(lDestination,p,lLen);
-		lDestination[lLen] = '\0';
-	}
-	else
-	{
-		* (lDestination-1) = '\0';
-	}
-	return aDestination ;
-}
+#endif
 
 
 static void wipefile(char const * const aFilename)
@@ -752,6 +708,94 @@ static int dirExists(char const * const aDirPath)
 		return 0;
 }
 
+
+static int fileExists(char const * const aFilePathAndName)
+{
+	struct _stat lInfo;
+	wchar_t * lTmpWChar;
+	int lStatRet;
+	FILE * lIn;
+
+	if (!aFilePathAndName || !strlen(aFilePathAndName))
+	{
+		return 0;
+	}
+
+	if (tinyfd_winUtf8)
+	{
+		lTmpWChar = utf8to16(aFilePathAndName);
+		lStatRet = _wstat(lTmpWChar, &lInfo);
+		free(lTmpWChar);
+		if (lStatRet != 0)
+			return 0;
+		else if (lInfo.st_mode & _S_IFREG)
+			return 1;
+		else
+			return 0;
+	}
+	else
+	{
+		lIn = fopen(aFilePathAndName, "r");
+		if (!lIn)
+		{
+			return 0;
+		}
+		fclose(lIn);
+		return 1;
+	}
+}
+
+#endif /* TINYFD_NOLIB */
+#endif /* _WIN32 */
+
+/* source and destination can be the same or ovelap*/
+static char const * ensureFilesExist(char * const aDestination,
+	char const * const aSourcePathsAndNames)
+{
+	char * lDestination = aDestination;
+	char const * p;
+	char const * p2;
+	int lLen;
+
+	if (!aSourcePathsAndNames)
+	{
+		return NULL;
+	}
+	lLen = strlen(aSourcePathsAndNames);
+	if (!lLen)
+	{
+		return NULL;
+	}
+
+	p = aSourcePathsAndNames;
+	while ((p2 = strchr(p, '|')) != NULL)
+	{
+		lLen = p2 - p;
+		memmove(lDestination, p, lLen);
+		lDestination[lLen] = '\0';
+		if (fileExists(lDestination))
+		{
+			lDestination += lLen;
+			*lDestination = '|';
+			lDestination++;
+		}
+		p = p2 + 1;
+	}
+	if (fileExists(p))
+	{
+		lLen = strlen(p);
+		memmove(lDestination, p, lLen);
+		lDestination[lLen] = '\0';
+	}
+	else
+	{
+		*(lDestination - 1) = '\0';
+	}
+	return aDestination;
+}
+
+#ifdef _WIN32
+#ifndef TINYFD_NOLIB
 
 static int __stdcall EnumThreadWndProc(HWND hwnd, LPARAM lParam)
 { 

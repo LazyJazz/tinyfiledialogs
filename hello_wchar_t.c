@@ -1,5 +1,5 @@
 /*_________
- /         \ hello_wchar_t.c v3.0.9 [Sep 29, 2017] zlib licence
+ /         \ hello_wchar_t.c v3.1.0 [Sep 30, 2017] zlib licence
  |tiny file| Hello WCHAR_T file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -125,7 +125,10 @@ int main(void)
 	wcscpy(lThePassword, L"tinyfiledialogs v");
 	mbstowcs(lWcharBuff, tinyfd_version, strlen(tinyfd_version) + 1);
 	wcscat(lThePassword, lWcharBuff);
+
 	tinyfd_messageBoxW(lThePassword, lBuffer, L"ok", L"info", 0);
+
+	tinyfd_notifyW(L"le titre", L"le message", L"info");
 
 	/*tinyfd_forceConsole = 1;*/
 	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )

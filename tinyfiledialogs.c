@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.0.9 [Sep 29, 2017] zlib licence
+ /         \ tinyfiledialogs.c v3.1.0 [Sep 30, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -124,7 +124,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "3.0.9";
+char tinyfd_version [8] = "3.1.0";
 
 static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
@@ -825,7 +825,7 @@ static int __stdcall EnumThreadWndProc(HWND hwnd, LPARAM lParam)
 	wchar_t lTitleName[MAX_PATH];
 	GetWindowTextW(hwnd, lTitleName, MAX_PATH);
 	/* wprintf(L"lTitleName %s \n", lTitleName);  */
-	if (wcscmp(L"tinyfiledialogs", lTitleName) == 0)
+	if (wcscmp(L"tinyfiledialogsTopWindow", lTitleName) == 0)
 	{
 		SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 		return 0;
@@ -834,67 +834,34 @@ static int __stdcall EnumThreadWndProc(HWND hwnd, LPARAM lParam)
 }
 
 
-static void runSilentW(wchar_t const * const aString, wchar_t const * const aDialogTitle)
+static void hiddenConsoleW(wchar_t const * const aString, wchar_t const * const aDialogTitle, int const aInFront)
 {
 	STARTUPINFOW StartupInfo;
 	PROCESS_INFORMATION ProcessInfo;
-	ULONG rc;
-	wchar_t * lArgs;
-	wchar_t * pEnvCMD;
-	wchar_t * pDefaultCMD = L"CMD.EXE";
-	int lStringLen = 0;
+
+	if (!aString || !wcslen(aString) ) return;
 
 	memset(&StartupInfo, 0, sizeof(StartupInfo));
 	StartupInfo.cb = sizeof(STARTUPINFOW);
 	StartupInfo.dwFlags = STARTF_USESHOWWINDOW;
 	StartupInfo.wShowWindow = SW_HIDE;
 
-	if ( aString )
-	{
-		lStringLen = wcslen(aString);
-	}
-	lArgs = (wchar_t *) malloc( (MAX_PATH_OR_CMD + lStringLen) * sizeof(wchar_t) );
-
-	pEnvCMD = utf8to16( getenv("COMSPEC") );
-	if (pEnvCMD)
-	{
-		wcscpy(lArgs, pEnvCMD);
-		free(pEnvCMD);
-	}
-	else
-	{
-		wcscpy(lArgs, pDefaultCMD);
-	}
-
-	/* c to execute then terminate the command window */
-	wcscat(lArgs, L" /c ");
-
-	/* application and parameters to run from the command window */
-	wcscat(lArgs, aString);
-
-	if (!CreateProcessW(NULL, lArgs, NULL, NULL, FALSE,
+	if (!CreateProcessW(NULL, (LPWSTR)aString, NULL, NULL, FALSE,
 				CREATE_NEW_CONSOLE, NULL, NULL,
 				&StartupInfo, &ProcessInfo))
 	{
-		free(lArgs);
 		return; /* GetLastError(); */
 	}
 
 	WaitForInputIdle(ProcessInfo.hProcess, INFINITE);
-	while ( EnumWindows(EnumThreadWndProc, (LPARAM)NULL) ) {}
-	SetWindowTextW(GetForegroundWindow(), aDialogTitle);
-
-	WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
-	if (!GetExitCodeProcess(ProcessInfo.hProcess, &rc))
+	if (aInFront)
 	{
-		rc = 0;
+		while (EnumWindows(EnumThreadWndProc, (LPARAM)NULL)) {}
+		SetWindowTextW(GetForegroundWindow(), aDialogTitle);
 	}
-
+	WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
 	CloseHandle(ProcessInfo.hThread);
 	CloseHandle(ProcessInfo.hProcess);
-
-	free(lArgs);
-	return; /* rc */
 }
 
 
@@ -996,6 +963,72 @@ static int messageBoxWinGui8(
 }
 
 
+int tinyfd_notifyW(
+	wchar_t const * const aTitle, /* NULL or L"" */
+	wchar_t const * const aMessage, /* NULL or L"" may NOT contain \n nor \t */
+	wchar_t const * const aIconType) /* L"info" L"warning" L"error" */
+{
+	static wchar_t lBuff[MAX_PATH_OR_CMD];
+	wchar_t * lDialogString;
+	int lTitleLen;
+	int lMessageLen;
+	int lDialogStringLen;
+
+	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return 1; }
+
+	lTitleLen = aTitle ? wcslen(aTitle) : 0;
+	lMessageLen = aMessage ? wcslen(aMessage) : 0;
+	lDialogStringLen = 3 * MAX_PATH_OR_CMD + lTitleLen + lMessageLen;
+	lDialogString = (wchar_t *)malloc(2 * lDialogStringLen);
+
+	wcscpy(lDialogString, L"powershell.exe -command \"\
+function Show-BalloonTip {\
+[cmdletbinding()] \
+param( \
+[string]$Title = ' ', \
+[string]$Message = ' ', \
+[ValidateSet('info', 'warning', 'error')] \
+[string]$IconType = 'info');\
+[system.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms') | Out-Null ; \
+$balloon = New-Object System.Windows.Forms.NotifyIcon ; \
+$path = Get-Process -id $pid | Select-Object -ExpandProperty Path ; \
+$icon = [System.Drawing.Icon]::ExtractAssociatedIcon($path) ; \
+$balloon.Icon = $icon ; \
+$balloon.BalloonTipIcon = $IconType ; \
+$balloon.BalloonTipText = $Message ; \
+$balloon.BalloonTipTitle = $Title ; \
+$balloon.Visible = $true ; \
+$balloon.ShowBalloonTip(5000)};\
+Show-BalloonTip");
+
+	if (aTitle && wcslen(aTitle))
+	{
+		wcscat(lDialogString, L" -Title '");
+		wcscat(lDialogString, aTitle);
+		wcscat(lDialogString, L"'");
+	}
+	if (aMessage && wcslen(aMessage))
+	{
+		wcscat(lDialogString, L" -Message '");
+		wcscat(lDialogString, aMessage);
+		wcscat(lDialogString, L"'");
+	}
+	if (aMessage && wcslen(aIconType))
+	{
+		wcscat(lDialogString, L" -IconType '");
+		wcscat(lDialogString, aIconType);
+		wcscat(lDialogString, L"'");
+	}
+	wcscat(lDialogString, L"\"");
+
+	/* wprintf ( L"lDialogString: %s\n" , lDialogString ) ; */
+
+	hiddenConsoleW(lDialogString, aTitle, 0);
+
+	return 1;
+}
+
+
 wchar_t const * tinyfd_inputBoxW(
 	wchar_t const * const aTitle, /* NULL or L"" */
 	wchar_t const * const aMessage, /* NULL or L"" may NOT contain \n nor \t */
@@ -1046,12 +1079,7 @@ wchar_t const * tinyfd_inputBoxW(
 		{
 			wcscat(lDialogString, aMessage);
 		}
-		wcscat(lDialogString, L"\",\"");
-		if (aTitle && wcslen(aTitle))
-		{
-			wcscat(lDialogString, L"tinyfiledialogs");
-		}
-		wcscat(lDialogString, L"\",\"");
+		wcscat(lDialogString, L"\",\"tinyfiledialogsTopWindow\",\"");
 		if (aDefaultInput && wcslen(aDefaultInput))
 		{
 			wcscat(lDialogString, aDefaultInput);
@@ -1149,7 +1177,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%%' ><BR>\n\
 </table>\n\
 </body>\n\
 </html>\n\
-"		, L"tinyfiledialogs", aMessage ? aMessage : L"") ;
+"		, L"tinyfiledialogsTopWindow", aMessage ? aMessage : L"") ;
 	}
 	fputws(lDialogString, lIn);
 	fclose(lIn);
@@ -1164,20 +1192,19 @@ name = 'txt_input' value = '' style = 'float:left;width:100%%' ><BR>\n\
 		FILE * lala = _wfopen(lDialogString, L"wt, ccs=UNICODE");
 		fclose(lala);
 
-		wcscpy(lDialogString, L"cscript.exe ");
-		wcscat(lDialogString, L"//U //Nologo ");
-		wcscat(lDialogString, L"%USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.vbs");
-		wcscat(lDialogString, L" >> %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.txt");
+		wcscpy(lDialogString, L"cmd.exe /c cscript.exe //U //Nologo ");
+		wcscat(lDialogString, L"%USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.vbs ");
+		wcscat(lDialogString, L">> %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.txt");
 	}
 	else
 	{
 		wcscpy(lDialogString,
-			L"mshta.exe %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.hta");
+			L"cmd.exe /c mshta.exe %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.hta");
 	}
 
 	/* printf ( "lDialogString: %s\n" , lDialogString ) ; */
 
-	runSilentW(lDialogString, aTitle);
+	hiddenConsoleW(lDialogString, aTitle, 1);
 
 	if (aDefaultInput)
 	{

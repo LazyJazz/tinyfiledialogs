@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.h v3.0.9 [Sep 29, 2017] zlib licence
+ /         \ tinyfiledialogs.h v3.1.0 [Sep 30, 2017] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -192,10 +192,16 @@ char const * tinyfd_colorChooser(
 int tinyfd_messageBoxW(
 	wchar_t const * const aTitle , /* NULL or L"" */
 	wchar_t const * const aMessage, /* L"" may contain \n \t */
-	wchar_t const * const aDialogType, /* "ok" "okcancel" "yesno" */
-	wchar_t const * const aIconType, /* "info" "warning" "error" "question" */
+	wchar_t const * const aDialogType, /* L"ok" L"okcancel" L"yesno" */
+	wchar_t const * const aIconType, /* L"info" L"warning" L"error" L"question" */
 	int const aDefaultButton ); /* 0 for cancel/no , 1 for ok/yes */
 		/* returns 0 for cancel/no , 1 for ok/yes */
+
+/* windows only - utf-16 version */
+int tinyfd_notifyW(
+	wchar_t const * const aTitle, /* NULL or L"" */
+	wchar_t const * const aMessage, /* NULL or L"" may NOT contain \n nor \t */
+	wchar_t const * const aIconType); /* L"info" L"warning" L"error" */
 
 /* windows only - utf-16 version */
 wchar_t const * tinyfd_inputBoxW(

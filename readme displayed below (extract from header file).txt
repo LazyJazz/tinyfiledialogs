@@ -25,7 +25,7 @@ bindings for LUA and C# dll, Haskell; included in LWJGL(java), Rust, Allegrobasi
     ___________________________________________________________________
    |                                                                   |
    | the windows only wchar_t UTF-16 prototypes are in the header file |
-   |                  NOW ALSO FOR THE INPUT BOX                       |
+   |              NOW ALSO FOR THE INPUT / PASSWORD BOX                |
    |___________________________________________________________________|
                    _____________________________________
                   |                                     |

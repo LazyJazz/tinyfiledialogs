@@ -3518,7 +3518,7 @@ static int perlPresent( )
         lPerlPresent = detectPresence("perl") ;
 		if ( lPerlPresent )
 		{
-			lIn = popen( "perl -MNet::DBus -we 1 2>&1" , "r" ) ;
+			lIn = popen( "perl -MNet::DBus -e 1 2>&1" , "r" ) ;
 			if ( fgets( lBuff , sizeof( lBuff ) , lIn ) == NULL )
 			{
 				lPerlPresent = 2 ;

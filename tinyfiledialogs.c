@@ -963,12 +963,12 @@ static int messageBoxWinGui8(
 }
 
 
+/* return has only meaning for tinyfd_query */
 int tinyfd_notifyW(
 	wchar_t const * const aTitle, /* NULL or L"" */
-	wchar_t const * const aMessage, /* NULL or L"" may NOT contain \n nor \t */
+	wchar_t const * const aMessage, /* L"" may contain \n \t */
 	wchar_t const * const aIconType) /* L"info" L"warning" L"error" */
 {
-	static wchar_t lBuff[MAX_PATH_OR_CMD];
 	wchar_t * lDialogString;
 	int lTitleLen;
 	int lMessageLen;
@@ -1024,7 +1024,38 @@ Show-BalloonTip");
 	/* wprintf ( L"lDialogString: %s\n" , lDialogString ) ; */
 
 	hiddenConsoleW(lDialogString, aTitle, 0);
+	free(lDialogString);
+	return 1;
+}
 
+
+static int notifyWinGui(
+	char const * const aTitle, /* NULL or "" */
+	char const * const aMessage, /* NULL or "" may NOT contain \n nor \t */
+	char const * const aIconType) 
+{
+	wchar_t * lTitle;
+	wchar_t * lMessage;
+	wchar_t * lIconType;
+
+	if (tinyfd_winUtf8)
+	{
+		lTitle = utf8to16(aTitle);
+		lMessage = utf8to16(aMessage);
+		lIconType = utf8to16(aIconType);
+	}
+	else
+	{
+		lTitle = mbcsTo16(aTitle);
+		lMessage = mbcsTo16(aMessage);
+		lIconType = mbcsTo16(aIconType);
+	}
+
+	tinyfd_notifyW( lTitle,	lMessage, lIconType);
+
+	free(lTitle);
+	free(lMessage);
+	free(lIconType);
 	return 1;
 }
 
@@ -1269,17 +1300,12 @@ name = 'txt_input' value = '' style = 'float:left;width:100%%' ><BR>\n\
 		return NULL ;
 	}
 
-//	if (aoBuff[wcslen(aoBuff) - 1] == '\n')
-//	{
-//		aoBuff[wcslen(aoBuff) - 1] = '\0';
-//	}
-
 	/* printf( "aoBuff+1: %s\n" , aoBuff+1 ) ; */
 	return lBuff + 1 ;
 }
 
 
-static char const * inputBoxWinGui8(
+static char const * inputBoxWinGui(
 	char * const aoBuff,
 	char const * const aTitle, /* NULL or "" */
 	char const * const aMessage, /* NULL or "" may NOT contain \n nor \t */
@@ -1291,14 +1317,20 @@ static char const * inputBoxWinGui8(
 	wchar_t const * lTmpWChar;
 	char * lTmpChar;
 
-	lTitle = utf8to16(aTitle);
-	lMessage = utf8to16(aMessage);
-	lDefaultInput = utf8to16(aDefaultInput);
+	if (tinyfd_winUtf8)
+	{
+		lTitle = utf8to16(aTitle);
+		lMessage = utf8to16(aMessage);
+		lDefaultInput = utf8to16(aDefaultInput);
+	}
+	else
+	{
+		lTitle = mbcsTo16(aTitle);
+		lMessage = mbcsTo16(aMessage);
+		lDefaultInput = mbcsTo16(aDefaultInput);
+	}
 
-	lTmpWChar = tinyfd_inputBoxW(
-		lTitle,
-		lMessage,
-		lDefaultInput);
+	lTmpWChar = tinyfd_inputBoxW( lTitle, lMessage, lDefaultInput);
 
 	free(lTitle);
 	free(lMessage);
@@ -1309,45 +1341,14 @@ static char const * inputBoxWinGui8(
 		return NULL;
 	}
 
-	lTmpChar = utf16to8(lTmpWChar);
-	strcpy(aoBuff, lTmpChar);
-	free(lTmpChar);
-
-	return aoBuff;
-}
-
-
-static char const * inputBoxWinGuiA(
-	char * const aoBuff,
-	char const * const aTitle, /* NULL or "" */
-	char const * const aMessage, /* NULL or "" may NOT contain \n nor \t */
-	char const * const aDefaultInput) /* "" , if NULL it's a passwordBox */
-{
-	wchar_t * lTitle;
-	wchar_t * lMessage;
-	wchar_t * lDefaultInput;
-	wchar_t const * lTmpWChar;
-	char * lTmpChar;
-
-	lTitle = mbcsTo16(aTitle);
-	lMessage = mbcsTo16(aMessage);
-	lDefaultInput = mbcsTo16(aDefaultInput);
-
-	lTmpWChar = tinyfd_inputBoxW(
-		lTitle,
-		lMessage,
-		lDefaultInput);
-
-	free(lTitle);
-	free(lMessage);
-	free(lDefaultInput);
-
-	if (!lTmpWChar)
+	if (tinyfd_winUtf8)
 	{
-		return NULL;
+		lTmpChar = utf16to8(lTmpWChar);
 	}
-
-	lTmpChar = utf16toMbcs(lTmpWChar);
+	else
+	{
+		lTmpChar = utf16toMbcs(lTmpWChar);
+	}
 	strcpy(aoBuff, lTmpChar);
 	free(lTmpChar);
 
@@ -2806,6 +2807,29 @@ int tinyfd_messageBox(
 }
 
 
+/* return has only meaning for tinyfd_query */
+int tinyfd_notify(
+	char const * const aTitle , /* NULL or "" */
+	char const * const aMessage , /* "" may contain \n \t */
+	char const * const aIconType ) /* "info" "warning" "error" */
+{
+#ifndef TINYFD_NOLIB
+	if ((!tinyfd_forceConsole || !( 
+		GetConsoleWindow() || 
+		dialogPresent()))
+		&& ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return 1;}
+		return notifyWinGui(aTitle, aMessage, aIconType);
+	}
+	else
+#endif /* TINYFD_NOLIB */
+	{
+		return tinyfd_messageBox(aTitle, aMessage, "ok" , aIconType, 0);
+	}
+}
+
+
 /* returns NULL on cancel */
 char const * tinyfd_inputBox(
 	char const * const aTitle , /* NULL or "" */
@@ -2826,14 +2850,7 @@ char const * tinyfd_inputBox(
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char const *)1;}
 		lBuff[0]='\0';
-		if (tinyfd_winUtf8)
-		{
-			return inputBoxWinGui8(lBuff, aTitle, aMessage, aDefaultInput);
-		}
-		else
-		{
-			return inputBoxWinGuiA(lBuff, aTitle, aMessage, aDefaultInput);
-		}
+		return inputBoxWinGui(lBuff, aTitle, aMessage, aDefaultInput);
 	}
 	else
 #endif /* TINYFD_NOLIB */
@@ -3544,6 +3561,21 @@ static int kdialogPresent( )
 				}
 			}
 			pclose( lIn ) ;
+
+			if (lKdialogPresent == 2)
+			{
+				lKdialogPresent = 1 ;
+				lIn = popen( "kdialog --passivepopup 2>&1" , "r" ) ;
+				if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
+				{
+					if ( ! strstr( "Unknown" , lBuff ) )
+					{
+						lKdialogPresent = 2 ;
+						if (tinyfd_verbose) printf("kdialog %d\n", lKdialogPresent);
+					}
+				}
+				pclose( lIn ) ;
+			}
 		}
 	}
 	return graphicMode() ? lKdialogPresent : 0 ;
@@ -3791,6 +3823,73 @@ int tinyfd_messageBox(
 		strcat( lDialogString, "-e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat( lDialogString, " -e 'end tell'") ;
 	}
+	else if ( kdialogPresent() )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return 1;}
+
+		strcpy( lDialogString , "kdialog" ) ;
+		if ( kdialogPresent() == 2 )
+		{
+			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+		}
+
+		strcat( lDialogString , " --" ) ;
+		if ( aDialogType && ( ! strcmp( "okcancel" , aDialogType )
+			|| ! strcmp( "yesno" , aDialogType ) || ! strcmp( "yesnocancel" , aDialogType ) ) )
+		{
+			if ( aIconType && ( ! strcmp( "warning" , aIconType )
+				|| ! strcmp( "error" , aIconType ) ) )
+			{
+				strcat( lDialogString , "warning" ) ;
+			}
+			if ( ! strcmp( "yesnocancel" , aDialogType ) )
+			{
+				strcat( lDialogString , "yesnocancel" ) ;
+			}
+			else
+			{
+				strcat( lDialogString , "yesno" ) ;
+			}
+		}
+		else if ( aIconType && ! strcmp( "error" , aIconType ) )
+		{
+			strcat( lDialogString , "error" ) ;
+		}
+		else if ( aIconType && ! strcmp( "warning" , aIconType ) )
+		{
+			strcat( lDialogString , "sorry" ) ;
+		}
+		else
+		{
+			strcat( lDialogString , "msgbox" ) ;
+		}
+		strcat( lDialogString , " \"" ) ;
+		if ( aMessage )
+		{
+			strcat( lDialogString , aMessage ) ;
+		}
+		strcat( lDialogString , "\"" ) ;
+		if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
+		{
+			strcat( lDialogString ,
+				" --yes-label Ok --no-label Cancel" ) ;
+		}
+		if ( aTitle && strlen(aTitle) )
+		{
+			strcat(lDialogString, " --title \"") ;
+			strcat(lDialogString, aTitle) ;
+			strcat(lDialogString, "\"") ;
+		}
+
+		if ( ! strcmp( "yesnocancel" , aDialogType ) )
+		{
+			strcat( lDialogString , "; x=$? ;if [ $x = 0 ] ;then echo 1;elif [ $x = 1 ] ;then echo 2;else echo 0;fi");
+		}
+		else
+		{
+			strcat( lDialogString , ";if [ $? = 0 ];then echo 1;else echo 0;fi");
+		}
+	}
 	else if ( zenityPresent() || matedialogPresent() || qarmaPresent() )
 	{
 		if ( zenityPresent() )
@@ -3875,73 +3974,6 @@ int tinyfd_messageBox(
 		else
 		{
 			strcat( lDialogString , ");if [ $? = 0 ];then echo 1;else echo 0;fi");
-		}
-	}
-	else if ( kdialogPresent() )
-	{
-		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return 1;}
-
-		strcpy( lDialogString , "kdialog" ) ;
-		if ( kdialogPresent() == 2 )
-		{
-			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-		}
-
-		strcat( lDialogString , " --" ) ;
-		if ( aDialogType && ( ! strcmp( "okcancel" , aDialogType )
-		  || ! strcmp( "yesno" , aDialogType ) || ! strcmp( "yesnocancel" , aDialogType ) ) )
-		{
-			if ( aIconType && ( ! strcmp( "warning" , aIconType )
-			  || ! strcmp( "error" , aIconType ) ) )
-			{
-				strcat( lDialogString , "warning" ) ;
-			}
-			if ( ! strcmp( "yesnocancel" , aDialogType ) )
-			{
-				strcat( lDialogString , "yesnocancel" ) ;
-			}
-			else
-			{
-				strcat( lDialogString , "yesno" ) ;
-			}
-		}
-		else if ( aIconType && ! strcmp( "error" , aIconType ) )
-		{
-			strcat( lDialogString , "error" ) ;
-		}
-		else if ( aIconType && ! strcmp( "warning" , aIconType ) )
-		{
-			strcat( lDialogString , "sorry" ) ;
-		}
-		else
-		{
-			strcat( lDialogString , "msgbox" ) ;
-		}
-		strcat( lDialogString , " \"" ) ;
-		if ( aMessage )
-		{
-			strcat( lDialogString , aMessage ) ;
-		}
-		strcat( lDialogString , "\"" ) ;
-		if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
-		{
-			strcat( lDialogString ,
-				" --yes-label Ok --no-label Cancel" ) ;
-		}
-		if ( aTitle && strlen(aTitle) )
-		{
-			strcat(lDialogString, " --title \"") ;
-			strcat(lDialogString, aTitle) ;
-			strcat(lDialogString, "\"") ;
-		}
-
-		if ( ! strcmp( "yesnocancel" , aDialogType ) )
-		{
-			strcat( lDialogString , "; x=$? ;if [ $x = 0 ] ;then echo 1;elif [ $x = 1 ] ;then echo 2;else echo 0;fi");
-		}
-		else
-		{
-			strcat( lDialogString , ";if [ $? = 0 ];then echo 1;else echo 0;fi");
 		}
 	}
 	else if ( !gxmessagePresent() && !gmessagePresent() && !gdialogPresent() && !xdialogPresent() && tkinter2Present( ) )
@@ -4455,6 +4487,174 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 	/* printf( "lResult: %d\n" , lResult ) ; */
 	free(lDialogString);
 	return lResult ;
+}
+
+
+int tinyfd_notify(
+	char const * const aTitle , /* NULL or "" */
+	char const * const aMessage , /* NULL or ""  may contain \n and \t */
+	char const * const aIconType ) /* "info" "warning" "error" "question" */
+{
+	char * lDialogString = NULL ;
+	FILE * lIn ;
+	int lTitleLen ;
+	int lMessageLen ;
+
+	lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
+	lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
+	if ( !aTitle || strcmp(aTitle,"tinyfd_query") )
+	{
+		lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
+	}
+
+	if ( osascriptPresent( ) )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return 1;}
+
+		strcpy( lDialogString , "osascript ");
+		if ( ! osx9orBetter() ) strcat( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
+		strcat( lDialogString , " -e 'try' -e 'display notification \"") ;
+		if ( aMessage && strlen(aMessage) )
+		{
+			strcat(lDialogString, aMessage) ;
+		}
+		strcat(lDialogString, " \" ") ;
+		if ( aTitle && strlen(aTitle) )
+		{
+			strcat(lDialogString, "with title \"") ;
+			strcat(lDialogString, aTitle) ;
+			strcat(lDialogString, "\" ") ;
+		}
+		strcat(lDialogString, "with icon ") ;
+		if ( aIconType && ! strcmp( "error" , aIconType ) )
+		{
+			strcat(lDialogString, "stop " ) ;
+		}
+		else if ( aIconType && ! strcmp( "warning" , aIconType ) )
+		{
+			strcat(lDialogString, "caution " ) ;
+		}
+		else /* question or info */
+		{
+			strcat(lDialogString, "note " ) ;
+		}
+
+		strcat( lDialogString, "' -e 'end try'") ;
+		if ( ! osx9orBetter() ) strcat( lDialogString, " -e 'end tell'") ;
+	}
+	else if ( zenityPresent() || matedialogPresent() || qarmaPresent() )
+	{
+		if ( zenityPresent() )
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
+			strcpy( lDialogString , "szAnswer=$(zenity" ) ;
+		}
+		else if ( matedialogPresent() )
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return 1;}
+			strcpy( lDialogString , "szAnswer=$(matedialog" ) ;
+		}
+		else
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return 1;}
+			strcpy( lDialogString , "szAnswer=$(qarma" ) ;
+		}
+
+		strcat( lDialogString , " --notification"); 
+
+		if ( aIconType && strlen( aIconType ) )
+		{
+			strcat( lDialogString , " --window-icon '"); 
+			strcat( lDialogString , aIconType ) ;
+			strcat( lDialogString , "'" ) ;
+		}
+
+		if ( aTitle && strlen(aTitle) ) 
+		{
+			strcat(lDialogString, " --title=\"") ;
+			strcat(lDialogString, aTitle) ;
+			strcat(lDialogString, "\"") ;
+		}
+
+		strcat( lDialogString , "' --text \"" ) ;
+		if ( aMessage && strlen( aMessage ) )
+		{
+			strcat( lDialogString , aMessage ) ;
+		}
+		strcat( lDialogString , " \"" ) ;
+
+		/*if ( zenity3Present() >= 3 )
+		{
+			strcat( lDialogString , " --icon-name=dialog-" ) ;
+			if ( aIconType && (! strcmp( "question" , aIconType )
+				|| ! strcmp( "error" , aIconType )
+				|| ! strcmp( "warning" , aIconType ) ) )
+			{
+				strcat( lDialogString , aIconType ) ;
+			}
+			else
+			{
+				strcat( lDialogString , "information" ) ;
+			}
+		}*/
+	}
+	else if ( kdialogPresent() )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return 1;}
+		strcpy( lDialogString , "kdialog" ) ;
+
+		if ( aIconType && strlen(aIconType) )
+		{
+			strcat( lDialogString , " --icon '" ) ;
+			strcat( lDialogString , aIconType ) ;
+			strcat( lDialogString , "'" ) ;
+		}
+		if ( aTitle && strlen(aTitle) )
+		{
+			strcat( lDialogString , " --title \"" ) ;
+			strcat( lDialogString , aTitle ) ;
+			strcat( lDialogString , "\"" ) ;
+		}
+
+		strcat( lDialogString , " --passivepopup" ) ;
+		strcat( lDialogString , " \"" ) ;
+		if ( aMessage )
+		{
+			strcat( lDialogString , aMessage ) ;
+		}
+		strcat( lDialogString , " \" 5" ) ;
+	}
+	else if ( notifysendPresent() )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notify");return 1;}
+		strcpy( lDialogString , "notify-send \"" ) ;
+		if ( aTitle && strlen(aTitle) )
+		{
+			strcat(lDialogString, aTitle) ;
+			strcat( lDialogString , " | " ) ;
+		}
+		if ( aMessage && strlen(aMessage) )
+		{
+			strcat(lDialogString, aMessage) ;
+		}
+		strcat( lDialogString , "\"" ) ;
+	}
+	else
+	{
+		return tinyfd_messageBox(aTitle, aMessage, "ok", 0);
+	}
+
+	if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
+
+	if ( ! ( lIn = popen( lDialogString , "r" ) ) )
+	{
+		free(lDialogString);
+		return 0 ;
+	}
+
+	pclose( lIn ) ;
+	free(lDialogString);
+	return 1;
 }
 
 

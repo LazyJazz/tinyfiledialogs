@@ -3507,6 +3507,17 @@ static int notifysendPresent( )
 }
 
 
+static int perlPresent( )
+{
+    static int lPerlPresent = -1 ;
+    if ( lPerlPresent < 0 )
+    {
+        lPerlPresent = detectPresence("perl") ;
+    }
+    return lPerlPresent && graphicMode( ) ;
+}
+
+
 static int xdialogPresent( )
 {
     static int lXdialogPresent = -1 ;
@@ -4359,9 +4370,16 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 	}
 	else if ( !isTerminalRunning() && notifysendPresent() && !strcmp("ok" , aDialogType) )
 	{
-		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notify");return 1;}
 
-		strcpy( lDialogString , "notify-send \"" ) ;
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notifysend");return 1;}
+		strcpy( lDialogString , "notify-send" ) ;
+		if ( aIconType && strlen(aIconType) )
+		{
+			strcat( lDialogString , " -i '" ) ;
+			strcat( lDialogString , aIconType ) ;
+			strcat( lDialogString , "'" ) ;
+		}
+        strcat( lDialogString , " \"" ) ;
 		if ( aTitle && strlen(aTitle) )
 		{
 			strcat(lDialogString, aTitle) ;
@@ -4369,7 +4387,10 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 		}
 		if ( aMessage && strlen(aMessage) )
 		{
-			strcat(lDialogString, aMessage) ;
+            replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
+            replaceSubStr( aMessage , "\n" , " | " , lBuff ) ;
+            replaceSubStr( aMessage , "\t" , "  " , lBuff ) ;
+			strcat(lDialogString, lBuff) ;
 		}
 		strcat( lDialogString , "\"" ) ;
 	}
@@ -4599,8 +4620,15 @@ int tinyfd_notifyPopup(
 	}
 	else if ( notifysendPresent() )
 	{
-		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notify");return 1;}
-		strcpy( lDialogString , "notify-send \"" ) ;
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notifysend");return 1;}
+		strcpy( lDialogString , "notify-send" ) ;
+		if ( aIconType && strlen(aIconType) )
+		{
+			strcat( lDialogString , " -i '" ) ;
+			strcat( lDialogString , aIconType ) ;
+			strcat( lDialogString , "'" ) ;
+		}
+        strcat( lDialogString , " \"" ) ;
 		if ( aTitle && strlen(aTitle) )
 		{
 			strcat(lDialogString, aTitle) ;
@@ -4614,6 +4642,18 @@ int tinyfd_notifyPopup(
 			strcat(lDialogString, lBuff) ;
 		}
 		strcat( lDialogString , "\"" ) ;
+	}
+	else if ( perlPresent() )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"perl");return 1;}
+
+		sprintf( lDialogString , "perl -e \"use Net::DBus;\
+my \\$sessionBus = Net::DBus->session;\
+my \\$notificationsService = \\$sessionBus->get_service('org.freedesktop.Notifications');\
+my \\$notificationsObject = \\$notificationsService->get_object('/org/freedesktop/Notifications',\
+'org.freedesktop.Notifications');\
+my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0, '%s', '%s', '%s', [], {}, -1);\" ",
+                aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 	}
 	else
 	{

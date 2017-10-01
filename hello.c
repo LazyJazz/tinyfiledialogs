@@ -136,7 +136,7 @@ int main(void)
 	strcat(lThePassword, " tinyfiledialogs");
 	tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
 
-	tinyfd_notify("le titre", "le message\n\tde la mort qui tue", "info");
+	tinyfd_notify("the title", "the message\n\tfrom outer-space", "info");
 
 	/*tinyfd_forceConsole = 1;*/
 	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )

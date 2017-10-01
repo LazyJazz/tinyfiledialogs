@@ -4580,21 +4580,6 @@ int tinyfd_notify(
 			strcat( lDialogString , aMessage ) ;
 		}
 		strcat( lDialogString , " \"" ) ;
-
-		/*if ( zenity3Present() >= 3 )
-		{
-			strcat( lDialogString , " --icon-name=dialog-" ) ;
-			if ( aIconType && (! strcmp( "question" , aIconType )
-				|| ! strcmp( "error" , aIconType )
-				|| ! strcmp( "warning" , aIconType ) ) )
-			{
-				strcat( lDialogString , aIconType ) ;
-			}
-			else
-			{
-				strcat( lDialogString , "information" ) ;
-			}
-		}*/
 	}
 	else if ( kdialogPresent() )
 	{

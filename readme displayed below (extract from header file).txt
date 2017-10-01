@@ -1,6 +1,6 @@
  _________
 /         \   tiny file dialogs ( cross-platform C C++ )
-|tiny file|   v3.1.0 [Sep 30, 2017] zlib licence
+|tiny file|   v3.1.1 [Oct 1, 2017] zlib licence
 | dialogs |   InputBox PasswordBox MessageBox ColorPicker
 \____  ___/   OpenFileDialog SaveFileDialog SelectFolderDialog		
      \|       ASCII UTF-8 (and also MBCS UTF-16 for windows)
@@ -35,30 +35,35 @@ bindings for LUA and C# dll, Haskell; included in LWJGL(java), Rust, Allegrobasi
                   |_____________________________________|
 
 int tinyfd_messageBox (
-    char const * const aTitle , // ""
-    char const * const aMessage , // "" may contain \n \t
+    char const * const aTitle , // NULL or ""
+    char const * const aMessage , // NULL or "" may contain \n \t
     char const * const aDialogType , // "ok" "okcancel" "yesno" "yesnocancel"
     char const * const aIconType , // "info" "warning" "error" "question"
     int const aDefaultButton ) ;
         // 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel
 
+int tinyfd_notify(
+	char const * const aTitle, // NULL or ""
+	char const * const aMessage, // NULL or "" may contain \n \t
+	char const * const aIconType); // "info" "warning" "error"
+
 char const * tinyfd_inputBox (
-    char const * const aTitle , // ""
-    char const * const aMessage , // "" may NOT contain \n \t on windows
+    char const * const aTitle , // NULL or ""
+    char const * const aMessage , // NULL or "" may NOT contain \n \t on windows
     char const * const aDefaultInput ) ; // "" , if NULL it's a passwordBox
         // returns NULL on cancel
 
 char const * tinyfd_saveFileDialog (
-    char const * const aTitle , // ""
-    char const * const aDefaultPathAndFile , // ""
+    char const * const aTitle , // NULL or ""
+    char const * const aDefaultPathAndFile , // NULL or ""
     int const aNumOfFilterPatterns , // 0
     char const * const * const aFilterPatterns , // NULL | {"*.txt"}
     char const * const aSingleFilterDescription ) ; // NULL | "text files"
         // returns NULL on cancel
 
 char const * tinyfd_openFileDialog (
-    char const * const aTitle , // ""
-    char const * const aDefaultPathAndFile , // ""
+    char const * const aTitle , // NULL or ""
+    char const * const aDefaultPathAndFile , // NULL or ""
     int const aNumOfFilterPatterns , // 0
     char const * const * const aFilterPatterns , // NULL {"*.jpg","*.png"}
     char const * const aSingleFilterDescription , // NULL | "image files"
@@ -67,12 +72,12 @@ char const * tinyfd_openFileDialog (
         // returns NULL on cancel
 
 char const * tinyfd_selectFolderDialog (
-    char const * const aTitle , // ""
-    char const * const aDefaultPath ) ; // ""
+    char const * const aTitle , // NULL or ""
+    char const * const aDefaultPath ) ; // NULL or ""
         // returns NULL on cancel
 
 char const * tinyfd_colorChooser(
-    char const * const aTitle , // ""
+    char const * const aTitle , // NULL or ""
     char const * const aDefaultHexRGB , // NULL or "#FF0000”
     unsigned char const aDefaultRGB[3] , // { 0 , 255 , 255 }
     unsigned char aoResultRGB[3] ) ; // { 0 , 0 , 0 }

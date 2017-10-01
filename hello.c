@@ -1,5 +1,5 @@
 /*_________
- /         \ hello.c v3.1.0 [Sep 30, 2017] zlib licence
+ /         \ hello.c v3.1.1 [Oct 1, 2017] zlib licence
  |tiny file| Hello World file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -24,8 +24,9 @@ OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 SSH supported via automatic switch to console mode or X11 forwarding
 
-One C file (add it to your C or C++ project) with 6 functions:
+One C file (add it to your C or C++ project) with 7 functions:
 - message & question
+- notification
 - input & password
 - save file
 - open file(s)

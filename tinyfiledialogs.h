@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.h v3.1.0 [Sep 30, 2017] zlib licence
+ /         \ tinyfiledialogs.h v3.1.1 [Oct 1, 2017] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -27,8 +27,9 @@ OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 SSH supported via automatic switch to console mode or X11 forwarding
 
-One C file (add it to your C or C++ project) with 6 functions:
+One C file (add it to your C or C++ project) with 7 functions:
 - message & question
+- notification
 - input & password
 - save file
 - open file(s)
@@ -136,8 +137,8 @@ for the console mode:
   dialog whiptail basicinput */
 
 int tinyfd_messageBox (
-	char const * const aTitle , /* "" */
-	char const * const aMessage , /* "" may contain \n \t */
+	char const * const aTitle , /* NULL or "" */
+	char const * const aMessage , /* NULL or "" may contain \n \t */
 	char const * const aDialogType , /* "ok" "okcancel" "yesno" "yesnocancel" */
 	char const * const aIconType , /* "info" "warning" "error" "question" */
 	int const aDefaultButton ) ;
@@ -145,26 +146,26 @@ int tinyfd_messageBox (
 
 int tinyfd_notify(
 	char const * const aTitle, /* NULL or "" */
-	char const * const aMessage, /* "" may contain \n \t */
+	char const * const aMessage, /* NULL or "" may contain \n \t */
 	char const * const aIconType); /* "info" "warning" "error" */
 
 char const * tinyfd_inputBox (
-	char const * const aTitle , /* "" */
-	char const * const aMessage , /* "" may NOT contain \n \t on windows */
+	char const * const aTitle , /* NULL or "" */
+	char const * const aMessage , /* NULL or "" may NOT contain \n \t on windows */
 	char const * const aDefaultInput ) ;  /* "" , if NULL it's a passwordBox */
 		/* returns NULL on cancel */
 
 char const * tinyfd_saveFileDialog (
-	char const * const aTitle , /* "" */
-	char const * const aDefaultPathAndFile , /* "" */
+	char const * const aTitle , /* NULL or "" */
+	char const * const aDefaultPathAndFile , /* NULL or "" */
 	int const aNumOfFilterPatterns , /* 0 */
 	char const * const * const aFilterPatterns , /* NULL | {"*.jpg","*.png"} */
 	char const * const aSingleFilterDescription ) ; /* NULL | "text files" */
 		/* returns NULL on cancel */
 
 char const * tinyfd_openFileDialog (
-	char const * const aTitle , /* "" */
-	char const * const aDefaultPathAndFile , /* "" */
+	char const * const aTitle , /* NULL or "" */
+	char const * const aDefaultPathAndFile , /* NULL or "" */
 	int const aNumOfFilterPatterns , /* 0 */
 	char const * const * const aFilterPatterns , /* NULL {"*.jpg","*.png"} */
 	char const * const aSingleFilterDescription , /* NULL | "image files" */
@@ -173,12 +174,12 @@ char const * tinyfd_openFileDialog (
 		/* returns NULL on cancel */
 
 char const * tinyfd_selectFolderDialog (
-	char const * const aTitle , /* "" */
-	char const * const aDefaultPath ) ; /* "" */
+	char const * const aTitle , /* NULL or "" */
+	char const * const aDefaultPath ) ; /* NULL or "" */
 		/* returns NULL on cancel */
 
 char const * tinyfd_colorChooser(
-	char const * const aTitle , /* "" */
+	char const * const aTitle , /* NULL or "" */
 	char const * const aDefaultHexRGB , /* NULL or "#FF0000" */
 	unsigned char const aDefaultRGB[3] , /* { 0 , 255 , 255 } */
 	unsigned char aoResultRGB[3] ) ; /* { 0 , 0 , 0 } */
@@ -196,7 +197,7 @@ char const * tinyfd_colorChooser(
 /* windows only - utf-16 version */
 int tinyfd_messageBoxW(
 	wchar_t const * const aTitle , /* NULL or L"" */
-	wchar_t const * const aMessage, /* L"" may contain \n \t */
+	wchar_t const * const aMessage, /* NULL or L"" may contain \n \t */
 	wchar_t const * const aDialogType, /* L"ok" L"okcancel" L"yesno" */
 	wchar_t const * const aIconType, /* L"info" L"warning" L"error" L"question" */
 	int const aDefaultButton ); /* 0 for cancel/no , 1 for ok/yes */
@@ -205,7 +206,7 @@ int tinyfd_messageBoxW(
 /* windows only - utf-16 version */
 int tinyfd_notifyW(
 	wchar_t const * const aTitle, /* NULL or L"" */
-	wchar_t const * const aMessage, /* L"" may contain \n \t */
+	wchar_t const * const aMessage, /* NULL or L"" may contain \n \t */
 	wchar_t const * const aIconType); /* L"info" L"warning" L"error" */
 
 /* windows only - utf-16 version */
@@ -225,8 +226,8 @@ wchar_t const * tinyfd_saveFileDialogW(
 
 /* windows only - utf-16 version */
 wchar_t const * tinyfd_openFileDialogW(
-	wchar_t const * const aTitle, /* L"" */
-	wchar_t const * const aDefaultPathAndFile, /* L"" */
+	wchar_t const * const aTitle, /* NULL or L"" */
+	wchar_t const * const aDefaultPathAndFile, /* NULL or L"" */
 	int const aNumOfFilterPatterns , /* 0 */
 	wchar_t const * const * const aFilterPatterns, /* NULL {L"*.jpg",L"*.png"} */
 	wchar_t const * const aSingleFilterDescription, /* NULL or L"image files" */
@@ -236,13 +237,13 @@ wchar_t const * tinyfd_openFileDialogW(
 
 /* windows only - utf-16 version */
 wchar_t const * tinyfd_selectFolderDialogW(
-	wchar_t const * const aTitle, /* L"" */
-	wchar_t const * const aDefaultPath); /* L"" */
+	wchar_t const * const aTitle, /* NULL or L"" */
+	wchar_t const * const aDefaultPath); /* NULL or L"" */
 		/* returns NULL on cancel */
 
 /* windows only - utf-16 version */
 wchar_t const * tinyfd_colorChooserW(
-	wchar_t const * const aTitle, /* L"" */
+	wchar_t const * const aTitle, /* NULL or L"" */
 	wchar_t const * const aDefaultHexRGB, /* NULL or L"#FF0000" */
 	unsigned char const aDefaultRGB[3] , /* { 0 , 255 , 255 } */
 	unsigned char aoResultRGB[3] ) ; /* { 0 , 0 , 0 } */
@@ -258,10 +259,10 @@ wchar_t const * tinyfd_colorChooserW(
 
 /* unix zenity only */
 char const * tinyfd_arrayDialog(
-	char const * const aTitle , /* "" */
+	char const * const aTitle , /* NULL or "" */
 	int const aNumOfColumns , /* 2 */
 	char const * const * const aColumns, /* {"Column 1","Column 2"} */
-	int const aNumOfRows, /* 2*/
+	int const aNumOfRows, /* 2 */
 	char const * const * const aCells);
 		/* {"Row1 Col1","Row1 Col2","Row2 Col1","Row2 Col2"} */
 

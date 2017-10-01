@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.1.0 [Sep 30, 2017] zlib licence
+ /         \ tinyfiledialogs.c v3.1.1 [Oct 1, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -27,8 +27,9 @@ OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 SSH supported via automatic switch to console mode or X11 forwarding
 
-One C file (add it to your C or C++ project) with 6 functions:
+One C file (add it to your C or C++ project) with 7 functions:
 - message & question
+- notification
 - input & password
 - save file
 - open file(s)
@@ -124,7 +125,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "3.1.0";
+char tinyfd_version [8] = "3.1.1";
 
 static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
@@ -966,7 +967,7 @@ static int messageBoxWinGui8(
 /* return has only meaning for tinyfd_query */
 int tinyfd_notifyW(
 	wchar_t const * const aTitle, /* NULL or L"" */
-	wchar_t const * const aMessage, /* L"" may contain \n \t */
+	wchar_t const * const aMessage, /* NULL or L"" may contain \n \t */
 	wchar_t const * const aIconType) /* L"info" L"warning" L"error" */
 {
 	wchar_t * lDialogString;
@@ -1504,8 +1505,8 @@ static char const * saveFileDialogWinGui8(
 
 
 wchar_t const * tinyfd_openFileDialogW(
-	wchar_t const * const aTitle, /*  NULL or "" */
-	wchar_t const * const aDefaultPathAndFile, /*  NULL or "" */
+	wchar_t const * const aTitle, /* NULL or "" */
+	wchar_t const * const aDefaultPathAndFile, /* NULL or "" */
 	int const aNumOfFilterPatterns, /* 0 */
 	wchar_t const * const * const aFilterPatterns, /* NULL or {"*.jpg","*.png"} */
 	wchar_t const * const aSingleFilterDescription, /* NULL or "image files" */
@@ -1710,7 +1711,7 @@ static int __stdcall BrowseCallbackProcW(HWND hwnd, UINT uMsg, LPARAM lp, LPARAM
 }
 
 wchar_t const * tinyfd_selectFolderDialogW(
-	wchar_t const * const aTitle, /*  NULL or "" */
+	wchar_t const * const aTitle, /* NULL or "" */
 	wchar_t const * const aDefaultPath) /* NULL or "" */
 {
 	static wchar_t lBuff[MAX_PATH_OR_CMD];
@@ -2810,7 +2811,7 @@ int tinyfd_messageBox(
 /* return has only meaning for tinyfd_query */
 int tinyfd_notify(
 	char const * const aTitle , /* NULL or "" */
-	char const * const aMessage , /* "" may contain \n \t */
+	char const * const aMessage , /* NULL or "" may contain \n \t */
 	char const * const aIconType ) /* "info" "warning" "error" */
 {
 #ifndef TINYFD_NOLIB
@@ -2972,8 +2973,8 @@ char const * tinyfd_saveFileDialog(
 
 /* in case of multiple files, the separator is | */
 char const * tinyfd_openFileDialog(
-    char const * const aTitle , /*  NULL or "" */
-    char const * const aDefaultPathAndFile , /*  NULL or "" */
+    char const * const aTitle , /* NULL or "" */
+    char const * const aDefaultPathAndFile , /* NULL or "" */
     int const aNumOfFilterPatterns , /* 0 */
     char const * const * const aFilterPatterns , /* NULL or {"*.jpg","*.png"} */
     char const * const aSingleFilterDescription , /* NULL or "image files" */
@@ -3031,7 +3032,7 @@ char const * tinyfd_openFileDialog(
 
 
 char const * tinyfd_selectFolderDialog(
-	char const * const aTitle , /*  NULL or "" */
+	char const * const aTitle , /* NULL or "" */
 	char const * const aDefaultPath ) /* NULL or "" */
 {
     static char lBuff [MAX_PATH_OR_CMD] ;
@@ -4490,6 +4491,7 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 }
 
 
+/* return has only meaning for tinyfd_query */
 int tinyfd_notify(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aMessage , /* NULL or ""  may contain \n and \t */

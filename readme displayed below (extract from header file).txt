@@ -23,7 +23,7 @@ bindings for LUA and C# dll, Haskell; included in LWJGL(java), Rust, Allegrobasi
                   | version 3 has the same good old API |
                   |       dialogs now stay on top       |
                   |       better UNICODE handling       |
-                  |       new dialog: NOTIFICATION      |
+                  |   new dialog: NOTIFICATION POPUP    |
                   |_____________________________________|
      ___________________________________________________________________
     |                                                                   |

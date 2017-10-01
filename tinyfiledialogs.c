@@ -4631,6 +4631,18 @@ int tinyfd_notifyPopup(
 		}
 		strcat( lDialogString , " \" 5" ) ;
 	}
+	else if ( perlPresent() >= 2 )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"perl");return 1;}
+
+		sprintf( lDialogString , "perl -e \"use Net::DBus;\
+my \\$sessionBus = Net::DBus->session;\
+my \\$notificationsService = \\$sessionBus->get_service('org.freedesktop.Notifications');\
+my \\$notificationsObject = \\$notificationsService->get_object('/org/freedesktop/Notifications',\
+'org.freedesktop.Notifications');\
+my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0, '%s', '%s', '%s', [], {}, -1);\" ",
+                aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
+	}
 	else if ( notifysendPresent() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notifysend");return 1;}
@@ -4655,18 +4667,6 @@ int tinyfd_notifyPopup(
 			strcat(lDialogString, lBuff) ;
 		}
 		strcat( lDialogString , "\"" ) ;
-	}
-	else if ( perlPresent() >= 2 )
-	{
-		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"perl");return 1;}
-
-		sprintf( lDialogString , "perl -e \"use Net::DBus;\
-my \\$sessionBus = Net::DBus->session;\
-my \\$notificationsService = \\$sessionBus->get_service('org.freedesktop.Notifications');\
-my \\$notificationsObject = \\$notificationsService->get_object('/org/freedesktop/Notifications',\
-'org.freedesktop.Notifications');\
-my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0, '%s', '%s', '%s', [], {}, -1);\" ",
-                aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 	}
 	else
 	{

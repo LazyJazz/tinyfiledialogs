@@ -117,7 +117,7 @@ unless your code is really prepared for UTF-8 on windows, leave this on MBSC.
 Or you can use the UTF-16 (wchar) prototypes at the end of ths file.*/
 #endif
 
-extern int tinyfd_forceConsole ;  /* 0 (default) or 1 */
+extern int tinyfd_forceConsole;  /* 0 (default) or 1 */
 /* for unix & windows: 0 (graphic mode) or 1 (console mode).
 0: try to use a graphic solution, if it fails then it uses console mode.
 1: forces all dialogs into console mode even when an X server is present,
@@ -136,7 +136,7 @@ for the graphic mode:
 for the console mode:
   dialog whiptail basicinput */
 
-int tinyfd_messageBox (
+int tinyfd_messageBox(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aMessage , /* NULL or "" may contain \n \t */
 	char const * const aDialogType , /* "ok" "okcancel" "yesno" "yesnocancel" */
@@ -144,18 +144,18 @@ int tinyfd_messageBox (
 	int const aDefaultButton ) ;
 		/* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */
 
-int tinyfd_notifyPopup (
+int tinyfd_notifyPopup(
 	char const * const aTitle, /* NULL or "" */
 	char const * const aMessage, /* NULL or "" may contain \n \t */
 	char const * const aIconType); /* "info" "warning" "error" */
 
-char const * tinyfd_inputBox (
+char const * tinyfd_inputBox(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aMessage , /* NULL or "" may NOT contain \n \t on windows */
 	char const * const aDefaultInput ) ;  /* "" , if NULL it's a passwordBox */
 		/* returns NULL on cancel */
 
-char const * tinyfd_saveFileDialog (
+char const * tinyfd_saveFileDialog(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aDefaultPathAndFile , /* NULL or "" */
 	int const aNumOfFilterPatterns , /* 0 */
@@ -163,7 +163,7 @@ char const * tinyfd_saveFileDialog (
 	char const * const aSingleFilterDescription ) ; /* NULL | "text files" */
 		/* returns NULL on cancel */
 
-char const * tinyfd_openFileDialog (
+char const * tinyfd_openFileDialog(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aDefaultPathAndFile , /* NULL or "" */
 	int const aNumOfFilterPatterns , /* 0 */
@@ -173,7 +173,7 @@ char const * tinyfd_openFileDialog (
 		/* in case of multiple files, the separator is | */
 		/* returns NULL on cancel */
 
-char const * tinyfd_selectFolderDialog (
+char const * tinyfd_selectFolderDialog(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aDefaultPath ) ; /* NULL or "" */
 		/* returns NULL on cancel */

@@ -6477,6 +6477,8 @@ strcpy(lThePassword, "tinyfiledialogs v");
 strcat(lThePassword, tinyfd_version);
 tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
 
+tinyfd_notifyPopup("the title", "the message\n\tfrom outer-space", "info");
+
 if (lWillBeGraphicMode && !tinyfd_forceConsole)
 {
 	tinyfd_forceConsole = ! tinyfd_messageBox("Hello World",

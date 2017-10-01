@@ -43,7 +43,7 @@ int tinyfd_messageBox (
     int const aDefaultButton ) ;
         // 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel
 
-int tinyfd_notifyPopup(
+int tinyfd_notifyPopup (
 	char const * const aTitle, // NULL or ""
 	char const * const aMessage, // NULL or "" may contain \n \t
 	char const * const aIconType); // "info" "warning" "error"
@@ -77,7 +77,7 @@ char const * tinyfd_selectFolderDialog (
     char const * const aDefaultPath ) ; // NULL or ""
         // returns NULL on cancel
 
-char const * tinyfd_colorChooser(
+char const * tinyfd_colorChooser (
     char const * const aTitle , // NULL or ""
     char const * const aDefaultHexRGB , // NULL or "#FF0000”
     unsigned char const aDefaultRGB[3] , // { 0 , 255 , 255 }
@@ -170,6 +170,8 @@ int main()
 	strcat(lThePassword, tinyfd_version);
 	strcat(lThePassword, " tinyfiledialogs");
 	tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
+
+	tinyfd_notifyPopup("the title", "the message\n\tfrom outer-space", "info");
 
 	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )
 	{

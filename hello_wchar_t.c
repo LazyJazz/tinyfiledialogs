@@ -128,7 +128,7 @@ int main(void)
 	wcscat(lThePassword, lWcharBuff);
 	tinyfd_messageBoxW(lThePassword, lBuffer, L"ok", L"info", 0);
 
-	tinyfd_notifyW(L"le titre", L"le message\n\tde la mort qui tue", L"info");
+	tinyfd_notifyPopupW(L"le titre", L"le message\n\tde la mort qui tue", L"info");
 
 	/*tinyfd_forceConsole = 1;*/
 	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )

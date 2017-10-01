@@ -137,7 +137,7 @@ int main(void)
 	strcat(lThePassword, " tinyfiledialogs");
 	tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
 
-	tinyfd_notify("the title", "the message\n\tfrom outer-space", "info");
+	tinyfd_notifyPopup("the title", "the message\n\tfrom outer-space", "info");
 
 	/*tinyfd_forceConsole = 1;*/
 	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )

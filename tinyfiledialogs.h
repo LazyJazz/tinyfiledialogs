@@ -144,7 +144,7 @@ int tinyfd_messageBox (
 	int const aDefaultButton ) ;
 		/* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */
 
-int tinyfd_notify (
+int tinyfd_notifyPopup (
 	char const * const aTitle, /* NULL or "" */
 	char const * const aMessage, /* NULL or "" may contain \n \t */
 	char const * const aIconType); /* "info" "warning" "error" */
@@ -204,7 +204,7 @@ int tinyfd_messageBoxW(
 		/* returns 0 for cancel/no , 1 for ok/yes */
 
 /* windows only - utf-16 version */
-int tinyfd_notifyW(
+int tinyfd_notifyPopupW(
 	wchar_t const * const aTitle, /* NULL or L"" */
 	wchar_t const * const aMessage, /* NULL or L"" may contain \n \t */
 	wchar_t const * const aIconType); /* L"info" L"warning" L"error" */

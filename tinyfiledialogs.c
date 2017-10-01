@@ -965,7 +965,7 @@ static int messageBoxWinGui8(
 
 
 /* return has only meaning for tinyfd_query */
-int tinyfd_notifyW(
+int tinyfd_notifyPopupW(
 	wchar_t const * const aTitle, /* NULL or L"" */
 	wchar_t const * const aMessage, /* NULL or L"" may contain \n \t */
 	wchar_t const * const aIconType) /* L"info" L"warning" L"error" */
@@ -1052,7 +1052,7 @@ static int notifyWinGui(
 		lIconType = mbcsTo16(aIconType);
 	}
 
-	tinyfd_notifyW( lTitle,	lMessage, lIconType);
+	tinyfd_notifyPopupW( lTitle,	lMessage, lIconType);
 
 	free(lTitle);
 	free(lMessage);
@@ -2809,7 +2809,7 @@ int tinyfd_messageBox(
 
 
 /* return has only meaning for tinyfd_query */
-int tinyfd_notify(
+int tinyfd_notifyPopup(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aMessage , /* NULL or "" may contain \n \t */
 	char const * const aIconType ) /* "info" "warning" "error" */
@@ -4492,7 +4492,7 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 
 
 /* return has only meaning for tinyfd_query */
-int tinyfd_notify(
+int tinyfd_notifyPopup(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aMessage , /* NULL or ""  may contain \n and \t */
 	char const * const aIconType ) /* "info" "warning" "error" "question" */

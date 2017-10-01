@@ -43,7 +43,7 @@ int tinyfd_messageBox (
     int const aDefaultButton ) ;
         // 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel
 
-int tinyfd_notify(
+int tinyfd_notifyPopup(
 	char const * const aTitle, // NULL or ""
 	char const * const aMessage, // NULL or "" may contain \n \t
 	char const * const aIconType); // "info" "warning" "error"

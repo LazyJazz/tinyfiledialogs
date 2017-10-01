@@ -4547,17 +4547,17 @@ int tinyfd_notify(
 		if ( zenityPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
-			strcpy( lDialogString , "szAnswer=$(zenity" ) ;
+			strcpy( lDialogString , "zenity" ) ;
 		}
 		else if ( matedialogPresent() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return 1;}
-			strcpy( lDialogString , "szAnswer=$(matedialog" ) ;
+			strcpy( lDialogString , "matedialog" ) ;
 		}
 		else
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return 1;}
-			strcpy( lDialogString , "szAnswer=$(qarma" ) ;
+			strcpy( lDialogString , "qarma" ) ;
 		}
 
 		strcat( lDialogString , " --notification"); 
@@ -4569,14 +4569,12 @@ int tinyfd_notify(
 			strcat( lDialogString , "'" ) ;
 		}
 
-		if ( aTitle && strlen(aTitle) ) 
-		{
-			strcat(lDialogString, " --title=\"") ;
-			strcat(lDialogString, aTitle) ;
-			strcat(lDialogString, "\"") ;
-		}
-
-		strcat( lDialogString , "' --text \"" ) ;
+		strcat( lDialogString , " --text \"" ) ;
+        if ( aTitle && strlen(aTitle) )
+        {
+            strcat(lDialogString, aTitle) ;
+            strcat(lDialogString, "\n") ;
+        }
 		if ( aMessage && strlen( aMessage ) )
 		{
 			strcat( lDialogString , aMessage ) ;

@@ -3403,7 +3403,7 @@ static char const * terminalName( )
 		{
 			strcpy(lTerminalName , "" ) ;
 		}
-		/*else if ( strcpy(lTerminalName,"gnome-terminal") //bad (good if version < 3)
+		/*else if ( strcpy(lTerminalName,"gnome-terminal") bad (good if version < 3)
 			  && detectPresence(lTerminalName) )
 		{
 			strcat(lTerminalName , " --disable-factory -x " ) ;
@@ -4532,7 +4532,7 @@ int tinyfd_notifyPopup(
 		strcat( lDialogString, "' -e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat( lDialogString, " -e 'end tell'") ;
 	}
-	else if ( 0)//zenity3Present() || matedialogPresent() || qarmaPresent() )
+	else if ( zenity3Present() || matedialogPresent() || qarmaPresent() )
 	{
 		if ( zenity3Present() )
 		{

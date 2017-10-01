@@ -4641,7 +4641,7 @@ int tinyfd_notify(
 	}
 	else
 	{
-		return tinyfd_messageBox(aTitle, aMessage, "ok", 0);
+		return tinyfd_messageBox(aTitle, aMessage, "ok", aIconType, 0);
 	}
 
 	if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;

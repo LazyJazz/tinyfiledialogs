@@ -18,21 +18,22 @@ bindings for LUA and C# dll, Haskell; included in LWJGL(java), Rust, Allegrobasi
 
                  http://tinyfiledialogs.sourceforge.net
               git://git.code.sf.net/p/tinyfiledialogs/code
- _________________________________________________________________________
-|                                                                         |
-| CONTACT me directly via the email address at the top of the header file |
-|_________________________________________________________________________|
-    ___________________________________________________________________
-   |                                                                   |
-   | the windows only wchar_t UTF-16 prototypes are in the header file |
-   |              NOW ALSO FOR THE INPUT / PASSWORD BOX                |
-   |___________________________________________________________________|
                    _____________________________________
                   |                                     |
                   | version 3 has the same good old API |
                   |       dialogs now stay on top       |
                   |       better UNICODE handling       |
+                  |       new dialog: NOTIFICATION      |
                   |_____________________________________|
+     ___________________________________________________________________
+    |                                                                   |
+    | the windows only wchar_t UTF-16 prototypes are in the header file |
+    |              NOW ALSO FOR THE INPUT / PASSWORD BOX                |
+    |___________________________________________________________________|
+  _________________________________________________________________________
+ |                                                                         |
+ | CONTACT me directly via the email address at the top of the header file |
+ |_________________________________________________________________________|
 
 int tinyfd_messageBox (
     char const * const aTitle , // NULL or ""

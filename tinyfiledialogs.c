@@ -4529,7 +4529,7 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 int tinyfd_notifyPopup(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aMessage , /* NULL or ""  may contain \n and \t */
-	char const * const aIconType ) /* "info" "warning" "error" "question" */
+	char const * const aIconType ) /* "info" "warning" "error" */
 {
     char lBuff[MAX_PATH_OR_CMD];
 	char * lDialogString = NULL ;

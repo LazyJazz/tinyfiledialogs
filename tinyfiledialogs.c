@@ -4525,20 +4525,7 @@ int tinyfd_notify(
 			strcat(lDialogString, aTitle) ;
 			strcat(lDialogString, "\" ") ;
 		}
-		strcat(lDialogString, "with icon ") ;
-		if ( aIconType && ! strcmp( "error" , aIconType ) )
-		{
-			strcat(lDialogString, "stop " ) ;
-		}
-		else if ( aIconType && ! strcmp( "warning" , aIconType ) )
-		{
-			strcat(lDialogString, "caution " ) ;
-		}
-		else /* question or info */
-		{
-			strcat(lDialogString, "note " ) ;
-		}
-
+		
 		strcat( lDialogString, "' -e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat( lDialogString, " -e 'end tell'") ;
 	}

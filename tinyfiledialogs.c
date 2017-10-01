@@ -4532,9 +4532,9 @@ int tinyfd_notifyPopup(
 		strcat( lDialogString, "' -e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat( lDialogString, " -e 'end tell'") ;
 	}
-	else if ( zenity3Present() || matedialogPresent() || qarmaPresent() )
+	else if ( (zenity3Present()>=3) || matedialogPresent() || qarmaPresent() )
 	{
-		if ( zenity3Present() )
+		if ( zenity3Present()>=3 )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
 			strcpy( lDialogString , "zenity" ) ;

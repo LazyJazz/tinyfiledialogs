@@ -4495,6 +4495,7 @@ int tinyfd_notify(
 	char const * const aMessage , /* NULL or ""  may contain \n and \t */
 	char const * const aIconType ) /* "info" "warning" "error" "question" */
 {
+    char lBuff[MAX_PATH_OR_CMD];
 	char * lDialogString = NULL ;
 	FILE * lIn ;
 	int lTitleLen ;
@@ -4529,7 +4530,7 @@ int tinyfd_notify(
 		strcat( lDialogString, "' -e 'end try'") ;
 		if ( ! osx9orBetter() ) strcat( lDialogString, " -e 'end tell'") ;
 	}
-	else if ( zenity3Present() || matedialogPresent() || qarmaPresent() )
+	else if ( 0)//zenity3Present() || matedialogPresent() || qarmaPresent() )
 	{
 		if ( zenity3Present() )
 		{
@@ -4605,7 +4606,10 @@ int tinyfd_notify(
 		}
 		if ( aMessage && strlen(aMessage) )
 		{
-			strcat(lDialogString, aMessage) ;
+            replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
+            replaceSubStr( aMessage , "\n" , " | " , lBuff ) ;
+            replaceSubStr( aMessage , "\t" , "  " , lBuff ) ;
+			strcat(lDialogString, lBuff) ;
 		}
 		strcat( lDialogString , "\"" ) ;
 	}

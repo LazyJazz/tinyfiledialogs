@@ -3510,11 +3510,24 @@ static int notifysendPresent( )
 static int perlPresent( )
 {
     static int lPerlPresent = -1 ;
+	char lBuff [MAX_PATH_OR_CMD] ;
+	FILE * lIn ;
+
     if ( lPerlPresent < 0 )
     {
         lPerlPresent = detectPresence("perl") ;
+		if ( lPerlPresent )
+		{
+			lIn = popen( "perl -MNet::DBus -we 1 2>&1" , "r" ) ;
+			if ( fgets( lBuff , sizeof( lBuff ) , lIn ) == NULL )
+			{
+				lPerlPresent = 2 ;
+				if (tinyfd_verbose) printf("perl %d\n", lPerlPresent);
+            }
+			pclose( lIn ) ;
+		}
     }
-    return lPerlPresent && graphicMode( ) ;
+    return graphicMode() ? lPerlPresent : 0 ;
 }
 
 
@@ -4643,7 +4656,7 @@ int tinyfd_notifyPopup(
 		}
 		strcat( lDialogString , "\"" ) ;
 	}
-	else if ( perlPresent() )
+	else if ( perlPresent() >= 2 )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"perl");return 1;}
 

@@ -14,8 +14,7 @@
     | the windows only wchar_t UTF-16 prototypes are at the end of this file |
     |________________________________________________________________________|
 
-A big thank you to Don Heyse http://ldglite.sf.net for
-                   his code contributions, bug corrections & thorough testing!
+A big thank you to Don Heyse http://ldglite.sf.net for bug corrections & thorough testing!
 
 Please 1) Let me know If you are using it on exotic hardware / OS / compiler
        2) If yo have a sourceforge account, leave a 3-word review on Sourceforge.

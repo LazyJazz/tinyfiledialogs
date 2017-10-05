@@ -4567,6 +4567,7 @@ int tinyfd_notifyPopup(
 	}
 	else if ( (zenity3Present()>=3) || matedialogPresent() || qarmaPresent() )
 	{
+		/* zenity 2.32 has the notification but with a bug: it doesnt return from it */
 		if ( zenity3Present()>=3 )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}

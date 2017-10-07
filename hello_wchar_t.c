@@ -26,7 +26,7 @@ SSH supported via automatic switch to console mode or X11 forwarding
 
 One C file (add it to your C or C++ project) with 7 functions:
 - message & question
-- notify
+- notify popup
 - input & password
 - save file
 - open file(s)

@@ -5,11 +5,11 @@
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|
              git://git.code.sf.net/p/tinyfiledialogs/code
-		 ____________________________________________
+         ____________________________________________
 		|                                            |
 		|   email: tinyfiledialogs at ysengrin.com   |
 		|____________________________________________|
-	 ________________________________________________________________________
+     ________________________________________________________________________
     |                                                                        |
     | the windows only wchar_t UTF-16 prototypes are at the end of this file |
     |________________________________________________________________________|
@@ -28,7 +28,7 @@ SSH supported via automatic switch to console mode or X11 forwarding
 
 One C file (add it to your C or C++ project) with 7 functions:
 - message & question
-- notify
+- notify popup
 - input & password
 - save file
 - open file(s)

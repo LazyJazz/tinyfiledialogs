@@ -144,9 +144,10 @@ int tinyfd_messageBox(
 		/* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */
 
 int tinyfd_notifyPopup(
-	char const * const aTitle, /* NULL or "" */
-	char const * const aMessage, /* NULL or "" may contain \n \t */
-	char const * const aIconType); /* "info" "warning" "error" */
+	char const * const aTitle , /* NULL or "" */
+	char const * const aMessage , /* NULL or "" may contain \n \t */
+	char const * const aIconType ) ; /* "info" "warning" "error" */
+		/* return has only meaning for tinyfd_query */
 
 char const * tinyfd_inputBox(
 	char const * const aTitle , /* NULL or "" */

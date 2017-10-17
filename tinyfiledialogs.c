@@ -3517,7 +3517,7 @@ static int perlPresent( )
         lPerlPresent = detectPresence("perl") ;
 		if ( lPerlPresent )
 		{
-			lIn = popen( "perl -MNet::DBus -e 1 2>&1" , "r" ) ;
+			lIn = popen( "perl -MNet::DBus -e \"Net::DBus->session->get_service('org.freedesktop.Notifications')\" 2>&1" , "r" ) ;
 			if ( fgets( lBuff , sizeof( lBuff ) , lIn ) == NULL )
 			{
 				lPerlPresent = 2 ;

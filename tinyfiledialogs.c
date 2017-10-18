@@ -147,7 +147,7 @@ tinyfd_response is then filled with the retain solution.
 possible values for tinyfd_response are (all lowercase)
 for the graphic mode:
   windows_wchar windows applescript zenity zenity3 matedialog qarma kdialog
-  tkinter gxmessage gmessage xmessage xdialog gdialog
+  tkinter python-dbus perl gxmessage gmessage xmessage xdialog gdialog
 for the console mode:
   dialog whiptail basicinput */
 
@@ -180,11 +180,10 @@ static char gMessageUnix[] = "\
 \\_____  ____/\n\
       \\|\
 \ntiny file dialogs on UNIX needs:\n\tapplescript\
-\nor\tzenity / matedialog\
-\nor\tqarma (zenity for qt)\
+\nor\tzenity / matedialog / qarma\
 \nor\tkdialog\
 \nor\tXdialog\
-\nor\tpython 2 + tkinter\
+\nor\tpython 2 + tkinter + dbus\
 \nor\tdialog (opens a console xterm if needed)\
 \nor\txterm + bash (opens a console for basic input)\
 \nor\tit will use the existing console for basic input";
@@ -3697,6 +3696,36 @@ static int osx9orBetter( )
 }
 
 
+static int python2Present( )
+{
+    static int lpython2Present = -1 ;
+	int i;
+
+	if ( lpython2Present < 0 )
+	{
+		lpython2Present = 0 ;
+		strcpy(gPython2Name , "python2" ) ;
+		if ( detectPresence(gPython2Name) ) lpython2Present = 1;
+        else
+		{
+			for ( i = 9 ; i >= 0 ; i -- )
+			{
+				sprintf( gPython2Name , "python2.%d" , i ) ;
+				if ( detectPresence(gPython2Name) ) lpython2Present = 1;
+                else break ;
+			}
+            if ( ! lpython2Present )
+            {
+		        strcpy(gPython2Name , "python" ) ;
+		        if ( detectPresence(gPython2Name) ) lpython2Present = 1;
+            }
+		}
+	}
+	/* printf("lpython2Present %d\n", lpython2Present) ; */
+	/* printf("gPython2Name %s\n", gPython2Name) ; */
+    return lpython2Present ;
+}
+
 static int tkinter2Present( )
 {
     static int lTkinter2Present = -1 ;
@@ -3708,35 +3737,38 @@ static int tkinter2Present( )
 	if ( lTkinter2Present < 0 )
 	{
 		lTkinter2Present = 0 ;
-		strcpy(gPython2Name , "python" ) ;
-		sprintf( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
-		if ( ! detectPresence(gPython2Name)
-                 || ! (lTkinter2Present = tryCommand(lPythonCommand)) )
-		{
-			strcpy(gPython2Name , "python2" ) ;
-			if ( detectPresence(gPython2Name) )
-			{
-				sprintf( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
-				lTkinter2Present = tryCommand(lPythonCommand);
-			}
-			else
-			{
-				for ( i = 9 ; i >= 0 ; i -- )
-				{
-					sprintf( gPython2Name , "python2.%d" , i ) ;
-					if ( detectPresence(gPython2Name) )
-					{
-						sprintf( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
-						lTkinter2Present = tryCommand(lPythonCommand);
-						break ;
-					}
-				}
-			}
+		if ( python2Present() )
+        {
+		    sprintf( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
+		    lTkinter2Present = tryCommand(lPythonCommand) ;
 		}
 	}
 	/* printf("lTkinter2Present %d\n", lTkinter2Present) ; */
 	/* printf("gPython2Name %s\n", gPython2Name) ; */
     return lTkinter2Present && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
+}
+
+
+static int dbusPresent( )
+{
+    static int lDbusPresent = -1 ;
+	int i;
+	char lPythonCommand[256];
+	char lPythonParams[256] =
+"-c \"try:\n\timport dbus;bus=dbus.SessionBus();notif=bus.get_object('org.freedesktop.Notifications','/org/freedesktop/Notifications');notify=dbus.Interface(notif,'org.freedesktop.Notifications');\nexcept:\n\tprint(0);\"";
+
+	if ( lDbusPresent < 0 )
+	{
+		lDbusPresent = 0 ;
+        if ( python2Present() )
+        {
+    		sprintf( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
+		    lDbusPresent = tryCommand(lPythonCommand) ;
+		}
+	}
+	/* printf("lDbusPresent %d\n", lDbusPresent) ; */
+	/* printf("gPython2Name %s\n", gPython2Name) ; */
+    return lDbusPresent && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
 }
 
 
@@ -4632,26 +4664,19 @@ int tinyfd_notifyPopup(
 		}
 		strcat( lDialogString , " \" 5" ) ;
 	}
-	else if ( perlPresent() >= 2 )
-	{
-		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"perl");return 1;}
-
-		sprintf( lDialogString , "perl -e \"use Net::DBus;\
-my \\$sessionBus = Net::DBus->session;\
-my \\$notificationsService = \\$sessionBus->get_service('org.freedesktop.Notifications');\
-my \\$notificationsObject = \\$notificationsService->get_object('/org/freedesktop/Notifications',\
-'org.freedesktop.Notifications');\
-my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0, '%s', '%s', '%s', [], {}, -1);\" ",
-                aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
-	}
-	else if ( perlPresent() >= 2 )
+	else if ( dbusPresent( ) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python-dbus");return 1;}
 		strcpy( lDialogString , gPython2Name ) ;
 		strcat( lDialogString ," -c \"import dbus;bus=dbus.SessionBus();");
 		strcat( lDialogString ,"notif=bus.get_object('org.freedesktop.Notifications','/org/freedesktop/Notifications');" ) ;
 		strcat( lDialogString ,"notify=dbus.Interface(notif,'org.freedesktop.Notifications');" ) ;
-		strcat( lDialogString ,"notify.Notify(app_name,0,'','" ) ;
+		strcat( lDialogString ,"notify.Notify('',0,'" ) ;
+		if ( aIconType && strlen(aIconType) )
+		{
+			strcat( lDialogString , aIconType ) ;
+		}
+		strcat(lDialogString, "','") ;
 		if ( aTitle && strlen(aTitle) )
 		{
 			strcat(lDialogString, aTitle) ;
@@ -4663,6 +4688,18 @@ my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0
 			replaceSubStr( aMessage , "\n" , "\\n" , lpDialogString ) ;
 		}
 		strcat(lDialogString, "','','',5000)\"") ;
+	}
+	else if ( perlPresent() >= 2 )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"perl");return 1;}
+
+		sprintf( lDialogString , "perl -e \"use Net::DBus;\
+my \\$sessionBus = Net::DBus->session;\
+my \\$notificationsService = \\$sessionBus->get_service('org.freedesktop.Notifications');\
+my \\$notificationsObject = \\$notificationsService->get_object('/org/freedesktop/Notifications',\
+'org.freedesktop.Notifications');\
+my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0, '%s', '%s', '%s', [], {}, -1);\" ",
+                aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 	}
 	else if ( notifysendPresent() )
 	{

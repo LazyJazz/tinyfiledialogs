@@ -145,10 +145,10 @@ the functions will not display the dialogs
 but and return 0 for console mode, 1 for graphic mode.
 tinyfd_response is then filled with the retain solution.
 possible values for tinyfd_response are (all lowercase)
-for the graphic mode:
+for graphic mode:
   windows_wchar windows applescript zenity zenity3 matedialog qarma kdialog
   tkinter python-dbus perl gxmessage gmessage xmessage xdialog gdialog
-for the console mode:
+for console mode:
   dialog whiptail basicinput */
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)

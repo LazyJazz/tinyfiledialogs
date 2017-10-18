@@ -183,7 +183,7 @@ static char gMessageUnix[] = "\
 \nor\tzenity / matedialog / qarma\
 \nor\tkdialog\
 \nor\tXdialog\
-\nor\tpython 2 + tkinter + dbus\
+\nor\tpython 2 + tkinter + dbus (for python)\
 \nor\tdialog (opens a console xterm if needed)\
 \nor\txterm + bash (opens a console for basic input)\
 \nor\tit will use the existing console for basic input";

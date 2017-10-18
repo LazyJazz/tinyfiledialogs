@@ -4532,6 +4532,7 @@ int tinyfd_notifyPopup(
 {
     char lBuff[MAX_PATH_OR_CMD];
 	char * lDialogString = NULL ;
+    char * lpDialogString ;
 	FILE * lIn ;
 	int lTitleLen ;
 	int lMessageLen ;

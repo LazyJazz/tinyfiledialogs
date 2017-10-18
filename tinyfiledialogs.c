@@ -4643,6 +4643,26 @@ my \\$notificationsObject = \\$notificationsService->get_object('/org/freedeskto
 my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0, '%s', '%s', '%s', [], {}, -1);\" ",
                 aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 	}
+	else if ( perlPresent() >= 2 )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python-dbus");return 1;}
+		strcpy( lDialogString , gPython2Name ) ;
+		strcat( lDialogString ," -c \"import dbus;bus=dbus.SessionBus();");
+		strcat( lDialogString ,"notif=bus.get_object('org.freedesktop.Notifications','/org/freedesktop/Notifications');" ) ;
+		strcat( lDialogString ,"notify=dbus.Interface(notif,'org.freedesktop.Notifications');" ) ;
+		strcat( lDialogString ,"notify.Notify(app_name,0,'','" ) ;
+		if ( aTitle && strlen(aTitle) )
+		{
+			strcat(lDialogString, aTitle) ;
+		}
+		strcat(lDialogString, "','") ;
+		if ( aMessage && strlen(aMessage) )
+		{
+			lpDialogString = lDialogString + strlen(lDialogString);
+			replaceSubStr( aMessage , "\n" , "\\n" , lpDialogString ) ;
+		}
+		strcat(lDialogString, "','','',5000)\"") ;
+	}
 	else if ( notifysendPresent() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notifysend");return 1;}

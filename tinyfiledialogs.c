@@ -3711,8 +3711,11 @@ static int python2Present( )
 			for ( i = 9 ; i >= 0 ; i -- )
 			{
 				sprintf( gPython2Name , "python2.%d" , i ) ;
-				if ( detectPresence(gPython2Name) ) lpython2Present = 1;
-                else break ;
+				if ( detectPresence(gPython2Name) )
+				{
+					lpython2Present = 1;
+					break;
+				}
 			}
             if ( ! lpython2Present )
             {

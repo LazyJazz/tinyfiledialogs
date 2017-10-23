@@ -23,7 +23,7 @@ bindings for LUA and C# dll, Haskell; included in LWJGL(java), Rust, Allegrobasi
                   | version 3 has the same good old API |
                   |       dialogs now stay on top       |
                   |       better UNICODE handling       |
-                  |   new dialog: NOTIFICATION POPUP    |
+                  | new dialog: TRAY NOTIFICATION POPUP |
                   |_____________________________________|
      ___________________________________________________________________
     |                                                                   |
@@ -35,6 +35,11 @@ bindings for LUA and C# dll, Haskell; included in LWJGL(java), Rust, Allegrobasi
  | CONTACT me directly via the email address at the top of the header file |
  |_________________________________________________________________________|
 
+int tinyfd_notifyPopup (
+	char const * const aTitle, // NULL or ""
+	char const * const aMessage, // NULL or "" may contain \n \t
+	char const * const aIconType); // "info" "warning" "error"
+
 int tinyfd_messageBox (
     char const * const aTitle , // NULL or ""
     char const * const aMessage , // NULL or "" may contain \n \t
@@ -42,11 +47,6 @@ int tinyfd_messageBox (
     char const * const aIconType , // "info" "warning" "error" "question"
     int const aDefaultButton ) ;
         // 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel
-
-int tinyfd_notifyPopup (
-	char const * const aTitle, // NULL or ""
-	char const * const aMessage, // NULL or "" may contain \n \t
-	char const * const aIconType); // "info" "warning" "error"
 
 char const * tinyfd_inputBox (
     char const * const aTitle , // NULL or ""

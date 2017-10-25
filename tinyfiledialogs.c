@@ -3698,14 +3698,14 @@ static int osx9orBetter( )
 
 static int python2Present( )
 {
-    static int lpython2Present = -1 ;
+    static int lPython2Present = -1 ;
 	int i;
 
-	if ( lpython2Present < 0 )
+	if ( lPython2Present < 0 )
 	{
-		lpython2Present = 0 ;
+		lPython2Present = 0 ;
 		strcpy(gPython2Name , "python2" ) ;
-		if ( detectPresence(gPython2Name) ) lpython2Present = 1;
+		if ( detectPresence(gPython2Name) ) lPython2Present = 1;
         else
 		{
 			for ( i = 9 ; i >= 0 ; i -- )
@@ -3713,21 +3713,22 @@ static int python2Present( )
 				sprintf( gPython2Name , "python2.%d" , i ) ;
 				if ( detectPresence(gPython2Name) )
 				{
-					lpython2Present = 1;
+					lPython2Present = 1;
 					break;
 				}
 			}
-            if ( ! lpython2Present )
+			if ( ! lPython2Present )
             {
 		        strcpy(gPython2Name , "python" ) ;
-		        if ( detectPresence(gPython2Name) ) lpython2Present = 1;
+				if ( detectPresence(gPython2Name) ) lPython2Present = 1;
             }
 		}
 	}
-	/* printf("lpython2Present %d\n", lpython2Present) ; */
+	if (tinyfd_verbose) printf("lPython2Present %d\n", lPython2Present) ;
 	/* printf("gPython2Name %s\n", gPython2Name) ; */
-    return lpython2Present ;
+	return lPython2Present ;
 }
+
 
 static int tkinter2Present( )
 {
@@ -3746,7 +3747,7 @@ static int tkinter2Present( )
 		    lTkinter2Present = tryCommand(lPythonCommand) ;
 		}
 	}
-	/* printf("lTkinter2Present %d\n", lTkinter2Present) ; */
+	if (tinyfd_verbose) printf("lTkinter2Present %d\n", lTkinter2Present) ;
 	/* printf("gPython2Name %s\n", gPython2Name) ; */
     return lTkinter2Present && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
 }
@@ -3769,7 +3770,7 @@ static int dbusPresent( )
 		    lDbusPresent = tryCommand(lPythonCommand) ;
 		}
 	}
-	/* printf("lDbusPresent %d\n", lDbusPresent) ; */
+	if (tinyfd_verbose) printf("lDbusPresent %d\n", lDbusPresent) ;
 	/* printf("gPython2Name %s\n", gPython2Name) ; */
     return lDbusPresent && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
 }

@@ -1,5 +1,5 @@
 /*_________
- /         \ hello.c v3.1.4 [Oct 19, 2017] zlib licence
+ /         \ hello.c v3.1.5 [Oct 25, 2017] zlib licence
  |tiny file| Hello World file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -115,7 +115,7 @@ int main( int argc , char * argv[] )
 	tinyfd_verbose = argc - 1;
 
 #ifdef _WIN32
-	tinyfd_winUtf8 = 0; /* on windows, you decide if char holds MBCS(0) or UTF8(1) */
+	tinyfd_winUtf8 = 0; /* on windows, you decide if char holds 0(default): MBCS or 1: UTF-8 */
 #endif
 
 	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
@@ -124,19 +124,19 @@ int main( int argc , char * argv[] )
 #pragma warning(disable:4996) /* silences warning about strcpy strcat fopen*/
 #endif
 
+	strcpy(lBuffer, "v");
+	strcat(lBuffer, tinyfd_version);
 	if (lWillBeGraphicMode)
 	{
-		strcpy(lBuffer, "graphic mode: ");
+		strcat(lBuffer, "\ngraphic mode: ");
 	}
 	else
 	{
-		strcpy(lBuffer, "console mode: ");
+		strcat(lBuffer, "\nconsole mode: ");
 	}
 
 	strcat(lBuffer, tinyfd_response);
-	strcpy(lThePassword, "v");
-	strcat(lThePassword, tinyfd_version);
-	strcat(lThePassword, " tinyfiledialogs");
+	strcpy(lThePassword, "tinyfiledialogs");
 	tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
 
 	tinyfd_notifyPopup("the title", "the message\n\tfrom outer-space", "info");

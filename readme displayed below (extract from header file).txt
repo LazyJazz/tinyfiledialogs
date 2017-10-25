@@ -1,11 +1,11 @@
+tiny file dialogs ( cross-platform C C++ ) v3.1.5 [Oct 25, 2017] zlib licence
  _________
-/         \   tiny file dialogs ( cross-platform C C++ )
-|tiny file|   v3.1.4 [Oct 19, 2017] zlib licence
-| dialogs |   InputBox PasswordBox MessageBox ColorPicker
-\____  ___/   OpenFileDialog SaveFileDialog SelectFolderDialog		
-     \|       ASCII UTF-8 (and also MBCS UTF-16 for windows)
-              Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE
-  
+/         \   Native Popup InputBox PasswordBox MessageBox ColorPicker
+|tiny file|   OpenFileDialog SaveFileDialog SelectFolderDialog	
+| dialogs |   ASCII UTF-8 (and also MBCS UTF-16 for windows)
+\____  ___/   Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE	
+     \|       
+
 SSH supported via automatic switch to console mode or X11 forwarding
 
 tested with C & C++ compilers on 

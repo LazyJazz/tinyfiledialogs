@@ -1,5 +1,5 @@
 /*_________
- /         \ hello_wchar_t.c v3.1.4 [Oct 19, 2017] zlib licence
+ /         \ hello_wchar_t.c v3.1.5 [Oct 25, 2017] zlib licence
  |tiny file| Hello WCHAR_T file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -112,20 +112,21 @@ int main(void)
 #pragma warning(disable:4996) /* silences warning about strcpy strcat fopen wcscpy*/
 #endif
 
+	wcscpy(lBuffer, L"v");
+	mbstowcs(lWcharBuff, tinyfd_version, strlen(tinyfd_version) + 1);
+	wcscat(lBuffer, lWcharBuff);
 	if (lWillBeGraphicMode)
 	{
-		wcscpy(lBuffer, L"graphic mode: ");
+		wcscat(lBuffer, L"\ngraphic mode: ");
 	}
 	else
 	{
-		wcscpy(lBuffer, L"console mode: ");
+		wcscat(lBuffer, L"\nconsole mode: ");
 	}
 
 	mbstowcs(lWcharBuff, tinyfd_response, strlen(tinyfd_response)+1);
 	wcscat(lBuffer, lWcharBuff);
-	wcscpy(lThePassword, L"tinyfiledialogs v");
-	mbstowcs(lWcharBuff, tinyfd_version, strlen(tinyfd_version) + 1);
-	wcscat(lThePassword, lWcharBuff);
+	wcscpy(lThePassword, L"tinyfiledialogs");
 	tinyfd_messageBoxW(lThePassword, lBuffer, L"ok", L"info", 0);
 
 	tinyfd_notifyPopupW(L"le titre", L"le message\n\tde la mort qui tue", L"info");

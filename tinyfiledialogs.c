@@ -126,7 +126,7 @@ misrepresented as being the original software.
 
 char tinyfd_version [8] = "3.1.4";
 
-static int tinyfd_verbose = 0 ; /* print on unix the command line calls */
+int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;

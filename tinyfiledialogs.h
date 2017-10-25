@@ -108,6 +108,8 @@ extern "C" {
 
 extern char tinyfd_version[8]; /* contains tinyfd current version number */
 
+extern int tinyfd_verbose; /* 0 (default) or 1 : on unix, prints the command line calls */
+
 #ifdef _WIN32
 /* for UTF-16 use the functions at the end of this files */
 extern int tinyfd_winUtf8; /* 0 (default MBCS) or 1 (UTF-8)*/

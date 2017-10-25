@@ -97,7 +97,7 @@ misrepresented as being the original software.
 #include <stdio.h>
 #include <string.h>
 #include "tinyfiledialogs.h"
-int main(void)
+int main(int argc)
 {
 	int lIntValue;
 	char const * lTmp;
@@ -111,6 +111,8 @@ int main(void)
 	char lBuffer[1024];
 	char lThePassword[1024];
 	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
+
+	tinyfd_verbose = argc;
 
 #ifdef _WIN32
 	tinyfd_winUtf8 = 0; /* on windows, you decide if char holds MBCS(0) or UTF8(1) */

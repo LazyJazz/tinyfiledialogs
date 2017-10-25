@@ -6562,7 +6562,7 @@ char const * tinyfd_arrayDialog(
 
 
 /*
-int main(void)
+int main( int argc , char * argv[] )
 {
 char const * lTmp;
 char const * lTheSaveFileName;
@@ -6575,6 +6575,8 @@ FILE * lIn;
 char lBuffer[1024];
 char lThePassword[1024];
 char const * lFilterPatterns[2] = { "*.txt", "*.text" };
+
+tinyfd_verbose = argc - 1;
 
 lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 

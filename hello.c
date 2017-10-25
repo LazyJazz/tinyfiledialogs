@@ -112,7 +112,7 @@ int main( int argc, char * argv[] )
 	char lThePassword[1024];
 	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
-	tinyfd_verbose = argc;
+	tinyfd_verbose = argc - 1 ;
 
 #ifdef _WIN32
 	tinyfd_winUtf8 = 0; /* on windows, you decide if char holds MBCS(0) or UTF8(1) */

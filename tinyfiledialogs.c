@@ -3520,9 +3520,9 @@ static int perlPresent( )
 			if ( fgets( lBuff , sizeof( lBuff ) , lIn ) == NULL )
 			{
 				lPerlPresent = 2 ;
-				if (tinyfd_verbose) printf("perl %d\n", lPerlPresent);
             }
 			pclose( lIn ) ;
+			if (tinyfd_verbose) printf("perl dbus %d\n", lPerlPresent);
 		}
     }
     return graphicMode() ? lPerlPresent : 0 ;

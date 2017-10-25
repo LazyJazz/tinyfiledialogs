@@ -97,7 +97,7 @@ misrepresented as being the original software.
 #include <stdio.h>
 #include <string.h>
 #include "tinyfiledialogs.h"
-int main(int argc)
+int main( int argc, char * argv[] )
 {
 	int lIntValue;
 	char const * lTmp;

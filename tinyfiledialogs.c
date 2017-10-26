@@ -5328,16 +5328,19 @@ char const * tinyfd_saveFileDialog(
 		}
 		strcat( lDialogString , " --getsavefilename " ) ;
 
-		if ( !aDefaultPathAndFile || !strlen(aDefaultPathAndFile) || (aDefaultPathAndFile[0] != '/') )
-		{
-			strcat(lDialogString, "$PWD/") ;
-		}
-
 		if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
 		{
+			if ( aDefaultPathAndFile[0] != '/' )
+			{
+				strcat(lDialogString, "$PWD/") ;
+			}
 			strcat(lDialogString, "\"") ;
 			strcat(lDialogString, aDefaultPathAndFile ) ;
 			strcat(lDialogString , "\"" ) ;
+		}
+		else
+		{
+			strcat(lDialogString, "$PWD/") ;
 		}
 
 		if ( aNumOfFilterPatterns > 0 )
@@ -5701,16 +5704,19 @@ char const * tinyfd_openFileDialog(
 		}
 		strcat( lDialogString , " --getopenfilename " ) ;
 
-		if ( !aDefaultPathAndFile || !strlen(aDefaultPathAndFile) || (aDefaultPathAndFile[0] != '/') )
-        {
-            strcat(lDialogString, "$PWD/") ;
-        }
-
 		if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
 		{
-			strcat(lDialogString, " \"") ;
+			if ( aDefaultPathAndFile[0] != '/' )
+			{
+				strcat(lDialogString, "$PWD/") ;
+			}
+			strcat(lDialogString, "\"") ;
 			strcat(lDialogString, aDefaultPathAndFile ) ;
 			strcat(lDialogString , "\"" ) ;
+		}
+		else
+		{
+			strcat(lDialogString, "$PWD/") ;
 		}
 
 		if ( aNumOfFilterPatterns > 0 )
@@ -6045,16 +6051,19 @@ char const * tinyfd_selectFolderDialog(
 		}
 		strcat( lDialogString , " --getexistingdirectory " ) ;
 
-		if ( !aDefaultPath || !strlen(aDefaultPath) || (aDefaultPath[0] != '/') )
-        {
-            strcat(lDialogString, "$PWD/") ;
-        }
-
 		if ( aDefaultPath && strlen(aDefaultPath) )
 		{
-			strcat(lDialogString, " \"") ;
+			if ( aDefaultPath[0] != '/' )
+			{
+				strcat(lDialogString, "$PWD/") ;
+			}
+			strcat(lDialogString, "\"") ;
 			strcat(lDialogString, aDefaultPath ) ;
 			strcat(lDialogString , "\"" ) ;
+		}
+		else
+		{
+			strcat(lDialogString, "$PWD/") ;
 		}
 
 		if ( aTitle && strlen(aTitle) )

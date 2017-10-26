@@ -5326,18 +5326,20 @@ char const * tinyfd_saveFileDialog(
 		{
 			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 		}
-		strcat( lDialogString , " --getsavefilename" ) ;
+		strcat( lDialogString , " --getsavefilename " ) ;
 
 		if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
 		{
-			strcat(lDialogString, " \"") ;
+			strcat(lDialogString, "\"") ;		if ( !aDefaultPathAndFile || !strlen(aDefaultPathAndFile) || (aDefaultPathAndFile[0] != '/') )
+        {
+            strcat(lDialogString, "$PWD/") ;
+        }
+
+
 			strcat(lDialogString, aDefaultPathAndFile ) ;
 			strcat(lDialogString , "\"" ) ;
 		}
-		else
-		{
-			strcat(lDialogString, " :" ) ;
-		}
+
 		if ( aNumOfFilterPatterns > 0 )
 		{
 			strcat(lDialogString , " \"" ) ;
@@ -5697,19 +5699,20 @@ char const * tinyfd_openFileDialog(
 		{
 			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 		}
-		strcat( lDialogString , " --getopenfilename" ) ;
+		strcat( lDialogString , " --getopenfilename " ) ;
+
+		if ( !aDefaultPathAndFile || !strlen(aDefaultPathAndFile) || (aDefaultPathAndFile[0] != '/') )
+        {
+            strcat(lDialogString, "$PWD/") ;
+        }
 
 		if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
 		{
 			strcat(lDialogString, " \"") ;
 			strcat(lDialogString, aDefaultPathAndFile ) ;
-
 			strcat(lDialogString , "\"" ) ;
 		}
-		else
-		{
-			strcat(lDialogString, " :" ) ;
-		}
+
 		if ( aNumOfFilterPatterns > 0 )
 		{
 			strcat(lDialogString , " \"" ) ;
@@ -6040,7 +6043,12 @@ char const * tinyfd_selectFolderDialog(
 		{
 			strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 		}
-		strcat( lDialogString , " --getexistingdirectory" ) ;
+		strcat( lDialogString , " --getexistingdirectory " ) ;
+
+		if ( !aDefaultPath || !strlen(aDefaultPath) || (aDefaultPath[0] != '/') )
+        {
+            strcat(lDialogString, "$PWD/") ;
+        }
 
 		if ( aDefaultPath && strlen(aDefaultPath) )
 		{
@@ -6048,10 +6056,7 @@ char const * tinyfd_selectFolderDialog(
 			strcat(lDialogString, aDefaultPath ) ;
 			strcat(lDialogString , "\"" ) ;
 		}
-		else
-		{
-			strcat(lDialogString, " :" ) ;
-		}
+
 		if ( aTitle && strlen(aTitle) )
 		{
 			strcat(lDialogString, " --title \"") ;

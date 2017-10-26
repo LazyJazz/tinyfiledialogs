@@ -5328,14 +5328,14 @@ char const * tinyfd_saveFileDialog(
 		}
 		strcat( lDialogString , " --getsavefilename " ) ;
 
+		if ( !aDefaultPathAndFile || !strlen(aDefaultPathAndFile) || (aDefaultPathAndFile[0] != '/') )
+		{
+			strcat(lDialogString, "$PWD/") ;
+		}
+
 		if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
 		{
-			strcat(lDialogString, "\"") ;		if ( !aDefaultPathAndFile || !strlen(aDefaultPathAndFile) || (aDefaultPathAndFile[0] != '/') )
-        {
-            strcat(lDialogString, "$PWD/") ;
-        }
-
-
+			strcat(lDialogString, "\"") ;
 			strcat(lDialogString, aDefaultPathAndFile ) ;
 			strcat(lDialogString , "\"" ) ;
 		}

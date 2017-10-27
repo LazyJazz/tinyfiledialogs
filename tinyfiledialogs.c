@@ -3400,16 +3400,16 @@ static char const * terminalName( )
 			strcat(lTerminalName , " -e " ) ;
 			strcat(lTerminalName , lShellName ) ;
 		}
+		else if ( strcpy(lTerminalName,"gnome-terminal") /*bad (good if version < 3)*/
+		&& detectPresence(lTerminalName) )
+		{
+			strcat(lTerminalName , " --disable-factory -x " ) ;
+			strcat(lTerminalName , lShellName ) ;
+		}
 		else
 		{
 			strcpy(lTerminalName , "" ) ;
 		}
-		/*else if ( strcpy(lTerminalName,"gnome-terminal") bad (good if version < 3)
-			  && detectPresence(lTerminalName) )
-		{
-			strcat(lTerminalName , " --disable-factory -x " ) ;
-			strcat(lTerminalName , lShellName ) ;
-		}*/
 		/* bad: koi rxterm guake tilda vala-terminal qterminal
                 aterm Terminal terminology sakura lilyterm weston-terminal
 		roxterm termit xvt rxvt mrxvt urxvt */

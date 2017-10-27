@@ -1,4 +1,4 @@
-tiny file dialogs ( cross-platform C C++ ) v3.1.6 [Oct 26, 2017] zlib licence
+tiny file dialogs ( cross-platform C C++ ) v3.1.7 [Oct 27, 2017] zlib licence
  _________
 /         \   Native Popup InputBox PasswordBox MessageBox ColorPicker
 |tiny file|   OpenFileDialog SaveFileDialog SelectFolderDialog
@@ -12,7 +12,7 @@ tested with C & C++ compilers on
     Visual Studio MinGW OSX LINUX FREEBSD OPENBSD ILLUMOS SOLARIS MINIX RASPBIAN
 using
     Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment
-    WindowMaker IceWm Cde Jds OpenBox Awesome Jwm
+    WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
 
 bindings for LUA and C# dll, Haskell; included in LWJGL(java), Rust, Allegrobasic
 

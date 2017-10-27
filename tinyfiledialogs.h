@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.h v3.1.6 [Oct 26, 2017] zlib licence
+ /         \ tinyfiledialogs.h v3.1.7 [Oct 27, 2017] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -52,19 +52,16 @@ http://andrear.altervista.org/home/cdialog.php
 - basic console input
 
 Unix (command line calls) ASCII UTF-8
-- applescript
-- zenity / matedialog / qarma (zenity for qt)
-- kdialog
-- Xdialog
-- python2 tkinter
+- applescript, kdialog, zenity
+- python (2 or 3) + tkinter + python-dbus
 - dialog (opens a console if needed)
 - basic console input
 The same executable can run across desktops & distributions
 
 tested with C & C++ compilers
 on VisualStudio MinGW Mac Linux Bsd Solaris Minix Raspbian
-using Gnome Kde Enlightenment Mate Cinnamon Unity
-Lxde Lxqt Xfce WindowMaker IceWm Cde Jds OpenBox Awesome Jwm
+using Gnome Kde Enlightenment Mate Cinnamon Unity Lxde Lxqt Xfce
+WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
 
 bindings for LUA and C# dll, Haskell
 included in LWJGL(java), Rust, Allegrobasic
@@ -132,8 +129,10 @@ but will return 0 for console mode, 1 for graphic mode.
 tinyfd_response is then filled with the retain solution.
 possible values for tinyfd_response are (all lowercase)
 for graphic mode:
-  windows_wchar windows applescript zenity zenity3 matedialog qarma kdialog
-  tkinter python-dbus perl gxmessage gmessage xmessage xdialog gdialog
+  windows_wchar windows
+  applescript kdialog zenity zenity3 matedialog qarma
+  python2-tkinter python3-tkinter python-dbus perl-dbus
+  gxmessage gmessage xmessage xdialog gdialog
 for console mode:
   dialog whiptail basicinput */
 

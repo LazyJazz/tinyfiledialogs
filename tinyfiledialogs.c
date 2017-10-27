@@ -3811,7 +3811,7 @@ static int tkinter3Present( )
 }
 
 
-static int dbusPresent( )
+static int pythonDbusPresent( )
 {
     static int lDbusPresent = -1 ;
 	int i;
@@ -4843,7 +4843,7 @@ int tinyfd_notifyPopup(
 		}
 		strcat( lDialogString , " \"" ) ;
 	}
-	else if ( dbusPresent( ) )
+	else if ( pythonDbusPresent( ) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python-dbus");return 1;}
 		strcpy( lDialogString , gPythonName ) ;

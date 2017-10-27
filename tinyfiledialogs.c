@@ -4574,6 +4574,18 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 		strcat( lDialogString ,
 			" >/tmp/tinyfd.txt';cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 	}
+	else if ( !isTerminalRunning() && (perlPresent() >= 2)  && !strcmp("ok" , aDialogType) )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"perl-dbus");return 1;}
+
+		sprintf( lDialogString , "perl -e \"use Net::DBus;\
+								 my \\$sessionBus = Net::DBus->session;\
+								 my \\$notificationsService = \\$sessionBus->get_service('org.freedesktop.Notifications');\
+								 my \\$notificationsObject = \\$notificationsService->get_object('/org/freedesktop/Notifications',\
+								 'org.freedesktop.Notifications');\
+								 my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0, '%s', '%s', '%s', [], {}, -1);\" ",
+								 aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
+	}
 	else if ( !isTerminalRunning() && notifysendPresent() && !strcmp("ok" , aDialogType) )
 	{
 

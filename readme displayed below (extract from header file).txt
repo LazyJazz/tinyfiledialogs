@@ -36,9 +36,9 @@ bindings for LUA and C# dll, Haskell; included in LWJGL(java), Rust, Allegrobasi
  |_________________________________________________________________________|
 
 int tinyfd_notifyPopup (
-	char const * const aTitle, // NULL or ""
-	char const * const aMessage, // NULL or "" may contain \n \t
-	char const * const aIconType); // "info" "warning" "error"
+    char const * const aTitle, // NULL or ""
+    char const * const aMessage, // NULL or "" may contain \n \t
+    char const * const aIconType); // "info" "warning" "error"
 
 int tinyfd_messageBox (
     char const * const aTitle , // NULL or ""

@@ -4574,6 +4574,31 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 		strcat( lDialogString ,
 			" >/tmp/tinyfd.txt';cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
 	}
+	else if ( !isTerminalRunning() && pythonDbusPresent() && !strcmp("ok" , aDialogType) )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python-dbus");return 1;}
+		strcpy( lDialogString , gPythonName ) ;
+		strcat( lDialogString ," -c \"import dbus;bus=dbus.SessionBus();");
+		strcat( lDialogString ,"notif=bus.get_object('org.freedesktop.Notifications','/org/freedesktop/Notifications');" ) ;
+		strcat( lDialogString ,"notify=dbus.Interface(notif,'org.freedesktop.Notifications');" ) ;
+		strcat( lDialogString ,"notify.Notify('',0,'" ) ;
+		if ( aIconType && strlen(aIconType) )
+		{
+			strcat( lDialogString , aIconType ) ;
+		}
+		strcat(lDialogString, "','") ;
+		if ( aTitle && strlen(aTitle) )
+		{
+			strcat(lDialogString, aTitle) ;
+		}
+		strcat(lDialogString, "','") ;
+		if ( aMessage && strlen(aMessage) )
+		{
+			lpDialogString = lDialogString + strlen(lDialogString);
+			replaceSubStr( aMessage , "\n" , "\\n" , lpDialogString ) ;
+		}
+		strcat(lDialogString, "','','',5000)\"") ;
+	}
 	else if ( !isTerminalRunning() && (perlPresent() >= 2)  && !strcmp("ok" , aDialogType) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"perl-dbus");return 1;}
@@ -5079,37 +5104,6 @@ char const * tinyfd_inputBox(
 		strcat( lDialogString ,
 				");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
 	}
-	else if ( gxmessagePresent() || gmessagePresent() )
-	{
-		if ( gxmessagePresent() ) {
-			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gxmessage");return (char const *)1;}
-			strcpy( lDialogString , "szAnswer=$(gxmessage -buttons Ok:1,Cancel:0 -center \"");
-		}
-		else
-		{
-			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gmessage");return (char const *)1;}
-			strcpy( lDialogString , "szAnswer=$(gmessage -buttons Ok:1,Cancel:0 -center \"");
-		}
-
-		if ( aMessage && strlen(aMessage) )
-		{
-			strcat( lDialogString , aMessage ) ;
-		}
-		strcat(lDialogString, "\"" ) ;
-		if ( aTitle && strlen(aTitle) )
-		{
-			strcat( lDialogString , " -title  \"");
-			strcat( lDialogString , aTitle ) ;
-			strcat(lDialogString, "\" " ) ;
-		}
-		strcat(lDialogString, " -entrytext \"" ) ;
-		if ( aDefaultInput && strlen(aDefaultInput) )
-		{
-			strcat( lDialogString , aDefaultInput ) ;
-		}
-		strcat(lDialogString, "\"" ) ;
-		strcat( lDialogString , ");echo $?$szAnswer");
-	}
 	else if ( tkinter2Present( ) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python2-tkinter");return (char const *)1;}
@@ -5196,6 +5190,37 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 		strcat(lDialogString, ");\nif res is None :\n\tprint(0)");
 		strcat(lDialogString, "\nelse :\n\tprint('1'+res)\n\"" ) ;
+	}
+	else if ( gxmessagePresent() || gmessagePresent() )
+	{
+		if ( gxmessagePresent() ) {
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gxmessage");return (char const *)1;}
+			strcpy( lDialogString , "szAnswer=$(gxmessage -buttons Ok:1,Cancel:0 -center \"");
+		}
+		else
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gmessage");return (char const *)1;}
+			strcpy( lDialogString , "szAnswer=$(gmessage -buttons Ok:1,Cancel:0 -center \"");
+		}
+
+		if ( aMessage && strlen(aMessage) )
+		{
+			strcat( lDialogString , aMessage ) ;
+		}
+		strcat(lDialogString, "\"" ) ;
+		if ( aTitle && strlen(aTitle) )
+		{
+			strcat( lDialogString , " -title  \"");
+			strcat( lDialogString , aTitle ) ;
+			strcat(lDialogString, "\" " ) ;
+		}
+		strcat(lDialogString, " -entrytext \"" ) ;
+		if ( aDefaultInput && strlen(aDefaultInput) )
+		{
+			strcat( lDialogString , aDefaultInput ) ;
+		}
+		strcat(lDialogString, "\"" ) ;
+		strcat( lDialogString , ");echo $?$szAnswer");
 	}
 	else if ( gdialogPresent() || xdialogPresent() || dialogName() || whiptailPresent() )
 	{

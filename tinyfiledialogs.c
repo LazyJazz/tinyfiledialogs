@@ -4036,7 +4036,7 @@ int tinyfd_messageBox(
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return 1;}
 			strcpy( lDialogString , "szAnswer=$(qarma" ) ;
-			if ( !getenv("SSH_TTY") )
+			//if ( !getenv("SSH_TTY") )
 			{
 				strcat(lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 			}
@@ -4080,7 +4080,7 @@ int tinyfd_messageBox(
 			strcat(lDialogString, aMessage) ;
 			strcat(lDialogString, "\"") ;
 		}
-		if ( zenity3Present() >= 3 )
+		if ( (zenity3Present() >= 3) || qarmaPresent()  )
 		{
 			strcat( lDialogString , " --icon-name=dialog-" ) ;
 			if ( aIconType && (! strcmp( "question" , aIconType )

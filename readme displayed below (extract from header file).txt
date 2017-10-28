@@ -1,4 +1,4 @@
-tiny file dialogs ( cross-platform C C++ ) v3.1.7 [Oct 27, 2017] zlib licence
+tiny file dialogs ( cross-platform C C++ ) v3.2.0 [Oct 28, 2017] zlib licence
  _________
 /         \   Native Popup InputBox PasswordBox MessageBox ColorPicker
 |tiny file|   OpenFileDialog SaveFileDialog SelectFolderDialog
@@ -104,8 +104,8 @@ char const * tinyfd_colorChooser (
   (on windows the no linking claim is a lie)
   This linking is not compulsary for console mode (see header file).
 - On unix: it tries command line calls, so no such need (NO LINKING).
-- On unix you need applescript, zenity, matedialog, qarma, kdialog,
-  Xdialog, python2/tkinter/dbus(for python)
+- On unix you need applescript, kdialog, zenity, matedialog, qarma,
+  python2/tkinter/dbus(for python), Xdialog,
   or dialog (opens terminal if running without console).
 - One of those is already included on most (if not all) desktops.
 - In the absence of those it will use gdialog, gxmessage or whiptail

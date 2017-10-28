@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.1.7 [Oct 27, 2017] zlib licence
+ /         \ tinyfiledialogs.c v3.2.0 [Oct 28, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -123,7 +123,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "3.1.7";
+char tinyfd_version [8] = "3.2.0";
 
 int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 

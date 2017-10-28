@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.h v3.1.7 [Oct 27, 2017] zlib licence
+ /         \ tinyfiledialogs.h v3.2.0 [Oct 28, 2017] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -291,8 +291,8 @@ char const * tinyfd_arrayDialog(
 - On windows link against Comdlg32.lib and Ole32.lib
   This linking is not compulsary for console mode (see above).
 - On unix: it tries command line calls, so no such need.
-- On unix you need applescript, zenity, matedialog, qarma, kdialog,
-  Xdialog, python2/tkinter/dbus(for python)
+- On unix you need applescript, kdialog, zenity, matedialog, qarma,
+  python2/tkinter/dbus(for python), Xdialog,
   or dialog (opens terminal if running without console).
 - One of those is already included on most (if not all) desktops.
 - In the absence of those it will use gdialog, gxmessage or whiptail

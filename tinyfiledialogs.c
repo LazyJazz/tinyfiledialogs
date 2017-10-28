@@ -6819,14 +6819,19 @@ frontmost of process \\\"Python\\\" to true' ''');");
     {
     	lBuff[strlen( lBuff ) -1] = '\0' ;
     }
-    if ( lWasZenity3 )
+    
+	if ( lWasZenity3 )
     {
-		if ( lBuff[0] == '#' ) {
-		    lBuff[3]=lBuff[5];
-		    lBuff[4]=lBuff[6];
-		    lBuff[5]=lBuff[9];
-		    lBuff[6]=lBuff[10];
-		    lBuff[7]='\0';
+		if ( lBuff[0] == '#' )
+		{
+			if ( strlen(lBuff)>7 )
+			{
+				lBuff[3]=lBuff[5];
+				lBuff[4]=lBuff[6];
+				lBuff[5]=lBuff[9];
+				lBuff[6]=lBuff[10];
+				lBuff[7]='\0';
+			}
 	        Hex2RGB(lBuff,aoResultRGB);
 		}
 		else if ( lBuff[3] == '(' ) {

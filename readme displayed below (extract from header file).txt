@@ -105,8 +105,8 @@ char const * tinyfd_colorChooser (
   This linking is not compulsary for console mode (see header file).
 - On unix: it tries command line calls, so no such need (NO LINKING).
 - On unix you need applescript, kdialog, zenity, matedialog, qarma,
-  python (2 or 3)/tkinter/dbus(for python), Xdialog,
-  or dialog (opens terminal if running without console).
+  python (2 or 3)/tkinter/python-dbus (optional),
+  Xdialog or dialog (opens terminal if running without console).
 - One of those is already included on most (if not all) desktops.
 - In the absence of those it will use gdialog, gxmessage or whiptail
   with a textinputbox.

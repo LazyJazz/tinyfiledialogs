@@ -55,7 +55,7 @@ http://andrear.altervista.org/home/cdialog.php
 
 Unix (command line calls) ASCII UTF-8
 - applescript, kdialog, zenity
-- python (2 or 3) + tkinter + python-dbus
+- python (2 or 3) + tkinter + python-dbus (optional)
 - dialog (opens a console if needed)
 - basic console input
 The same executable can run across desktops & distributions
@@ -184,7 +184,7 @@ static char gMessageUnix[] = "\
 \n   applescript\
 \nor kdialog\
 \nor zenity\
-\nor python (2 or 3) + tkinter + python-dbus\
+\nor python (2 or 3) + tkinter + python-dbus (optional)\
 \nor dialog (opens a console if needed)\
 \nor xterm + bash (opens a console for basic input)\
 \nor it will use the existing console for basic input";

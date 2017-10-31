@@ -87,6 +87,7 @@ misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 */
 
+#define USE_POSIX2
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

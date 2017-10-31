@@ -93,8 +93,8 @@ misrepresented as being the original software.
 if you don't want to include the code creating the graphic dialogs.
 Then you won't need to link against Comdlg32.lib and Ole32.lib */
 
-/* if tinydialogs.c is compiled with a C++ compiler rather than with a C compiler
-(ie. you change the extension from .c to .cpp), you need to comment out:
+/* if tinydialogs.c is compiled as C++ code rather than C code,
+you may need to comment out:
 extern "C" {
 and the corresponding closing bracket near the end of this file:
 }

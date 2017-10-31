@@ -87,7 +87,7 @@ misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 */
 
-#define _POSIX_C_SOURCE 2 /* to enforce inclusion of POSIX 2 in old C standards */
+#define _POSIX_C_SOURCE 2 /* to accept POSIX 2 in old ANSI C standards */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

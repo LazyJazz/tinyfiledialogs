@@ -993,7 +993,9 @@ param( \
 [system.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms') | Out-Null ; \
 $balloon = New-Object System.Windows.Forms.NotifyIcon ; \
 $path = Get-Process -id $pid | Select-Object -ExpandProperty Path ; \
-$icon = [System.Drawing.Icon]::ExtractAssociatedIcon($path) ; \
+$icon = [System.Drawing.Icon]::ExtractAssociatedIcon($path) ;");
+
+	wcscat(lDialogString, L"\
 $balloon.Icon = $icon ; \
 $balloon.BalloonTipIcon = $IconType ; \
 $balloon.BalloonTipText = $Message ; \
@@ -1069,6 +1071,7 @@ wchar_t const * tinyfd_inputBoxW(
 	static wchar_t lBuff[MAX_PATH_OR_CMD];
 	wchar_t * lDialogString;
 	FILE * lIn;
+	FILE * lFile;
 	int lResult;
 	int lTitleLen;
 	int lMessageLen;
@@ -1121,14 +1124,13 @@ wchar_t const * tinyfd_inputBoxW(
 	}
 	else
 	{
-		swprintf(lDialogString,
-#if !defined(__GNUC__) || (__GNUC__) >= 5
-			lDialogStringLen,
-#endif
-L"\n\
+		wcscpy(lDialogString, L"\n\
 <html>\n\
 <head>\n\
-<title>%ls</title>\n\
+<title>");
+
+		wcscat(lDialogString, L"tinyfiledialogsTopWindow");
+		wcscat(lDialogString, L"</title>\n\
 <HTA:APPLICATION\n\
 ID = 'tinyfdHTA'\n\
 APPLICATIONNAME = 'tinyfd_inputBox'\n\
@@ -1150,11 +1152,13 @@ result = 0\n\
 Sub Window_onLoad\n\
 txt_input.Focus\n\
 End Sub\n\
-\n\
+\n");
+
+		wcscat(lDialogString, L"\
 Sub Window_onUnload\n\
 Set objFSO = CreateObject(\"Scripting.FileSystemObject\")\n\
 Set oShell = CreateObject(\"WScript.Shell\")\n\
-strHomeFolder = oShell.ExpandEnvironmentStrings(\"%%USERPROFILE%%\")\n\
+strHomeFolder = oShell.ExpandEnvironmentStrings(\"%USERPROFILE%\")\n\
 Set objFile = objFSO.CreateTextFile(strHomeFolder & \"\\AppData\\Local\\Temp\\tinyfd.txt\",True,True)\n\
 If result = 1 Then\n\
 objFile.Write 1 & txt_input.Value\n\
@@ -1172,8 +1176,9 @@ End Sub\n\
 Sub Run_ProgramCancel\n\
 window.Close\n\
 End Sub\n\
-\n\
-Sub Default_Buttons\n\
+\n");
+
+		wcscat(lDialogString, L"Sub Default_Buttons\n\
 If Window.Event.KeyCode = 13 Then\n\
 btn_OK.Click\n\
 ElseIf Window.Event.KeyCode = 27 Then\n\
@@ -1184,10 +1189,13 @@ End Sub\n\
 </script>\n\
 </head>\n\
 <body style = 'background-color:#EEEEEE' onkeypress = 'vbs:Default_Buttons' align = 'top'>\n\
-<table width = '100%%' height = '80%%' align = 'center' border = '0'>\n\
+<table width = '100%' height = '80%' align = 'center' border = '0'>\n\
 <tr border = '0'>\n\
-<td align = 'left' valign = 'middle' style='Font-Family:Arial'>\n\
-%ls\n\
+<td align = 'left' valign = 'middle' style='Font-Family:Arial'>\n");
+
+		wcscat(lDialogString, aMessage ? aMessage : L"");
+
+		wcscat(lDialogString, L"\n\
 </td>\n\
 <td align = 'right' valign = 'middle' style = 'margin-top: 0em'>\n\
 <table  align = 'right' style = 'margin-right: 0em;'>\n\
@@ -1198,18 +1206,19 @@ End Sub\n\
 </table>\n\
 </td>\n\
 </tr>\n\
-</table>\n\
-<table width = '100%%' height = '100%%' align = 'center' border = '0'>\n\
+</table>\n");
+
+		wcscat(lDialogString, L"<table width = '100%' height = '100%' align = 'center' border = '0'>\n\
 <tr>\n\
 <td align = 'left' valign = 'top'>\n\
 <input type = 'password' id = 'txt_input'\n\
-name = 'txt_input' value = '' style = 'float:left;width:100%%' ><BR>\n\
+name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
 </td>\n\
 </tr>\n\
 </table>\n\
 </body>\n\
 </html>\n\
-"		, L"tinyfiledialogsTopWindow", aMessage ? aMessage : L"") ;
+"		) ;
 	}
 	fputws(lDialogString, lIn);
 	fclose(lIn);
@@ -1221,8 +1230,8 @@ name = 'txt_input' value = '' style = 'float:left;width:100%%' ><BR>\n\
 			lDialogStringLen,
 #endif
 			L"%ls\\AppData\\Local\\Temp\\tinyfd.txt",_wgetenv(L"USERPROFILE"));
-		FILE * lala = _wfopen(lDialogString, L"wt, ccs=UNICODE");
-		fclose(lala);
+		lFile = _wfopen(lDialogString, L"wt, ccs=UNICODE");
+		fclose(lFile);
 
 		wcscpy(lDialogString, L"cmd.exe /c cscript.exe //U //Nologo ");
 		wcscat(lDialogString, L"%USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.vbs ");

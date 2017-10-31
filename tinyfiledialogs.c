@@ -6898,8 +6898,9 @@ char const * tinyfd_arrayDialog(
 	static char lBuff [MAX_PATH_OR_CMD] ;
 	char lDialogString [MAX_PATH_OR_CMD] ;
 	FILE * lIn ;
-	lBuff[0]='\0';
 	int i ;
+
+	lBuff[0]='\0';
 
 	if ( zenityPresent() || matedialogPresent() || qarmaPresent() )
 	{

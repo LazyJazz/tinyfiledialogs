@@ -3773,7 +3773,7 @@ static int tkinter2Present( )
 	char lPythonCommand[256];
 	char lPythonParams[256] =
 "-c \"try:\n\timport Tkinter;\nexcept:\n\tprint 0;\"";
-	int i;
+
 
 	if ( lTkinter2Present < 0 )
 	{
@@ -3795,7 +3795,6 @@ static int tkinter3Present( )
 	char lPythonCommand[256];
 	char lPythonParams[256] =
 		"-c \"try:\n\timport tkinter;\nexcept:\n\tprint(0);\"";
-	int i;
 
 	if ( lTkinter3Present < 0 )
 	{
@@ -3814,7 +3813,6 @@ static int tkinter3Present( )
 static int pythonDbusPresent( )
 {
     static int lDbusPresent = -1 ;
-	int i;
 	char lPythonCommand[256];
 	char lPythonParams[256] =
 "-c \"try:\n\timport dbus;bus=dbus.SessionBus();notif=bus.get_object('org.freedesktop.Notifications','/org/freedesktop/Notifications');notify=dbus.Interface(notif,'org.freedesktop.Notifications');\nexcept:\n\tprint(0);\"";

@@ -87,7 +87,7 @@ misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 */
 
-#define USE_POSIX2
+#define _POSIX_C_SOURCE 2 /*POSIX 2 is not included in C89*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -3831,16 +3831,16 @@ static int pythonDbusPresent( )
 	if ( lDbusPresent < 0 )
 	{
 		lDbusPresent = 0 ;
-        if ( python2Present() )
+        if ( python3Present() )
         {
-			strcpy(gPythonName , gPython2Name ) ;
+			strcpy(gPythonName , gPython3Name ) ;
     		sprintf( lPythonCommand , "%s %s" , gPythonName , lPythonParams ) ;
 		    lDbusPresent = tryCommand(lPythonCommand) ;
 		}
 
-		if ( ! lDbusPresent && python3Present() )
+		if ( ! lDbusPresent && python2Present() )
 		{
-			strcpy(gPythonName , gPython3Name ) ;
+			strcpy(gPythonName , gPython2Name ) ;
 			sprintf( lPythonCommand , "%s %s" , gPythonName , lPythonParams ) ;
 			lDbusPresent = tryCommand(lPythonCommand) ;
 		}
@@ -4877,6 +4877,17 @@ int tinyfd_notifyPopup(
 		}
 		strcat( lDialogString , " \"" ) ;
 	}
+	else if ( perlPresent() >= 2 )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"perl-dbus");return 1;}
+		sprintf( lDialogString , "perl -e \"use Net::DBus;\
+								 my \\$sessionBus = Net::DBus->session;\
+								 my \\$notificationsService = \\$sessionBus->get_service('org.freedesktop.Notifications');\
+								 my \\$notificationsObject = \\$notificationsService->get_object('/org/freedesktop/Notifications',\
+								 'org.freedesktop.Notifications');\
+								 my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0, '%s', '%s', '%s', [], {}, -1);\" ",
+								 aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
+	}
 	else if ( pythonDbusPresent( ) )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python-dbus");return 1;}
@@ -4901,18 +4912,6 @@ int tinyfd_notifyPopup(
 			replaceSubStr( aMessage , "\n" , "\\n" , lpDialogString ) ;
 		}
 		strcat(lDialogString, "','','',5000)\"") ;
-	}
-	else if ( perlPresent() >= 2 )
-	{
-		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"perl-dbus");return 1;}
-
-		sprintf( lDialogString , "perl -e \"use Net::DBus;\
-my \\$sessionBus = Net::DBus->session;\
-my \\$notificationsService = \\$sessionBus->get_service('org.freedesktop.Notifications');\
-my \\$notificationsObject = \\$notificationsService->get_object('/org/freedesktop/Notifications',\
-'org.freedesktop.Notifications');\
-my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0, '%s', '%s', '%s', [], {}, -1);\" ",
-                aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 	}
 	else if ( notifysendPresent() )
 	{

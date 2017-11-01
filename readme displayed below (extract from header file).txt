@@ -8,7 +8,7 @@ tiny file dialogs ( cross-platform C C++ ) v3.2.1 [Oct 31, 2017] zlib licence
 
 SSH supported via automatic switch to console mode or X11 forwarding
 
-tested with C & C++ compilers on 
+C89 & C++98 compliant: Tested with C & C++ compilers on 
     Visual Studio MinGW OSX LINUX FREEBSD OPENBSD ILLUMOS SOLARIS MINIX RASPBIAN
 using
     Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment

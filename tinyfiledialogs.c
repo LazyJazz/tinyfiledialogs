@@ -1000,6 +1000,7 @@ $balloon.Icon = $icon ; \
 $balloon.BalloonTipIcon = $IconType ; \
 $balloon.BalloonTipText = $Message ; \
 $balloon.BalloonTipTitle = $Title ; \
+$balloon.Text = 'lalala' ; \
 $balloon.Visible = $true ; \
 $balloon.ShowBalloonTip(5000)};\
 Show-BalloonTip");
@@ -1429,7 +1430,7 @@ wchar_t const * tinyfd_saveFileDialogW(
 
 	ofn.nMaxFile = MAX_PATH_OR_CMD;
 	ofn.lpstrFileTitle = NULL;
-	ofn.nMaxFileTitle = _MAX_FNAME + _MAX_EXT;
+	ofn.nMaxFileTitle = MAX_PATH_OR_CMD/2;
 	ofn.lpstrInitialDir = lDirname && wcslen(lDirname) ? lDirname : NULL;
 	ofn.lpstrTitle = aTitle && wcslen(aTitle) ? aTitle : NULL;
 	ofn.Flags = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
@@ -1579,7 +1580,7 @@ wchar_t const * tinyfd_openFileDialogW(
 	ofn.lpstrFile = lBuff;
 	ofn.nMaxFile = MAX_PATH_OR_CMD;
 	ofn.lpstrFileTitle = NULL;
-	ofn.nMaxFileTitle = _MAX_FNAME + _MAX_EXT;
+	ofn.nMaxFileTitle = MAX_PATH_OR_CMD / 2;
 	ofn.lpstrInitialDir = lDirname && wcslen(lDirname) ? lDirname : NULL;
 	ofn.lpstrTitle = aTitle && wcslen(aTitle) ? aTitle : NULL;
 	ofn.Flags = OFN_EXPLORER | OFN_NOCHANGEDIR;
@@ -2038,7 +2039,7 @@ static char const * saveFileDialogWinGuiA(
 
 	ofn.nMaxFile        = MAX_PATH_OR_CMD ;
 	ofn.lpstrFileTitle  = NULL ;
-	ofn.nMaxFileTitle   = _MAX_FNAME + _MAX_EXT ;
+	ofn.nMaxFileTitle	= MAX_PATH_OR_CMD / 2;
 	ofn.lpstrInitialDir = lDirname && strlen(lDirname) ? lDirname : NULL;
 	ofn.lpstrTitle		= aTitle && strlen(aTitle) ? aTitle : NULL;
 	ofn.Flags           = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR ;
@@ -2130,7 +2131,7 @@ static char const * openFileDialogWinGuiA(
 	ofn.lpstrFile		= aoBuff ;
 	ofn.nMaxFile        = MAX_PATH_OR_CMD ;
 	ofn.lpstrFileTitle  = NULL ;
-	ofn.nMaxFileTitle   = _MAX_FNAME + _MAX_EXT ;
+	ofn.nMaxFileTitle	= MAX_PATH_OR_CMD / 2;
 	ofn.lpstrInitialDir = lDirname && strlen(lDirname) ? lDirname : NULL;
 	ofn.lpstrTitle		= aTitle && strlen(aTitle) ? aTitle : NULL;
 	ofn.Flags			= OFN_EXPLORER  | OFN_NOCHANGEDIR ;

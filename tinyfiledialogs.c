@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.2.2 [Nov 1, 2017] zlib licence
+ /         \ tinyfiledialogs.c v3.2.3 [Nov 2, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -28,7 +28,7 @@ OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 SSH supported via automatic switch to console mode or X11 forwarding
 
-One C file (add it to your C or C++ project) with 7 functions:
+One C file (add it to your C or C++ project) with 8 functions:
 - notify popup
 - message & question
 - input & password
@@ -36,6 +36,7 @@ One C file (add it to your C or C++ project) with 7 functions:
 - open file(s)
 - select folder
 - color picker
+- beep
 
 Complements OpenGL GLFW GLUT GLUI VTK SFML TGUI SDL Ogre Unity3d ION OpenCV
 CEGUI MathGL GLM CPW GLOW IMGUI MyGUI GLT NGL STB & GUI less programs
@@ -124,7 +125,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "3.2.2";
+char tinyfd_version [8] = "3.2.3";
 
 int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
@@ -3145,6 +3146,12 @@ char const * tinyfd_colorChooser(
 	return p ;
 }
 
+
+void tinyfd_beep()
+{
+	Beep(400,300);
+}
+
 #else /* unix */
 
 static char gPython2Name[16];
@@ -3472,6 +3479,17 @@ static int graphicMode()
 	return !( tinyfd_forceConsole && (isTerminalRunning() || terminalName()) )
 	  && ( getenv("DISPLAY")
 	    || (isDarwin() && (!getenv("SSH_TTY") || getenv("DISPLAY") ) ) ) ;
+}
+
+
+static int beepPresent( )
+{
+	static int lBeepPresent = -1 ;
+	if ( lBeepPresent < 0 )
+	{
+		lBeepPresent = detectPresence("beep") ;
+	}
+	return lBeepPresent ;
 }
 
 
@@ -6894,6 +6912,28 @@ frontmost of process \\\"Python\\\" to true' ''');");
 }
 
 
+void tinyfd_beep()
+{
+	char lDialogString [64] ;
+	FILE * lIn ;
+
+	if ( beepPresent() ) 
+	{
+		strcpy( lDialogString , "beep -f 400 -l 300" ) ;
+	}
+	else
+	{
+		strcpy( lDialogString , "echo -e '\a'" ) ;
+	}
+
+	if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
+	if ( ( lIn = popen( lDialogString , "r" ) ) )
+	{
+		pclose( lIn ) ;
+	}
+}
+
+
 /* not cross platform - zenity only */
 /* contributed by Attila Dusnoki */
 char const * tinyfd_arrayDialog(
@@ -7010,6 +7050,8 @@ char lThePassword[1024];
 char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
 tinyfd_verbose = argc - 1;
+
+tinyfd_beep();
 
 lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 

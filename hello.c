@@ -1,5 +1,5 @@
 /*_________
- /         \ hello.c v3.2.2 [Nov 1, 2017] zlib licence
+ /         \ hello.c v3.2.3 [Nov 2, 2017] zlib licence
  |tiny file| Hello World file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -24,7 +24,7 @@ OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 SSH supported via automatic switch to console mode or X11 forwarding
 
-One C file (add it to your C or C++ project) with 7 functions:
+One C file (add it to your C or C++ project) with 8 functions:
 - notify popup
 - message & question
 - input & password
@@ -32,6 +32,7 @@ One C file (add it to your C or C++ project) with 7 functions:
 - open file(s)
 - select folder
 - color picker
+- beep
 
 Complements OpenGL GLFW GLUT GLUI VTK SFML TGUI SDL Ogre Unity3d ION OpenCV
 CEGUI MathGL GLM CPW GLOW IMGUI MyGUI GLT NGL STB & GUI less programs
@@ -114,6 +115,8 @@ int main( int argc , char * argv[] )
 #ifdef _WIN32
 	tinyfd_winUtf8 = 0; /* on windows, you decide if char holds 0(default): MBCS or 1: UTF-8 */
 #endif
+
+	tinyfd_beep();
 
 	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 

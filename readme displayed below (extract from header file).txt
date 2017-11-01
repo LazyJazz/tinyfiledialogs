@@ -1,4 +1,4 @@
-tiny file dialogs ( cross-platform C C++ ) v3.2.2 [Nov 1, 2017] zlib licence
+tiny file dialogs ( cross-platform C C++ ) v3.2.3 [Nov 2, 2017] zlib licence
  _________
 /         \   Native Popup InputBox PasswordBox MessageBox ColorPicker
 |tiny file|   OpenFileDialog SaveFileDialog SelectFolderDialog
@@ -88,6 +88,8 @@ char const * tinyfd_colorChooser (
         // aDefaultRGB and aoResultRGB can be the same array
         // returns NULL on cancel
 
+void tinyfd_beep() ;
+
 - This is not for android nor ios.
 - The code is pure C, perfectly compatible with C++.
 - the windows only wchar_t (utf-16) prototypes are in the header file
@@ -154,6 +156,8 @@ int main()
 	char lBuffer[1024];
 	char lThePassword[1024];
 	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
+
+	tinyfd_beep();
 
 	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 

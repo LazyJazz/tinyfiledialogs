@@ -1,5 +1,5 @@
 /*_________
- /         \ hello_wchar_t.c v3.2.2 [Nov 1, 2017] zlib licence
+ /         \ hello_wchar_t.c v3.2.3 [Nov 2, 2017] zlib licence
  |tiny file| Hello WCHAR_T file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -24,7 +24,7 @@ OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 SSH supported via automatic switch to console mode or X11 forwarding
 
-One C file (add it to your C or C++ project) with 7 functions:
+One C file (add it to your C or C++ project) with 8 functions:
 - notify popup
 - message & question
 - input & password
@@ -32,6 +32,7 @@ One C file (add it to your C or C++ project) with 7 functions:
 - open file(s)
 - select folder
 - color picker
+- beep
 
 Complements OpenGL GLFW GLUT GLUI VTK SFML TGUI SDL Ogre Unity3d ION OpenCV
 CEGUI MathGL GLM CPW GLOW IMGUI MyGUI GLT NGL STB & GUI less programs
@@ -102,6 +103,8 @@ int main(void)
 	wchar_t lBuffer[1024];
 	wchar_t lThePassword[1024];
 	wchar_t const * lFilterPatterns[2] = { L"*.txt", L"*.text" };
+
+	tinyfd_beep();
 
 	lWillBeGraphicMode = tinyfd_inputBoxW(L"tinyfd_query", NULL, NULL);
 

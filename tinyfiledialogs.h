@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.h v3.2.2 [Nov 1, 2017] zlib licence
+ /         \ tinyfiledialogs.h v3.2.3 [Nov 2, 2017] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -26,7 +26,7 @@ OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 SSH supported via automatic switch to console mode or X11 forwarding
 
-One C file (add it to your C or C++ project) with 7 functions:
+One C file (add it to your C or C++ project) with 8 functions:
 - notify popup
 - message & question
 - input & password
@@ -34,6 +34,7 @@ One C file (add it to your C or C++ project) with 7 functions:
 - open file(s)
 - select folder
 - color picker
+- beep
 
 Complements OpenGL GLFW GLUT GLUI VTK SFML TGUI SDL Ogre Unity3d ION OpenCV
 CEGUI MathGL GLM CPW GLOW IMGUI MyGUI GLT NGL STB & GUI less programs
@@ -189,6 +190,8 @@ char const * tinyfd_colorChooser(
 		/* aDefaultRGB is used only if aDefaultHexRGB is NULL */
 		/* aDefaultRGB and aoResultRGB can be the same array */
 		/* returns NULL on cancel */
+
+void tinyfd_beep() ;
 
 
 /************ NOT CROSS PLATFORM SECTION STARTS HERE ************************/

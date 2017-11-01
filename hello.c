@@ -25,6 +25,7 @@ Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 SSH supported via automatic switch to console mode or X11 forwarding
 
 One C file (add it to your C or C++ project) with 8 functions:
+- beep
 - notify popup
 - message & question
 - input & password
@@ -32,7 +33,6 @@ One C file (add it to your C or C++ project) with 8 functions:
 - open file(s)
 - select folder
 - color picker
-- beep
 
 Complements OpenGL GLFW GLUT GLUI VTK SFML TGUI SDL Ogre Unity3d ION OpenCV
 CEGUI MathGL GLM CPW GLOW IMGUI MyGUI GLT NGL STB & GUI less programs

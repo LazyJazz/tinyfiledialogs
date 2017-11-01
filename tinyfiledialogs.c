@@ -29,6 +29,7 @@ Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 SSH supported via automatic switch to console mode or X11 forwarding
 
 One C file (add it to your C or C++ project) with 8 functions:
+- beep
 - notify popup
 - message & question
 - input & password
@@ -36,7 +37,6 @@ One C file (add it to your C or C++ project) with 8 functions:
 - open file(s)
 - select folder
 - color picker
-- beep
 
 Complements OpenGL GLFW GLUT GLUI VTK SFML TGUI SDL Ogre Unity3d ION OpenCV
 CEGUI MathGL GLM CPW GLOW IMGUI MyGUI GLT NGL STB & GUI less programs
@@ -3869,6 +3869,28 @@ static int pythonDbusPresent( )
 }
 
 
+void tinyfd_beep()
+{
+	char lDialogString [64] ;
+	FILE * lIn ;
+
+	if ( beepPresent() ) 
+	{
+		strcpy( lDialogString , "beep -f 400 -l 300" ) ;
+	}
+	else
+	{
+		strcpy( lDialogString , "echo -e '\a'" ) ;
+	}
+
+	if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
+	if ( ( lIn = popen( lDialogString , "r" ) ) )
+	{
+		pclose( lIn ) ;
+	}
+}
+
+
 int tinyfd_messageBox(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aMessage , /* NULL or ""  may contain \n and \t */
@@ -6909,28 +6931,6 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	/* printf("%d %d %d\n", aoResultRGB[0],aoResultRGB[1],aoResultRGB[2]); */
 	/* printf( "lBuff: %s\n" , lBuff ) ; */
 	return lBuff ;
-}
-
-
-void tinyfd_beep()
-{
-	char lDialogString [64] ;
-	FILE * lIn ;
-
-	if ( beepPresent() ) 
-	{
-		strcpy( lDialogString , "beep -f 400 -l 300" ) ;
-	}
-	else
-	{
-		strcpy( lDialogString , "echo -e '\a'" ) ;
-	}
-
-	if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
-	if ( ( lIn = popen( lDialogString , "r" ) ) )
-	{
-		pclose( lIn ) ;
-	}
 }
 
 

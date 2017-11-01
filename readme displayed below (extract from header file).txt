@@ -35,6 +35,8 @@ bindings for LUA and C# dll, Haskell; included in LWJGL(java), Rust, Allegrobasi
  | CONTACT me directly via the email address at the top of the header file |
  |_________________________________________________________________________|
 
+void tinyfd_beep() ;
+
 int tinyfd_notifyPopup (
     char const * const aTitle, // NULL or ""
     char const * const aMessage, // NULL or "" may contain \n \t
@@ -88,7 +90,6 @@ char const * tinyfd_colorChooser (
         // aDefaultRGB and aoResultRGB can be the same array
         // returns NULL on cancel
 
-void tinyfd_beep() ;
 
 - This is not for android nor ios.
 - The code is pure C, perfectly compatible with C++.

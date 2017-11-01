@@ -3783,7 +3783,7 @@ static int tkinter2Present( )
     static int lTkinter2Present = -1 ;
 	char lPythonCommand[256];
 	char lPythonParams[256] =
-"-c \"try:\n\timport Tkinter;\nexcept:\n\tprint 0;\"";
+"-S -c \"try:\n\timport Tkinter;\nexcept:\n\tprint 0;\"";
 
 
 	if ( lTkinter2Present < 0 )
@@ -3805,7 +3805,7 @@ static int tkinter3Present( )
 	static int lTkinter3Present = -1 ;
 	char lPythonCommand[256];
 	char lPythonParams[256] =
-		"-c \"try:\n\timport tkinter;\nexcept:\n\tprint(0);\"";
+		"-S -c \"try:\n\timport tkinter;\nexcept:\n\tprint(0);\"";
 
 	if ( lTkinter3Present < 0 )
 	{

@@ -3881,8 +3881,7 @@ void tinyfd_beep()
 
 	if ( osascriptPresent() )
 	{
-		//strcpy( lDialogString , "osascript -e 'tell application \"System Events\" to beep'") ;
-		strcpy( lDialogString , "echo -e \\a" ) ;
+		strcpy( lDialogString , "osascript -e 'tell application \"System Events\" to beep'") ;
 	}
 	else if ( beepPresent() ) 
 	{

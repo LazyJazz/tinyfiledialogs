@@ -3890,7 +3890,7 @@ void tinyfd_beep()
 	else
 	{
 		//printf("\a");return;
-		strcpy( lDialogString , "tput bel" ) ;
+		strcpy( lDialogString , "osascript -e 'beep'" ) ;
 		if ( ( lIn = popen( lDialogString , "r" ) ) )
 		{
 			pclose( lIn ) ;

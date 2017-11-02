@@ -3879,34 +3879,18 @@ void tinyfd_beep()
 	char lDialogString [64] ;
 	FILE * lIn ;
 
-	if ( osascriptPresent( ) )
-	{
-		printf("lulululu\a");
-		return;
-
-		//if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return 1;}
-
-		strcpy( lDialogString , "osascript");
-		if ( ! osx9orBetter() )
-			strcat( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
-		strcat( lDialogString , " -e 'beep' ") ;
-		if ( ! osx9orBetter() ) 
-			strcat( lDialogString, " -e 'end tell'") ;
-	}
-	else if ( beepPresent() ) 
+	if ( beepPresent() ) 
 	{
 		strcpy( lDialogString , "beep -f 400 -l 300" ) ;
+		if ( ( lIn = popen( lDialogString , "r" ) ) )
+		{
+			pclose( lIn ) ;
+		}
 	}
 	else
 	{
-		strcpy( lDialogString , "echo -e \\a" ) ;
-	}
-
-	if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
-
-	if ( ( lIn = popen( lDialogString , "r" ) ) )
-	{
-		pclose( lIn ) ;
+		printf("\a");
+		return;
 	}
 }
 

@@ -3909,13 +3909,13 @@ void tinyfd_beep()
 	}
 	else if ( pactlPresent() ) 
 	{
-		/* strcpy( lDialogString , "pactl load-module module-sine frequency=400;sleep .3;pactl unload-module module-sine" ) ; */
+		/*strcpy( lDialogString , "pactl load-module module-sine frequency=400;sleep .3;pactl unload-module module-sine" ) ;*/
 		strcpy( lDialogString , "thnum=$(pactl load-module module-sine frequency=400);sleep .3;pactl unload-module $thnum" ) ;
 	}
 	else if ( speakertestPresent() ) 
 	{
-		/* strcpy( lDialogString , "( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.3s ; kill -9 $pid" ) ; */
-		strcpy( lDialogString , "timeout -k .3 .3 speaker-test --frequency 400 --test sine" ) ;
+		/*strcpy( lDialogString , "timeout -k .3 .3 speaker-test --frequency 400 --test sine > /dev/tty" ) ;*/
+		strcpy( lDialogString , "( speaker-test -t sine -f 400 > /dev/tty )& pid=$! ; sleep 0.3s ; kill -9 $pid" ) ;
 	}
 	else if ( beepPresent() ) 
 	{

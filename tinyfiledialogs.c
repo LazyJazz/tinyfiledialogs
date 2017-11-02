@@ -3487,6 +3487,28 @@ static int graphicMode()
 }
 
 
+static int pactlPresent( )
+{
+	static int lPactlPresent = -1 ;
+	if ( lPactlPresent < 0 )
+	{
+		lPactlPresent = detectPresence("pactl") ;
+	}
+	return lPactlPresent ;
+}
+
+
+static int speakertestPresent( )
+{
+	static int lSpeakertestPresent = -1 ;
+	if ( lSpeakertestPresent < 0 )
+	{
+		lSpeakertestPresent = detectPresence("speaker-test") ;
+	}
+	return lSpeakertestPresent ;
+}
+
+
 static int beepPresent( )
 {
 	static int lBeepPresent = -1 ;
@@ -3881,7 +3903,16 @@ void tinyfd_beep()
 
 	if ( osascriptPresent() )
 	{
-		strcpy( lDialogString , "osascript -e 'tell application \"System Events\" to beep'") ;
+		/*strcpy( lDialogString , "osascript -e 'tell application \"System Events\" to beep'") ;*/
+		strcpy( lDialogString , "printf '\a' > /dev/tty" ) ;
+	}
+	else if ( pactlPresent() ) 
+	{
+		strcpy( lDialogString , "pactl load-module module-sine frequency=400;sleep .3;pactl unload-module module-sine" ) ;
+	}
+	else if ( speakertestPresent() ) 
+	{
+		strcpy( lDialogString , "( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.1s ; kill -9 $pid" ) ;
 	}
 	else if ( beepPresent() ) 
 	{
@@ -3889,7 +3920,7 @@ void tinyfd_beep()
 	}
 	else
 	{
-		strcpy( lDialogString , "echo -e '\a' > /dev/tty" ) ;
+		strcpy( lDialogString , "printf '\a' > /dev/tty" ) ;
 	}
 
 	if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;

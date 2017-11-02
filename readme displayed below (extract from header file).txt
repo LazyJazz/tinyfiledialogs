@@ -24,6 +24,7 @@ bindings for LUA and C# dll, Haskell; included in LWJGL(java), Rust, Allegrobasi
                   |       dialogs now stay on top       |
                   |       better UNICODE handling       |
                   | new dialog: TRAY NOTIFICATION POPUP |
+                  |     2nd new dialog: SYSTEM BEEP     |
                   |_____________________________________|
      ___________________________________________________________________
     |                                                                   |

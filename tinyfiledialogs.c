@@ -7095,8 +7095,6 @@ char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
 tinyfd_verbose = argc - 1;
 
-tinyfd_beep();
-
 lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 
 if (lWillBeGraphicMode)
@@ -7235,6 +7233,8 @@ if (!lTheHexColor)
 
 tinyfd_messageBox("The selected hexcolor is",
 	lTheHexColor, "ok", "info", 1);
+
+	tinyfd_beep();
 
 	return 0;
 }

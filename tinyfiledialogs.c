@@ -3889,8 +3889,6 @@ void tinyfd_beep()
 	}
 	else
 	{
-		//printf("\a");return;
-		//strcpy( lDialogString , "echo -e '\a'" ) ;
 		strcpy( lDialogString , "echo -e '\a' > /dev/tty" ) ;
 	}
 

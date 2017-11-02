@@ -3911,7 +3911,7 @@ void tinyfd_beep()
 	}
 	else if ( speakertestPresent() ) 
 	{
-		strcpy( lDialogString , "( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.1s ; kill -9 $pid" ) ;
+		strcpy( lDialogString , "( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.3s ; kill -9 $pid" ) ;
 	}
 	else if ( beepPresent() ) 
 	{

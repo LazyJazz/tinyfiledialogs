@@ -3727,7 +3727,7 @@ static int osx9orBetter( )
 			}
 		}
 		pclose( lIn ) ;
-		if (tinyfd_verbose) printf("Osx10 = %d, %d = <%s>\n", lOsx9orBetter, V, lBuff) ; 
+		if (tinyfd_verbose) printf("Osx10 = %d, %d = %s\n", lOsx9orBetter, V, lBuff) ; 
 	}
 	return lOsx9orBetter ;
 }
@@ -3889,8 +3889,12 @@ void tinyfd_beep()
 	}
 	else
 	{
-		printf("\a");
-		return;
+		//printf("\a");return;
+		strcpy( lDialogString , "tput bel" ) ;
+		if ( ( lIn = popen( lDialogString , "r" ) ) )
+		{
+			pclose( lIn ) ;
+		}
 	}
 }
 

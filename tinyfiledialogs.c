@@ -3900,7 +3900,7 @@ static int pythonDbusPresent( )
 
 void tinyfd_beep()
 {
-	char lDialogString [64] ;
+	char lDialogString [256] ;
 	FILE * lIn ;
 
 	if ( osascriptPresent() )

@@ -3909,7 +3909,8 @@ void tinyfd_beep()
 	}
 	else if ( pactlPresent() ) 
 	{
-		strcpy( lDialogString , "pactl load-module module-sine frequency=400;sleep .3;pactl unload-module module-sine;sleep 1." ) ;
+		/* strcpy( lDialogString , "pactl load-module module-sine frequency=400;sleep .3;pactl unload-module module-sine" ) ; */
+		strcpy( lDialogString , "thnum=(pactl load-module module-sine frequency=400);sleep .3;pactl unload-module $thnum" ) ;
 	}
 	else if ( speakertestPresent() ) 
 	{

@@ -96,7 +96,7 @@ misrepresented as being the original software.
 #include <sys/stat.h>
 
 #include "tinyfiledialogs.h"
-/* #define TINYFD_NOLIB */
+/* #define TINYFD_NOLIB */ 
 
 #ifdef _WIN32
  #ifndef _WIN32_WINNT
@@ -478,7 +478,17 @@ static int dirExists(char const * const aDirPath)
 		return 0;
 }
 
+void tinyfd_beep()
+{
+	printf("\a");
+}
+
 #else /* ndef TINYFD_NOLIB */
+
+void tinyfd_beep()
+{
+	Beep(400,300);
+}
 
 static void wipefileW(wchar_t const * const aFilename)
 {
@@ -3147,11 +3157,6 @@ char const * tinyfd_colorChooser(
 }
 
 
-void tinyfd_beep()
-{
-	Beep(400,300);
-}
-
 #else /* unix */
 
 static char gPython2Name[16];
@@ -3877,16 +3882,14 @@ void tinyfd_beep()
 	if ( beepPresent() ) 
 	{
 		strcpy( lDialogString , "beep -f 400 -l 300" ) ;
+		if ( ( lIn = popen( lDialogString , "r" ) ) )
+		{
+			pclose( lIn ) ;
+		}
 	}
 	else
 	{
-		strcpy( lDialogString , "echo -e '\a'" ) ;
-	}
-
-	if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
-	if ( ( lIn = popen( lDialogString , "r" ) ) )
-	{
-		pclose( lIn ) ;
+		printf("\a");
 	}
 }
 

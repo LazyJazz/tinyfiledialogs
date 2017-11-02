@@ -478,6 +478,7 @@ static int dirExists(char const * const aDirPath)
 		return 0;
 }
 
+
 void tinyfd_beep()
 {
 	printf("\a");
@@ -489,6 +490,7 @@ void tinyfd_beep()
 {
 	Beep(400,300);
 }
+
 
 static void wipefileW(wchar_t const * const aFilename)
 {

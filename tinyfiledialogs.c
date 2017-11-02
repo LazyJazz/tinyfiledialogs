@@ -3897,6 +3897,8 @@ void tinyfd_beep()
 		strcpy( lDialogString , "echo -e \\a" ) ;
 	}
 
+	if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
+
 	if ( ( lIn = popen( lDialogString , "r" ) ) )
 	{
 		pclose( lIn ) ;

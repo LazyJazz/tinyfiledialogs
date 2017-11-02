@@ -3884,9 +3884,11 @@ void tinyfd_beep()
 		//if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return 1;}
 
 		strcpy( lDialogString , "osascript ");
-		if ( ! osx9orBetter() ) strcat( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
+		//if ( ! osx9orBetter() )
+			strcat( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
 		strcat( lDialogString , " -e 'beep' ") ;
-		if ( ! osx9orBetter() ) strcat( lDialogString, " -e 'end tell'") ;
+		//if ( ! osx9orBetter() ) 
+			strcat( lDialogString, " -e 'end tell'") ;
 	}
 	else if ( beepPresent() ) 
 	{

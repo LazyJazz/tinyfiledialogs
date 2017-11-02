@@ -3915,7 +3915,7 @@ void tinyfd_beep()
 	else if ( speakertestPresent() ) 
 	{
 		/* strcpy( lDialogString , "( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.3s ; kill -9 $pid" ) ; */
-		strcpy( lDialogString , "timeout .3 speaker-test --frequency 400 --test sine" ) ;
+		strcpy( lDialogString , "timeout -k .3 .3 speaker-test --frequency 400 --test sine" ) ;
 	}
 	else if ( beepPresent() ) 
 	{

@@ -104,8 +104,6 @@ int main(void)
 	wchar_t lThePassword[1024];
 	wchar_t const * lFilterPatterns[2] = { L"*.txt", L"*.text" };
 
-	tinyfd_beep();
-
 	lWillBeGraphicMode = tinyfd_inputBoxW(L"tinyfd_query", NULL, NULL);
 
 #ifdef _MSC_VER
@@ -260,6 +258,8 @@ int main(void)
 
 	tinyfd_messageBoxW(L"The selected hexcolor is",
 		lTheHexColor, L"ok", L"info", 1);
+
+	tinyfd_beep();
 
 	return 0;
 }

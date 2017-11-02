@@ -3882,14 +3882,15 @@ void tinyfd_beep()
 	if ( beepPresent() ) 
 	{
 		strcpy( lDialogString , "beep -f 400 -l 300" ) ;
-		if ( ( lIn = popen( lDialogString , "r" ) ) )
-		{
-			pclose( lIn ) ;
-		}
 	}
 	else
 	{
-		printf("\a");
+		strcpy( lDialogString , "echo -e \\a" ) ;
+	}
+
+	if ( ( lIn = popen( lDialogString , "r" ) ) )
+	{
+		pclose( lIn ) ;
 	}
 }
 

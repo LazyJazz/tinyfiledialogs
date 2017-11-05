@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.2.3 [Nov 2, 2017] zlib licence
+ /         \ tinyfiledialogs.c v3.2.4 [Nov 5, 2017] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -125,7 +125,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "3.2.3";
+char tinyfd_version [8] = "3.2.4";
 
 int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
@@ -3590,6 +3590,30 @@ static int perlPresent( )
 }
 
 
+static int afplayPresent( )
+{
+	static int lAfplayPresent = -1 ;
+	char lBuff [MAX_PATH_OR_CMD] ;
+	FILE * lIn ;
+
+	if ( lAfplayPresent < 0 )
+	{
+		lAfplayPresent = detectPresence("afplay") ;
+		if ( lAfplayPresent )
+		{
+			lIn = popen( "test -e /System/Library/Sounds/Ping.aiff && echo Ping" , "r" ) ;
+			if ( fgets( lBuff , sizeof( lBuff ) , lIn ) == NULL )
+			{
+				lAfplayPresent = 2 ;
+			}
+			pclose( lIn ) ;
+			if (tinyfd_verbose) printf("afplay %d\n", lAfplayPresent);
+		}
+	}
+	return graphicMode() ? lAfplayPresent : 0 ;
+}
+
+
 static int xdialogPresent( )
 {
     static int lXdialogPresent = -1 ;
@@ -3905,7 +3929,14 @@ void tinyfd_beep()
 
 	if ( osascriptPresent() )
 	{
-		strcpy( lDialogString , "osascript -e 'tell application \"System Events\" to beep'") ;
+		if ( afplayPresent() )
+		{
+			strcpy( lDialogString , "afplay /System/Library/Sounds/Ping.aiff") ;
+		}
+		else
+		{
+			strcpy( lDialogString , "osascript -e 'tell application \"System Events\" to beep'") ;
+		}
 	}
 	else if ( pactlPresent() ) 
 	{

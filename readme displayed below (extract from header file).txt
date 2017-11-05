@@ -1,4 +1,4 @@
-tiny file dialogs ( cross-platform C C++ ) v3.2.3 [Nov 2, 2017] zlib licence
+tiny file dialogs ( cross-platform C C++ ) v3.2.4 [Nov 5, 2017] zlib licence
  _________
 /         \   Native Popup InputBox PasswordBox MessageBox ColorPicker
 |tiny file|   OpenFileDialog SaveFileDialog SelectFolderDialog

@@ -3601,7 +3601,7 @@ static int afplayPresent( )
 		lAfplayPresent = detectPresence("afplay") ;
 		if ( lAfplayPresent )
 		{
-			lIn = popen( "test -e /System/Library/Sounds/Ping.aiff && echo Ping" , "r" ) ;
+			lIn = popen( "test -e /System/Library/Sounds/Ping.aiff || echo Ping" , "r" ) ;
 			if ( fgets( lBuff , sizeof( lBuff ) , lIn ) == NULL )
 			{
 				lAfplayPresent = 2 ;

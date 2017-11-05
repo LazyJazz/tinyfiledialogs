@@ -3929,7 +3929,7 @@ void tinyfd_beep()
 
 	if ( osascriptPresent() )
 	{
-		if ( afplayPresent() )
+		if ( afplayPresent() >= 2 )
 		{
 			strcpy( lDialogString , "afplay /System/Library/Sounds/Ping.aiff") ;
 		}

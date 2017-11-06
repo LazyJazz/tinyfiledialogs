@@ -3921,7 +3921,10 @@ static int pythonDbusPresent( )
     return lDbusPresent && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
 }
 
-
+/*
+#include <sys/ioctl.h>
+#include <fcntl.h>
+*/
 void tinyfd_beep()
 {
 	char lDialogString [256] ;
@@ -3940,21 +3943,46 @@ void tinyfd_beep()
 	}
 	else if ( pactlPresent() ) 
 	{
-		/*strcpy( lDialogString , "pactl load-module module-sine frequency=400;sleep .3;pactl unload-module module-sine" ) ;*/
-		strcpy( lDialogString , "thnum=$(pactl load-module module-sine frequency=400);sleep .3;pactl unload-module $thnum" ) ;
+		/*strcpy( lDialogString , "pactl load-module module-sine frequency=440;sleep .3;pactl unload-module module-sine" ) ;*/
+		strcpy( lDialogString , "thnum=$(pactl load-module module-sine frequency=440);sleep .3;pactl unload-module $thnum" ) ;
 	}
 	else if ( speakertestPresent() ) 
 	{
-		/*strcpy( lDialogString , "timeout -k .3 .3 speaker-test --frequency 400 --test sine > /dev/tty" ) ;*/
-		strcpy( lDialogString , "( speaker-test -t sine -f 400 > /dev/tty )& pid=$! ; sleep 0.3s ; kill -9 $pid" ) ;
+		/*strcpy( lDialogString , "timeout -k .3 .3 speaker-test --frequency 440 --test sine > /dev/tty" ) ;*/
+		strcpy( lDialogString , "( speaker-test -t sine -f 440 > /dev/tty )& pid=$! ; sleep 0.3s ; kill -9 $pid" ) ;
 	}
 	else if ( beepPresent() ) 
 	{
-		strcpy( lDialogString , "beep -f 400 -l 300" ) ;
+		strcpy( lDialogString , "beep -f 440 -l 300" ) ;
 	}
 	else
 	{
 		strcpy( lDialogString , "printf '\a' > /dev/tty" ) ;
+		/*
+		#define KIOCSOUND 0x4B2F
+		#define KDMKTONE 0x4B30
+		#define CLOCK_TICK_RATE 1193180
+		int console_fd = -1 ;
+		printf("AAAAAAAAAAAAaaaa\n");
+		if ( ( console_fd = open("/dev/tty", O_WRONLY) ) >= 0)
+		{
+			printf("BBBBBBBBBBBBBBBBbb\n");
+			if ( ioctl( console_fd, KDMKTONE, (int) ( CLOCK_TICK_RATE/440 ) ) < 0 )
+			{
+				printf("\a");
+				perror("ioctl");
+			}
+			printf("CCCCCCCCCCCCCCCCCCCCccc\n");
+			sleep(1000*1);
+			printf("DDDDDDDDDDDDDDDDDdddd\n");
+			ioctl(console_fd, KDMKTONE, 0);
+			printf("EEEEEEEEEEEEEEEEeeeeeeeeeee\n");
+			close(console_fd);
+			printf("FFFFFFFFFFFFFfffffffffffff\n");
+		}
+		printf("GGGGGGGGGGGGGGGGGGGggggggggggg\n");
+		return;
+		*/
 	}
 
 	if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;

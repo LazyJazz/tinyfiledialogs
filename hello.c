@@ -116,6 +116,8 @@ int main( int argc , char * argv[] )
 	tinyfd_winUtf8 = 0; /* on windows, you decide if char holds 0(default): MBCS or 1: UTF-8 */
 #endif
 
+	tinyfd_beep();
+
 	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 
 #ifdef _MSC_VER

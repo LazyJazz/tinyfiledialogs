@@ -488,7 +488,7 @@ void tinyfd_beep()
 
 void tinyfd_beep()
 {
-	Beep(400,300);
+	Beep(440,300);
 }
 
 

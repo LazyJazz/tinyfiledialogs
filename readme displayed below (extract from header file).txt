@@ -97,7 +97,7 @@ char const * tinyfd_colorChooser (
 - the windows only wchar_t (utf-16) prototypes are in the header file
 - windows is fully supported from XP to 10 (maybe even older versions)
 - C# & LUA via dll, see files in the folder EXTRAS 
-- OSX supported from 10.4 to 10.12 (maybe even older versions)
+- OSX supported from 10.4 to latest (maybe even older versions)
 - Avoid using " and ' in titles and messages.
 - There's one file filter only, it may contain several patterns.
 - If no filter description is provided,

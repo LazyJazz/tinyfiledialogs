@@ -4630,7 +4630,7 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
 			}
 		}
 	}
-	else if ( ! isTerminalRunning( ) && terminalName() )
+	else if (  isTerminalRunning( ) && terminalName() )
 	{
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return 0;}
 		strcpy( lDialogString , terminalName() ) ;

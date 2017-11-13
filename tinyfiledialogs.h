@@ -313,7 +313,8 @@ char const * tinyfd_arrayDialog(
 - Mutiple selects are not allowed in console mode.
 - The package dialog must be installed to run in enhanced console mode.
   It is already installed on most unix systems.
-- On osx, the package dialog can be installed via http://macports.org
+- On osx, the package dialog can be installed via
+  http://macappstore.org/dialog or http://macports.org
 - On windows, for enhanced console mode,
   dialog.exe should be copied somewhere on your executable path.
   It can be found at the bottom of the following page:

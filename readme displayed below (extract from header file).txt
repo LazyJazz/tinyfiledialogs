@@ -9,15 +9,15 @@ tiny file dialogs ( cross-platform C C++ ) v3.2.4 [Nov 5, 2017] zlib licence
 SSH supported via automatic switch to console mode or X11 forwarding
 
 C89 & C++98 compliant: tested with C & C++ compilers on 
-    Visual Studio MinGW OSX LINUX FREEBSD OPENBSD ILLUMOS SOLARIS MINIX RASPBIAN
+    VisualStudio MinGW OSX LINUX FREEBSD OPENBSD ILLUMOS SOLARIS MINIX RASPBIAN
 using
     Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment
     WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
 
 bindings for LUA and C# dll, Haskell; included in LWJGL(java), Rust, Allegrobasic
 
-                 http://tinyfiledialogs.sourceforge.net
-              git://git.code.sf.net/p/tinyfiledialogs/code
+                  http://tinyfiledialogs.sourceforge.net
+               git://git.code.sf.net/p/tinyfiledialogs/code
                    _____________________________________
                   |                                     |
                   | version 3 has the same good old API |
@@ -127,7 +127,8 @@ char const * tinyfd_colorChooser (
 - Mutiple selects are not allowed in console mode.
 - The package dialog must be installed to run in enhanced console mode.
   It is already installed on most unix systems.
-- On osx, the package dialog can be installed via http://macports.org
+- On osx, the package dialog can be installed via
+  http://macappstore.org/dialog or http://macports.org
 - On windows, for enhanced console mode,
   dialog.exe should be copied somewhere on your executable path.
   It can be found at the bottom of the following page:

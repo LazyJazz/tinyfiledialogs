@@ -1,5 +1,5 @@
 /*_________
- /         \ hello.c v3.2.4 [Nov 5, 2017] zlib licence
+ /         \ hello.c v3.2.5 [Dec 5, 2017] zlib licence
  |tiny file| Hello World file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -15,7 +15,7 @@
     |_________________________________________________________________|
 	  
 Please 1) Let me know If you are using it on exotic hardware / OS / compiler
-       2) If yo have a sourceforge account, leave a 3-word review on Sourceforge.
+       2) If yo have a sourceforge account, leave a 1-word review on Sourceforge.
           It helps the ranking on google.
 
 tiny file dialogs (cross-platform C C++)

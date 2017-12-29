@@ -119,7 +119,7 @@ misrepresented as being the original software.
  #include <dirent.h> /* on old systems try <sys/dir.h> instead */
  #include <termios.h>
  #include <sys/utsname.h>
- #include <signal.h>
+ #include <signal.h> /* on old systems try <sys/signal.h> instead */
  #define SLASH "/"
 #endif /* _WIN32 */
 

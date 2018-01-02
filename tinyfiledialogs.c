@@ -4,7 +4,7 @@
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|
-             git://git.code.sf.net/p/tinyfiledialogs/code
+		git://git.code.sf.net/p/tinyfiledialogs/code
 		 ____________________________________________
 		|                                            |
 		|   email: tinyfiledialogs at ysengrin.com   |

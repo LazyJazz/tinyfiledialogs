@@ -294,9 +294,10 @@ char const * tinyfd_arrayDialog(
 - On windows link against Comdlg32.lib and Ole32.lib
   This linking is not compulsary for console mode (see above).
 - On unix: it tries command line calls, so no such need.
-- On unix you need applescript, kdialog, zenity, matedialog, qarma,
-  python (2 or 3)/tkinter/python-dbus (optional),
-  Xdialog or dialog (opens terminal if running without console).
+- On unix you need one of the following:
+  applescript, kdialog, zenity, matedialog, shellementary, qarma,
+  python (2 or 3)/tkinter/python-dbus (optional), Xdialog
+  or dialog (opens terminal if running without console) or xterm.
 - One of those is already included on most (if not all) desktops.
 - In the absence of those it will use gdialog, gxmessage or whiptail
   with a textinputbox.

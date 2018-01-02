@@ -1,11 +1,11 @@
 /*_________
- /         \ tinyfiledialogs.c v3.2.6 [Dec 29, 2017] zlib licence
+ /         \ tinyfiledialogs.c v3.2.7 [Jan 02, 2018] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
- | dialogs | Copyright (c) 2014 - 2017 Guillaume Vareille http://ysengrin.com
+ | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|
              git://git.code.sf.net/p/tinyfiledialogs/code
-         ____________________________________________
+		 ____________________________________________
 		|                                            |
 		|   email: tinyfiledialogs at ysengrin.com   |
 		|____________________________________________|
@@ -126,7 +126,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "3.2.6";
+char tinyfd_version [8] = "3.2.7";
 
 int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 
@@ -3569,20 +3569,20 @@ static int notifysendPresent( )
 
 static int perlPresent( )
 {
-    static int lPerlPresent = -1 ;
+	static int lPerlPresent = -1 ;
 	char lBuff [MAX_PATH_OR_CMD] ;
 	FILE * lIn ;
 
-    if ( lPerlPresent < 0 )
-    {
-        lPerlPresent = detectPresence("perl") ;
+	if ( lPerlPresent < 0 )
+	{
+		lPerlPresent = detectPresence("perl") ;
 		if ( lPerlPresent )
 		{
 			lIn = popen( "perl -MNet::DBus -e \"Net::DBus->session->get_service('org.freedesktop.Notifications')\" 2>&1" , "r" ) ;
 			if ( fgets( lBuff , sizeof( lBuff ) , lIn ) == NULL )
 			{
 				lPerlPresent = 2 ;
-            }
+			}
 			pclose( lIn ) ;
 			if (tinyfd_verbose) printf("perl-dbus %d\n", lPerlPresent);
 		}
@@ -3792,7 +3792,7 @@ static int python2Present( )
 		lPython2Present = 0 ;
 		strcpy(gPython2Name , "python2" ) ;
 		if ( detectPresence(gPython2Name) ) lPython2Present = 1;
-        else
+		else
 		{
 			for ( i = 9 ; i >= 0 ; i -- )
 			{
@@ -3803,11 +3803,11 @@ static int python2Present( )
 					break;
 				}
 			}
-			if ( ! lPython2Present )
-            {
-		        strcpy(gPython2Name , "python" ) ;
+			/*if ( ! lPython2Present )
+ 			{
+				strcpy(gPython2Name , "python" ) ;
 				if ( detectPresence(gPython2Name) ) lPython2Present = 1;
-            }
+			}*/
 		}
 		if (tinyfd_verbose) printf("lPython2Present %d\n", lPython2Present) ;
 		if (tinyfd_verbose) printf("gPython2Name %s\n", gPython2Name) ;
@@ -3837,11 +3837,11 @@ static int python3Present( )
 					break;
 				}
 			}
-			if ( ! lPython3Present )
+			/*if ( ! lPython3Present )
 			{
 				strcpy(gPython3Name , "python" ) ;
 				if ( detectPresence(gPython3Name) ) lPython3Present = 1;
-			}
+			}*/
 		}
 		if (tinyfd_verbose) printf("lPython3Present %d\n", lPython3Present) ;
 		if (tinyfd_verbose) printf("gPython3Name %s\n", gPython3Name) ;
@@ -3898,29 +3898,33 @@ static int pythonDbusPresent( )
     static int lDbusPresent = -1 ;
 	char lPythonCommand[256];
 	char lPythonParams[256] =
-"-c \"try:\n\timport dbus;bus=dbus.SessionBus();notif=bus.get_object('org.freedesktop.Notifications','/org/freedesktop/Notifications');notify=dbus.Interface(notif,'org.freedesktop.Notifications');\nexcept:\n\tprint(0);\"";
+"-c \"try:\n\timport dbus;bus=dbus.SessionBus();\
+notif=bus.get_object('org.freedesktop.Notifications','/org/freedesktop/Notifications');\
+notify=dbus.Interface(notif,'org.freedesktop.Notifications');\nexcept:\n\tprint(0);\"";
 
 	if ( lDbusPresent < 0 )
 	{
 		lDbusPresent = 0 ;
-        if ( python3Present() )
-        {
-			strcpy(gPythonName , gPython3Name ) ;
-    		sprintf( lPythonCommand , "%s %s" , gPythonName , lPythonParams ) ;
-		    lDbusPresent = tryCommand(lPythonCommand) ;
-		}
-
-		if ( ! lDbusPresent && python2Present() )
+		if ( python2Present() )
 		{
 			strcpy(gPythonName , gPython2Name ) ;
 			sprintf( lPythonCommand , "%s %s" , gPythonName , lPythonParams ) ;
 			lDbusPresent = tryCommand(lPythonCommand) ;
 		}
+
+		if ( ! lDbusPresent && python3Present() )
+		{
+			strcpy(gPythonName , gPython3Name ) ;
+			sprintf( lPythonCommand , "%s %s" , gPythonName , lPythonParams ) ;
+			lDbusPresent = tryCommand(lPythonCommand) ;
+		}
+
 		if (tinyfd_verbose) printf("lDbusPresent %d\n", lDbusPresent) ;
 		if (tinyfd_verbose) printf("gPythonName %s\n", gPythonName) ;
 	}
-    return lDbusPresent && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
+	return lDbusPresent && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
 }
+
 
 static void sigHandler(int sig)
 {
@@ -4996,11 +5000,11 @@ int tinyfd_notifyPopup(
 		}
 
 		strcat( lDialogString , " --text \"" ) ;
-        if ( aTitle && strlen(aTitle) )
-        {
-            strcat(lDialogString, aTitle) ;
-            strcat(lDialogString, "\n") ;
-        }
+		if ( aTitle && strlen(aTitle) )
+		{
+			strcat(lDialogString, aTitle) ;
+			strcat(lDialogString, "\n") ;
+		}
 		if ( aMessage && strlen( aMessage ) )
 		{
 			strcat( lDialogString , aMessage ) ;

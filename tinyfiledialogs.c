@@ -3752,7 +3752,7 @@ static int zenity3Present()
 				if ( atoi(lBuff) >= 3 )
 				{
 					lZenity3Present = 3 ;
-					if ( atoi(strtok(lBuff,".")+2 ) >= 10 ) )
+					if ( atoi(strtok(lBuff,".")+2 ) >= 10 )
 					{
 						lZenity3Present = 4 ;
 					}

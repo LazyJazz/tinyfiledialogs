@@ -4991,9 +4991,10 @@ int tinyfd_notifyPopup(
 		}
 		strcat( lDialogString , " \" 5" ) ;
 	}
-	else if ( (zenity3Present()>=3) || matedialogPresent() || shellementaryPresent() || qarmaPresent() )
+	else if ( (zenity3Present()>=4) || matedialogPresent() || shellementaryPresent() || qarmaPresent() )
 	{
 		/* zenity 2.32 has the notification but with a bug: it doesnt return from it */
+		/* zenity 3.8 show the notification as an alert ok cancel box */
 		if ( zenity3Present()>=3 )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}

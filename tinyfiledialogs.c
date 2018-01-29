@@ -126,7 +126,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "3.2.7";
+char tinyfd_version [8] = "3.2.8";
 
 int tinyfd_verbose = 0 ; /* print on unix the command line calls */
 

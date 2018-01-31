@@ -186,7 +186,7 @@ static char gMessageUnix[] = "\
 \ntiny file dialogs on UNIX needs:\
 \n   applescript\
 \nor kdialog\
-\nor zenity (or matedialog or shellementary or qarma)\
+\nor zenity (or matedialog or qarma)\
 \nor python (2 or 3) + tkinter + python-dbus (optional)\
 \nor dialog (opens a console if needed)\
 \nor xterm + bash (opens a console for basic input)\
@@ -3718,7 +3718,7 @@ static int shellementaryPresent( )
 	static int lShellementaryPresent = -1 ;
 	if ( lShellementaryPresent < 0 )
 	{
-		lShellementaryPresent = detectPresence("shellementary") ;
+		lShellementaryPresent = 0 ; /*detectPresence("shellementary"); shellementary is not ready yet */
 	}
 	return lShellementaryPresent && graphicMode( ) ;
 }

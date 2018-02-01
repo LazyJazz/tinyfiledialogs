@@ -110,6 +110,7 @@ misrepresented as being the original software.
   #endif /*TINYFD_NOSELECTFOLDERWIN*/
  #endif
  #include <conio.h>
+ #include <commdlg.h>
  /*#include <io.h>*/
  #define SLASH "\\"
  int tinyfd_winUtf8 = 0 ; /* on windows string char can be 0:MBCS or 1:UTF-8 */
@@ -330,7 +331,7 @@ static void replaceSubStr( char const * const aSource ,
 	char const * pOccurence ;
 	char const * p ;
 	char const * lNewSubStr = "" ;
-	int lOldSubLen = strlen( aOldSubStr ) ;
+	size_t lOldSubLen = strlen( aOldSubStr ) ;
 	
 	if ( ! aSource )
 	{
@@ -793,7 +794,7 @@ static char const * ensureFilesExist(char * const aDestination,
 	char * lDestination = aDestination;
 	char const * p;
 	char const * p2;
-	int lLen;
+	size_t lLen;
 
 	if (!aSourcePathsAndNames)
 	{
@@ -985,9 +986,9 @@ int tinyfd_notifyPopupW(
 	wchar_t const * const aIconType) /* L"info" L"warning" L"error" */
 {
 	wchar_t * lDialogString;
-	int lTitleLen;
-	int lMessageLen;
-	int lDialogStringLen;
+	size_t lTitleLen;
+	size_t lMessageLen;
+	size_t lDialogStringLen;
 
 	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return 1; }
 
@@ -1088,9 +1089,9 @@ wchar_t const * tinyfd_inputBoxW(
 	FILE * lIn;
 	FILE * lFile;
 	int lResult;
-	int lTitleLen;
-	int lMessageLen;
-	int lDialogStringLen;
+	size_t lTitleLen;
+	size_t lMessageLen;
+	size_t lDialogStringLen;
 
 	if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t const *)1; }
 
@@ -4017,8 +4018,8 @@ int tinyfd_messageBox(
 	char lChar ;
 	struct termios infoOri;
 	struct termios info;
-	int lTitleLen ;
-	int lMessageLen ;
+	size_t lTitleLen ;
+	size_t lMessageLen ;
 
 	lBuff[0]='\0';
 
@@ -4928,8 +4929,8 @@ int tinyfd_notifyPopup(
 	char * lDialogString = NULL ;
     char * lpDialogString ;
 	FILE * lIn ;
-	int lTitleLen ;
-	int lMessageLen ;
+	size_t lTitleLen ;
+	size_t lMessageLen ;
 
 	if ( getenv("SSH_TTY") )
 	{
@@ -5135,8 +5136,8 @@ char const * tinyfd_inputBox(
 	struct termios oldt ;
 	struct termios newt ;
 	char * lEOF;
-	int lTitleLen ;
-	int lMessageLen ;
+	size_t lTitleLen ;
+	size_t lMessageLen ;
 
 	lBuff[0]='\0';
 

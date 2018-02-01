@@ -18,10 +18,9 @@ A big thank you for contributions, bug corrections & thorough testing to:
 - Don Heyse http://ldglite.sf.net for bug corrections & thorough testing!
 - Paul Rouget
 		
-Please 1) Let me know If you are using it on exotic hardware / OS / compiler
-       2) If yo have a sourceforge account, leave a 1-word review on Sourceforge.
-          It helps the ranking on google.
-	   3) leave an upvote to the stackoverflow answer https://stackoverflow.com/a/47651444
+Please 1) let me know If you are using it on exotic hardware / OS / compiler
+       2) if yo have a sourceforge account, leave a 1-word review on Sourceforge.
+	   3) leave an upvote to my stackoverflow answer https://stackoverflow.com/a/47651444
 
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker

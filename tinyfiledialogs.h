@@ -17,7 +17,7 @@
 A big thank you to Don Heyse http://ldglite.sf.net for bug corrections & thorough testing!
 
 Please 1) let me know If you are using it on exotic hardware / OS / compiler
-       2) if yo have a sourceforge account, leave a 1-word review on Sourceforge.
+       2) if you have a sourceforge account, leave a 1-word review on Sourceforge.
 	   3) leave an upvote to my stackoverflow answer https://stackoverflow.com/a/47651444
 
 tiny file dialogs (cross-platform C C++)

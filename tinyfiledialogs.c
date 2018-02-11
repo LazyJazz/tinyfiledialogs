@@ -1246,7 +1246,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
                         lDialogStringLen,
 #endif
                         L"%ls\\AppData\\Local\\Temp\\tinyfd.txt",_wgetenv(L"USERPROFILE"));
-                lFile = _wfopen(lDialogString, L"wt, ccs=UNICODE");
+				lFile = _wfopen(lDialogString, L"wt, ccs=UNICODE"); /*or ccs=UTF-16LE*/
                 fclose(lFile);
 
                 wcscpy(lDialogString, L"cmd.exe /c cscript.exe //U //Nologo ");
@@ -1270,7 +1270,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
                         lDialogStringLen,
 #endif
                         L"%s\\AppData\\Local\\Temp\\tinyfd.txt", _wgetenv(L"USERPROFILE"));
-                if (!(lIn = _wfopen(lDialogString, L"rt, ccs=UNICODE")))
+				if (!(lIn = _wfopen(lDialogString, L"rt, ccs=UNICODE"))) /*or ccs=UTF-16LE*/
                 {
                         _wremove(lDialogString);
                         free(lDialogString);
@@ -1297,7 +1297,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
                         L"%ls\\AppData\\Local\\Temp\\tinyfd.txt",
                         _wgetenv(L"USERPROFILE"));
                 /* wprintf( L"lDialogString: %s\n" , lDialogString ) ; */
-                if (!(lIn = _wfopen(lDialogString, L"rt, ccs=UNICODE")))
+				if (!(lIn = _wfopen(lDialogString, L"rt, ccs=UNICODE"))) /*or ccs=UTF-16LE*/
                 {
                         _wremove(lDialogString);
                         free(lDialogString);

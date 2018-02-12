@@ -285,7 +285,7 @@ $ gcc -o hello.app hello.c tinyfiledialogs.c
 
 UNIX :
 $ gcc -o hello hello.c tinyfiledialogs.c
-( or clang tcc cc CC )
+( or clang tcc cc CC owcc )
 
 MinGW (needs gcc >= v4.9 otherwise some headers are incomplete):
 > gcc -o hello.exe hello.c tinyfiledialogs.c -LC:/mingw/lib -lcomdlg32 -lole32

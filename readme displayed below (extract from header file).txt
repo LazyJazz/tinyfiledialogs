@@ -9,7 +9,8 @@ tiny file dialogs ( cross-platform C C++ ) v3.2.9 [Feb 1, 2018] zlib licence
 SSH supported via automatic switch to console mode or X11 forwarding
 
 C89 & C++98 compliant: tested with C & C++ compilers on 
-    VisualStudio MinGW OSX LINUX FREEBSD OPENBSD ILLUMOS SOLARIS MINIX RASPBIAN
+    VisualStudio MinGW OpenWatcom-v2
+	OSX LINUX FREEBSD OPENBSD ILLUMOS SOLARIS MINIX RASPBIAN
 using
     Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment
     WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
@@ -315,7 +316,7 @@ $ gcc -o hello.app hello.c tinyfiledialogs.c
 
 UNIX :
 $ gcc -o hello hello.c tinyfiledialogs.c
-( or clang tcc cc CC )
+( or clang tcc cc CC owcc )
 
 MinGW (needs gcc >= v4.9 otherwise some headers are incomplete):
 > gcc -o hello.exe hello.c tinyfiledialogs.c -LC:/mingw/lib -lcomdlg32 -lole32

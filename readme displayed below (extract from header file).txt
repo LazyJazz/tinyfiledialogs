@@ -9,7 +9,7 @@ tiny file dialogs ( cross-platform C C++ ) v3.3.0 [Feb 13, 2018] zlib licence
 SSH supported via automatic switch to console mode or X11 forwarding
 
 C89 & C++98 compliant: tested with C & C++ compilers
-VisualStudio MinGW-gcc GCC Clang TinyCC OpenWatcom-v2
+VisualStudio MinGW-gcc GCC Clang TinyCC OpenWatcom-v2 SolarisCC
 on Windows Mac Linux Bsd Solaris Minix Raspbian
 using
     Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment

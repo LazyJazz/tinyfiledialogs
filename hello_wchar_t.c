@@ -1,5 +1,5 @@
 /*_________
- /         \ hello_wchar_t.c v3.2.9 [Feb 1, 2018] zlib licence
+ /         \ hello_wchar_t.c v3.3.0 [Feb 13, 2018] zlib licence
  |tiny file| Hello WCHAR_T file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -58,7 +58,8 @@ Unix (command line calls) ASCII UTF-8
 The same executable can run across desktops & distributions
 
 C89 & C++98 compliant: tested with C & C++ compilers
-on VisualStudio MinGW OpenWatcom-v2 Mac Linux Bsd Solaris Minix Raspbian
+VisualStudio MinGW-gcc GCC Clang TinyCC OpenWatcom-v2
+on Windows Mac Linux Bsd Solaris Minix Raspbian
 using Gnome Kde Enlightenment Mate Cinnamon Unity Lxde Lxqt Xfce
 WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
 
@@ -266,10 +267,14 @@ int main(void)
 
 /*
 MinGW (needs gcc >= v4.9 otherwise some headers are incomplete):
-> gcc -o hello.exe hello_wchar_t.c tinyfiledialogs.c -LC:/mingw/lib -lcomdlg32 -lole32
-(unfortunately some headers are missing with tcc)
+> gcc -o hello.exe hello.c tinyfiledialogs.c -LC:/mingw/lib -lcomdlg32 -lole32
+
+TinyCC (needs v0.9.27 otherwise some headers are missing)
+> tcc -o hello.exe hello.c tinyfiledialogs.c
+    -isystem C:\tcc\winapi-full-for-0.9.27\include\winapi
+    -lcomdlg32 -lole32 -luser32 -lshell32
 
 VisualStudio :
-	Create a console application project,
-	it links against Comdlg32.lib & Ole32.lib.
+    Create a console application project,
+    it links against Comdlg32.lib & Ole32.lib.
 */

@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.h v3.2.9 [Feb 1, 2018] zlib licence
+ /         \ tinyfiledialogs.h v3.3.0 [Feb 13, 2018] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -60,7 +60,8 @@ Unix (command line calls) ASCII UTF-8
 The same executable can run across desktops & distributions
 
 C89 & C++98 compliant: tested with C & C++ compilers
-on VisualStudio MinGW OpenWatcom-v2 Mac Linux Bsd Solaris Minix Raspbian
+VisualStudio MinGW-gcc GCC Clang TinyCC OpenWatcom-v2
+on Windows Mac Linux Bsd Solaris Minix Raspbian
 using Gnome Kde Enlightenment Mate Cinnamon Unity Lxde Lxqt Xfce
 WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
 

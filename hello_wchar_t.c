@@ -266,10 +266,10 @@ int main(void)
 }
 
 /*
-MinGW (needs gcc >= v4.9 otherwise some headers are incomplete):
+MinGW needs gcc >= v4.9 otherwise some headers are incomplete:
 > gcc -o hello.exe hello.c tinyfiledialogs.c -LC:/mingw/lib -lcomdlg32 -lole32
 
-TinyCC (needs v0.9.27 otherwise some headers are missing)
+TinyCC needs >= v0.9.27 (+ tweaks - contact me) otherwise some headers are missing
 > tcc -o hello.exe hello.c tinyfiledialogs.c
     -isystem C:\tcc\winapi-full-for-0.9.27\include\winapi
     -lcomdlg32 -lole32 -luser32 -lshell32

@@ -100,6 +100,9 @@ misrepresented as being the original software.
 /* #define TINYFD_NOLIB */ 
 
 #ifdef _WIN32
+ #ifdef __BORLANDC__
+  #define _getch getch
+ #endif
  #ifndef _WIN32_WINNT
   #define _WIN32_WINNT 0x0500
  #endif
@@ -130,7 +133,7 @@ misrepresented as being the original software.
 
 char tinyfd_version [8] = "3.3.0";
 
-int tinyfd_verbose = 0 ; /* print on unix the command line calls */
+int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -611,7 +614,7 @@ static void RGB2HexW(
                 {
                         /* wprintf(L"aoResultHexRGB %s\n", aoResultHexRGB); */
                         swprintf(aoResultHexRGB,
-#if !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
+#if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
                                 8,
 #endif
                         L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
@@ -1104,7 +1107,7 @@ wchar_t const * tinyfd_inputBoxW(
         if (aDefaultInput)
         {
         swprintf(lDialogString,
-#if !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
+#if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
                 lDialogStringLen,
 #endif
                 L"%ls\\AppData\\Local\\Temp\\tinyfd.vbs", _wgetenv(L"USERPROFILE"));
@@ -1112,7 +1115,7 @@ wchar_t const * tinyfd_inputBoxW(
         else
         {
                 swprintf(lDialogString,
-#if !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
+#if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
                         lDialogStringLen,
 #endif
                         L"%ls\\AppData\\Local\\Temp\\tinyfd.hta", _wgetenv(L"USERPROFILE"));
@@ -1243,7 +1246,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
         if (aDefaultInput)
         {
                 swprintf(lDialogString,
-#if !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
+#if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
                         lDialogStringLen,
 #endif
                         L"%ls\\AppData\\Local\\Temp\\tinyfd.txt",_wgetenv(L"USERPROFILE"));
@@ -1267,7 +1270,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
         if (aDefaultInput)
         {
                 swprintf(lDialogString,
-#if !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
+#if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
                         lDialogStringLen,
 #endif
                         L"%s\\AppData\\Local\\Temp\\tinyfd.txt", _wgetenv(L"USERPROFILE"));
@@ -1283,7 +1286,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
                 _wremove(lDialogString);
 
                 swprintf(lDialogString,
-#if !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
+#if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
                         lDialogStringLen,
 #endif
                         L"%ls\\AppData\\Local\\Temp\\tinyfd.vbs",
@@ -1292,7 +1295,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
         else
         {
                 swprintf(lDialogString,
-#if !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
+#if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
                         lDialogStringLen,
 #endif
                         L"%ls\\AppData\\Local\\Temp\\tinyfd.txt",
@@ -1311,7 +1314,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
                 wipefileW(lDialogString);
                 _wremove(lDialogString);
                 swprintf(lDialogString,
-#if !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
+#if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
                         lDialogStringLen,
 #endif
                         L"%s\\AppData\\Local\\Temp\\tinyfd.hta",

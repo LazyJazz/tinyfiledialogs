@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.3.1 [Feb 15, 2018] zlib licence
+ /         \ tinyfiledialogs.c v3.3.1 [Feb 16, 2018] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -110,12 +110,11 @@ misrepresented as being the original software.
   #include <Windows.h>
   /*#define TINYFD_NOSELECTFOLDERWIN*/
   #ifndef TINYFD_NOSELECTFOLDERWIN
-        #include <Shlobj.h>
+   #include <Shlobj.h>
   #endif /*TINYFD_NOSELECTFOLDERWIN*/
  #endif
  #include <conio.h>
  #include <commdlg.h>
- /*#include <io.h>*/
  #define TINYFD_NOCCSUNICODE
  #define SLASH "\\"
  int tinyfd_winUtf8 = 0 ; /* on windows string char can be 0:MBCS or 1:UTF-8 */
@@ -1330,7 +1329,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
         /* printf( "lResult: %d \n" , lResult ) ; */
         if (!lResult)
         {
-            //return NULL ;
+            return NULL ;
         }
 
         /* wprintf( "lBuff+1: %ls\n" , lBuff+1 ) ; */

@@ -312,7 +312,8 @@ int main()
 
 
 OSX :
-$ gcc -o hello.app hello.c tinyfiledialogs.c
+$ clang -o hello.app hello.c tinyfiledialogs.c
+( or gcc )
 
 UNIX :
 $ gcc -o hello hello.c tinyfiledialogs.c
@@ -326,6 +327,8 @@ Windows :
     > tcc -o hello.exe hello.c tinyfiledialogs.c
       -isystem C:\tcc\winapi-full-for-0.9.27\include\winapi
       -lcomdlg32 -lole32 -luser32 -lshell32
+
+    OpenWatcom v2: simply create a console application project.
 
     VisualStudio :
       Create a console application project,

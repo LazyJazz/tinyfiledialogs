@@ -328,7 +328,7 @@ Windows :
       -isystem C:\tcc\winapi-full-for-0.9.27\include\winapi
       -lcomdlg32 -lole32 -luser32 -lshell32
 
-    OpenWatcom v2: simply create a console application project.
+    OpenWatcom v2: create a character-mode executable project.
 
     VisualStudio :
       Create a console application project,

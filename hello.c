@@ -15,8 +15,8 @@
     |_________________________________________________________________|
 	  
 Please 1) let me know If you are using it on exotic hardware / OS / compiler
-       2) if you have a sourceforge account, leave a 1-word review on Sourceforge.
-	   3) upvote my stackoverflow answer https://stackoverflow.com/a/47651444
+       2) leave a 1-word review on Sourceforge.
+	   3) upvote my stackoverflow advert https://stackoverflow.com/a/47651444
 
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker

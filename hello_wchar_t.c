@@ -274,6 +274,10 @@ TinyCC needs >= v0.9.27 (+ tweaks - contact me) otherwise some headers are missi
     -isystem C:\tcc\winapi-full-for-0.9.27\include\winapi
     -lcomdlg32 -lole32 -luser32 -lshell32
 
+Borland C: > bcc32c -o hello.exe hello.c tinyfiledialogs.c
+
+OpenWatcom v2: create a character-mode executable project.
+
 VisualStudio :
     Create a console application project,
     it links against Comdlg32.lib & Ole32.lib.

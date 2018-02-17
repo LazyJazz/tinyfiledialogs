@@ -8,7 +8,7 @@ tiny file dialogs ( cross-platform C C++ ) v3.3.1 [Feb 16, 2018] zlib licence
 
 Please 1) let me know If you are using it on exotic hardware / OS / compiler
        2) leave a 1-word review on Sourceforge
-       3) upvote my stackoverflow advert https://stackoverflow.com/a/47651444
+       3) upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
 
 SSH supported via automatic switch to console mode or X11 forwarding
 

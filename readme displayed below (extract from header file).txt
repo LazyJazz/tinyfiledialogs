@@ -11,7 +11,7 @@ Please 1) let me know If you are using it on exotic hardware / OS / compiler
        3) upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
 
 C89 & C++98 compliant: tested with C & C++ compilers
-VisualStudio MinGW-gcc GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC 
+VisualStudio MinGW GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC 
 on Windows Mac Linux Bsd Solaris Minix Raspbian
 using Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment
       WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
@@ -19,7 +19,7 @@ using Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment
 Bindings for LUA and C# dll, Haskell. Included in LWJGL(java), Rust, Allegrobasic
 
                    http://tinyfiledialogs.sourceforge.net
-          git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
+         git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
   _________________________________________________________________________
  |                                                                         |
  | CONTACT me directly via the email address at the top of the header file |

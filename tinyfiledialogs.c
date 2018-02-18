@@ -191,10 +191,12 @@ char tinyfd_needs[] = "\
 \n   applescript\
 \nor kdialog\
 \nor zenity (or matedialog or qarma)\
-\nor python (2 or 3) + tkinter + python-dbus (optional)\
-\nor dialog (opens a console if needed)\
-\nor xterm + bash (opens a console for basic input)\
-\nor it will use the existing console for basic input";
+\nor python (2 or 3)\
+\n + tkinter + python-dbus (optional)\
+\nor dialog (opens console if needed)\
+\nor xterm + bash\
+\n   (opens console for basic input)\
+\nor existing console for basic input";
 #endif
 
 #ifdef _MSC_VER

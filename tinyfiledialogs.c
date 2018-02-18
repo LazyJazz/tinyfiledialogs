@@ -168,7 +168,7 @@ static int gWarningDisplayed = 0 ;
 static char gTitle[]="missing software! (we will try basic console input)";
 
 #ifdef _WIN32
-static char gMessageWin[] = "\
+char tinyfd_needs[] = "\
  ___________\n\
 /           \\ \n\
 | tiny file |\n\
@@ -180,7 +180,7 @@ static char gMessageWin[] = "\
 \nor dialog.exe (enhanced console mode)\
 \nor a console for basic input";
 #else
-static char gMessageUnix[] = "\
+char tinyfd_needs[] = "\
  ___________\n\
 /           \\ \n\
 | tiny file |\n\
@@ -2777,7 +2777,7 @@ int tinyfd_messageBox(
                 {
                         gWarningDisplayed = 1; 
                         printf("\n\n%s\n", gTitle);
-                        printf("%s\n\n", gMessageWin);
+                        printf("%s\n\n", tinyfd_needs);
                 }
                 if ( aTitle && strlen(aTitle) )
                 {
@@ -2903,7 +2903,7 @@ char const * tinyfd_inputBox(
       {
           gWarningDisplayed = 1 ;
           printf("\n\n%s\n", gTitle);
-          printf("%s\n\n", gMessageWin);
+          printf("%s\n\n", tinyfd_needs);
       }
       if ( aTitle && strlen(aTitle) )
       {
@@ -4694,7 +4694,7 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
                         strcat( lDialogString, gTitle) ;
                         strcat( lDialogString , "\";" ) ;
                         strcat( lDialogString , "echo \"" ) ;
-                        strcat( lDialogString, gMessageUnix) ;
+                        strcat( lDialogString, tinyfd_needs) ;
                         strcat( lDialogString , "\";echo;echo;" ) ;
                 }
                 if ( aTitle && strlen(aTitle) )
@@ -4820,7 +4820,7 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
                 {
                         gWarningDisplayed = 1 ;
                         printf("\n\n%s\n", gTitle);
-                        printf("%s\n\n", gMessageUnix);
+                        printf("%s\n\n", tinyfd_needs);
                 }
                 if ( aTitle && strlen(aTitle) )
                 {
@@ -5524,7 +5524,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 strcat( lDialogString , "'" ) ;
                 if ( !gWarningDisplayed && !tinyfd_forceConsole)
                 {
-                        tinyfd_messageBox(gTitle,gMessageUnix,"ok","warning",0);
+                        tinyfd_messageBox(gTitle,tinyfd_needs,"ok","warning",0);
                         gWarningDisplayed = 1 ;
                 }
                 if ( aTitle && strlen(aTitle) && !tinyfd_forceConsole)
@@ -5550,7 +5550,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 strcat( lDialogString , "cat -v /tmp/tinyfd.txt");
         }
         else if ( !gWarningDisplayed && ! isTerminalRunning( ) && ! terminalName() ) {
-          tinyfd_messageBox(gTitle,gMessageUnix,"ok","warning",0);
+          tinyfd_messageBox(gTitle,tinyfd_needs,"ok","warning",0);
           gWarningDisplayed = 1 ;
           return NULL;
         }
@@ -5559,7 +5559,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return (char const *)0;}
                 if ( !gWarningDisplayed && !tinyfd_forceConsole)
                 {
-                        tinyfd_messageBox(gTitle,gMessageUnix,"ok","warning",0);
+                        tinyfd_messageBox(gTitle,tinyfd_needs,"ok","warning",0);
                         gWarningDisplayed = 1 ;
                 }
                 if ( aTitle && strlen(aTitle) )
@@ -7209,26 +7209,28 @@ char const * lWillBeGraphicMode;
 unsigned char lRgbColor[3];
 FILE * lIn;
 char lBuffer[1024];
-char lThePassword[1024];
+char lString[1024];
 char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
 tinyfd_verbose = argc - 1;
 
 lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 
+strcpy(lBuffer, "v");
+strcat(lBuffer, tinyfd_version);
 if (lWillBeGraphicMode)
 {
-        strcpy(lBuffer, "graphic mode: ");
+    strcat(lBuffer, "\ngraphic mode: ");
 }
 else
 {
-        strcpy(lBuffer, "console mode: ");
+    strcat(lBuffer, "\nconsole mode: ");
 }
-
 strcat(lBuffer, tinyfd_response);
-strcpy(lThePassword, "tinyfiledialogs v");
-strcat(lThePassword, tinyfd_version);
-tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
+strcat(lBuffer, "\n");
+strcat(lBuffer, tinyfd_needs);
+strcpy(lString, "tinyfiledialogs");
+tinyfd_messageBox(lString, lBuffer, "ok", "info", 0);
 
 tinyfd_notifyPopup("the title", "the message\n\tfrom outer-space", "info");
 
@@ -7244,7 +7246,7 @@ lTmp = tinyfd_inputBox(
 
 if (!lTmp) return 1;
 
-strcpy(lThePassword, lTmp);
+strcpy(lString, lTmp);
 
 lTheSaveFileName = tinyfd_saveFileDialog(
         "let us save this password",
@@ -7275,7 +7277,7 @@ if (!lIn)
                 1);
         return 1;
 }
-fputs(lThePassword, lIn);
+fputs(lString, lIn);
 fclose(lIn);
 
 lTheOpenFileName = tinyfd_openFileDialog(

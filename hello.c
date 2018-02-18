@@ -95,6 +95,7 @@ misrepresented as being the original software.
 #include <stdio.h>
 #include <string.h>
 #include "tinyfiledialogs.h"
+
 int main( int argc , char * argv[] )
 {
 	int lIntValue;
@@ -107,7 +108,7 @@ int main( int argc , char * argv[] )
 	unsigned char lRgbColor[3];
 	FILE * lIn;
 	char lBuffer[1024];
-	char lThePassword[1024];
+	char lString[1024];
 	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
 	tinyfd_verbose = argc - 1;
@@ -132,10 +133,11 @@ int main( int argc , char * argv[] )
 	{
 		strcat(lBuffer, "\nconsole mode: ");
 	}
-
 	strcat(lBuffer, tinyfd_response);
-	strcpy(lThePassword, "tinyfiledialogs");
-	tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
+	strcat(lBuffer, "\n");
+	strcat(lBuffer, tinyfd_needs);
+	strcpy(lString, "tinyfiledialogs");
+	tinyfd_messageBox(lString, lBuffer, "ok", "info", 0);
 
 	tinyfd_notifyPopup("the title", "the message\n\tfrom outer-space", "info");
 
@@ -161,7 +163,7 @@ int main( int argc , char * argv[] )
 	/* copy lTmp because saveDialog would overwrites
 	inputBox static buffer in basicinput mode */
 
-	strcpy(lThePassword, lTmp);
+	strcpy(lString, lTmp);
 
 	lTheSaveFileName = tinyfd_saveFileDialog(
 		"let us save this password",
@@ -192,7 +194,7 @@ int main( int argc , char * argv[] )
 			1);
 		return 1 ;
 	}
-	fputs(lThePassword, lIn);
+	fputs(lString, lIn);
 	fclose(lIn);
 
 	lTheOpenFileName = tinyfd_openFileDialog(

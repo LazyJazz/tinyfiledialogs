@@ -4,17 +4,17 @@
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|     git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
-                 ____________________________________________
-                |                                            |
-                |   email: tinyfiledialogs at ysengrin.com   |
-                |____________________________________________|
-     ___________________________________________________________________
-    |                                                                   |
-    | the windows only wchar_t UTF-16 prototypes are in the header file |
-    |___________________________________________________________________|
+         ____________________________________________
+        |                                            |
+        |   email: tinyfiledialogs at ysengrin.com   |
+        |____________________________________________|
+         ___________________________________________________________________
+        |                                                                   |
+        | the windows only wchar_t UTF-16 prototypes are in the header file |
+        |___________________________________________________________________|
 
 Please 1) let me know If you are using it on exotic hardware / OS / compiler
-       2) leave a 1-word review on Sourceforge.
+       2) leave a one word review on Sourceforge.
        3) upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
 
 tiny file dialogs (cross-platform C C++)

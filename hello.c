@@ -8,13 +8,13 @@
 		|                                            |
 		|   email: tinyfiledialogs at ysengrin.com   |
 		|____________________________________________|
-     _________________________________________________________________
-    |                                                                 |
-    | this file is for windows and unix (osx linux, bsd, solaris ...) |
-    |_________________________________________________________________|
+         _________________________________________________________________
+        |                                                                 |
+        | this file is for windows and unix (osx linux, bsd, solaris ...) |
+        |_________________________________________________________________|
 	  
 Please 1) let me know If you are using it on exotic hardware / OS / compiler
-       2) leave a 1-word review on Sourceforge.
+       2) leave a one word review on Sourceforge.
 	   3) upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
 
 tiny file dialogs (cross-platform C C++)

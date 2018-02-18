@@ -7230,7 +7230,7 @@ else
 }
 strcat(lBuffer, tinyfd_response);
 strcat(lBuffer, "\n");
-strcat(lBuffer, tinyfd_needs);
+strcat(lBuffer, tinyfd_needs+78);
 strcpy(lString, "tinyfiledialogs");
 tinyfd_messageBox(lString, lBuffer, "ok", "info", 0);
 

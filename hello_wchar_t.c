@@ -101,7 +101,7 @@ int main(void)
 	FILE * lIn;
 	wchar_t lWcharBuff[1024];
 	wchar_t lBuffer[1024];
-	wchar_t lThePassword[1024];
+	wchar_t lString[1024];
 	wchar_t const * lFilterPatterns[2] = { L"*.txt", L"*.text" };
 
 	lWillBeGraphicMode = tinyfd_inputBoxW(L"tinyfd_query", NULL, NULL);
@@ -121,11 +121,13 @@ int main(void)
 	{
 		wcscat(lBuffer, L"\nconsole mode: ");
 	}
-
 	mbstowcs(lWcharBuff, tinyfd_response, strlen(tinyfd_response)+1);
 	wcscat(lBuffer, lWcharBuff);
-	wcscpy(lThePassword, L"tinyfiledialogs");
-	tinyfd_messageBoxW(lThePassword, lBuffer, L"ok", L"info", 0);
+	wcscat(lBuffer, L"\n");
+	mbstowcs(lWcharBuff, tinyfd_needs + 78, strlen(tinyfd_needs + 78) + 1);
+	wcscat(lBuffer, lWcharBuff);
+	wcscpy(lString, L"tinyfiledialogs");
+	tinyfd_messageBoxW(lString, lBuffer, L"ok", L"info", 0);
 
 	tinyfd_notifyPopupW(L"le titre", L"le message\n\tde la mort qui tue", L"info");
 
@@ -146,7 +148,7 @@ int main(void)
 	/* copy lTmp because saveDialog would overwrites
 	inputBox static buffer in basicinput mode */
 
-	wcscpy(lThePassword, lTmp);
+	wcscpy(lString, lTmp);
 
 	lTheSaveFileName = tinyfd_saveFileDialogW(
 		L"let us save this password",
@@ -177,7 +179,7 @@ int main(void)
 			1);
 		return 1 ;
 	}
-	fputws(lThePassword, lIn);
+	fputws(lString, lIn);
 	fclose(lIn);
 
 	lTheOpenFileName = tinyfd_openFileDialogW(

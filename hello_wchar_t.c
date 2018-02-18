@@ -3,9 +3,8 @@
  |tiny file| Hello WCHAR_T file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
-      \|
-		git://git.code.sf.net/p/tinyfiledialogs/code
-		 ____________________________________________
+      \|     git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
+	     ____________________________________________
 		|                                            |
 		|   email: tinyfiledialogs at ysengrin.com   |
 		|____________________________________________|
@@ -63,8 +62,8 @@ on Windows Mac Linux Bsd Solaris Minix Raspbian
 using Gnome Kde Enlightenment Mate Cinnamon Unity Lxde Lxqt Xfce
 WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
 
-bindings for LUA and C# dll, Haskell
-included in LWJGL(java), Rust, Allegrobasic
+Bindings for LUA and C# dll, Haskell
+Included in LWJGL(java), Rust, Allegrobasic
 
 - License -
 

@@ -3,8 +3,7 @@
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
-      \|
-                git://git.code.sf.net/p/tinyfiledialogs/code
+      \|     git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
                  ____________________________________________
                 |                                            |
                 |   email: tinyfiledialogs at ysengrin.com   |
@@ -14,10 +13,6 @@
     | the windows only wchar_t UTF-16 prototypes are in the header file |
     |___________________________________________________________________|
 
-A big thank you for contributions, bug corrections & thorough testing to:
-- Don Heyse http://ldglite.sf.net for bug corrections & thorough testing!
-- Paul Rouget
-                
 Please 1) let me know If you are using it on exotic hardware / OS / compiler
        2) leave a 1-word review on Sourceforge.
        3) upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
@@ -67,8 +62,12 @@ on Windows Mac Linux Bsd Solaris Minix Raspbian
 using Gnome Kde Enlightenment Mate Cinnamon Unity Lxde Lxqt Xfce
 WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
 
-bindings for LUA and C# dll, Haskell
-included in LWJGL(java), Rust, Allegrobasic
+Bindings for LUA and C# dll, Haskell
+Included in LWJGL(java), Rust, Allegrobasic
+
+Thanks for contributions, bug corrections & thorough testing to:
+- Don Heyse http://ldglite.sf.net for bug corrections & thorough testing!
+- Paul Rouget
 
 - License -
 

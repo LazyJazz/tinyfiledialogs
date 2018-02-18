@@ -20,6 +20,10 @@ Bindings for LUA and C# dll, Haskell. Included in LWJGL(java), Rust, Allegrobasi
 
                    http://tinyfiledialogs.sourceforge.net
           git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
+  _________________________________________________________________________
+ |                                                                         |
+ | CONTACT me directly via the email address at the top of the header file |
+ |_________________________________________________________________________|
                    _____________________________________
                   |                                     |
                   | version 3 has the same good old API |
@@ -33,10 +37,6 @@ Bindings for LUA and C# dll, Haskell. Included in LWJGL(java), Rust, Allegrobasi
     | the windows only wchar_t UTF-16 prototypes are in the header file |
     |              NOW ALSO FOR THE INPUT / PASSWORD BOX                |
     |___________________________________________________________________|
-  _________________________________________________________________________
- |                                                                         |
- | CONTACT me directly via the email address at the top of the header file |
- |_________________________________________________________________________|
 
 void tinyfd_beep() ;
 

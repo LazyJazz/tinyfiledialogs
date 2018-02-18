@@ -136,7 +136,7 @@ int main( int argc , char * argv[] )
 	strcat(lBuffer, tinyfd_response);
 	strcat(lBuffer, "\n");
 	strcat(lBuffer, tinyfd_needs+78);
-	strcpy(lString, "tinyfiledialogs");
+	strcpy(lString, "hello");
 	tinyfd_messageBox(lString, lBuffer, "ok", "info", 0);
 
 	tinyfd_notifyPopup("the title", "the message\n\tfrom outer-space", "info");

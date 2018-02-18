@@ -126,10 +126,10 @@ int main(void)
 	wcscat(lBuffer, L"\n");
 	mbstowcs(lWcharBuff, tinyfd_needs + 78, strlen(tinyfd_needs + 78) + 1);
 	wcscat(lBuffer, lWcharBuff);
-	wcscpy(lString, L"tinyfiledialogs");
+	wcscpy(lString, L"hello");
 	tinyfd_messageBoxW(lString, lBuffer, L"ok", L"info", 0);
 
-	tinyfd_notifyPopupW(L"le titre", L"le message\n\tde la mort qui tue", L"info");
+	tinyfd_notifyPopupW(L"the title", L"the message\n\tfrom outer-space", L"info");
 
 	/*tinyfd_forceConsole = 1;*/
 	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )

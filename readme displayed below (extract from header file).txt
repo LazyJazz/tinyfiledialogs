@@ -160,7 +160,7 @@ int main()
 	unsigned char lRgbColor[3];
 	FILE * lIn;
 	char lBuffer[1024];
-	char lThePassword[1024];
+	char lString[1024];
 	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
 	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
@@ -175,10 +175,10 @@ int main()
 	}
 
 	strcat(lBuffer, tinyfd_response);
-	strcpy(lThePassword, "v");
-	strcat(lThePassword, tinyfd_version);
-	strcat(lThePassword, " tinyfiledialogs");
-	tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
+	strcpy(lString, "v");
+	strcat(lString, tinyfd_version);
+	strcat(lString, " tinyfiledialogs");
+	tinyfd_messageBox(lString, lBuffer, "ok", "info", 0);
 
 	tinyfd_notifyPopup("the title", "the message\n\tfrom outer-space", "info");
 
@@ -197,7 +197,7 @@ int main()
 	/* copy lTmp because saveDialog would overwrites
 	inputBox static buffer in basicinput mode */
 
-	strcpy(lThePassword, lTmp);
+	strcpy(lString, lTmp);
 
 	lTheSaveFileName = tinyfd_saveFileDialog(
 		"let us save this password",
@@ -228,7 +228,7 @@ int main()
 			1);
 		return 1 ;
 	}
-	fputs(lThePassword, lIn);
+	fputs(lString, lIn);
 	fclose(lIn);
 
 	lTheOpenFileName = tinyfd_openFileDialog(

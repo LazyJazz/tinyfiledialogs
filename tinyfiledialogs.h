@@ -102,9 +102,9 @@ and the corresponding closing bracket near the end of this file:
 extern "C" {
 #endif
 
-extern char tinyfd_version[8]; /* contains tinyfd current version number */
+extern char const tinyfd_version[8]; /* contains tinyfd current version number */
+extern char const tinyfd_needs[]; /* info about requirements */
 extern int tinyfd_verbose; /* 0 (default) or 1 : on unix, prints the command line calls */
-extern char tinyfd_needs[]; /* info about requirements */
 
 #ifdef _WIN32
 /* for UTF-16 use the functions at the end of this files */

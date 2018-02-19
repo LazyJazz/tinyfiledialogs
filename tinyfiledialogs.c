@@ -130,7 +130,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char tinyfd_version [8] = "3.3.1";
+char const tinyfd_version [8] = "3.3.1";
 
 int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 
@@ -165,10 +165,10 @@ static int gWarningDisplayed = 1 ;
 static int gWarningDisplayed = 0 ;
 #endif
 
-static char gTitle[]="missing software! (we will try basic console input)";
+static char const gTitle[]="missing software! (we will try basic console input)";
 
 #ifdef _WIN32
-char tinyfd_needs[] = "\
+char const tinyfd_needs[] = "\
  ___________\n\
 /           \\ \n\
 | tiny file |\n\
@@ -180,7 +180,7 @@ char tinyfd_needs[] = "\
 \nor dialog.exe (enhanced console mode)\
 \nor a console for basic input";
 #else
-char tinyfd_needs[] = "\
+char const tinyfd_needs[] = "\
  ___________\n\
 /           \\ \n\
 | tiny file |\n\

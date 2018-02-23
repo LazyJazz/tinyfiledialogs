@@ -133,7 +133,7 @@ for graphic mode:
   python2-tkinter python3-tkinter python-dbus perl-dbus
   gxmessage gmessage xmessage xdialog gdialog
 for console mode:
-  dialog whiptail basicinput */
+  dialog whiptail basicinput no_solution */
 
 void tinyfd_beep();
 

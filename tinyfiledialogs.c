@@ -157,7 +157,7 @@ for graphic mode:
   python2-tkinter python3-tkinter python-dbus perl-dbus
   gxmessage gmessage xmessage xdialog gdialog
 for console mode:
-  dialog whiptail basicinput */
+  dialog whiptail basicinput no_solution */
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 static int gWarningDisplayed = 1 ;
@@ -3273,7 +3273,13 @@ static int tryCommand( char const * const aCommand )
 
 static int isTerminalRunning()
 {
-        return isatty(1);
+	static int lIsTerminalRunning = -1 ;
+	if ( lIsTerminalRunning < 0 ) 
+	{
+		lIsTerminalRunning = isatty(1);
+		if (tinyfd_verbose) printf("isTerminalRunning %d\n", lIsTerminalRunning );
+	}
+	return lIsTerminalRunning;
 }
 
 
@@ -3356,14 +3362,15 @@ static char const * terminalName( )
                 {
                         strcpy(lShellName , "bash -c " ) ; /*good for basic input*/
                 }
-        else if ( strlen(dialogNameOnly()) || whiptailPresentOnly() )
-        {
-                strcpy(lShellName , "sh -c " ) ; /*good enough for dialog & whiptail*/
-        }
-        else
-        {
-            return NULL ;
-        }
+				else if ( strlen(dialogNameOnly()) || whiptailPresentOnly() )
+				{
+						strcpy(lShellName , "sh -c " ) ; /*good enough for dialog & whiptail*/
+				}
+				else
+				{
+					strcpy(lTerminalName , "" ) ;
+					return NULL ;
+				}
 
                 if ( isDarwin() )
                 {
@@ -5526,8 +5533,8 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 strcat( lDialogString , "'" ) ;
                 if ( !gWarningDisplayed && !tinyfd_forceConsole)
                 {
-                        tinyfd_messageBox(gTitle,tinyfd_needs,"ok","warning",0);
-                        gWarningDisplayed = 1 ;
+					gWarningDisplayed = 1 ;
+					tinyfd_messageBox(gTitle,tinyfd_needs,"ok","warning",0);
                 }
                 if ( aTitle && strlen(aTitle) && !tinyfd_forceConsole)
                 {
@@ -5552,17 +5559,18 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 strcat( lDialogString , "cat -v /tmp/tinyfd.txt");
         }
         else if ( !gWarningDisplayed && ! isTerminalRunning( ) && ! terminalName() ) {
-          tinyfd_messageBox(gTitle,tinyfd_needs,"ok","warning",0);
-          gWarningDisplayed = 1 ;
-          return NULL;
+			gWarningDisplayed = 1 ;
+			tinyfd_messageBox(gTitle,tinyfd_needs,"ok","warning",0);
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"no_solution");return (char const *)0;}
+			return NULL;
         }
         else
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return (char const *)0;}
                 if ( !gWarningDisplayed && !tinyfd_forceConsole)
                 {
-                        tinyfd_messageBox(gTitle,tinyfd_needs,"ok","warning",0);
                         gWarningDisplayed = 1 ;
+                        tinyfd_messageBox(gTitle,tinyfd_needs,"ok","warning",0);
                 }
                 if ( aTitle && strlen(aTitle) )
                 {

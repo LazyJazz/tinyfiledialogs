@@ -11,7 +11,7 @@ Please 1) let me know If you are using it on exotic hardware / OS / compiler
        3) upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
 
 C89 & C++98 compliant: tested with C & C++ compilers
-VisualStudio MinGW GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC 
+VisualStudio MinGW GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC Zapcc
 on Windows Mac Linux Bsd Solaris Minix Raspbian
 using Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment
       WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm

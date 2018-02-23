@@ -57,7 +57,7 @@ Unix (command line calls) ASCII UTF-8
 The same executable can run across desktops & distributions
 
 C89 & C++98 compliant: tested with C & C++ compilers
-VisualStudio MinGW-gcc GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC
+VisualStudio MinGW-gcc GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC Zapcc
 on Windows Mac Linux Bsd Solaris Minix Raspbian
 using Gnome Kde Enlightenment Mate Cinnamon Unity Lxde Lxqt Xfce
 WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm

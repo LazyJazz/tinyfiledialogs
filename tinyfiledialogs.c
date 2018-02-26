@@ -3759,6 +3759,7 @@ static int zenity3Present()
         static int lZenity3Present = -1 ;
         char lBuff [MAX_PATH_OR_CMD] ;
         FILE * lIn ;
+		int lIntTmp ;
 
         if ( lZenity3Present < 0 )
         {
@@ -3771,11 +3772,16 @@ static int zenity3Present()
                                 if ( atoi(lBuff) >= 3 )
                                 {
                                         lZenity3Present = 3 ;
-                                        if ( atoi(strtok(lBuff,".")+2 ) >= 10 )
-                                        {
-                                                lZenity3Present = 4 ;
-                                        }
-                                }
+										lIntTmp = atoi(strtok(lBuff,".")+2 ) ;
+										if ( lIntTmp >= 18 )
+										{
+											lZenity3Present = 5 ;
+										}
+										else if ( lIntTmp >= 10 )
+										{
+											lZenity3Present = 4 ;
+										}
+								}
                                 else if ( ( atoi(lBuff) == 2 ) && ( atoi(strtok(lBuff,".")+2 ) >= 32 ) )
                                 {
                                         lZenity3Present = 2 ;
@@ -5013,11 +5019,11 @@ int tinyfd_notifyPopup(
                 }
                 strcat( lDialogString , " \" 5" ) ;
         }
-        else if ( (zenity3Present()>=4) || matedialogPresent() || shellementaryPresent() || qarmaPresent() )
+        else if ( (zenity3Present()>=5) || matedialogPresent() || shellementaryPresent() || qarmaPresent() )
         {
-                /* zenity 2.32 has the notification but with a bug: it doesnt return from it */
+                /* zenity 2.32 & 3.14 has the notification but with a bug: it doesnt return from it */
                 /* zenity 3.8 show the notification as an alert ok cancel box */
-                if ( zenity3Present()>=3 )
+                if ( zenity3Present()>=5 )
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
                         strcpy( lDialogString , "zenity" ) ;

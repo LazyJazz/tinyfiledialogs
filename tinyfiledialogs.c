@@ -4268,7 +4268,7 @@ int tinyfd_messageBox(
                 }
                 if ( aMessage && strlen(aMessage) ) 
                 {
-                        strcat(lDialogString, " --text=\"") ;
+                        strcat(lDialogString, " --no-wrap --text=\"") ;
                         strcat(lDialogString, aMessage) ;
                         strcat(lDialogString, "\"") ;
                 }

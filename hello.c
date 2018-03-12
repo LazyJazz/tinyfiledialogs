@@ -13,9 +13,9 @@
         | this file is for windows and unix (osx linux, bsd, solaris ...) |
         |_________________________________________________________________|
 	  
-Please 1) let me know If you are using it on exotic hardware / OS / compiler
+Please 1) upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
        2) leave a one word review on Sourceforge.
-	   3) upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
+       3) let me know If you are using it on exotic hardware / OS / compiler
 
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
@@ -33,15 +33,16 @@ a C file + a header (add them to your C or C++ project) with 8 functions:
 - select folder
 - color picker
 
-Complements OpenGL GLFW GLUT GLUI VTK SFML TGUI SDL Ogre Unity3d ION OpenCV
-CEGUI MathGL GLM CPW GLOW IMGUI MyGUI GLT NGL STB & GUI less programs
+complements OpenGL Vulkan GLFW GLUT GLUI VTK SFML TGUI
+SDL Ogre Unity3d ION OpenCV CEGUI MathGL GLM CPW GLOW
+IMGUI MyGUI GLT NGL STB & GUI less programs
 
 NO INIT
 NO MAIN LOOP
 NO LINKING
 NO INCLUDE
 
-The dialogs can be forced into console mode
+the dialogs can be forced into console mode
 
 Windows (XP to 10) ASCII MBCS UTF-8 UTF-16
 - native code & vbs create the graphic dialogs
@@ -54,7 +55,7 @@ Unix (command line calls) ASCII UTF-8
 - python (2 or 3) + tkinter + python-dbus (optional)
 - dialog (opens a console if needed)
 - basic console input
-The same executable can run across desktops & distributions
+the same executable can run across desktops & distributions
 
 C89 & C++98 compliant: tested with C & C++ compilers
 VisualStudio MinGW-gcc GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC Zapcc

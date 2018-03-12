@@ -13,9 +13,9 @@
 		| this file is for windows only |
 		|_______________________________|
 	  
-Please 1) let me know If you are using it on exotic hardware / OS / compiler
+Please 1) upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
        2) leave a one word review on Sourceforge.
-	   3) upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
+       3) let me know If you are using it on exotic hardware / OS / compiler
 
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
@@ -33,8 +33,9 @@ a C file + a header (add them to your C or C++ project) with 8 functions:
 - select folder
 - color picker
 
-Complements OpenGL GLFW GLUT GLUI VTK SFML TGUI SDL Ogre Unity3d ION OpenCV
-CEGUI MathGL GLM CPW GLOW IMGUI MyGUI GLT NGL STB & GUI less programs
+Complements OpenGL Vulkan GLFW GLUT GLUI VTK SFML TGUI
+SDL Ogre Unity3d ION OpenCV CEGUI MathGL GLM CPW GLOW
+IMGUI MyGUI GLT NGL STB & GUI less programs
 
 NO INIT
 NO MAIN LOOP

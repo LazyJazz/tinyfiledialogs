@@ -15,7 +15,7 @@
 	  
 Please 1) upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
        2) leave a one word review on Sourceforge.
-       3) let me know If you are using it on exotic hardware / OS / compiler
+       3) let me know If you are using it on exotic hardware/OS/compiler
 
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
@@ -23,7 +23,7 @@ OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 SSH supported via automatic switch to console mode or X11 forwarding
 
-a C file + a header (add them to your C or C++ project) with 8 functions:
+a C file and a header (add them to your C or C++ project) with 8 functions:
 - beep
 - notify popup
 - message & question

@@ -3452,7 +3452,7 @@ static char const * terminalName( )
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"gnome-terminal") /*bad (good if version < 3)*/
+                else if ( strcpy(lTerminalName,"gnome-terminal") /*bad (good if version <3 or >=3.18 )*/
                 && detectPresence(lTerminalName) )
                 {
                         strcat(lTerminalName , " --disable-factory -x " ) ;

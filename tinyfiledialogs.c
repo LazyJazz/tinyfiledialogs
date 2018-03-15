@@ -3512,7 +3512,7 @@ static int graphicMode( )
 {
         return !( tinyfd_forceConsole && (isTerminalRunning() || terminalName()) )
           && ( getenv("DISPLAY")
-            || (isDarwin() && (!getenv("SSH_TTY") || getenv("DISPLAY") ) ) ) ; */
+            || (isDarwin() && (!getenv("SSH_TTY") || getenv("DISPLAY") ) ) ) ;
 }
 
 

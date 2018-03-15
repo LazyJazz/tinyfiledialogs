@@ -3416,6 +3416,12 @@ static char const * terminalName( )
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
+                else if ( strcpy(lTerminalName,"tilix") /*good*/
+                          && detectPresence(lTerminalName) )
+                {
+                        strcat(lTerminalName , " -e " ) ;
+                        strcat(lTerminalName , lShellName ) ;
+                }
                 else if ( strcpy(lTerminalName,"xfce4-terminal") /*good*/
                           && detectPresence(lTerminalName) )
                 {
@@ -4698,7 +4704,7 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
                         }
                 }
         }
-        else if (  isTerminalRunning( ) && terminalName() )
+        else if (  !isTerminalRunning() && terminalName() )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return 0;}
                 strcpy( lDialogString , terminalName() ) ;

@@ -3272,7 +3272,7 @@ static int tryCommand( char const * const aCommand )
 }
 
 
-static int isTerminalRunning()
+static int isTerminalRunning( )
 {
 	static int lIsTerminalRunning = -1 ;
 	if ( lIsTerminalRunning < 0 ) 

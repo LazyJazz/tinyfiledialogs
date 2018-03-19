@@ -1,6 +1,6 @@
 /*_________
  /         \ hello_wchar_t.c v3.3.4 [Mar 15, 2018] zlib licence
- |tiny file| Hello WCHAR_T file created [November 9, 2014]
+ |tiny file| Hello WCHAR_T windows only file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|     git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
@@ -89,7 +89,7 @@ misrepresented as being the original software.
 #include <stdio.h>
 #include <string.h>
 #include "tinyfiledialogs.h"
-int main(void)
+int main(void) /* WINDOWS ONLY */
 {
 	int lIntValue;
 	wchar_t const * lTmp;

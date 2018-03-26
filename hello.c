@@ -13,9 +13,7 @@
         | this file is for windows and unix (osx linux, bsd, solaris ...) |
         |_________________________________________________________________|
 	  
-Please 1) upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
-       2) leave a one word review on Sourceforge.
-       3) let me know If you are using it on exotic hardware/OS/compiler
+Please upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
 
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker

@@ -6,9 +6,7 @@ tiny file dialogs ( cross-platform C C++ ) v3.3.4 [Mar 15, 2018] zlib licence
 \____  ___/   Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE
      \|       SSH support via automatic switch to console mode or X11 forwarding
 
-Please 1) upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
-       2) leave a one word review on Sourceforge.
-       3) let me know If you are using it on exotic hardware/OS/compiler
+Please upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
 
 C89 & C++98 compliant: tested with C & C++ compilers
 VisualStudio MinGW GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC ZapCC

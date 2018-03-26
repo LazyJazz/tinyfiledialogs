@@ -13,7 +13,7 @@
         | the windows only wchar_t UTF-16 prototypes are in the header file |
         |___________________________________________________________________|
 
-Please upvote my stackoverflow answer/advert https://stackoverflow.com/a/47651444
+Please upvote my stackoverflow answer https://stackoverflow.com/a/47651444
 
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker

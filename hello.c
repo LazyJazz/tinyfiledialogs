@@ -21,7 +21,7 @@ OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 SSH supported via automatic switch to console mode or X11 forwarding
 
-a C file and a header (add them to your C or C++ project) with 8 functions:
+one C file and a header (add them to your C or C++ project) with 8 functions:
 - beep
 - notify popup
 - message & question

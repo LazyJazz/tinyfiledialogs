@@ -3230,23 +3230,41 @@ static int detectPresence( char const * const aExecutable )
 }
 
 
-static char const * getVersion( char const * const aExecutable ) /*version # must follow :*/
+static char const * getVersion( char const * const aExecutable ) /*version must be first numeral*/
 {
-        static char lBuff [MAX_PATH_OR_CMD] ;
-        char lTestedString [MAX_PATH_OR_CMD] ;
-        FILE * lIn ;
-        char * lTmp ;
-
+	static char lBuff [MAX_PATH_OR_CMD] ;
+	char lTestedString [MAX_PATH_OR_CMD] ;
+	FILE * lIn ;
+	char * lTmp ;
+		
     strcpy( lTestedString , aExecutable ) ;
     strcat( lTestedString , " --version" ) ;
 
     lIn = popen( lTestedString , "r" ) ;
         lTmp = fgets( lBuff , sizeof( lBuff ) , lIn ) ;
         pclose( lIn ) ;
-    if ( ! lTmp || !(lTmp = strchr( lBuff , ':' )) ) return 0 ;
-        lTmp ++ ;
-        /* printf("lTmp %s\n", lTmp); */
-        return lTmp ;
+	
+	lTmp += strcspn(lTmp,"0123456789");
+	/* printf("lTmp:%s\n", lTmp); */
+	return lTmp ;
+}
+
+
+static int * const getMajorMinorPatch( char const * const aExecutable )
+{
+	static int lArray [3] ;
+	char * lTmp ;
+
+	lTmp = (char *) getVersion(aExecutable);
+	lArray[0] = atoi( strtok(lTmp," ,.-") ) ;
+	/* printf("lArray0 %d\n", lArray[0]); */
+	lArray[1] = atoi( strtok(0," ,.-") ) ;
+	/* printf("lArray1 %d\n", lArray[1]); */
+	lArray[2] = atoi( strtok(0," ,.-") ) ;
+	/* printf("lArray2 %d\n", lArray[2]); */
+
+	if ( !lArray[0] && !lArray[1] && !lArray[2] ) return NULL;
+	return lArray ;
 }
 
 
@@ -3354,6 +3372,7 @@ static char const * terminalName( )
 {
         static char lTerminalName[128] = "*" ;
         char lShellName[64] = "*" ;
+        int * lArray;
 
         if ( lTerminalName[0] == '*' )
         {
@@ -3450,8 +3469,9 @@ static char const * terminalName( )
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"gnome-terminal") /*bad (good if version <3 or >=3.18)*/
-                && detectPresence(lTerminalName) )
+                else if ( strcpy(lTerminalName,"gnome-terminal")
+                && detectPresence(lTerminalName) && (lArray = getMajorMinorPatch(lTerminalName))
+				&& ((lArray[0]<3) || (lArray[0]==3 && lArray[1]<=6)) )
                 {
                         strcat(lTerminalName , " --disable-factory -x " ) ;
                         strcat(lTerminalName , lShellName ) ;

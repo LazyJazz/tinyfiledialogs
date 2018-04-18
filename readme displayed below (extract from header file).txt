@@ -11,7 +11,7 @@ Please upvote my stackoverflow answer https://stackoverflow.com/a/47651444
 C89 & C++98 compliant: tested with C & C++ compilers
 VisualStudio MinGW GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC ZapCC
 on Windows Mac Linux Bsd Solaris Minix Raspbian
-using Gnome Kde Mate Cinnamon Unity Lxde Lxqt Xfce Enlightenment
+using Gnome Kde Mate Enlightenment Cinnamon Budgie Unity Lxde Lxqt Xfce
       WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
 
 Bindings for LUA and C# dll, Haskell. Included in LWJGL(java), Rust, Allegrobasic

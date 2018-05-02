@@ -33,7 +33,7 @@ one C file + a header (add them to your C or C++ project) with 8 functions:
 
 complements OpenGL Vulkan GLFW GLUT GLUI VTK SFML TGUI
 SDL Ogre Unity3d ION OpenCV CEGUI MathGL GLM CPW GLOW
-IMGUI MyGUI GLT NGL STB & GUI less programs
+Open3D IMGUI MyGUI GLT NGL STB & GUI less programs
 
 NO INIT
 NO MAIN LOOP

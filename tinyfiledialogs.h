@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.h v3.3.5 [Apr 18, 2018] zlib licence
+ /         \ tinyfiledialogs.h v3.3.6 [Jul 25, 2018] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -168,7 +168,7 @@ char const * tinyfd_openFileDialog(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aDefaultPathAndFile , /* NULL or "" */
 	int const aNumOfFilterPatterns , /* 0 */
-	char const * const * const aFilterPatterns , /* NULL {"*.jpg","*.png"} */
+	char const * const * const aFilterPatterns , /* NULL | {"*.jpg","*.png"} */
 	char const * const aSingleFilterDescription , /* NULL | "image files" */
 	int const aAllowMultipleSelects ) ; /* 0 or 1 */
 		/* in case of multiple files, the separator is | */

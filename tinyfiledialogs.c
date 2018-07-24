@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.3.5 [Apr 18, 2018] zlib licence
+ /         \ tinyfiledialogs.c v3.3.6 [Jul 25, 2018] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -105,10 +105,10 @@ misrepresented as being the original software.
   #define _WIN32_WINNT 0x0500
  #endif
  #ifndef TINYFD_NOLIB
-  #include <Windows.h>
+  #include <windows.h>
   /*#define TINYFD_NOSELECTFOLDERWIN*/
   #ifndef TINYFD_NOSELECTFOLDERWIN
-   #include <Shlobj.h>
+   #include <shlobj.h>
   #endif /*TINYFD_NOSELECTFOLDERWIN*/
  #endif
  #include <conio.h>
@@ -3698,9 +3698,17 @@ static int kdialogPresent( )
         static int lKdialogPresent = -1 ;
         char lBuff [MAX_PATH_OR_CMD] ;
         FILE * lIn ;
+		char * lDesktop;
 
         if ( lKdialogPresent < 0 )
         {
+			lDesktop = getenv("XDG_SESSION_DESKTOP");
+			if ( !lDesktop  || ( strcmp(lDesktop, "KDE") && strcmp(lDesktop, "lxqt") ) )
+			{
+				lKdialogPresent = 0 ;
+				return lKdialogPresent ;
+			}
+
                 lKdialogPresent = detectPresence("kdialog") ;
                 if ( lKdialogPresent && !getenv("SSH_TTY") )
                 {

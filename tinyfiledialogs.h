@@ -104,6 +104,8 @@ extern "C" {
 extern char const tinyfd_version[8]; /* contains tinyfd current version number */
 extern char const tinyfd_needs[]; /* info about requirements */
 extern int tinyfd_verbose; /* 0 (default) or 1 : on unix, prints the command line calls */
+extern int tinyfd_silent; /* 1 (default) or 0 : on unix,
+                          hide errors and warnings from called dialog*/
 
 #ifdef _WIN32
 /* for UTF-16 use the functions at the end of this files */

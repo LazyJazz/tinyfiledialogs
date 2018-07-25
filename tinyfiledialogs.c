@@ -132,6 +132,8 @@ misrepresented as being the original software.
 char const tinyfd_version [8] = "3.3.5";
 
 int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
+int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix,
+                        hide errors and warnings from called dialog*/
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -4319,6 +4321,8 @@ int tinyfd_messageBox(
                         }
                 }
 
+                if (tinyfd_silent) strcat( lDialogString , " 2>/dev/null ");
+
                 if ( ! strcmp( "yesnocancel" , aDialogType ) )
                 {
                         strcat( lDialogString ,
@@ -5335,6 +5339,7 @@ char const * tinyfd_inputBox(
                 {
                         strcat(lDialogString, " --hide-text") ;
                 }
+                if (tinyfd_silent) strcat( lDialogString , " 2>/dev/null ");
                 strcat( lDialogString ,
                                 ");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
         }
@@ -5885,6 +5890,7 @@ char const * tinyfd_saveFileDialog(
                         }
                         strcat( lDialogString , "' --file-filter='All files | *'" ) ;
                 }
+                if (tinyfd_silent) strcat( lDialogString , " 2>/dev/null ");
         }
         else if ( !xdialogPresent() && tkinter2Present( ) )
         {
@@ -6326,6 +6332,7 @@ char const * tinyfd_openFileDialog(
                         }
                         strcat( lDialogString , "' --file-filter='All files | *'" ) ;
                 }
+                if (tinyfd_silent) strcat( lDialogString , " 2>/dev/null ");
         }
         else if ( tkinter2Present( ) )
         {
@@ -6699,6 +6706,7 @@ char const * tinyfd_selectFolderDialog(
                         strcat(lDialogString, aDefaultPath) ;
                         strcat(lDialogString, "\"") ;
                 }
+                if (tinyfd_silent) strcat( lDialogString , " 2>/dev/null ");
         }
         else if ( !xdialogPresent() && tkinter2Present( ) )
         {
@@ -6991,6 +6999,7 @@ to set mycolor to choose color default color {");
                         strcat(lDialogString, aTitle) ;
                         strcat(lDialogString, "\"") ;
                 }
+                if (tinyfd_silent) strcat( lDialogString , " 2>/dev/null ");
         }
         else if ( xdialogPresent() )
         {
@@ -7262,6 +7271,7 @@ char lString[1024];
 char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
 tinyfd_verbose = argc - 1;
+tinyfd_silent = 1;
 
 lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 

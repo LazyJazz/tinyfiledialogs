@@ -111,6 +111,7 @@ int main( int argc , char * argv[] )
 	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
 	tinyfd_verbose = argc - 1;
+    tinyfd_silent = 1;
 
 #ifdef _WIN32
 	tinyfd_winUtf8 = 0; /* on windows, you decide if char holds 0(default): MBCS or 1: UTF-8 */

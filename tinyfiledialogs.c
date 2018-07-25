@@ -3695,56 +3695,6 @@ static int osascriptPresent( )
 }
 
 
-static int kdialogPresent( )
-{
-        static int lKdialogPresent = -1 ;
-        char lBuff [MAX_PATH_OR_CMD] ;
-        FILE * lIn ;
-		char * lDesktop;
-
-        if ( lKdialogPresent < 0 )
-        {
-			lDesktop = getenv("XDG_SESSION_DESKTOP");
-			if ( !lDesktop  || ( strcmp(lDesktop, "KDE") && strcmp(lDesktop, "lxqt") ) )
-			{
-				lKdialogPresent = 0 ;
-				return lKdialogPresent ;
-			}
-
-                lKdialogPresent = detectPresence("kdialog") ;
-                if ( lKdialogPresent && !getenv("SSH_TTY") )
-                {
-                        lIn = popen( "kdialog --attach 2>&1" , "r" ) ;
-                        if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
-                        {
-                                if ( ! strstr( "Unknown" , lBuff ) )
-                                {
-                                        lKdialogPresent = 2 ;
-                                        if (tinyfd_verbose) printf("kdialog-attach %d\n", lKdialogPresent);
-                                }
-                        }
-                        pclose( lIn ) ;
-
-                        if (lKdialogPresent == 2)
-                        {
-                                lKdialogPresent = 1 ;
-                                lIn = popen( "kdialog --passivepopup 2>&1" , "r" ) ;
-                                if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
-                                {
-                                        if ( ! strstr( "Unknown" , lBuff ) )
-                                        {
-                                                lKdialogPresent = 2 ;
-                                                if (tinyfd_verbose) printf("kdialog-popup %d\n", lKdialogPresent);
-                                        }
-                                }
-                                pclose( lIn ) ;
-                        }
-                }
-        }
-        return graphicMode() ? lKdialogPresent : 0 ;
-}
-
-
 static int qarmaPresent( )
 {
         static int lQarmaPresent = -1 ;
@@ -3827,6 +3777,59 @@ static int zenity3Present()
                 }
         }
         return graphicMode() ? lZenity3Present : 0 ;
+}
+
+
+static int kdialogPresent( )
+{
+	static int lKdialogPresent = -1 ;
+	char lBuff [MAX_PATH_OR_CMD] ;
+	FILE * lIn ;
+	char * lDesktop;
+
+	if ( lKdialogPresent < 0 )
+	{
+		if ( zenityPresent() )
+		{
+			lDesktop = getenv("XDG_SESSION_DESKTOP");
+			if ( !lDesktop  || ( strcmp(lDesktop, "KDE") && strcmp(lDesktop, "lxqt") ) )
+			{
+				lKdialogPresent = 0 ;
+				return lKdialogPresent ;
+			}
+		}
+
+		lKdialogPresent = detectPresence("kdialog") ;
+		if ( lKdialogPresent && !getenv("SSH_TTY") )
+		{
+			lIn = popen( "kdialog --attach 2>&1" , "r" ) ;
+			if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
+			{
+				if ( ! strstr( "Unknown" , lBuff ) )
+				{
+					lKdialogPresent = 2 ;
+					if (tinyfd_verbose) printf("kdialog-attach %d\n", lKdialogPresent);
+				}
+			}
+			pclose( lIn ) ;
+
+			if (lKdialogPresent == 2)
+			{
+				lKdialogPresent = 1 ;
+				lIn = popen( "kdialog --passivepopup 2>&1" , "r" ) ;
+				if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
+				{
+					if ( ! strstr( "Unknown" , lBuff ) )
+					{
+						lKdialogPresent = 2 ;
+						if (tinyfd_verbose) printf("kdialog-popup %d\n", lKdialogPresent);
+					}
+				}
+				pclose( lIn ) ;
+			}
+		}
+	}
+	return graphicMode() ? lKdialogPresent : 0 ;
 }
 
 

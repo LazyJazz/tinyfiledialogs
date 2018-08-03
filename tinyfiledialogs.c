@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.3.6 [Jul 25, 2018] zlib licence
+ /         \ tinyfiledialogs.c v3.3.7 [Aug 3, 2018] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -129,7 +129,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char const tinyfd_version [8] = "3.3.6";
+char const tinyfd_version [8] = "3.3.7";
 
 int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix,
@@ -1263,13 +1263,13 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
 				fclose(lFile);
 
                 wcscpy(lDialogString, L"cmd.exe /c cscript.exe //U //Nologo ");
-                wcscat(lDialogString, L"%USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.vbs ");
-                wcscat(lDialogString, L">> %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.txt");
+                wcscat(lDialogString, L"\"%USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.vbs\" ");
+                wcscat(lDialogString, L">> \"%USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.txt\"");
         }
         else
         {
                 wcscpy(lDialogString,
-                        L"cmd.exe /c mshta.exe %USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.hta");
+                        L"cmd.exe /c mshta.exe \"%USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.hta\"");
         }
 
         /* wprintf ( "lDialogString: %ls\n" , lDialogString ) ; */

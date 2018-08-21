@@ -2230,7 +2230,8 @@ static char const * selectFolderDialogWinGuiA(
 {
         BROWSEINFOA bInfo ;
         LPITEMIDLIST lpItem ;
-        HRESULT lHResult;
+        HRESULT lHResult ;
+		char * lRetval = NULL ;
 
         lHResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 
@@ -2251,13 +2252,14 @@ static char const * selectFolderDialogWinGuiA(
         if ( lpItem )
         {
                 SHGetPathFromIDListA( lpItem , aoBuff ) ;
+				lRetval = aoBuff;
         }
 
         if (lHResult==S_OK || lHResult==S_FALSE) 
         {
                 CoUninitialize();
         }
-        return aoBuff ;
+		return lRetval;
 }
 #endif /*TINYFD_NOSELECTFOLDERWIN*/
 

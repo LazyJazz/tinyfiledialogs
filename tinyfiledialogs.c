@@ -87,7 +87,10 @@ misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 */
 
+#ifndef __sun
 #define _POSIX_C_SOURCE 2 /* to accept POSIX 2 in old ANSI C standards */
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6914,17 +6917,17 @@ char const * tinyfd_colorChooser(
                 lWasOsascript = 1 ;
                 strcpy( lDialogString , "osascript");
                                 
-                if ( ! osx9orBetter() ) 
-                {
+                /*if ( ! osx9orBetter() ) 
+                {*/
                         strcat( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
                         strcat( lDialogString , " -e 'try' -e 'set mycolor to choose color default color {");
-                }
+                /*}
                 else 
                 {
                         strcat( lDialogString ,
 " -e 'try' -e 'tell app (path to frontmost application as Unicode text) \
 to set mycolor to choose color default color {");
-                }
+                }*/
 
                 sprintf(lTmp, "%d", 256 * lDefaultRGB[0] ) ;
                 strcat(lDialogString, lTmp ) ;
@@ -6945,7 +6948,7 @@ to set mycolor to choose color default color {");
                 strcat( lDialogString , "-e 'mystring' ");
                 strcat(lDialogString, "-e 'on error number -128' " ) ;
                 strcat(lDialogString, "-e 'end try'") ;
-                if ( ! osx9orBetter() ) strcat( lDialogString, " -e 'end tell'") ;
+                /*if ( ! osx9orBetter() ) */ strcat( lDialogString, " -e 'end tell'") ;
         }
         else if ( kdialogPresent() )
         {

@@ -1741,13 +1741,28 @@ static int __stdcall BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lp, LPARAM 
         return 0;
 }
 
+BOOL CALLBACK BrowseCallbackProcW_enum(HWND hWndChild, LPARAM lParam)
+{
+    wchar_t buf[255];
+    GetClassName(hWndChild, buf, sizeof(buf));
+    if (wcscmp(buf, L"SysTreeView32") == 0) {
+        HTREEITEM hNode = TreeView_GetSelection(hWndChild);
+        TreeView_EnsureVisible(hWndChild, hNode);
+        return FALSE;
+    }
+    return TRUE;
+}
+
 static int __stdcall BrowseCallbackProcW(HWND hwnd, UINT uMsg, LPARAM lp, LPARAM pData)
 {
-        if (uMsg == BFFM_INITIALIZED)
-        {
-                SendMessage(hwnd, BFFM_SETSELECTIONW, TRUE, (LPARAM)pData);
-        }
-        return 0;
+    switch (uMsg) {
+        case BFFM_INITIALIZED:
+            SendMessage(hwnd, BFFM_SETSELECTIONW, TRUE, (LPARAM)pData);
+            break;
+        case BFFM_SELCHANGED:
+            EnumChildWindows(hwnd, BrowseCallbackProcW_enum, 0);
+    }
+    return 0;
 }
 
 wchar_t const * tinyfd_selectFolderDialogW(

@@ -1335,6 +1335,9 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
                 free(lDialogString);
                 return NULL;
         }
+
+		memset(lBuff, 0, MAX_PATH_OR_CMD);
+
 #ifdef TINYFD_NOCCSUNICODE
 		fgets((char *)lBuff, 2*MAX_PATH_OR_CMD, lIn);
 #else

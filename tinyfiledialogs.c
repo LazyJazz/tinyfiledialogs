@@ -1385,7 +1385,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
 #ifdef TINYFD_NOCCSUNICODE
 		if (aDefaultInput)
 		{
-			lDialogStringLen = wcslen(lBuff);
+			lDialogStringLen = wcslen(lBuff) ;
 			lBuff[lDialogStringLen - 1] = L'\0';
 			lBuff[lDialogStringLen - 2] = L'\0';
 		}

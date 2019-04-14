@@ -799,6 +799,36 @@ static int fileExists(char const * const aFilePathAndName)
         }
 }
 
+static int replaceWchar(wchar_t * const aString,
+	wchar_t const aOldChr,
+	wchar_t const aNewChr)
+{
+	wchar_t * p;
+	int lRes = 0;
+
+	if (!aString)
+	{
+		return 0;
+	}
+
+	if (aOldChr == aNewChr)
+	{
+		return 0;
+	}
+
+	p = aString;
+	while ((p = wcsrchr(p, aOldChr)))
+	{
+		*p = aNewChr;
+#ifdef TINYFD_NOCCSUNICODE
+		p++;
+#endif
+		p++;
+		lRes = 1;
+	}
+	return lRes;
+}
+
 #endif /* TINYFD_NOLIB */
 #endif /* _WIN32 */
 
@@ -1143,12 +1173,16 @@ wchar_t const * tinyfd_inputBoxW(
                 wcscpy(lDialogString, L"Dim result:result=InputBox(\"");
                 if (aMessage && wcslen(aMessage))
                 {
-                        wcscat(lDialogString, aMessage);
+					wcscpy(lBuff, aMessage);
+					replaceWchar(lBuff, L'\n', L' ');
+					wcscat(lDialogString, lBuff);
                 }
                 wcscat(lDialogString, L"\",\"tinyfiledialogsTopWindow\",\"");
                 if (aDefaultInput && wcslen(aDefaultInput))
                 {
-                        wcscat(lDialogString, aDefaultInput);
+					wcscpy(lBuff, aDefaultInput);
+					replaceWchar(lBuff, L'\n', L' ');
+					wcscat(lDialogString, lBuff);
                 }
                 wcscat(lDialogString, L"\"):If IsEmpty(result) then:WScript.Echo 0");
                 wcscat(lDialogString, L":Else: WScript.Echo \"1\" & result : End If");
@@ -1349,12 +1383,12 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
 		if (aDefaultInput)
 		{
 			lDialogStringLen = wcslen(lBuff);
-			lBuff[lDialogStringLen - 1] = 0;
-			lBuff[lDialogStringLen - 2] = 0;
+			lBuff[lDialogStringLen - 1] = L'\0';
+			lBuff[lDialogStringLen - 2] = L'\0';
 		}
 		return lBuff + 2;
 #else
-		if (aDefaultInput) lBuff[wcslen(lBuff) - 1] = 0;
+		if (aDefaultInput) lBuff[wcslen(lBuff) - 1] = L'\0';
 		return lBuff + 1;
 #endif
 }

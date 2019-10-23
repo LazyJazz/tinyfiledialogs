@@ -1783,19 +1783,25 @@ static char const * openFileDialogWinGui8(
 }
 
 #ifndef TINYFD_NOSELECTFOLDERWIN
-static int __stdcall BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lp, LPARAM pData)
+
+BOOL CALLBACK BrowseCallbackProc_enum(HWND hWndChild, LPARAM lParam)
 {
-        if (uMsg == BFFM_INITIALIZED)
-        {
-                SendMessage(hwnd, BFFM_SETSELECTION, TRUE, pData);
-        }
-        return 0;
+	char buf[255];
+	GetClassNameA(hWndChild, buf, sizeof(buf));
+	if (strcmp(buf, "SysTreeView32") == 0) {
+		HTREEITEM hNode = TreeView_GetSelection(hWndChild);
+		TreeView_EnsureVisible(hWndChild, hNode);
+		return FALSE;
+	}
+	return TRUE;
 }
+
+
 
 BOOL CALLBACK BrowseCallbackProcW_enum(HWND hWndChild, LPARAM lParam)
 {
     wchar_t buf[255];
-    GetClassName(hWndChild, buf, sizeof(buf));
+    GetClassNameW(hWndChild, buf, sizeof(buf));
     if (wcscmp(buf, L"SysTreeView32") == 0) {
         HTREEITEM hNode = TreeView_GetSelection(hWndChild);
         TreeView_EnsureVisible(hWndChild, hNode);
@@ -1803,6 +1809,19 @@ BOOL CALLBACK BrowseCallbackProcW_enum(HWND hWndChild, LPARAM lParam)
     }
     return TRUE;
 }
+
+static int __stdcall BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lp, LPARAM pData)
+{
+	switch (uMsg) {
+	case BFFM_INITIALIZED:
+		SendMessage(hwnd, BFFM_SETSELECTION, TRUE, pData);
+		break;
+	case BFFM_SELCHANGED:
+		EnumChildWindows(hwnd, BrowseCallbackProc_enum, 0);
+	}
+	return 0;
+}
+
 
 static int __stdcall BrowseCallbackProcW(HWND hwnd, UINT uMsg, LPARAM lp, LPARAM pData)
 {

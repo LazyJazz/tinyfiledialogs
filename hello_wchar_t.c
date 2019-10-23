@@ -136,7 +136,7 @@ int main(void) /* WINDOWS ONLY */
 		lIntValue = tinyfd_messageBoxW(L"Hello World",
 			L"Console mode is not implemented for wchar UTF-16",
 			L"ok", L"info", 1);
-		tinyfd_forceConsole = ! lIntValue ;		
+		tinyfd_forceConsole = ! lIntValue ;	
 	}
 
 	lTmp = tinyfd_inputBoxW(

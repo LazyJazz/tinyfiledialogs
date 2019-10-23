@@ -12,7 +12,7 @@
         |                                                                 |
         | this file is for windows and unix (osx linux, bsd, solaris ...) |
         |_________________________________________________________________|
-	  
+	 
 Please upvote my stackoverflow answer https://stackoverflow.com/a/47651444
 
 tiny file dialogs (cross-platform C C++)
@@ -148,7 +148,7 @@ int main( int argc , char * argv[] )
 			"graphic dialogs [yes] / console mode [no]?",
 			"yesno", "question", 1);
 		tinyfd_forceConsole = ! lIntValue ;
-		
+	
 		/*lIntValue = tinyfd_messageBox("Hello World",
 			"graphic dialogs [yes] / console mode [no]?",
 			"yesnocancel", "question", 1);

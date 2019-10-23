@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.3.9 [Apr 14, 2019] zlib licence
+ /         \ tinyfiledialogs.c v3.3.10 [Oct 23, 2019] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -132,7 +132,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char const tinyfd_version [8] = "3.3.9";
+char const tinyfd_version [8] = "3.3.10";
 
 int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix,
@@ -1806,7 +1806,8 @@ wchar_t const * tinyfd_selectFolderDialogW(
         wchar_t const * const aDefaultPath) /* NULL or "" */
 {
         static wchar_t lBuff[MAX_PATH_OR_CMD];
-                
+		wchar_t * lRetval;
+
         BROWSEINFOW bInfo;
         LPITEMIDLIST lpItem;
         HRESULT lHResult;
@@ -1828,16 +1829,21 @@ wchar_t const * tinyfd_selectFolderDialogW(
         bInfo.iImage = -1;
 
         lpItem = SHBrowseForFolderW(&bInfo);
-        if (lpItem)
+        if (!lpItem)
+		{
+			lRetval = NULL;
+		}
+		else
         {
                 SHGetPathFromIDListW(lpItem, lBuff);
+				lRetval = lBuff ;
         }
 
         if (lHResult == S_OK || lHResult == S_FALSE)
         {
                 CoUninitialize();
         }
-        return lBuff;
+		return lRetval;
 }
 
 

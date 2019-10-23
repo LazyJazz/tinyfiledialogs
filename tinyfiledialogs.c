@@ -490,14 +490,14 @@ static int dirExists(char const * const aDirPath)
 }
 
 
-void tinyfd_beep()
+void tinyfd_beep(void)
 {
         printf("\a");
 }
 
 #else /* ndef TINYFD_NOLIB */
 
-void tinyfd_beep()
+void tinyfd_beep(void)
 {
         Beep(440,300);
 }
@@ -2377,7 +2377,7 @@ static char const * colorChooserWinGuiA(
 
 #endif /* TINYFD_NOLIB */
 
-static int dialogPresent( )
+static int dialogPresent(void)
 {
         static int lDialogPresent = -1 ;
         char lBuff [MAX_PATH_OR_CMD] ;
@@ -3241,7 +3241,7 @@ static char gPython2Name[16];
 static char gPython3Name[16];
 static char gPythonName[16];
 
-static int isDarwin( )
+static int isDarwin(void)
 {
         static int lsIsDarwin = -1 ;
         struct utsname lUtsname ;
@@ -3352,7 +3352,7 @@ static int tryCommand( char const * const aCommand )
 }
 
 
-static int isTerminalRunning( )
+static int isTerminalRunning(void)
 {
 	static int lIsTerminalRunning = -1 ;
 	if ( lIsTerminalRunning < 0 )
@@ -3364,7 +3364,7 @@ static int isTerminalRunning( )
 }
 
 
-static char const * dialogNameOnly( )
+static char const * dialogNameOnly(void)
 {
         static char lDialogName[128] = "*" ;
         if ( lDialogName[0] == '*' )
@@ -3384,7 +3384,7 @@ static char const * dialogNameOnly( )
 }
 
 
-int isDialogVersionBetter09b( )
+int isDialogVersionBetter09b(void)
 {
         char const * lDialogName ;
         char * lVersion ;
@@ -3421,7 +3421,7 @@ int isDialogVersionBetter09b( )
 }
 
 
-static int whiptailPresentOnly( )
+static int whiptailPresentOnly(void)
 {
         static int lWhiptailPresent = -1 ;
         if ( lWhiptailPresent < 0 )
@@ -3432,7 +3432,7 @@ static int whiptailPresentOnly( )
 }
 
 
-static char const * terminalName( )
+static char const * terminalName(void)
 {
         static char lTerminalName[128] = "*" ;
         char lShellName[64] = "*" ;
@@ -3559,7 +3559,7 @@ static char const * terminalName( )
 }
 
 
-static char const * dialogName( )
+static char const * dialogName(void)
 {
     char const * lDialogName ;
     lDialogName = dialogNameOnly( ) ;
@@ -3574,7 +3574,7 @@ static char const * dialogName( )
 }
 
 
-static int whiptailPresent( )
+static int whiptailPresent(void)
 {
         int lWhiptailPresent ;
     lWhiptailPresent = whiptailPresentOnly( ) ;
@@ -3590,7 +3590,7 @@ static int whiptailPresent( )
 
 
 
-static int graphicMode( )
+static int graphicMode(void)
 {
         return !( tinyfd_forceConsole && (isTerminalRunning() || terminalName()) )
           && ( getenv("DISPLAY")
@@ -3598,7 +3598,7 @@ static int graphicMode( )
 }
 
 
-static int pactlPresent( )
+static int pactlPresent(void)
 {
         static int lPactlPresent = -1 ;
         if ( lPactlPresent < 0 )
@@ -3609,7 +3609,7 @@ static int pactlPresent( )
 }
 
 
-static int speakertestPresent( )
+static int speakertestPresent(void)
 {
         static int lSpeakertestPresent = -1 ;
         if ( lSpeakertestPresent < 0 )
@@ -3620,7 +3620,7 @@ static int speakertestPresent( )
 }
 
 
-static int beepexePresent( )
+static int beepexePresent(void)
 {
         static int lBeepexePresent = -1 ;
         if ( lBeepexePresent < 0 )
@@ -3631,7 +3631,7 @@ static int beepexePresent( )
 }
 
 
-static int xmessagePresent( )
+static int xmessagePresent(void)
 {
         static int lXmessagePresent = -1 ;
         if ( lXmessagePresent < 0 )
@@ -3642,7 +3642,7 @@ static int xmessagePresent( )
 }
 
 
-static int gxmessagePresent( )
+static int gxmessagePresent(void)
 {
     static int lGxmessagePresent = -1 ;
     if ( lGxmessagePresent < 0 )
@@ -3653,7 +3653,7 @@ static int gxmessagePresent( )
 }
 
 
-static int gmessagePresent( )
+static int gmessagePresent(void)
 {
         static int lGmessagePresent = -1 ;
         if ( lGmessagePresent < 0 )
@@ -3664,7 +3664,7 @@ static int gmessagePresent( )
 }
 
 
-static int notifysendPresent( )
+static int notifysendPresent(void)
 {
     static int lNotifysendPresent = -1 ;
     if ( lNotifysendPresent < 0 )
@@ -3675,7 +3675,7 @@ static int notifysendPresent( )
 }
 
 
-static int perlPresent( )
+static int perlPresent(void)
 {
         static int lPerlPresent = -1 ;
         char lBuff [MAX_PATH_OR_CMD] ;
@@ -3699,7 +3699,7 @@ static int perlPresent( )
 }
 
 
-static int afplayPresent( )
+static int afplayPresent(void)
 {
         static int lAfplayPresent = -1 ;
         char lBuff [MAX_PATH_OR_CMD] ;
@@ -3723,7 +3723,7 @@ static int afplayPresent( )
 }
 
 
-static int xdialogPresent( )
+static int xdialogPresent(void)
 {
     static int lXdialogPresent = -1 ;
     if ( lXdialogPresent < 0 )
@@ -3734,7 +3734,7 @@ static int xdialogPresent( )
 }
 
 
-static int gdialogPresent( )
+static int gdialogPresent(void)
 {
     static int lGdialoglPresent = -1 ;
     if ( lGdialoglPresent < 0 )
@@ -3745,7 +3745,7 @@ static int gdialogPresent( )
 }
 
 
-static int osascriptPresent( )
+static int osascriptPresent(void)
 {
     static int lOsascriptPresent = -1 ;
     if ( lOsascriptPresent < 0 )
@@ -3757,7 +3757,7 @@ static int osascriptPresent( )
 }
 
 
-static int qarmaPresent( )
+static int qarmaPresent(void)
 {
         static int lQarmaPresent = -1 ;
         if ( lQarmaPresent < 0 )
@@ -3768,7 +3768,7 @@ static int qarmaPresent( )
 }
 
 
-static int matedialogPresent( )
+static int matedialogPresent(void)
 {
         static int lMatedialogPresent = -1 ;
         if ( lMatedialogPresent < 0 )
@@ -3779,7 +3779,7 @@ static int matedialogPresent( )
 }
 
 
-static int shellementaryPresent( )
+static int shellementaryPresent(void)
 {
         static int lShellementaryPresent = -1 ;
         if ( lShellementaryPresent < 0 )
@@ -3790,7 +3790,7 @@ static int shellementaryPresent( )
 }
 
 
-static int zenityPresent( )
+static int zenityPresent(void)
 {
         static int lZenityPresent = -1 ;
         if ( lZenityPresent < 0 )
@@ -3801,7 +3801,7 @@ static int zenityPresent( )
 }
 
 
-static int zenity3Present()
+static int zenity3Present(void)
 {
         static int lZenity3Present = -1 ;
         char lBuff [MAX_PATH_OR_CMD] ;
@@ -3842,7 +3842,7 @@ static int zenity3Present()
 }
 
 
-static int kdialogPresent( )
+static int kdialogPresent(void)
 {
 	static int lKdialogPresent = -1 ;
 	char lBuff [MAX_PATH_OR_CMD] ;
@@ -3895,7 +3895,7 @@ static int kdialogPresent( )
 }
 
 
-static int osx9orBetter( )
+static int osx9orBetter(void)
 {
         static int lOsx9orBetter = -1 ;
         char lBuff [MAX_PATH_OR_CMD] ;
@@ -3922,7 +3922,7 @@ static int osx9orBetter( )
 }
 
 
-static int python2Present( )
+static int python2Present(void)
 {
     static int lPython2Present = -1 ;
         int i;
@@ -3956,7 +3956,7 @@ static int python2Present( )
 }
 
 
-static int python3Present( )
+static int python3Present(void)
 {
         static int lPython3Present = -1 ;
         int i;
@@ -3990,7 +3990,7 @@ static int python3Present( )
 }
 
 
-static int tkinter2Present( )
+static int tkinter2Present(void)
 {
     static int lTkinter2Present = -1 ;
         char lPythonCommand[256];
@@ -4012,7 +4012,7 @@ static int tkinter2Present( )
 }
 
 
-static int tkinter3Present( )
+static int tkinter3Present(void)
 {
         static int lTkinter3Present = -1 ;
         char lPythonCommand[256];
@@ -4033,7 +4033,7 @@ static int tkinter3Present( )
 }
 
 
-static int pythonDbusPresent( )
+static int pythonDbusPresent(void)
 {
     static int lDbusPresent = -1 ;
         char lPythonCommand[256];
@@ -4075,7 +4075,7 @@ static void sigHandler(int sig)
         }
 }
 
-void tinyfd_beep()
+void tinyfd_beep(void)
 {
         char lDialogString [256] ;
         FILE * lIn ;

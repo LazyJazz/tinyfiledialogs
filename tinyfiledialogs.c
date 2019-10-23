@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.3.10 [Oct 23, 2019] zlib licence
+ /         \ tinyfiledialogs.c v3.4 [Oct 23, 2019] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -132,7 +132,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char const tinyfd_version [8] = "3.3.10";
+char const tinyfd_version [8] = "3.4";
 
 int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix,
@@ -1461,7 +1461,8 @@ wchar_t const * tinyfd_saveFileDialogW(
         wchar_t lFilterPatterns[MAX_PATH_OR_CMD] = L"";
         wchar_t * p;
         wchar_t * lRetval;
-        int i;
+		wchar_t const * ldefExt = NULL;
+		int i;
         HRESULT lHResult;
         OPENFILENAMEW ofn = {0};
 
@@ -1474,6 +1475,8 @@ wchar_t const * tinyfd_saveFileDialogW(
 
         if (aNumOfFilterPatterns > 0)
         {
+			ldefExt = aFilterPatterns[0];
+
                 if (aSingleFilterDescription && wcslen(aSingleFilterDescription))
                 {
                         wcscpy(lFilterPatterns, aSingleFilterDescription);
@@ -1517,7 +1520,7 @@ wchar_t const * tinyfd_saveFileDialogW(
         ofn.Flags = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST ;
         ofn.nFileOffset = 0;
         ofn.nFileExtension = 0;
-        ofn.lpstrDefExt = NULL;
+		ofn.lpstrDefExt = ldefExt;
         ofn.lCustData = 0L;
         ofn.lpfnHook = NULL;
         ofn.lpTemplateName = NULL;
@@ -2114,6 +2117,7 @@ static char const * saveFileDialogWinGuiA(
         char * p;
         char * lRetval;
         HRESULT lHResult;
+		char const * ldefExt = NULL;
         OPENFILENAMEA ofn = { 0 };
 
         lHResult = CoInitializeEx(NULL,0);
@@ -2123,6 +2127,8 @@ static char const * saveFileDialogWinGuiA(
 
         if (aNumOfFilterPatterns > 0)
         {
+			ldefExt = aFilterPatterns[0];
+
                 if ( aSingleFilterDescription && strlen(aSingleFilterDescription) )
                 {
                         strcpy(lFilterPatterns, aSingleFilterDescription);
@@ -2166,7 +2172,7 @@ static char const * saveFileDialogWinGuiA(
         ofn.Flags           = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR ;
         ofn.nFileOffset     = 0 ;
         ofn.nFileExtension  = 0 ;
-        ofn.lpstrDefExt     = NULL ;
+		ofn.lpstrDefExt		= ldefExt;
         ofn.lCustData       = 0L ;
         ofn.lpfnHook        = NULL ;
         ofn.lpTemplateName  = NULL ;

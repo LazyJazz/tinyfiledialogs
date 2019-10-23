@@ -224,7 +224,7 @@ int main(void) /* WINDOWS ONLY */
 			lBuffer, L"ok", L"info", 1);
 
 	lTheSelectFolderName = tinyfd_selectFolderDialogW(
-		L"let us just select a directory", NULL);
+		L"let us just select a directory", L"C:\\");
 
 	if (!lTheSelectFolderName)
 	{

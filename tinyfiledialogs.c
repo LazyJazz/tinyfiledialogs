@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.4 [Oct 23, 2019] zlib licence
+ /         \ tinyfiledialogs.c v3.4 [Oct 24, 2019] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net

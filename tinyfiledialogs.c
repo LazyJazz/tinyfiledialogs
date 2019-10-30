@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.4 [Oct 24, 2019] zlib licence
+ /         \ tinyfiledialogs.c v3.4.1 [Oct 29, 2019] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -132,7 +132,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char const tinyfd_version [8] = "3.4";
+char const tinyfd_version [8] = "3.4.1";
 
 int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix,
@@ -3340,7 +3340,7 @@ static char const * getVersion( char const * const aExecutable ) /*version must 
 	char lTestedString [MAX_PATH_OR_CMD] ;
 	FILE * lIn ;
 	char * lTmp ;
-	
+
     strcpy( lTestedString , aExecutable ) ;
     strcat( lTestedString , " --version" ) ;
 
@@ -3406,21 +3406,21 @@ static int isTerminalRunning(void)
 
 static char const * dialogNameOnly(void)
 {
-        static char lDialogName[128] = "*" ;
-        if ( lDialogName[0] == '*' )
-        {
-                if ( isDarwin() && strcpy(lDialogName , "/opt/local/bin/dialog" )
-                        && detectPresence( lDialogName ) )
-                {}
-                else if ( strcpy(lDialogName , "dialog" )
-                        && detectPresence( lDialogName ) )
-                {}
-                else
-                {
-                        strcpy(lDialogName , "" ) ;
-                }
-        }
-    return lDialogName ;
+	static char lDialogName[128] = "*" ;
+	if ( lDialogName[0] == '*' )
+	{
+		if ( isDarwin() && * strcpy(lDialogName , "/opt/local/bin/dialog" )
+			&& detectPresence( lDialogName ) )
+		{}
+		else if ( * strcpy(lDialogName , "dialog" )
+			&& detectPresence( lDialogName ) )
+		{}
+		else
+		{
+			strcpy(lDialogName , "" );
+		}
+	}
+	return lDialogName ;
 }
 
 
@@ -3496,7 +3496,7 @@ static char const * terminalName(void)
 
                 if ( isDarwin() )
                 {
-                        if ( strcpy(lTerminalName , "/opt/X11/bin/xterm" )
+					if ( * strcpy(lTerminalName , "/opt/X11/bin/xterm" )
                       && detectPresence( lTerminalName ) )
                         {
                                 strcat(lTerminalName , " -fa 'DejaVu Sans Mono' -fs 10 -title tinyfiledialogs -e " ) ;
@@ -3507,73 +3507,73 @@ static char const * terminalName(void)
                                 strcpy(lTerminalName , "" ) ;
                         }
                 }
-                else if ( strcpy(lTerminalName,"xterm") /*good (small without parameters)*/
+                else if ( * strcpy(lTerminalName,"xterm") /*good (small without parameters)*/
                         && detectPresence(lTerminalName) )
                 {
                         strcat(lTerminalName , " -fa 'DejaVu Sans Mono' -fs 10 -title tinyfiledialogs -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"terminator") /*good*/
+                else if ( * strcpy(lTerminalName,"terminator") /*good*/
                           && detectPresence(lTerminalName) )
                 {
                         strcat(lTerminalName , " -x " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"lxterminal") /*good*/
+                else if ( * strcpy(lTerminalName,"lxterminal") /*good*/
                           && detectPresence(lTerminalName) )
                 {
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"konsole") /*good*/
+                else if ( * strcpy(lTerminalName,"konsole") /*good*/
                           && detectPresence(lTerminalName) )
                 {
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"kterm") /*good*/
+                else if ( * strcpy(lTerminalName,"kterm") /*good*/
                           && detectPresence(lTerminalName) )
                 {
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"tilix") /*good*/
+                else if ( * strcpy(lTerminalName,"tilix") /*good*/
                           && detectPresence(lTerminalName) )
                 {
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"xfce4-terminal") /*good*/
+                else if ( * strcpy(lTerminalName,"xfce4-terminal") /*good*/
                           && detectPresence(lTerminalName) )
                 {
                         strcat(lTerminalName , " -x " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"mate-terminal") /*good*/
+                else if ( * strcpy(lTerminalName,"mate-terminal") /*good*/
                           && detectPresence(lTerminalName) )
                 {
                         strcat(lTerminalName , " -x " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"Eterm") /*good*/
+                else if ( * strcpy(lTerminalName,"Eterm") /*good*/
                           && detectPresence(lTerminalName) )
                 {
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"evilvte") /*good*/
+                else if ( * strcpy(lTerminalName,"evilvte") /*good*/
                           && detectPresence(lTerminalName) )
                 {
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"pterm") /*good (only letters)*/
+                else if ( * strcpy(lTerminalName,"pterm") /*good (only letters)*/
                           && detectPresence(lTerminalName) )
                 {
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"gnome-terminal")
+				else if ( * strcpy(lTerminalName,"gnome-terminal")
                 && detectPresence(lTerminalName) && (lArray = getMajorMinorPatch(lTerminalName))
 				&& ((lArray[0]<3) || (lArray[0]==3 && lArray[1]<=6)) )
                 {

@@ -320,7 +320,5 @@ char const * tinyfd_arrayDialog(
   It can be found at the bottom of the following page:
   http://andrear.altervista.org/home/cdialog.php
 - If dialog is missing, it will switch to basic console input.
-- You can query the type of dialog that will be use.
-- MinGW needs gcc >= v4.9 otherwise some headers are incomplete.
-- The Hello World (and a bit more) is on the sourceforge site:
+- You can query the type of dialog that will be use (pass "tinyfd_query" as aTitle)
 */

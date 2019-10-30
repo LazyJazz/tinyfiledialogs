@@ -135,8 +135,8 @@ char const * tinyfd_colorChooser (
   It can be found at the bottom of the following page:
   http://andrear.altervista.org/home/cdialog.php
 - If dialog is missing, it will switch to basic console input.
-- You can query the type of dialog that will be use.
-- MinGW needs gcc >= v4.9 otherwise some headers are incomplete.
+- You can query the type of dialog that will be use (pass "tinyfd_query" as aTitle)
+
 
 - Here is the Hello World:
             if a console is missing, it will use graphic dialogs

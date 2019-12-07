@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.4.1 [Oct 29, 2019] zlib licence
+ /         \ tinyfiledialogs.c v3.4.2 [Dec 7, 2019] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -132,7 +132,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char const tinyfd_version [8] = "3.4.1";
+char const tinyfd_version [8] = "3.4.2";
 
 int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix,
@@ -1336,7 +1336,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
                 return NULL;
         }
 
-		memset(lBuff, 0, MAX_PATH_OR_CMD);
+		memset(lBuff, 0, MAX_PATH_OR_CMD * sizeof(wchar_t) );
 
 #ifdef TINYFD_NOCCSUNICODE
 		fgets((char *)lBuff, 2*MAX_PATH_OR_CMD, lIn);
@@ -1506,7 +1506,7 @@ wchar_t const * tinyfd_saveFileDialogW(
         ofn.lStructSize = sizeof(OPENFILENAMEW);
         ofn.hwndOwner = GetForegroundWindow();
         ofn.hInstance = 0;
-        ofn.lpstrFilter = lFilterPatterns && wcslen(lFilterPatterns) ? lFilterPatterns : NULL;
+        ofn.lpstrFilter = wcslen(lFilterPatterns) ? lFilterPatterns : NULL;
         ofn.lpstrCustomFilter = NULL;
         ofn.nMaxCustFilter = 0;
         ofn.nFilterIndex = 1;
@@ -1515,7 +1515,7 @@ wchar_t const * tinyfd_saveFileDialogW(
         ofn.nMaxFile = MAX_PATH_OR_CMD;
         ofn.lpstrFileTitle = NULL;
         ofn.nMaxFileTitle = MAX_PATH_OR_CMD/2;
-        ofn.lpstrInitialDir = lDirname && wcslen(lDirname) ? lDirname : NULL;
+        ofn.lpstrInitialDir = wcslen(lDirname) ? lDirname : NULL;
         ofn.lpstrTitle = aTitle && wcslen(aTitle) ? aTitle : NULL;
         ofn.Flags = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST ;
         ofn.nFileOffset = 0;
@@ -1657,7 +1657,7 @@ wchar_t const * tinyfd_openFileDialogW(
         ofn.lStructSize = sizeof(OPENFILENAME);
         ofn.hwndOwner = GetForegroundWindow();
         ofn.hInstance = 0;
-        ofn.lpstrFilter = lFilterPatterns && wcslen(lFilterPatterns) ? lFilterPatterns : NULL;
+        ofn.lpstrFilter = wcslen(lFilterPatterns) ? lFilterPatterns : NULL;
         ofn.lpstrCustomFilter = NULL;
         ofn.nMaxCustFilter = 0;
         ofn.nFilterIndex = 1;
@@ -1665,7 +1665,7 @@ wchar_t const * tinyfd_openFileDialogW(
         ofn.nMaxFile = MAX_PATH_OR_CMD;
         ofn.lpstrFileTitle = NULL;
         ofn.nMaxFileTitle = MAX_PATH_OR_CMD / 2;
-        ofn.lpstrInitialDir = lDirname && wcslen(lDirname) ? lDirname : NULL;
+        ofn.lpstrInitialDir = wcslen(lDirname) ? lDirname : NULL;
         ofn.lpstrTitle = aTitle && wcslen(aTitle) ? aTitle : NULL;
         ofn.Flags = OFN_EXPLORER | OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
         ofn.nFileOffset = 0;
@@ -2158,7 +2158,7 @@ static char const * saveFileDialogWinGuiA(
         ofn.lStructSize     = sizeof(OPENFILENAME) ;
         ofn.hwndOwner           = GetForegroundWindow();
         ofn.hInstance       = 0 ;
-        ofn.lpstrFilter         = lFilterPatterns && strlen(lFilterPatterns) ? lFilterPatterns : NULL;
+        ofn.lpstrFilter         = strlen(lFilterPatterns) ? lFilterPatterns : NULL;
         ofn.lpstrCustomFilter = NULL ;
         ofn.nMaxCustFilter  = 0 ;
         ofn.nFilterIndex    = 1 ;
@@ -2167,7 +2167,7 @@ static char const * saveFileDialogWinGuiA(
         ofn.nMaxFile        = MAX_PATH_OR_CMD ;
         ofn.lpstrFileTitle  = NULL ;
         ofn.nMaxFileTitle       = MAX_PATH_OR_CMD / 2;
-        ofn.lpstrInitialDir = lDirname && strlen(lDirname) ? lDirname : NULL;
+        ofn.lpstrInitialDir = strlen(lDirname) ? lDirname : NULL;
         ofn.lpstrTitle          = aTitle && strlen(aTitle) ? aTitle : NULL;
         ofn.Flags           = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR ;
         ofn.nFileOffset     = 0 ;
@@ -2251,7 +2251,7 @@ static char const * openFileDialogWinGuiA(
         ofn.lStructSize     = sizeof( OPENFILENAME ) ;
         ofn.hwndOwner           = GetForegroundWindow();
         ofn.hInstance       = 0 ;
-        ofn.lpstrFilter         = lFilterPatterns && strlen(lFilterPatterns) ? lFilterPatterns : NULL;
+        ofn.lpstrFilter         = strlen(lFilterPatterns) ? lFilterPatterns : NULL;
         ofn.lpstrCustomFilter = NULL ;
         ofn.nMaxCustFilter  = 0 ;
         ofn.nFilterIndex    = 1 ;
@@ -2259,7 +2259,7 @@ static char const * openFileDialogWinGuiA(
         ofn.nMaxFile        = MAX_PATH_OR_CMD ;
         ofn.lpstrFileTitle  = NULL ;
         ofn.nMaxFileTitle       = MAX_PATH_OR_CMD / 2;
-        ofn.lpstrInitialDir = lDirname && strlen(lDirname) ? lDirname : NULL;
+        ofn.lpstrInitialDir = strlen(lDirname) ? lDirname : NULL;
         ofn.lpstrTitle          = aTitle && strlen(aTitle) ? aTitle : NULL;
         ofn.Flags                       = OFN_EXPLORER  | OFN_NOCHANGEDIR ;
         ofn.nFileOffset     = 0 ;
@@ -4034,7 +4034,7 @@ static int tkinter2Present(void)
 {
     static int lTkinter2Present = -1 ;
         char lPythonCommand[256];
-        char lPythonParams[256] =
+        char lPythonParams[128] =
 "-S -c \"try:\n\timport Tkinter;\nexcept:\n\tprint 0;\"";
 
 
@@ -4056,7 +4056,7 @@ static int tkinter3Present(void)
 {
         static int lTkinter3Present = -1 ;
         char lPythonCommand[256];
-        char lPythonParams[256] =
+        char lPythonParams[128] =
                 "-S -c \"try:\n\timport tkinter;\nexcept:\n\tprint(0);\"";
 
         if ( lTkinter3Present < 0 )
@@ -4076,7 +4076,7 @@ static int tkinter3Present(void)
 static int pythonDbusPresent(void)
 {
     static int lDbusPresent = -1 ;
-        char lPythonCommand[256];
+        char lPythonCommand[384];
         char lPythonParams[256] =
 "-c \"try:\n\timport dbus;bus=dbus.SessionBus();\
 notif=bus.get_object('org.freedesktop.Notifications','/org/freedesktop/Notifications');\
@@ -4936,13 +4936,15 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"perl-dbus");return 1;}
 
-                sprintf( lDialogString , "perl -e \"use Net::DBus;\
-                                                                 my \\$sessionBus = Net::DBus->session;\
-                                                                 my \\$notificationsService = \\$sessionBus->get_service('org.freedesktop.Notifications');\
-                                                                 my \\$notificationsObject = \\$notificationsService->get_object('/org/freedesktop/Notifications',\
-                                                                 'org.freedesktop.Notifications');\
-                                                                 my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0, '%s', '%s', '%s', [], {}, -1);\" ",
-                                                                 aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
+				strcpy( lDialogString ,  "perl -e \"use Net::DBus;\
+my \\$sessionBus = Net::DBus->session;\
+my \\$notificationsService = \\$sessionBus->get_service('org.freedesktop.Notifications');\
+my \\$notificationsObject = \\$notificationsService->get_object('/org/freedesktop/Notifications',\
+'org.freedesktop.Notifications');");
+
+				sprintf( lDialogString + strlen(lDialogString),
+"my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0, '%s', '%s', '%s', [], {}, -1);\" ",
+							aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
         }
         else if ( !isTerminalRunning() && notifysendPresent() && !strcmp("ok" , aDialogType) )
         {
@@ -5210,13 +5212,16 @@ int tinyfd_notifyPopup(
         else if ( perlPresent() >= 2 )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"perl-dbus");return 1;}
-                sprintf( lDialogString , "perl -e \"use Net::DBus;\
-                                                                 my \\$sessionBus = Net::DBus->session;\
-                                                                 my \\$notificationsService = \\$sessionBus->get_service('org.freedesktop.Notifications');\
-                                                                 my \\$notificationsObject = \\$notificationsService->get_object('/org/freedesktop/Notifications',\
-                                                                 'org.freedesktop.Notifications');\
-                                                                 my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0, '%s', '%s', '%s', [], {}, -1);\" ",
-                                                                 aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
+
+				strcpy( lDialogString , "perl -e \"use Net::DBus;\
+my \\$sessionBus = Net::DBus->session;\
+my \\$notificationsService = \\$sessionBus->get_service('org.freedesktop.Notifications');\
+my \\$notificationsObject = \\$notificationsService->get_object('/org/freedesktop/Notifications',\
+'org.freedesktop.Notifications');");
+
+				sprintf( lDialogString + strlen(lDialogString) ,
+"my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0, '%s', '%s', '%s', [], {}, -1);\" ",
+aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
         }
         else if ( pythonDbusPresent( ) )
         {

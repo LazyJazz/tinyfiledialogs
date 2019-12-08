@@ -314,13 +314,12 @@ static void RGB2Hex( unsigned char const aRGB [3] ,
         {
                 if ( aRGB )
                 {
-#if defined(__GNUC__) && defined(_WIN32)
-                        sprintf(aoResultHexRGB, "#%02hx%02hx%02hx",
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+    sprintf(aoResultHexRGB, "#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 #else
-                        sprintf(aoResultHexRGB, "#%02hhx%02hhx%02hhx",
+    sprintf(aoResultHexRGB, "#%02hx%02hx%02hx", aRGB[0], aRGB[1], aRGB[2]);
 #endif
-                                aRGB[0], aRGB[1], aRGB[2]);
-                        /* printf("aoResultHexRGB %s\n", aoResultHexRGB); */
+                         /*printf("aoResultHexRGB %s\n", aoResultHexRGB);*/
                 }
                 else
                 {
@@ -6987,6 +6986,9 @@ char const * tinyfd_colorChooser(
 {
         static char lBuff [128] ;
         char lTmp [128] ;
+#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
+       char * lTmp2 ;
+#endif
         char lDialogString [MAX_PATH_OR_CMD] ;
         char lDefaultHexRGB[8];
         char * lpDefaultHexRGB;
@@ -7121,8 +7123,11 @@ to set mycolor to choose color default color {");
                         strcat(lDialogString, aTitle) ;
                 }
                 strcat(lDialogString, "\" 0 60 ") ;
-                sprintf(lTmp,"%hhu %hhu %hhu",lDefaultRGB[0],
-                        lDefaultRGB[1],lDefaultRGB[2]);
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+                sprintf(lTmp,"%hhu %hhu %hhu",lDefaultRGB[0],lDefaultRGB[1],lDefaultRGB[2]);
+#else
+                sprintf(lTmp,"%hu %hu %hu",lDefaultRGB[0],lDefaultRGB[1],lDefaultRGB[2]);
+#endif
                 strcat(lDialogString, lTmp) ;
                 strcat(lDialogString, " 2>&1");
         }
@@ -7233,22 +7238,37 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 Hex2RGB(lBuff,aoResultRGB);
                 }
                 else if ( lBuff[3] == '(' ) {
-                        sscanf(lBuff,"rgb(%hhu,%hhu,%hhu",
-                                        & aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
-                        RGB2Hex(aoResultRGB,lBuff);
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+    sscanf(lBuff,"rgb(%hhu,%hhu,%hhu", & aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
+#else
+    aoResultRGB[0] = strtol(lBuff+4, & lTmp2, 10 );
+    aoResultRGB[1] = strtol(lTmp2+1, & lTmp2, 10 );
+    aoResultRGB[2] = strtol(lTmp2+1, NULL, 10 );
+#endif
+    RGB2Hex(aoResultRGB,lBuff);
                 }
                 else if ( lBuff[4] == '(' ) {
-                        sscanf(lBuff,"rgba(%hhu,%hhu,%hhu",
-                                        & aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
-                        RGB2Hex(aoResultRGB,lBuff);
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+    sscanf(lBuff,"rgba(%hhu,%hhu,%hhu",  & aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
+#else
+    aoResultRGB[0] = strtol(lBuff+5, & lTmp2, 10 );
+    aoResultRGB[1] = strtol(lTmp2+1, & lTmp2, 10 );
+    aoResultRGB[2] = strtol(lTmp2+1, NULL, 10 );
+#endif
+    RGB2Hex(aoResultRGB,lBuff);
                 }
     }
     else if ( lWasOsascript || lWasXdialog )
     {
                 /* printf( "lBuff: %s\n" , lBuff ) ; */
-        sscanf(lBuff,"%hhu %hhu %hhu",
-                           & aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
-        RGB2Hex(aoResultRGB,lBuff);
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+    sscanf(lBuff,"%hhu %hhu %hhu", & aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
+#else
+    aoResultRGB[0] = strtol(lBuff, & lTmp2, 10 );
+    aoResultRGB[1] = strtol(lTmp2+1, & lTmp2, 10 );
+    aoResultRGB[2] = strtol(lTmp2+1, NULL, 10 );
+#endif
+    RGB2Hex(aoResultRGB,lBuff);
     }
     else
     {

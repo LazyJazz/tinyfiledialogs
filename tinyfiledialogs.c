@@ -621,7 +621,12 @@ static void RGB2HexW(
 #if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
                                 8,
 #endif
-                        L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
+
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+								L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
+#else
+								L"#%02hx%02hx%02hx", aRGB[0], aRGB[1], aRGB[2]);
+#endif
                 }
                 else
                 {

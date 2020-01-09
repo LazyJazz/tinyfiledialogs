@@ -14,7 +14,7 @@ on Windows Mac Linux Bsd Solaris Minix Raspbian
 using Gnome Kde Mate Enlightenment Cinnamon Budgie Unity Lxde Lxqt Xfce
       WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
 
-Bindings for LUA and C# dll, Haskell. Included in LWJGL(java), Rust, Allegrobasic
+Bindings for LUA and C# dll, Haskell, fortran. Included in LWJGL(java), Rust, Allegrobasic
 
                    http://tinyfiledialogs.sourceforge.net
          git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
@@ -22,14 +22,6 @@ Bindings for LUA and C# dll, Haskell. Included in LWJGL(java), Rust, Allegrobasi
  |                                                                         |
  | CONTACT me directly via the email address at the top of the header file |
  |_________________________________________________________________________|
-                   _____________________________________
-                  |                                     |
-                  | version 3 has the same good old API |
-                  |       dialogs now stay on top       |
-                  |       better UNICODE handling       |
-                  | new dialog: TRAY NOTIFICATION POPUP |
-                  |     2nd new dialog: SYSTEM BEEP     |
-                  |_____________________________________|
      ___________________________________________________________________
     |                                                                   |
     | the windows only wchar_t UTF-16 prototypes are in the header file |

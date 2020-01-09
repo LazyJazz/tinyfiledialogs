@@ -61,7 +61,7 @@ on Windows Mac Linux Bsd Solaris Minix Raspbian
 using Gnome Kde Enlightenment Mate Cinnamon Budgie Unity Lxde Lxqt Xfce
 WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
 
-Bindings for LUA and C# dll, Haskell
+Bindings for LUA and C# dll, Haskell, fortran
 Included in LWJGL(java), Rust, Allegrobasic
 
 - License -

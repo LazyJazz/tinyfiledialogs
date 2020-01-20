@@ -59,9 +59,10 @@ C89 & C++98 compliant: tested with C & C++ compilers
 VisualStudio MinGW-gcc GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC ZapCC
 on Windows Mac Linux Bsd Solaris Minix Raspbian
 using Gnome Kde Enlightenment Mate Cinnamon Budgie Unity Lxde Lxqt Xfce
-WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
+WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm Cwm
 
-Bindings for LUA and C# dll, Haskell, fortran
+
+Bindings for LUA and C# dll, Haskell, Fortran
 Included in LWJGL(java), Rust, Allegrobasic
 
 - License -

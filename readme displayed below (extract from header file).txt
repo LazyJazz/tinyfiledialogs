@@ -6,15 +6,13 @@ tiny file dialogs ( cross-platform C C++ ) v3.4.3 [Dec 8, 2019] zlib licence
 \____  ___/   Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE
      \|       SSH support via automatic switch to console mode or X11 forwarding
 
-Please upvote my stackoverflow answer https://stackoverflow.com/a/47651444
-
 C89 & C++98 compliant: tested with C & C++ compilers
 VisualStudio MinGW GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC ZapCC
 on Windows Mac Linux Bsd Solaris Minix Raspbian
 using Gnome Kde Mate Enlightenment Cinnamon Budgie Unity Lxde Lxqt Xfce
-      WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
+      WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm Cwm
 
-Bindings for LUA and C# dll, Haskell, fortran. Included in LWJGL(java), Rust, Allegrobasic
+Bindings for LUA and C# dll, Haskell, Fortran. Included in LWJGL(java), Rust, Allegrobasic
 
                    http://tinyfiledialogs.sourceforge.net
          git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
@@ -25,7 +23,6 @@ Bindings for LUA and C# dll, Haskell, fortran. Included in LWJGL(java), Rust, Al
      ___________________________________________________________________
     |                                                                   |
     | the windows only wchar_t UTF-16 prototypes are in the header file |
-    |              NOW ALSO FOR THE INPUT / PASSWORD BOX                |
     |___________________________________________________________________|
 
 void tinyfd_beep() ;

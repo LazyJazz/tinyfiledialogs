@@ -1,7 +1,7 @@
 /*_________
- /         \ tinyfiledialogs.c v3.4.3 [Dec 8, 2019] zlib licence
+ /         \ tinyfiledialogs.c v3.4.4 [Apr 12, 2020] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
- | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
+ | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|     git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
          ____________________________________________
@@ -132,7 +132,7 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-char const tinyfd_version [8] = "3.4.3";
+char const tinyfd_version [8] = "3.4.4";
 
 int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix,
@@ -1666,7 +1666,7 @@ wchar_t const * tinyfd_openFileDialogW(
         ofn.nMaxCustFilter = 0;
         ofn.nFilterIndex = 1;
         ofn.lpstrFile = lBuff;
-        ofn.nMaxFile = MAX_PATH_OR_CMD;
+		ofn.nMaxFile = MAX_MULTIPLE_FILES * MAX_PATH_OR_CMD;
         ofn.lpstrFileTitle = NULL;
         ofn.nMaxFileTitle = MAX_PATH_OR_CMD / 2;
         ofn.lpstrInitialDir = wcslen(lDirname) ? lDirname : NULL;
@@ -2260,7 +2260,7 @@ static char const * openFileDialogWinGuiA(
         ofn.nMaxCustFilter  = 0 ;
         ofn.nFilterIndex    = 1 ;
         ofn.lpstrFile           = aoBuff ;
-        ofn.nMaxFile        = MAX_PATH_OR_CMD ;
+		ofn.nMaxFile = MAX_MULTIPLE_FILES * MAX_PATH_OR_CMD;
         ofn.lpstrFileTitle  = NULL ;
         ofn.nMaxFileTitle       = MAX_PATH_OR_CMD / 2;
         ofn.lpstrInitialDir = strlen(lDirname) ? lDirname : NULL;

@@ -1,7 +1,7 @@
 /*_________
- /         \ tinyfiledialogs.h v3.4.3 [Dec 8, 2019] zlib licence
+ /         \ tinyfiledialogs.h v3.4.4 [Apr 12, 2020] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
- | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
+ | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|     git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
 		 ____________________________________________

@@ -132,7 +132,7 @@ misrepresented as being the original software.
 #endif /* _WIN32 */
 
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
-#define MAX_MULTIPLE_FILES 2
+#define MAX_MULTIPLE_FILES 1024
 #define LOW_MULTIPLE_FILES 32
 
 char const tinyfd_version [8] = "3.5.0";

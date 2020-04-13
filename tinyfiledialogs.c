@@ -1721,25 +1721,33 @@ wchar_t const * tinyfd_openFileDialogW(
                                 lPointers[i + 1] = lPointers[i] + lLengths[i] + 1;
                                 i++;
                         } while (lPointers[i][0] != L'\0');
-                        i--;
-						p = lBuff + lFullBuffLen - 1;
-                        *p = L'\0';
-                        for (j = i; j >= 0; j--)
-                        {
-                                p -= lLengths[j];
-                                memmove(p, lPointers[j], lLengths[j]*sizeof(wchar_t));
-                                p--;
-                                *p = L'\\';
-                                p -= lBuffLen;
-                                memmove(p, lBuff, lBuffLen*sizeof(wchar_t));
-                                p--;
-                                *p = L'|';
-                        }
-						p++;
-						wcscpy(lBuff, p);
-						lBuffLen = wcslen(lBuff);
+						if (i > MAX_MULTIPLE_FILES)
+						{
+							free(lBuff);
+							lBuff = NULL;
+						}
+						else
+						{
+							i--;
+							p = lBuff + lFullBuffLen - 1;
+							*p = L'\0';
+							for (j = i; j >= 0; j--)
+							{
+								p -= lLengths[j];
+								memmove(p, lPointers[j], lLengths[j] * sizeof(wchar_t));
+								p--;
+								*p = L'\\';
+								p -= lBuffLen;
+								memmove(p, lBuff, lBuffLen*sizeof(wchar_t));
+								p--;
+								*p = L'|';
+							}
+							p++;
+							wcscpy(lBuff, p);
+							lBuffLen = wcslen(lBuff);
+						}
 				}
-				lBuff = (wchar_t*)(realloc(lBuff, (lBuffLen + 1) * sizeof(wchar_t)));
+				if (lBuff) lBuff = (wchar_t*)(realloc(lBuff, (lBuffLen + 1) * sizeof(wchar_t)));
         }
 
         if (lHResult == S_OK || lHResult == S_FALSE)
@@ -2328,25 +2336,33 @@ static char const * openFileDialogWinGuiA(
                                 i ++ ;
                         }
                         while ( lPointers[i][0] != '\0' );
-                        i--;
-						p = lBuff + MAX_MULTIPLE_FILES*MAX_PATH_OR_CMD - 1;
-                        * p = '\0';
-                        for ( j = i ; j >=0 ; j-- )
-                        {
-                                p -= lLengths[j];
-                                memmove(p, lPointers[j], lLengths[j]);
-                                p--;
-                                *p = '\\';
-                                p -= lBuffLen ;
+						if (i > MAX_MULTIPLE_FILES)
+						{
+							free(lBuff);
+							lBuff = NULL;
+						}
+						else
+						{
+							i--;
+							p = lBuff + MAX_MULTIPLE_FILES*MAX_PATH_OR_CMD - 1;
+							*p = '\0';
+							for (j = i; j >= 0; j--)
+							{
+								p -= lLengths[j];
+								memmove(p, lPointers[j], lLengths[j]);
+								p--;
+								*p = '\\';
+								p -= lBuffLen;
 								memmove(p, lBuff, lBuffLen);
-                                p--;
-                                *p = '|';
-                        }
-						p++;
-						strcpy(lBuff, p);
-						lBuffLen = strlen(lBuff);
+								p--;
+								*p = '|';
+							}
+							p++;
+							strcpy(lBuff, p);
+							lBuffLen = strlen(lBuff);
+						}
 				}
-				lBuff = (char *)(realloc(lBuff, (lBuffLen + 1) * sizeof(char)));
+				if (lBuff) lBuff = (char *)(realloc(lBuff, (lBuffLen + 1) * sizeof(char)));
 		}
 
         if (lHResult==S_OK || lHResult==S_FALSE)

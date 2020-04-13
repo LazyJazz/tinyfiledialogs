@@ -1,19 +1,20 @@
 /*_________
- /         \ tinyfiledialogs.h v3.4.4 [Apr 12, 2020] zlib licence
+ /         \ tinyfiledialogs.h v3.5.0 [Apr 13, 2020] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|     git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
-		 ____________________________________________
-		|                                            |
-		|   email: tinyfiledialogs at ysengrin.com   |
-		|____________________________________________|
-         ________________________________________________________________________
-        |                                                                        |
-        | the windows only wchar_t UTF-16 prototypes are at the end of this file |
-        |________________________________________________________________________|
+              ____________________________________________
+             |                                            |
+             |   email: tinyfiledialogs at ysengrin.com   |
+             |____________________________________________|
+  _________________________________________________________________________________
+ |                                                                                 |
+ | the windows only wchar_t UTF-16 prototypes are at the bottom of the header file |
+ |_________________________________________________________________________________|
 
-Please upvote my stackoverflow answer https://stackoverflow.com/a/47651444
+If you like tinyfiledialogs, please upvote my stackoverflow answer
+https://stackoverflow.com/a/47651444
 
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker

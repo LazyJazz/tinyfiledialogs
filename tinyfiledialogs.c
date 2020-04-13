@@ -1,19 +1,20 @@
 /*_________
- /         \ tinyfiledialogs.c v3.4.4 [Apr 12, 2020] zlib licence
+ /         \ tinyfiledialogs.c v3.5.0 [Apr 13, 2020] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|     git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
-         ____________________________________________
-        |                                            |
-        |   email: tinyfiledialogs at ysengrin.com   |
-        |____________________________________________|
-         ___________________________________________________________________
-        |                                                                   |
-        | the windows only wchar_t UTF-16 prototypes are in the header file |
-        |___________________________________________________________________|
+              ____________________________________________
+             |                                            |
+             |   email: tinyfiledialogs at ysengrin.com   |
+             |____________________________________________|
+ _________________________________________________________________________________
+|                                                                                 |
+| the windows only wchar_t UTF-16 prototypes are at the bottom of the header file |
+|_________________________________________________________________________________|
 
-Please upvote my stackoverflow answer https://stackoverflow.com/a/47651444
+If you like tinyfiledialogs, please upvote my stackoverflow answer
+https://stackoverflow.com/a/47651444
 
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
@@ -96,6 +97,7 @@ misrepresented as being the original software.
 #include <string.h>
 #include <ctype.h>
 #include <sys/stat.h>
+#include <assert.h>
 
 #include "tinyfiledialogs.h"
 /* #define TINYFD_NOLIB */
@@ -131,8 +133,9 @@ misrepresented as being the original software.
 
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
+#define LOW_MULTIPLE_FILES 32
 
-char const tinyfd_version [8] = "3.4.4";
+char const tinyfd_version [8] = "3.5.0";
 
 int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix,
@@ -1610,20 +1613,36 @@ wchar_t const * tinyfd_openFileDialogW(
         wchar_t const * const aSingleFilterDescription, /* NULL or "image files" */
         int const aAllowMultipleSelects) /* 0 or 1 */
 {
-        static wchar_t lBuff[MAX_MULTIPLE_FILES*MAX_PATH_OR_CMD];
-
         size_t lLengths[MAX_MULTIPLE_FILES];
         wchar_t lDirname[MAX_PATH_OR_CMD];
         wchar_t lFilterPatterns[MAX_PATH_OR_CMD] = L"";
         wchar_t lDialogString[MAX_PATH_OR_CMD];
         wchar_t * lPointers[MAX_MULTIPLE_FILES];
-        wchar_t * lRetval, * p;
+        wchar_t * p;
         int i, j;
-        size_t lBuffLen;
+		size_t lBuffLen, lFullBuffLen;
         HRESULT lHResult;
         OPENFILENAMEW ofn = { 0 };
+		static wchar_t * lBuff = NULL;
 
-        if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t const *)1; }
+		if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t *)1; }
+
+		if (aAllowMultipleSelects)
+		{
+			lFullBuffLen = MAX_MULTIPLE_FILES * MAX_PATH_OR_CMD + 1;
+			lBuff = (wchar_t*)(realloc(lBuff, lFullBuffLen * sizeof(wchar_t)));
+			if (!lBuff)
+			{
+				lFullBuffLen = LOW_MULTIPLE_FILES * MAX_PATH_OR_CMD + 1;
+				lBuff = (wchar_t*)( malloc( lFullBuffLen * sizeof(wchar_t)));
+			}
+		}
+		else
+		{
+			lFullBuffLen = MAX_PATH_OR_CMD + 1;
+			lBuff = (wchar_t*)(realloc(lBuff, lFullBuffLen * sizeof(wchar_t)));
+		}
+		if (!lBuff) return NULL;
 
         lHResult = CoInitializeEx(NULL, 0);
 
@@ -1666,7 +1685,7 @@ wchar_t const * tinyfd_openFileDialogW(
         ofn.nMaxCustFilter = 0;
         ofn.nFilterIndex = 1;
         ofn.lpstrFile = lBuff;
-		ofn.nMaxFile = MAX_MULTIPLE_FILES * MAX_PATH_OR_CMD;
+		ofn.nMaxFile = lFullBuffLen;
         ofn.lpstrFileTitle = NULL;
         ofn.nMaxFileTitle = MAX_PATH_OR_CMD / 2;
         ofn.lpstrInitialDir = wcslen(lDirname) ? lDirname : NULL;
@@ -1686,18 +1705,15 @@ wchar_t const * tinyfd_openFileDialogW(
 
         if (GetOpenFileNameW(&ofn) == 0)
         {
-                lRetval = NULL;
+			free(lBuff);
+			lBuff = NULL;
         }
         else
         {
                 lBuffLen = wcslen(lBuff);
                 lPointers[0] = lBuff + lBuffLen + 1;
-                if (!aAllowMultipleSelects || (lPointers[0][0] == L'\0'))
-                {
-                        lRetval = lBuff;
-                }
-                else
-                {
+                if (aAllowMultipleSelects && (lPointers[0][0] != L'\0'))
+				{
                         i = 0;
                         do
                         {
@@ -1706,7 +1722,7 @@ wchar_t const * tinyfd_openFileDialogW(
                                 i++;
                         } while (lPointers[i][0] != L'\0');
                         i--;
-                        p = lBuff + MAX_MULTIPLE_FILES*MAX_PATH_OR_CMD - 1;
+						p = lBuff + lFullBuffLen - 1;
                         *p = L'\0';
                         for (j = i; j >= 0; j--)
                         {
@@ -1719,21 +1735,22 @@ wchar_t const * tinyfd_openFileDialogW(
                                 p--;
                                 *p = L'|';
                         }
-                        p++;
-                        lRetval = p;
-                }
+						p++;
+						wcscpy(lBuff, p);
+						lBuffLen = wcslen(lBuff);
+				}
+				lBuff = (wchar_t*)(realloc(lBuff, (lBuffLen + 1) * sizeof(wchar_t)));
         }
 
         if (lHResult == S_OK || lHResult == S_FALSE)
         {
                 CoUninitialize();
         }
-        return lRetval;
+		return lBuff;
 }
 
 
 static char const * openFileDialogWinGui8(
-        char * const aoBuff,
         char const * const aTitle, /*  NULL or "" */
         char const * const aDefaultPathAndFile, /*  NULL or "" */
         int const aNumOfFilterPatterns, /* 0 */
@@ -1745,10 +1762,12 @@ static char const * openFileDialogWinGui8(
         wchar_t * lDefaultPathAndFile;
         wchar_t * lSingleFilterDescription;
         wchar_t * * lFilterPatterns;
-        wchar_t const * lTmpWChar;
-        char * lTmpChar;
-        int i;
+		wchar_t const * lTmpWChar;
+		int i;
 
+		static char * lTmpChar = NULL;
+
+		free(lTmpChar);
         lFilterPatterns = (wchar_t * *) malloc(aNumOfFilterPatterns*sizeof(wchar_t *));
         for (i = 0; i < aNumOfFilterPatterns; i++)
         {
@@ -1777,16 +1796,12 @@ static char const * openFileDialogWinGui8(
         }
         free(lFilterPatterns);
 
-        if (!lTmpWChar)
-        {
-                return NULL;
-        }
+        if (!lTmpWChar) return NULL;
 
         lTmpChar = utf16to8(lTmpWChar);
-        strcpy(aoBuff, lTmpChar);
-        free(lTmpChar);
+		(void)realloc((wchar_t *)lTmpWChar, 1); /*0 could return a NULL pointer*/
 
-        return aoBuff;
+		return lTmpChar;
 }
 
 #ifndef TINYFD_NOSELECTFOLDERWIN
@@ -2199,7 +2214,6 @@ static char const * saveFileDialogWinGuiA(
 
 
 static char const * openFileDialogWinGuiA(
-        char * const aoBuff ,
     char const * const aTitle , /*  NULL or "" */
     char const * const aDefaultPathAndFile , /*  NULL or "" */
     int const aNumOfFilterPatterns , /* 0 */
@@ -2214,15 +2228,32 @@ static char const * openFileDialogWinGuiA(
         size_t lLengths[MAX_MULTIPLE_FILES];
         int i , j ;
         char * p;
-        size_t lBuffLen ;
-        char * lRetval;
+		size_t lBuffLen, lFullBuffLen;
         HRESULT lHResult;
         OPENFILENAMEA ofn = {0};
+		static char * lBuff = NULL;
+
+		if (aAllowMultipleSelects)
+		{
+			lFullBuffLen = MAX_MULTIPLE_FILES * MAX_PATH_OR_CMD + 1;
+			lBuff = (char *)(realloc(lBuff, lFullBuffLen * sizeof(char)));
+			if (!lBuff)
+			{
+				lFullBuffLen = LOW_MULTIPLE_FILES * MAX_PATH_OR_CMD + 1;
+				lBuff = (char *)(malloc(lFullBuffLen * sizeof(char)));
+			}
+		}
+		else
+		{
+			lFullBuffLen = MAX_PATH_OR_CMD + 1;
+			lBuff = (char *)(realloc(lBuff, lFullBuffLen * sizeof(char)));
+		}
+		if (!lBuff) return NULL;
 
         lHResult = CoInitializeEx(NULL,0);
 
         getPathWithoutFinalSlash(lDirname, aDefaultPathAndFile);
-        getLastName(aoBuff, aDefaultPathAndFile);
+		getLastName(lBuff, aDefaultPathAndFile);
 
         if (aNumOfFilterPatterns > 0)
         {
@@ -2259,8 +2290,8 @@ static char const * openFileDialogWinGuiA(
         ofn.lpstrCustomFilter = NULL ;
         ofn.nMaxCustFilter  = 0 ;
         ofn.nFilterIndex    = 1 ;
-        ofn.lpstrFile           = aoBuff ;
-		ofn.nMaxFile = MAX_MULTIPLE_FILES * MAX_PATH_OR_CMD;
+		ofn.lpstrFile = lBuff;
+		ofn.nMaxFile = lFullBuffLen;
         ofn.lpstrFileTitle  = NULL ;
         ofn.nMaxFileTitle       = MAX_PATH_OR_CMD / 2;
         ofn.lpstrInitialDir = strlen(lDirname) ? lDirname : NULL;
@@ -2280,17 +2311,14 @@ static char const * openFileDialogWinGuiA(
 
         if ( GetOpenFileNameA( & ofn ) == 0 )
         {
-                lRetval = NULL ;
+			free(lBuff);
+			lBuff = NULL ;
         }
         else
         {
-                lBuffLen = strlen(aoBuff) ;
-                lPointers[0] = aoBuff + lBuffLen + 1 ;
-                if ( !aAllowMultipleSelects || (lPointers[0][0] == '\0')  )
-                {
-                        lRetval = aoBuff ;
-                }
-                else
+			lBuffLen = strlen(lBuff);
+			lPointers[0] = lBuff + lBuffLen + 1;
+                if ( aAllowMultipleSelects && (lPointers[0][0] != '\0')  )
                 {
                         i = 0 ;
                         do
@@ -2301,7 +2329,7 @@ static char const * openFileDialogWinGuiA(
                         }
                         while ( lPointers[i][0] != '\0' );
                         i--;
-                        p = aoBuff + MAX_MULTIPLE_FILES*MAX_PATH_OR_CMD - 1 ;
+						p = lBuff + MAX_MULTIPLE_FILES*MAX_PATH_OR_CMD - 1;
                         * p = '\0';
                         for ( j = i ; j >=0 ; j-- )
                         {
@@ -2310,20 +2338,22 @@ static char const * openFileDialogWinGuiA(
                                 p--;
                                 *p = '\\';
                                 p -= lBuffLen ;
-                                memmove(p, aoBuff, lBuffLen);
+								memmove(p, lBuff, lBuffLen);
                                 p--;
                                 *p = '|';
                         }
-                        p++;
-                        lRetval = p ;
-                }
-        }
+						p++;
+						strcpy(lBuff, p);
+						lBuffLen = strlen(lBuff);
+				}
+				lBuff = (char *)(realloc(lBuff, (lBuffLen + 1) * sizeof(char)));
+		}
 
         if (lHResult==S_OK || lHResult==S_FALSE)
         {
                 CoUninitialize();
         }
-        return lRetval;
+		return lBuff;
 }
 
 #ifndef TINYFD_NOSELECTFOLDERWIN
@@ -2728,14 +2758,14 @@ static char const * saveFileDialogWinConsole(
 
 
 static char const * openFileDialogWinConsole(
-        char * const aoBuff ,
         char const * const aTitle , /*  NULL or "" */
-        char const * const aDefaultPathAndFile , /*  NULL or "" */
-        int const aAllowMultipleSelects ) /* 0 or 1 */
+        char const * const aDefaultPathAndFile ) /*  NULL or "" */
 {
         char lFilterPatterns[MAX_PATH_OR_CMD] = "";
         char lDialogString[MAX_PATH_OR_CMD] ;
         FILE * lIn;
+
+		static char aoBuff[MAX_PATH_OR_CMD];
 
         strcpy( lDialogString , "dialog " ) ;
         if ( aTitle && strlen(aTitle) )
@@ -3123,8 +3153,8 @@ char const * tinyfd_openFileDialog(
     char const * const aSingleFilterDescription , /* NULL or "image files" */
     int const aAllowMultipleSelects ) /* 0 or 1 */
 {
-        static char lBuff[MAX_MULTIPLE_FILES*MAX_PATH_OR_CMD];
-        char const * p ;
+	char const * p;
+
 #ifndef TINYFD_NOLIB
         if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
           && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
@@ -3132,14 +3162,12 @@ char const * tinyfd_openFileDialog(
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char const *)1;}
                 if (tinyfd_winUtf8)
                 {
-                        p = openFileDialogWinGui8(lBuff,
-                                aTitle, aDefaultPathAndFile, aNumOfFilterPatterns,
+                        p = openFileDialogWinGui8( aTitle, aDefaultPathAndFile, aNumOfFilterPatterns,
                                 aFilterPatterns, aSingleFilterDescription, aAllowMultipleSelects);
                 }
                 else
                 {
-                        p = openFileDialogWinGuiA(lBuff,
-                                aTitle, aDefaultPathAndFile, aNumOfFilterPatterns,
+                        p = openFileDialogWinGuiA( aTitle, aDefaultPathAndFile, aNumOfFilterPatterns,
                                 aFilterPatterns, aSingleFilterDescription, aAllowMultipleSelects);
                 }
         }
@@ -3148,13 +3176,12 @@ char const * tinyfd_openFileDialog(
         if ( dialogPresent() )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
-                p = openFileDialogWinConsole(lBuff,
-                                aTitle,aDefaultPathAndFile,aAllowMultipleSelects);
+				p = openFileDialogWinConsole(aTitle, aDefaultPathAndFile);
         }
         else
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return (char const *)0;}
-                p = tinyfd_inputBox(aTitle, "Open file","");
+				p = tinyfd_inputBox(aTitle, "Open file", "");
         }
 
         if ( ! p || ! strlen( p )  )
@@ -3163,7 +3190,7 @@ char const * tinyfd_openFileDialog(
         }
         if ( aAllowMultipleSelects && strchr(p, '|') )
         {
-                p = ensureFilesExist( lBuff , p ) ;
+                p = ensureFilesExist( (char *) p , p ) ;
         }
         else if ( ! fileExists(p) )
         {
@@ -6254,7 +6281,6 @@ char const * tinyfd_openFileDialog(
     char const * const aSingleFilterDescription , /* NULL or "image files" */
     int const aAllowMultipleSelects ) /* 0 or 1 */
 {
-        static char lBuff [MAX_MULTIPLE_FILES*MAX_PATH_OR_CMD] ;
         char lDialogString [MAX_PATH_OR_CMD] ;
         char lString [MAX_PATH_OR_CMD] ;
         int i ;
@@ -6264,7 +6290,34 @@ char const * tinyfd_openFileDialog(
         int lWasKdialog = 0 ;
         int lWasGraphicDialog = 0 ;
         int lWasXterm = 0 ;
-        lBuff[0]='\0';
+		size_t lFullBuffLen ;
+		static char * lBuff = NULL;
+
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query"))
+		{
+			free(lBuff);
+			lBuff = NULL;
+		}
+		else
+		{
+			if (aAllowMultipleSelects)
+			{
+				lFullBuffLen = MAX_MULTIPLE_FILES * MAX_PATH_OR_CMD + 1;
+				lBuff = (char *)(realloc(lBuff, lFullBuffLen * sizeof(char)));
+				if (!lBuff)
+				{
+					lFullBuffLen = LOW_MULTIPLE_FILES * MAX_PATH_OR_CMD + 1;
+					lBuff = (char *)( malloc( lFullBuffLen * sizeof(char)));
+				}
+			}
+			else
+			{
+				lFullBuffLen = MAX_PATH_OR_CMD + 1;
+				lBuff = (char *)(realloc(lBuff, lFullBuffLen * sizeof(char)));
+			}
+			if (!lBuff) return NULL;
+			lBuff[0]='\0';
+		}
 
         if ( osascriptPresent( ) )
         {
@@ -6658,15 +6711,23 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 p2 = tinyfd_inputBox(aTitle, "Open file","");
                 if ( ! fileExists(p2) )
                 {
-                        return NULL ;
+					free(lBuff);
+					lBuff = NULL;
                 }
-                return p2 ;
+				else
+				{
+					strcpy(lBuff, p2);
+					lBuff = (char *)( realloc( lBuff, (strlen(lBuff)+1) * sizeof(char)));
+				}
+				return lBuff ;
         }
 
     if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
     if ( ! ( lIn = popen( lDialogString , "r" ) ) )
     {
-        return NULL ;
+		free(lBuff);
+		lBuff = NULL;
+		return NULL ;
     }
         lBuff[0]='\0';
         p=lBuff;
@@ -6689,23 +6750,30 @@ frontmost of process \\\"Python\\\" to true' ''');");
         /* printf( "lBuff2: %s\n" , lBuff ) ; */
         if ( ! strlen( lBuff )  )
         {
-                return NULL;
+			free(lBuff);
+			lBuff = NULL;
+			return NULL;
         }
         if ( aAllowMultipleSelects && strchr(lBuff, '|') )
         {
-                p2 = ensureFilesExist( lBuff , lBuff ) ;
+			if( ! ensureFilesExist( lBuff , lBuff ) ) 
+			{
+				free(lBuff);
+				lBuff = NULL;
+				return NULL;
+			}
         }
-        else if ( fileExists(lBuff) )
+        else if ( !fileExists(lBuff) )
         {
-                p2 = lBuff ;
-        }
-        else
-        {
-                return NULL ;
-        }
-        /* printf( "lBuff3: %s\n" , p2 ) ; */
+			free(lBuff);
+			lBuff = NULL;
+			return NULL;
+		}
 
-        return p2 ;
+		lBuff = (char *)( realloc( lBuff, (strlen(lBuff)+1) * sizeof(char)));
+
+        /*printf( "lBuff3: %s\n" , lBuff ) ; */
+		return lBuff ;
 }
 
 

@@ -1,4 +1,4 @@
-tiny file dialogs ( cross-platform C C++ ) v3.4.4 [Apr 12, 2020] zlib licence
+tiny file dialogs ( cross-platform C C++ ) v3.5.0 [Apr 13, 2020] zlib licence
  _________
 /         \   Beep Popup InputBox PasswordBox MessageBox ColorPicker
 |tiny file|   OpenFileDialog SaveFileDialog SelectFolderDialog
@@ -20,10 +20,10 @@ Bindings for LUA and C# dll, Haskell, Fortran. Included in LWJGL(java), Rust, Al
  |                                                                         |
  | CONTACT me directly via the email address at the top of the header file |
  |_________________________________________________________________________|
-     ___________________________________________________________________
-    |                                                                   |
-    | the windows only wchar_t UTF-16 prototypes are in the header file |
-    |___________________________________________________________________|
+  _________________________________________________________________________________
+ |                                                                                 |
+ | the windows only wchar_t UTF-16 prototypes are at the bottom of the header file |
+ |_________________________________________________________________________________|
 
 void tinyfd_beep() ;
 

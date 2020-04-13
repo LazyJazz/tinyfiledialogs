@@ -132,7 +132,7 @@ misrepresented as being the original software.
 #endif /* _WIN32 */
 
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
-#define MAX_MULTIPLE_FILES 32
+#define MAX_MULTIPLE_FILES 2
 #define LOW_MULTIPLE_FILES 32
 
 char const tinyfd_version [8] = "3.5.0";
@@ -1617,7 +1617,7 @@ wchar_t const * tinyfd_openFileDialogW(
         wchar_t lDirname[MAX_PATH_OR_CMD];
         wchar_t lFilterPatterns[MAX_PATH_OR_CMD] = L"";
         wchar_t lDialogString[MAX_PATH_OR_CMD];
-        wchar_t * lPointers[MAX_MULTIPLE_FILES];
+        wchar_t * lPointers[MAX_MULTIPLE_FILES+1];
         wchar_t * p;
         int i, j;
 		size_t lBuffLen, lFullBuffLen;
@@ -1720,7 +1720,7 @@ wchar_t const * tinyfd_openFileDialogW(
                                 lLengths[i] = wcslen(lPointers[i]);
                                 lPointers[i + 1] = lPointers[i] + lLengths[i] + 1;
                                 i++;
-                        } while (lPointers[i][0] != L'\0');
+						} while (lPointers[i][0] != L'\0' && i < MAX_MULTIPLE_FILES );
 						if (i > MAX_MULTIPLE_FILES)
 						{
 							free(lBuff);
@@ -2232,7 +2232,7 @@ static char const * openFileDialogWinGuiA(
         char lDirname [MAX_PATH_OR_CMD] ;
         char lFilterPatterns[MAX_PATH_OR_CMD] = "";
         char lDialogString[MAX_PATH_OR_CMD] ;
-        char * lPointers[MAX_MULTIPLE_FILES];
+        char * lPointers[MAX_MULTIPLE_FILES+1];
         size_t lLengths[MAX_MULTIPLE_FILES];
         int i , j ;
         char * p;
@@ -2334,8 +2334,7 @@ static char const * openFileDialogWinGuiA(
                                 lLengths[i] = strlen(lPointers[i]);
                                 lPointers[i+1] = lPointers[i] + lLengths[i] + 1 ;
                                 i ++ ;
-                        }
-                        while ( lPointers[i][0] != '\0' );
+						} while (lPointers[i][0] != L'\0' && i < MAX_MULTIPLE_FILES);
 						if (i > MAX_MULTIPLE_FILES)
 						{
 							free(lBuff);

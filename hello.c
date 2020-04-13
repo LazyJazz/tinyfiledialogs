@@ -204,7 +204,7 @@ int main( int argc , char * argv[] )
 		2,
 		lFilterPatterns,
 		NULL,
-		0);
+		1);
 
 	if (! lTheOpenFileName)
 	{

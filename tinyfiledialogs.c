@@ -321,7 +321,7 @@ static void RGB2Hex( unsigned char const aRGB [3] ,
         {
                 if ( aRGB )
                 {
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#if defined(__cplusplus ) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
     sprintf(aoResultHexRGB, "#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 #else
     sprintf(aoResultHexRGB, "#%02hx%02hx%02hx", aRGB[0], aRGB[1], aRGB[2]);
@@ -629,7 +629,7 @@ static void RGB2HexW(
                                 8,
 #endif
 
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#if defined(__cplusplus ) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
 								L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 #else
 								L"#%02hx%02hx%02hx", aRGB[0], aRGB[1], aRGB[2]);
@@ -3315,7 +3315,7 @@ char const * tinyfd_colorChooser(
         }
         for ( i = 1 ; i < 7 ; i ++ )
         {
-                if ( ! isxdigit( p[i] ) )
+                if ( ! isxdigit( (int) p[i] ) )
                 {
                         return NULL ;
                 }
@@ -7078,7 +7078,7 @@ char const * tinyfd_colorChooser(
 {
         static char lBuff [128] ;
         char lTmp [128] ;
-#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
+#if !defined(__cplusplus ) && (!defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L)
        char * lTmp2 ;
 #endif
         char lDialogString [MAX_PATH_OR_CMD] ;
@@ -7215,8 +7215,8 @@ to set mycolor to choose color default color {");
                         strcat(lDialogString, aTitle) ;
                 }
                 strcat(lDialogString, "\" 0 60 ") ;
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-                sprintf(lTmp,"%hhu %hhu %hhu",lDefaultRGB[0],lDefaultRGB[1],lDefaultRGB[2]);
+#if defined(__cplusplus ) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
+				sprintf(lTmp,"%hhu %hhu %hhu",lDefaultRGB[0],lDefaultRGB[1],lDefaultRGB[2]);
 #else
                 sprintf(lTmp,"%hu %hu %hu",lDefaultRGB[0],lDefaultRGB[1],lDefaultRGB[2]);
 #endif
@@ -7286,7 +7286,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 }
                 for ( i = 1 ; i < 7 ; i ++ )
                 {
-                        if ( ! isxdigit( p[i] ) )
+                        if ( ! isxdigit( (int) p[i] ) )
                         {
                                 return NULL ;
                         }
@@ -7330,7 +7330,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 Hex2RGB(lBuff,aoResultRGB);
                 }
                 else if ( lBuff[3] == '(' ) {
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#if defined(__cplusplus ) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
     sscanf(lBuff,"rgb(%hhu,%hhu,%hhu", & aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
 #else
     aoResultRGB[0] = strtol(lBuff+4, & lTmp2, 10 );
@@ -7340,7 +7340,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
     RGB2Hex(aoResultRGB,lBuff);
                 }
                 else if ( lBuff[4] == '(' ) {
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#if defined(__cplusplus ) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
     sscanf(lBuff,"rgba(%hhu,%hhu,%hhu",  & aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
 #else
     aoResultRGB[0] = strtol(lBuff+5, & lTmp2, 10 );
@@ -7353,7 +7353,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
     else if ( lWasOsascript || lWasXdialog )
     {
                 /* printf( "lBuff: %s\n" , lBuff ) ; */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#if defined(__cplusplus ) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
     sscanf(lBuff,"%hhu %hhu %hhu", & aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
 #else
     aoResultRGB[0] = strtol(lBuff, & lTmp2, 10 );

@@ -213,7 +213,7 @@ int main( int argc , char * argv[] )
 			"Open file name is NULL",
 			"ok",
 			"error",
-			1);
+			0);
 		return 1 ;
 	}
 

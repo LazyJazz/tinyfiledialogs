@@ -454,6 +454,13 @@ static void wipefile(char const * const aFilename)
 
 #ifdef _WIN32
 
+/* windows only - to set char to utf-8 */
+void tinyfd_setWinUtf8(void) /* only to be used from C# to modify the global variable tinyfd_winUtf8 */
+{
+	tinyfd_winUtf8 = 1;
+}
+
+
 static int replaceChr( char * const aString ,
                                            char const aOldChr ,
                                            char const aNewChr )

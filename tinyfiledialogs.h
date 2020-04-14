@@ -203,6 +203,9 @@ char const * tinyfd_colorChooser(
 #ifdef _WIN32
 #ifndef TINYFD_NOLIB
 
+/* windows only - to set char to utf-8 */
+void tinyfd_setWinUtf8(void); /* only to be used from C# to modify the global variable tinyfd_winUtf8 */
+
 /* windows only - utf-16 version */
 int tinyfd_notifyPopupW(
 	wchar_t const * const aTitle, /* NULL or L"" */

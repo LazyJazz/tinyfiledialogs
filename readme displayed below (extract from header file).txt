@@ -24,6 +24,10 @@ Bindings for LUA and C# dll, Haskell, Fortran. Included in LWJGL(java), Rust, Al
  |                                                                                 |
  | the windows only wchar_t UTF-16 prototypes are at the bottom of the header file |
  |_________________________________________________________________________________|
+  _________________________________________________________________________________
+ |                                                                                 |
+ | on windows: char is MBCS by default, if you want UTF-8 set tinyfd_winUtf8 to 1  |
+ |_________________________________________________________________________________|
 
 void tinyfd_beep() ;
 

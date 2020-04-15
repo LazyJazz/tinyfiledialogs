@@ -116,10 +116,7 @@ misrepresented as being the original software.
  #ifndef TINYFD_NOLIB
   #include <windows.h>
   #include <commdlg.h>
-  /*#define TINYFD_NOSELECTFOLDERWIN*/
-  #ifndef TINYFD_NOSELECTFOLDERWIN
-   #include <shlobj.h>
-  #endif /*TINYFD_NOSELECTFOLDERWIN*/
+  #include <shlobj.h>
  #endif
  #include <conio.h>
  #define TINYFD_NOCCSUNICODE
@@ -325,7 +322,7 @@ static void RGB2Hex( unsigned char const aRGB [3] ,
         {
                 if ( aRGB )
                 {
-#if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
+#if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__clang__)
     sprintf(aoResultHexRGB, "#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 #else
     sprintf(aoResultHexRGB, "#%02hx%02hx%02hx", aRGB[0], aRGB[1], aRGB[2]);
@@ -640,7 +637,7 @@ static void RGB2HexW(
                                 8,
 #endif
 
-#if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
+#if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__clang__)
 								L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 #else
 								L"#%02hx%02hx%02hx", aRGB[0], aRGB[1], aRGB[2]);
@@ -1827,7 +1824,6 @@ static char const * openFileDialogWinGui8(
 		return lTmpChar;
 }
 
-#ifndef TINYFD_NOSELECTFOLDERWIN
 
 BOOL CALLBACK BrowseCallbackProc_enum(HWND hWndChild, LPARAM lParam)
 {
@@ -1956,7 +1952,6 @@ static char const * selectFolderDialogWinGui8(
 
         return aoBuff;
 }
-#endif /*TINYFD_NOSELECTFOLDERWIN*/
 
 
 wchar_t const * tinyfd_colorChooserW(
@@ -2386,7 +2381,7 @@ static char const * openFileDialogWinGuiA(
 		return lBuff;
 }
 
-#ifndef TINYFD_NOSELECTFOLDERWIN
+
 static char const * selectFolderDialogWinGuiA(
         char * const aoBuff ,
         char const * const aTitle , /*  NULL or "" */
@@ -2425,7 +2420,6 @@ static char const * selectFolderDialogWinGuiA(
         }
 		return lRetval;
 }
-#endif /*TINYFD_NOSELECTFOLDERWIN*/
 
 
 static char const * colorChooserWinGuiA(
@@ -3244,13 +3238,11 @@ char const * tinyfd_selectFolderDialog(
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char const *)1;}
                 if (tinyfd_winUtf8)
                 {
-#ifndef TINYFD_NOSELECTFOLDERWIN
                         p = selectFolderDialogWinGui8(lBuff, aTitle, aDefaultPath);
                 }
                 else
                 {
                         p = selectFolderDialogWinGuiA(lBuff, aTitle, aDefaultPath);
-#endif /*TINYFD_NOSELECTFOLDERWIN*/
                 }
         }
         else
@@ -7089,8 +7081,8 @@ char const * tinyfd_colorChooser(
 {
         static char lBuff [128] ;
         char lTmp [128] ;
-#if (!defined(__cplusplus ) || __cplusplus < 201103L) && (!defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L)
-       char * lTmp2 ;
+#if !((defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__clang__))
+		char * lTmp2 ;
 #endif
         char lDialogString [MAX_PATH_OR_CMD] ;
         char lDefaultHexRGB[8];
@@ -7226,7 +7218,7 @@ to set mycolor to choose color default color {");
                         strcat(lDialogString, aTitle) ;
                 }
                 strcat(lDialogString, "\" 0 60 ") ;
-#if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
+#if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__clang__)
 				sprintf(lTmp,"%hhu %hhu %hhu",lDefaultRGB[0],lDefaultRGB[1],lDefaultRGB[2]);
 #else
                 sprintf(lTmp,"%hu %hu %hu",lDefaultRGB[0],lDefaultRGB[1],lDefaultRGB[2]);
@@ -7341,7 +7333,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 Hex2RGB(lBuff,aoResultRGB);
                 }
                 else if ( lBuff[3] == '(' ) {
-#if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
+#if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__clang__)
     sscanf(lBuff,"rgb(%hhu,%hhu,%hhu", & aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
 #else
     aoResultRGB[0] = strtol(lBuff+4, & lTmp2, 10 );
@@ -7351,7 +7343,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
     RGB2Hex(aoResultRGB,lBuff);
                 }
                 else if ( lBuff[4] == '(' ) {
-#if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
+#if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__clang__)
     sscanf(lBuff,"rgba(%hhu,%hhu,%hhu",  & aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
 #else
     aoResultRGB[0] = strtol(lBuff+5, & lTmp2, 10 );
@@ -7364,7 +7356,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
     else if ( lWasOsascript || lWasXdialog )
     {
                 /* printf( "lBuff: %s\n" , lBuff ) ; */
-#if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
+#if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__clang__)
     sscanf(lBuff,"%hhu %hhu %hhu", & aoResultRGB[0], & aoResultRGB[1],& aoResultRGB[2]);
 #else
     aoResultRGB[0] = strtol(lBuff, & lTmp2, 10 );

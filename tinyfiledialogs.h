@@ -202,9 +202,6 @@ char const * tinyfd_colorChooser(
 /************ NOT CROSS PLATFORM SECTION STARTS HERE ************************/
 #ifdef _WIN32
 
-/* windows only - to set char to utf-8 */
-void tinyfd_setWinUtf8(void); /* only to be used from C# to set the global variable tinyfd_winUtf8 */
-
 #ifndef TINYFD_NOLIB
 
 /* windows only - utf-16 version */
@@ -266,8 +263,11 @@ wchar_t const * tinyfd_colorChooserW(
 		/* aDefaultRGB and aoResultRGB can be the same array */
 		/* returns NULL on cancel */
 
-
 #endif /*TINYFD_NOLIB*/
+
+/* windows only (not for wchar_t): to set char to utf-8 (instead of MBCS) */
+void tinyfd_setWinUtf8(void); /* only to be used from C# to set the global variable tinyfd_winUtf8 to 1 */
+
 #else /*_WIN32*/
 
 /* unix zenity only */

@@ -56,7 +56,7 @@ Unix (command line calls) ASCII UTF-8
 - basic console input
 The same executable can run across desktops & distributions
 
-C89 & C++98 compliant: tested with C & C++ compilers
+C89/C18 & C++98/C++20 compliant: tested with C & C++ compilers
 VisualStudio MinGW-gcc GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC ZapCC
 on Windows Mac Linux Bsd Solaris Minix Raspbian
 using Gnome Kde Enlightenment Mate Cinnamon Budgie Unity Lxde Lxqt Xfce

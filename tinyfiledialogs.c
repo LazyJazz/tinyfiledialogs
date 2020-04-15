@@ -103,8 +103,8 @@ misrepresented as being the original software.
 #include <sys/stat.h>
 #include <assert.h>
 
-#include "tinyfiledialogs.h"
 /* #define TINYFD_NOLIB */
+#include "tinyfiledialogs.h"
 
 #ifdef _WIN32
  #ifdef __BORLANDC__
@@ -115,13 +115,13 @@ misrepresented as being the original software.
  #endif
  #ifndef TINYFD_NOLIB
   #include <windows.h>
+  #include <commdlg.h>
   /*#define TINYFD_NOSELECTFOLDERWIN*/
   #ifndef TINYFD_NOSELECTFOLDERWIN
    #include <shlobj.h>
   #endif /*TINYFD_NOSELECTFOLDERWIN*/
  #endif
  #include <conio.h>
- #include <commdlg.h>
  #define TINYFD_NOCCSUNICODE
  #define SLASH "\\"
  int tinyfd_winUtf8 = 0 ; /* on windows string char can be 0:MBCS or 1:UTF-8 */

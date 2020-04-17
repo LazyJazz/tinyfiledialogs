@@ -100,8 +100,7 @@ Then you won't need to link against Comdlg32.lib and Ole32.lib */
 /* if tinydialogs.c is compiled as C++ code rather than C code,
 you may need to comment out:
 extern "C" {
-and the corresponding closing bracket near the end of this file:
-}
+and the corresponding closing bracket near the end of this file.
 */
 #ifdef	__cplusplus
 extern "C" {
@@ -282,7 +281,7 @@ char const * tinyfd_arrayDialog(
 #endif /*_WIN32 */
 
 #ifdef	__cplusplus
-}
+} /*extern "C"*/
 #endif
 
 #endif /* TINYFILEDIALOGS_H */

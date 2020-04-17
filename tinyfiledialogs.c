@@ -101,10 +101,6 @@ misrepresented as being the original software.
 #include <string.h>
 #include <ctype.h>
 #include <sys/stat.h>
-#include <assert.h>
-
-/* #define TINYFD_NOLIB */
-#include "tinyfiledialogs.h"
 
 #ifdef _WIN32
  #ifdef __BORLANDC__
@@ -121,7 +117,6 @@ misrepresented as being the original software.
  #include <conio.h>
  #define TINYFD_NOCCSUNICODE
  #define SLASH "\\"
- int tinyfd_winUtf8 = 0 ; /* on windows string char can be 0:MBCS or 1:UTF-8 */
 #else
  #include <limits.h>
  #include <unistd.h>
@@ -132,19 +127,22 @@ misrepresented as being the original software.
  #define SLASH "/"
 #endif /* _WIN32 */
 
+#include "tinyfiledialogs.h" /* #define TINYFD_NOLIB */ /* do not define this here, do it in the header file */
+
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 
 #ifndef MAX_MULTIPLE_FILES
 #define MAX_MULTIPLE_FILES 1024
 #endif
-
 #define LOW_MULTIPLE_FILES 32
 
-char const tinyfd_version [8] = "3.5.0";
+char const tinyfd_version[8] = "3.5.0";
 
 int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix,
                         hide errors and warnings from called dialog*/
+
+int tinyfd_winUtf8 = 0; /* on windows string char can be 0:MBCS or 1:UTF-8 */
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;

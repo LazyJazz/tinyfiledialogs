@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.5.1 [Apr 18, 2020] zlib licence
+ /         \ tinyfiledialogs.c v3.5.2 [Apr 21, 2020] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -136,7 +136,7 @@ misrepresented as being the original software.
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char const tinyfd_version[8] = "3.5.1";
+char const tinyfd_version[8] = "3.5.2";
 
 int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix,
@@ -1621,7 +1621,7 @@ wchar_t const * tinyfd_openFileDialogW(
         int const aNumOfFilterPatterns, /* 0 */
         wchar_t const * const * const aFilterPatterns, /* NULL or {"*.jpg","*.png"} */
         wchar_t const * const aSingleFilterDescription, /* NULL or "image files" */
-        int const aAllowMultipleSelects) /* 0 or 1 */
+        int const aAllowMultipleSelects) /* 0 or 1 ; -1 to free allocated memory and return */
 {
         size_t lLengths[MAX_MULTIPLE_FILES];
         wchar_t lDirname[MAX_PATH_OR_CMD];
@@ -1635,12 +1635,15 @@ wchar_t const * tinyfd_openFileDialogW(
         OPENFILENAMEW ofn = { 0 };
 		static wchar_t * lBuff = NULL;
 
+		free(lBuff);
+		if (aAllowMultipleSelects < 0) return (wchar_t *)0;
+
 		if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t *)1; }
 
 		if (aAllowMultipleSelects)
 		{
 			lFullBuffLen = MAX_MULTIPLE_FILES * MAX_PATH_OR_CMD + 1;
-			lBuff = (wchar_t*)(realloc(lBuff, lFullBuffLen * sizeof(wchar_t)));
+			lBuff = (wchar_t*)(malloc(lFullBuffLen * sizeof(wchar_t)));
 			if (!lBuff)
 			{
 				lFullBuffLen = LOW_MULTIPLE_FILES * MAX_PATH_OR_CMD + 1;
@@ -1650,7 +1653,7 @@ wchar_t const * tinyfd_openFileDialogW(
 		else
 		{
 			lFullBuffLen = MAX_PATH_OR_CMD + 1;
-			lBuff = (wchar_t*)(realloc(lBuff, lFullBuffLen * sizeof(wchar_t)));
+			lBuff = (wchar_t*)(malloc(lFullBuffLen * sizeof(wchar_t)));
 		}
 		if (!lBuff) return NULL;
 
@@ -1817,7 +1820,7 @@ static char const * openFileDialogWinGui8(
         if (!lTmpWChar) return NULL;
 
         lTmpChar = utf16to8(lTmpWChar);
-		(void)realloc((wchar_t *)lTmpWChar, 1); /*0 could return a NULL pointer*/
+		(void) tinyfd_openFileDialogW(NULL,NULL,0,NULL,NULL,-1);
 
 		return lTmpChar;
 }

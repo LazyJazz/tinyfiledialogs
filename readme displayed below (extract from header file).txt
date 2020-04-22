@@ -1,4 +1,4 @@
-tiny file dialogs ( cross-platform C C++ ) v3.5.2 [Apr 21, 2020] zlib licence
+tiny file dialogs ( cross-platform C C++ ) v3.6.0 [Apr 22, 2020] zlib licence
  _________
 /         \   Beep Popup InputBox PasswordBox MessageBox ColorPicker
 |tiny file|   OpenFileDialog SaveFileDialog SelectFolderDialog
@@ -16,18 +16,18 @@ Bindings for LUA and C# dll, Haskell, Fortran. Included in LWJGL(java), Rust, Al
 
                    http://tinyfiledialogs.sourceforge.net
          git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
-  _________________________________________________________________________
- |                                                                         |
- | CONTACT me directly via the email address at the top of the header file |
- |_________________________________________________________________________|
+  __________________________________________________________________
+ |                                                                  |
+ | my email address at the top of the header file tinyfiledialogs.h |
+ |__________________________________________________________________|
   _________________________________________________________________________________
  |                                                                                 |
  | the windows only wchar_t UTF-16 prototypes are at the bottom of the header file |
  |_________________________________________________________________________________|
-  _________________________________________________________________________________
- |                                                                                 |
- | on windows: char is MBCS by default, if you want UTF-8 set tinyfd_winUtf8 to 1  |
- |_________________________________________________________________________________|
+  ________________________________________________________________________________
+ |                                                                                |
+ | on windows: char is UTF-8 by default, if you want MBCS set tinyfd_winUtf8 to 0 |
+ |________________________________________________________________________________|
 
 void tinyfd_beep() ;
 

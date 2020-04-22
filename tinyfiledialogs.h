@@ -311,7 +311,7 @@ char * tinyfd_arrayDialog(
 - If no filter description is provided,
   the list of patterns will become the description.
 - char const * filterPatterns[3] = { "*.obj" , "*.stl" , "*.dxf" } ;
-- On windows char defaults to MBCS, set tinyfd_winUtf8=1 to use UTF-8
+- On windows char defaults to UTF-8, set tinyfd_winUtf8=0 to use MBCS
 - On windows link against Comdlg32.lib and Ole32.lib
   This linking is not compulsary for console mode (see above).
 - On unix: it tries command line calls, so no such need.

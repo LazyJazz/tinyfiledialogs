@@ -2,7 +2,7 @@ tiny file dialogs ( cross-platform C C++ ) v3.6.0 [Apr 22, 2020] zlib licence
  _________
 /         \   Beep Popup InputBox PasswordBox MessageBox ColorPicker
 |tiny file|   OpenFileDialog SaveFileDialog SelectFolderDialog
-| dialogs |   ASCII UTF-8 (and also MBCS UTF-16 for windows)
+| dialogs |   ASCII UTF-8 (and also MBCS & UTF-16 for windows)
 \____  ___/   Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE
      \|       SSH support via automatic switch to console mode or X11 forwarding
 
@@ -96,7 +96,7 @@ char const * tinyfd_colorChooser (
 - If no filter description is provided,
   the list of patterns will become the description.
 - char const * filterPatterns[3] = { "*.obj" , "*.stl" , "*.dxf" } ;
-- On windows char defaults to MBCS, set tinyfd_winUtf8=1 to use UTF-8
+- On windows char defaults to UTF-8, set tinyfd_winUtf8=0 to use MBCS
 - On windows link against Comdlg32.lib and Ole32.lib
   (on windows the no linking claim is a lie)
   This linking is not compulsary for console mode (see header file).

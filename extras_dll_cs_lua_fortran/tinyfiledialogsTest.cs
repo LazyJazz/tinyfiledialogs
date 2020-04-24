@@ -1,5 +1,5 @@
 ﻿/*_________
- /         \ tinyfiledialogsTest.cs v3.6.0 [Apr 22, 2020] zlib licence
+ /         \ tinyfiledialogsTest.cs v3.6.1 [Apr 24, 2020] zlib licence
  |tiny file| C# bindings created [2015]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net

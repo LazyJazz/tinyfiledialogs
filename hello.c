@@ -208,7 +208,15 @@ int main( int argc , char * argv[] )
 		NULL,
 		1);
 
-	if (! lTheOpenFileName)
+	lTheOpenFileName = tinyfd_openFileDialog(
+		"let us read the password back",
+		"",
+		2,
+		lFilterPatterns,
+		NULL,
+		1);
+
+	if (!lTheOpenFileName)
 	{
 		tinyfd_messageBox(
 			"Error",

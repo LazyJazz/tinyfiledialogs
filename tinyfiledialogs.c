@@ -1768,6 +1768,7 @@ wchar_t * tinyfd_openFileDialogW(
 		static wchar_t * lBuff = NULL;
 
 		free(lBuff);
+		lBuff = NULL;
 		if (aAllowMultipleSelects < 0) return (wchar_t *)0;
 
 		if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t *)1; }
@@ -2404,6 +2405,7 @@ static char * openFileDialogWinGuiA(
 		static char * lBuff = NULL;
 
 		free(lBuff);
+		lBuff = NULL;
 		if (aAllowMultipleSelects)
 		{
 			lFullBuffLen = MAX_MULTIPLE_FILES * MAX_PATH_OR_CMD + 1;

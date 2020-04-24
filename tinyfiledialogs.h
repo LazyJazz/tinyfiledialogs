@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.h v3.6.0 [Apr 22, 2020] zlib licence
+ /         \ tinyfiledialogs.h v3.6.1 [Apr 24, 2020] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -92,11 +92,6 @@ misrepresented as being the original software.
 #ifndef TINYFILEDIALOGS_H
 #define TINYFILEDIALOGS_H
 
-/* #define TINYFD_NOLIB */
-/* On windows, define TINYFD_NOLIB here
-if you don't want to include the code creating the graphic dialogs.
-Then you won't need to link against Comdlg32.lib and Ole32.lib */
-
 #ifdef	__cplusplus
 extern "C" { /* if tinydialogs.c is compiled as C++ code rather than C code, you may need to comment this out
 			    and the corresponding closing bracket near the end of this file. */
@@ -106,10 +101,15 @@ extern "C" { /* if tinydialogs.c is compiled as C++ code rather than C code, you
 /**************************************** UTF-8 on Windows ********************************************/
 /******************************************************************************************************/
 #ifdef _WIN32
-/* if you want to use UTF-8 ( instead of the UTF-16/wchar_t functions at the end of this files )
+/* On windows, if you want to use UTF-8 ( instead of the UTF-16/wchar_t functions at the end of this file )
 Make sure your code is really prepared for UTF-8 (on windows, functions like fopen() expect MBCS and not UTF-8) */
 extern int tinyfd_winUtf8; /* on windows char strings can be 1:UTF-8(default) or 0:MBCS */
 /* for MBCS change this to 0, in tinyfiledialogs.c or in your code */
+/* Here are some functions to help you convert between UTF-16 UTF-8 MBSC */
+char * tinyfd_utf8toMbcs(char const * aUtf8string);
+wchar_t * tinyfd_utf8to16(char const * aUtf8string);
+char * tinyfd_utf16to8(wchar_t const * aUtf16string);
+void tinyfd_setWinUtf8(int aIsUtf8); /* made to be used from C# to set the global variable tinyfd_winUtf8 to 1 or 0 */
 #endif
 /******************************************************************************************************/
 /******************************************************************************************************/
@@ -120,19 +120,6 @@ extern char const tinyfd_needs[]; /* info about requirements */
 extern int tinyfd_verbose; /* 0 (default) or 1 : on unix, prints the command line calls */
 extern int tinyfd_silent; /* 1 (default) or 0 : on unix, hide errors and warnings from called dialogs*/
 extern int tinyfd_allowCursesDialogs; /* 0 (default) or 1 : curses dialogs are difficult to use, on windows they are only ascii*/
-
-#ifdef _WIN32
-/* For UTF-16 (wchar_t) use the functions at the end of this files */
-extern int tinyfd_winUtf8; /* 0 (default MBCS) or 1 (UTF-8)*/
-/* On windows output char strings can be 0:MBCS or 1:UTF-8
-Set it to 1 if your code is really prepared for UTF-8.
-On windows functions like fopen() expect MBCS and not UTF-8 */ 
-
-/* Here are some functions to help you convert between UTF-16 UTF-8 MBSC */
-char * tinyfd_utf8toMbcs(char const * aUtf8string);
-wchar_t * tinyfd_utf8to16(char const * aUtf8string);
-char * tinyfd_utf16to8(wchar_t const * aUtf16string);
-#endif
 
 extern int tinyfd_forceConsole;  /* 0 (default) or 1 */
 /* for unix & windows: 0 (graphic mode) or 1 (console mode).
@@ -214,7 +201,6 @@ char * tinyfd_colorChooser(
 
 /************ NOT CROSS PLATFORM SECTION STARTS HERE ************************/
 #ifdef _WIN32
-#ifndef TINYFD_NOLIB
 
 /* windows only - utf-16 version */
 int tinyfd_notifyPopupW(
@@ -274,11 +260,6 @@ wchar_t * tinyfd_colorChooserW(
 		/* aDefaultRGB is used only if aDefaultHexRGB is NULL */
 		/* aDefaultRGB and aoResultRGB can be the same array */
 		/* returns NULL on cancel */
-
-#endif /*!TINYFD_NOLIB*/
-
-/* windows only (not for wchar_t): you can set char to 1:utf-8(default) or 0:MBCS */
-void tinyfd_setWinUtf8(int aIsUtf8); /* made to be used from C# to set the global variable tinyfd_winUtf8 to 1 or 0 */
 
 #else /*_WIN32*/
 

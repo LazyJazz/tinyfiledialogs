@@ -1,5 +1,5 @@
 /*_________
- /         \ hello.c v3.6.0 [Apr 22, 2020] zlib licence
+ /         \ hello.c v3.6.1 [Apr 24, 2020] zlib licence
  |tiny file| Hello World file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -118,7 +118,7 @@ int main( int argc , char * argv[] )
 	char lBuffer[1024];
 	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
-	/*tinyfd_forceConsole = 1;*/
+	/*tinyfd_forceConsole = 1;*/ /* default is 0 */
 	tinyfd_verbose = argc - 1;
 	tinyfd_silent = 1;
 

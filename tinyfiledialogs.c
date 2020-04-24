@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.6.0 [Apr 22, 2020] zlib licence
+ /         \ tinyfiledialogs.c v3.6.1 [Apr 24, 2020] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -92,6 +92,7 @@ misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 */
 
+
 #ifndef __sun
 #define _POSIX_C_SOURCE 2 /* to accept POSIX 2 in old ANSI C standards */
 #endif
@@ -128,7 +129,7 @@ misrepresented as being the original software.
  #define SLASH "/"
 #endif /* _WIN32 */
 
-#include "tinyfiledialogs.h" /* #define TINYFD_NOLIB */ /* do not define this here, do it in the header file */
+#include "tinyfiledialogs.h"
 
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 
@@ -137,7 +138,7 @@ misrepresented as being the original software.
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char const tinyfd_version[8] = "3.6.0";
+char const tinyfd_version[8] = "3.6.1";
 
 /******************************************************************************************************/
 /**************************************** UTF-8 on Windows ********************************************/
@@ -3054,6 +3055,17 @@ static char * selectFolderDialogWinConsole(
         return aoBuff;
 }
 
+static void writeUtf8( char const * aUtf8String )
+{
+	unsigned long lNum;
+	void * lConsoleHandle;
+	wchar_t * lTmpWChar;
+
+	lConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	lTmpWChar = tinyfd_utf8to16(aUtf8String);
+	(void)WriteConsoleW(lConsoleHandle, lTmpWChar, wcslen(lTmpWChar), &lNum, NULL);
+}
+
 
 int tinyfd_messageBox(
         char const * aTitle , /* NULL or "" */
@@ -3063,6 +3075,8 @@ int tinyfd_messageBox(
         int aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */
 {
         char lChar ;
+		UINT lOriginalCP;
+		UINT lOriginalOutputCP;
 
 #ifndef TINYFD_NOLIB
         if ((!tinyfd_forceConsole || !(GetConsoleWindow() || dialogPresent()))
@@ -3090,6 +3104,11 @@ int tinyfd_messageBox(
         }
         else
         {
+			lOriginalCP = GetConsoleCP();
+			lOriginalOutputCP = GetConsoleOutputCP();
+			(void)SetConsoleCP(GetACP());
+			(void)SetConsoleOutputCP(GetACP());
+
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return 0;}
                 if (!gWarningDisplayed && !tinyfd_forceConsole )
                 {
@@ -3098,19 +3117,22 @@ int tinyfd_messageBox(
                         printf("%s\n\n", tinyfd_needs);
                 }
 
-				(void) SetConsoleCP(GetACP());
-				(void) SetConsoleOutputCP(GetACP());
                 if ( aTitle && strlen(aTitle) )
                 {
-                        printf("\n%s\n\n", aTitle);
-                }
+					printf("\n");
+					if (tinyfd_winUtf8) writeUtf8(aTitle);
+					else printf("%s", aTitle);
+					printf("\n\n");
+				}
                 if ( aDialogType && !strcmp("yesno",aDialogType) )
                 {
                         do
                         {
                                 if ( aMessage && strlen(aMessage) )
                                 {
-                                        printf("%s\n",aMessage);
+									if (tinyfd_winUtf8) writeUtf8(aMessage);
+									else printf("%s",aMessage);
+									printf("\n");
                                 }
                                 printf("y/n: ");
                                 lChar = (char) tolower( _getch() ) ;
@@ -3125,7 +3147,9 @@ int tinyfd_messageBox(
                         {
                                 if ( aMessage && strlen(aMessage) )
                                 {
-                                        printf("%s\n",aMessage);
+									if (tinyfd_winUtf8) writeUtf8(aMessage);
+									else printf("%s", aMessage);
+									printf("\n");
                                 }
                                 printf("[O]kay/[C]ancel: ");
                                 lChar = (char) tolower( _getch() ) ;
@@ -3140,7 +3164,9 @@ int tinyfd_messageBox(
                         {
                                 if (aMessage && strlen(aMessage))
                                 {
-                                        printf("%s\n", aMessage);
+									if (tinyfd_winUtf8) writeUtf8(aMessage);
+									else printf("%s", aMessage);
+									printf("\n");
                                 }
                                 printf("[Y]es/[N]o/[C]ancel: ");
                                 lChar = (char)tolower(_getch());
@@ -3152,14 +3178,18 @@ int tinyfd_messageBox(
                 {
                         if ( aMessage && strlen(aMessage) )
                         {
-                                printf("%s\n\n",aMessage);
+							if (tinyfd_winUtf8) writeUtf8(aMessage);
+							else printf("%s", aMessage);
+							printf("\n\n");
                         }
                         printf("press enter to continue ");
                         lChar = (char) _getch() ;
                         printf("\n\n");
                         return 1 ;
                 }
-        }
+				(void)SetConsoleCP(lOriginalCP);
+				(void)SetConsoleOutputCP(lOriginalOutputCP);
+		}
 }
 
 
@@ -3190,13 +3220,16 @@ char * tinyfd_inputBox(
         char const * aMessage , /* NULL or "" may NOT contain \n nor \t */
         char const * aDefaultInput ) /* "" , if NULL it's a passwordBox */
 {
-        static char lBuff [MAX_PATH_OR_CMD] = "";
-        char * lEOF;
-		char * p;
-#ifndef TINYFD_NOLIB
-		DWORD mode = 0;
-		HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
-#endif /* TINYFD_NOLIB */
+	static char lBuff[MAX_PATH_OR_CMD] = "";
+	char * lEOF;
+
+	DWORD mode = 0;
+	HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+
+	unsigned long lNum;
+	void * lConsoleHandle;
+	char * lTmpChar;
+	wchar_t lBuffW[1024];
 
 		if (!aTitle && !aMessage && !aDefaultInput) return lBuff; /* now I can fill lBuff from outside */
 
@@ -3234,56 +3267,72 @@ char * tinyfd_inputBox(
           printf("%s\n\n", tinyfd_needs);
       }
 
-	  (void) SetConsoleCP(GetACP());
-	  (void) SetConsoleOutputCP(GetACP());
+	  (void)SetConsoleCP(GetACP());
+	  (void)SetConsoleOutputCP(GetACP());
+
 	  if (aTitle && strlen(aTitle))
       {
-          printf("\n%s\n\n", aTitle);
-      }
+		printf("\n");
+		if (tinyfd_winUtf8) writeUtf8(aTitle);
+		else printf("%s", aTitle);
+		printf("\n\n");
+	  }
       if ( aMessage && strlen(aMessage) )
       {
-          printf("%s\n",aMessage);
+		if (tinyfd_winUtf8) writeUtf8(aMessage);
+		else printf("%s", aMessage);
+		printf("\n");
       }
       printf("(ctrl-Z + enter to cancel): ");
-#ifndef TINYFD_NOLIB
       if ( ! aDefaultInput )
       {
-          GetConsoleMode(hStdin,&mode);
-          SetConsoleMode(hStdin,mode & (~ENABLE_ECHO_INPUT) );
+		  (void) GetConsoleMode(hStdin, &mode);
+		  (void) SetConsoleMode(hStdin, mode & (~ENABLE_ECHO_INPUT));
       }
-#endif /* TINYFD_NOLIB */
-	  (void) SetConsoleCP(GetACP());
-	  (void) SetConsoleOutputCP(GetACP());
-      lEOF = fgets(lBuff, MAX_PATH_OR_CMD, stdin);
-      if ( ! lEOF )
-      {
-          return NULL;
-      }
-#ifndef TINYFD_NOLIB
-      if ( ! aDefaultInput )
-      {
-          SetConsoleMode(hStdin,mode);
-          printf("\n");
-      }
-#endif /* TINYFD_NOLIB */
-      printf("\n");
-      if ( strchr(lBuff,27) )
-      {
-          return NULL ;
-      }
-      if ( lBuff[strlen( lBuff ) -1] == '\n' )
-      {
-          lBuff[strlen( lBuff ) -1] = '\0' ;
-      }
-
 	  if (tinyfd_winUtf8)
 	  {
-		  p = mbcsTo8(lBuff);
-		  if (p) strcpy(lBuff, p);
-		  else return NULL;
+		  	lConsoleHandle = GetStdHandle(STD_INPUT_HANDLE);
+			(void) ReadConsoleW(lConsoleHandle, lBuffW, MAX_PATH_OR_CMD, &lNum, NULL);
+			if (!aDefaultInput)
+			{
+				(void)SetConsoleMode(hStdin, mode);
+				printf("\n");
+			}
+			lBuffW[lNum] = '\0';
+			if (lBuffW[wcslen(lBuffW) - 1] == '\n') lBuffW[wcslen(lBuffW) - 1] = '\0';
+			if (lBuffW[wcslen(lBuffW) - 1] == '\r') lBuffW[wcslen(lBuffW) - 1] = '\0';
+			lTmpChar = tinyfd_utf16to8(lBuffW);
+			if (lTmpChar)
+			{
+				strcpy(lBuff, lTmpChar);
+				return lBuff;
+			}
+			else
+				return NULL;
 	  }
-
-      return lBuff ;
+	  else
+	  {
+		  lEOF = fgets(lBuff, MAX_PATH_OR_CMD, stdin);
+		  if (!aDefaultInput)
+		  {
+			  (void)SetConsoleMode(hStdin, mode);
+			  printf("\n");
+		  }
+		  if (!lEOF)
+		  {
+			  return NULL;
+		  }
+		  printf("\n");
+		  if (strchr(lBuff, 27))
+		  {
+			  return NULL;
+		  }
+		  if (lBuff[strlen(lBuff) - 1] == '\n')
+		  {
+			  lBuff[strlen(lBuff) - 1] = '\0';
+		  }
+		  return lBuff;
+	  }
   }
 }
 

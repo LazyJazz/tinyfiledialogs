@@ -3104,10 +3104,13 @@ int tinyfd_messageBox(
         }
         else
         {
-			lOriginalCP = GetConsoleCP();
-			lOriginalOutputCP = GetConsoleOutputCP();
-			(void)SetConsoleCP(GetACP());
-			(void)SetConsoleOutputCP(GetACP());
+			if (!tinyfd_winUtf8)
+			{
+				lOriginalCP = GetConsoleCP();
+				lOriginalOutputCP = GetConsoleOutputCP();
+				(void)SetConsoleCP(GetACP());
+				(void)SetConsoleOutputCP(GetACP());
+			}
 
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return 0;}
                 if (!gWarningDisplayed && !tinyfd_forceConsole )
@@ -3139,6 +3142,7 @@ int tinyfd_messageBox(
                                 printf("\n\n");
                         }
                         while ( lChar != 'y' && lChar != 'n' ) ;
+						if (!tinyfd_winUtf8) { (void)SetConsoleCP(lOriginalCP); (void)SetConsoleOutputCP(lOriginalOutputCP); }
                         return lChar == 'y' ? 1 : 0 ;
                 }
                 else if ( aDialogType && !strcmp("okcancel",aDialogType) )
@@ -3156,6 +3160,7 @@ int tinyfd_messageBox(
                                 printf("\n\n");
                         }
                         while ( lChar != 'o' && lChar != 'c' ) ;
+						if (!tinyfd_winUtf8) { (void)SetConsoleCP(lOriginalCP); (void)SetConsoleOutputCP(lOriginalOutputCP); }
                         return lChar == 'o' ? 1 : 0 ;
                 }
                 else if (aDialogType && !strcmp("yesnocancel", aDialogType))
@@ -3172,6 +3177,7 @@ int tinyfd_messageBox(
                                 lChar = (char)tolower(_getch());
                                 printf("\n\n");
                         } while (lChar != 'y' && lChar != 'n' && lChar != 'c');
+						if (!tinyfd_winUtf8) { (void)SetConsoleCP(lOriginalCP); (void)SetConsoleOutputCP(lOriginalOutputCP); }
                         return (lChar == 'y') ? 1 : (lChar == 'n') ? 2 : 0 ;
                 }
                 else
@@ -3185,10 +3191,9 @@ int tinyfd_messageBox(
                         printf("press enter to continue ");
                         lChar = (char) _getch() ;
                         printf("\n\n");
+						if (!tinyfd_winUtf8) { (void)SetConsoleCP(lOriginalCP); (void)SetConsoleOutputCP(lOriginalOutputCP); }
                         return 1 ;
                 }
-				(void)SetConsoleCP(lOriginalCP);
-				(void)SetConsoleOutputCP(lOriginalOutputCP);
 		}
 }
 
@@ -3231,6 +3236,10 @@ char * tinyfd_inputBox(
 	char * lTmpChar;
 	wchar_t lBuffW[1024];
 
+	UINT lOriginalCP;
+	UINT lOriginalOutputCP;
+
+
 		if (!aTitle && !aMessage && !aDefaultInput) return lBuff; /* now I can fill lBuff from outside */
 
 #ifndef TINYFD_NOLIB
@@ -3267,8 +3276,13 @@ char * tinyfd_inputBox(
           printf("%s\n\n", tinyfd_needs);
       }
 
-	  (void)SetConsoleCP(GetACP());
-	  (void)SetConsoleOutputCP(GetACP());
+	  if (!tinyfd_winUtf8)
+	  {
+		  lOriginalCP = GetConsoleCP();
+		  lOriginalOutputCP = GetConsoleOutputCP();
+		  (void)SetConsoleCP(GetACP());
+		  (void)SetConsoleOutputCP(GetACP());
+	  }
 
 	  if (aTitle && strlen(aTitle))
       {
@@ -3318,6 +3332,13 @@ char * tinyfd_inputBox(
 			  (void)SetConsoleMode(hStdin, mode);
 			  printf("\n");
 		  }
+
+		  if (!tinyfd_winUtf8)
+		  {
+			  (void)SetConsoleCP(lOriginalCP);
+			  (void)SetConsoleOutputCP(lOriginalOutputCP);
+		  }
+
 		  if (!lEOF)
 		  {
 			  return NULL;

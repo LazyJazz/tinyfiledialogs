@@ -2634,7 +2634,7 @@ static int dialogPresent(void)
         char lBuff [MAX_PATH_OR_CMD] ;
         FILE * lIn ;
         char const * lString = "dialog.exe";
-        if ( lDialogPresent < 0 )
+		if (tinyfd_allowCursesDialogs && lDialogPresent < 0)
         {
                 if (!(lIn = _popen("where dialog.exe","r")))
                 {
@@ -2657,7 +2657,7 @@ static int dialogPresent(void)
                         lDialogPresent = 1 ;
                 }
         }
-		return lDialogPresent && tinyfd_allowCursesDialogs ;
+		return tinyfd_allowCursesDialogs && lDialogPresent;
 }
 
 

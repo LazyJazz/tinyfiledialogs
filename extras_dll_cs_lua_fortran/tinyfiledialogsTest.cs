@@ -22,11 +22,6 @@ using System.Runtime.InteropServices;
 
 class tinyfd
 {
-    // windows only: you can set char strings to 1:UTF8(default) or 0:MBCS
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CallingConvention = CallingConvention.Cdecl)]
-    public static extern void tinyfd_setWinUtf8(int aIsUtf8);
-
     // cross platform UTF8 (or MBCS on windows)
     [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
         CallingConvention = CallingConvention.Cdecl)]

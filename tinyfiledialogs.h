@@ -12,10 +12,12 @@
  |                                                                                 |
  | the windows only wchar_t UTF-16 functions are at the bottom of this header file |
  |_________________________________________________________________________________|
-  ________________________________________________________________________________
- |                                                                                |
- | on windows: char is UTF-8 by default, if you want MBCS set tinyfd_winUtf8 to 0 |
- |________________________________________________________________________________|
+  _________________________________________________________
+ |                                                         |
+ | on windows: - since v3.6 char is UTF-8 by default       |
+ |             - if you want MBCS set tinyfd_winUtf8 to 0  |
+ |             - functions like fopen expect MBCS          |
+ |_________________________________________________________|
 
 If you like tinyfiledialogs, please upvote my stackoverflow answer
 https://stackoverflow.com/a/47651444
@@ -105,6 +107,7 @@ extern "C" { /* if tinydialogs.c is compiled as C++ code rather than C code, you
 Make sure your code is really prepared for UTF-8 (on windows, functions like fopen() expect MBCS and not UTF-8) */
 extern int tinyfd_winUtf8; /* on windows char strings can be 1:UTF-8(default) or 0:MBCS */
 /* for MBCS change this to 0, in tinyfiledialogs.c or in your code */
+
 /* Here are some functions to help you convert between UTF-16 UTF-8 MBSC */
 char * tinyfd_utf8toMbcs(char const * aUtf8string);
 wchar_t * tinyfd_utf8to16(char const * aUtf8string);

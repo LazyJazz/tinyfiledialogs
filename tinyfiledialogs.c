@@ -3826,7 +3826,7 @@ static int whiptailPresentOnly(void)
         {
                 lWhiptailPresent = detectPresence( "whiptail" ) ;
         }
-        return lWhiptailPresent ;
+        return tinyfd_allowCursesDialogs && lWhiptailPresent ;
 }
 
 
@@ -7087,7 +7087,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
         }
         if ( aAllowMultipleSelects && strchr(lBuff, '|') )
         {
-			if( ! ensureFilesExist( lBuff , lBuff ) ) 
+			if( ! ensureFilesExist( lBuff , lBuff ) )
 			{
 				free(lBuff);
 				lBuff = NULL;

@@ -1,5 +1,5 @@
 /*_________
- /         \ hello.c v3.6.1 [Apr 24, 2020] zlib licence
+ /         \ hello.c v3.6.2 [May 9, 2020] zlib licence
  |tiny file| Hello World file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -164,6 +164,8 @@ int main( int argc , char * argv[] )
 
 	if (!lPassword) return 1;
 
+	tinyfd_messageBox("your password as read", lPassword, "ok", "info", 1);
+
 	lTheSaveFileName = tinyfd_saveFileDialog(
 		"let us save this password",
 		"passwordFile.txt",
@@ -243,7 +245,7 @@ int main( int argc , char * argv[] )
 	fgets(lBuffer, sizeof(lBuffer), lIn);
 	fclose(lIn);
 
-	tinyfd_messageBox("your password is", lBuffer, "ok", "info", 1);
+	tinyfd_messageBox("your password as it was saved", lBuffer, "ok", "info", 1);
 
 	lTheSelectFolderName = tinyfd_selectFolderDialog(
 		"let us just select a directory", NULL);
@@ -280,7 +282,7 @@ int main( int argc , char * argv[] )
 
 	tinyfd_messageBox("The selected hexcolor is", lTheHexColor, "ok", "info", 1);
 
-	tinyfd_messageBox("your password was", lPassword, "ok", "info", 1);
+	tinyfd_messageBox("your read password was", lPassword, "ok", "info", 1);
 
 	tinyfd_beep();
 

@@ -1,5 +1,5 @@
 ﻿/*_________
- /         \ tinyfiledialogsTest.cs v3.6.1 [Apr 24, 2020] zlib licence
+ /         \ tinyfiledialogsTest.cs v3.6.2 [May 9, 2020] zlib licence
  |tiny file| C# bindings created [2015]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 
 class tinyfd
 {
-    // cross platform UTF8 (or MBCS on windows)
+    // cross platform UTF8
     [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
         CallingConvention = CallingConvention.Cdecl)]
     public static extern void tinyfd_beep();

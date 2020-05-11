@@ -157,7 +157,7 @@ int tinyfd_winUtf8 = 1; /* on windows char strings can be 1:UTF-8(default) or 0:
 
 int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix, hide errors and warnings from called dialogs*/
-int tinyfd_allowCursesDialogs = 0 ; /* 0 (default) or 1 : curses dialogs are difficult to use, on windows they are only ascii*/
+static int const tinyfd_allowCursesDialogs = 0 ; /* 0 (default) or 1 : curses dialogs are difficult to use, on windows they are only ascii*/
 
 #if defined(TINYFD_NOLIB) && defined(_WIN32)
 int tinyfd_forceConsole = 1 ;
@@ -2638,7 +2638,8 @@ static int dialogPresent(void)
         char lBuff [MAX_PATH_OR_CMD] ;
         FILE * lIn ;
         char const * lString = "dialog.exe";
-		if (tinyfd_allowCursesDialogs && lDialogPresent < 0)
+		if (!tinyfd_allowCursesDialogs) return 0;
+		if (lDialogPresent < 0)
         {
                 if (!(lIn = _popen("where dialog.exe","r")))
                 {
@@ -2661,7 +2662,7 @@ static int dialogPresent(void)
                         lDialogPresent = 1 ;
                 }
         }
-		return tinyfd_allowCursesDialogs && lDialogPresent;
+		return lDialogPresent;
 }
 
 
@@ -3766,7 +3767,11 @@ static char * dialogNameOnly(void)
 	static char lDialogName[128] = "*" ;
 	if ( lDialogName[0] == '*' )
 	{
-		if ( isDarwin() && * strcpy(lDialogName , "/opt/local/bin/dialog" )
+		if (!tinyfd_allowCursesDialogs)
+		{
+			strcpy(lDialogName , "" );
+		}
+		else if ( isDarwin() && * strcpy(lDialogName , "/opt/local/bin/dialog" )
 			&& detectPresence( lDialogName ) )
 		{}
 		else if ( * strcpy(lDialogName , "dialog" )
@@ -3777,7 +3782,6 @@ static char * dialogNameOnly(void)
 			strcpy(lDialogName , "" );
 		}
 	}
-	if (!tinyfd_allowCursesDialogs) strcpy(lDialogName , "" );
 	return lDialogName ;
 }
 
@@ -3822,11 +3826,12 @@ int isDialogVersionBetter09b(void)
 static int whiptailPresentOnly(void)
 {
         static int lWhiptailPresent = -1 ;
+		if (!tinyfd_allowCursesDialogs) return 0;
         if ( lWhiptailPresent < 0 )
         {
                 lWhiptailPresent = detectPresence( "whiptail" ) ;
         }
-        return tinyfd_allowCursesDialogs && lWhiptailPresent ;
+        return lWhiptailPresent ;
 }
 
 

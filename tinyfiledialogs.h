@@ -121,8 +121,10 @@ void tinyfd_setWinUtf8(int aIsUtf8); /* made to be used from C# to set the globa
 extern char const tinyfd_version[8]; /* contains tinyfd current version number */
 extern char const tinyfd_needs[]; /* info about requirements */
 extern int tinyfd_verbose; /* 0 (default) or 1 : on unix, prints the command line calls */
-extern int tinyfd_silent; /* 1 (default) or 0 : on unix, hide errors and warnings from called dialogs*/
-extern int tinyfd_allowCursesDialogs; /* 0 (default) or 1 : curses dialogs are difficult to use, on windows they are only ascii*/
+extern int tinyfd_silent; /* 1 (default) or 0 : on unix, hide errors and warnings from called dialogs */
+
+/* Curses dialogs are difficult to use, on windows they are only ascii */
+/* int const tinyfd_allowCursesDialogs; 0 (default) or 1 : you can change this in tinyfiledialogs.c */
 
 extern int tinyfd_forceConsole;  /* 0 (default) or 1 */
 /* for unix & windows: 0 (graphic mode) or 1 (console mode).

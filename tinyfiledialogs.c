@@ -6364,7 +6364,7 @@ char * tinyfd_saveFileDialog(
 			strcpy( lDialogString , gPython3Name ) ;
 			strcat( lDialogString ,
 				" -S -c \"import tkinter;from tkinter import filedialog;root=tkinter.Tk();root.withdraw();");
-			strcat( lDialogString , "print( filedialog.asksaveasfilename(");
+			strcat( lDialogString , "res=filedialog.asksaveasfilename(");
 			if ( aTitle && strlen(aTitle) )
 			{
 				strcat(lDialogString, "title='") ;
@@ -6408,7 +6408,7 @@ char * tinyfd_saveFileDialog(
 				strcat( lDialogString , "))," ) ;
 				strcat( lDialogString , "('All files','*'))" ) ;
 			}
-			strcat( lDialogString , "))\"" ) ;
+			strcat( lDialogString, ");\nif not isinstance(res, tuple):\n\tprint(res)\n\"" ) ;
 		}
 		else if ( !xdialogPresent() && tkinter2Present( ) )
         {
@@ -6429,7 +6429,7 @@ char * tinyfd_saveFileDialog(
  frontmost of process \\\"Python\\\" to true' ''');");
                 }
 
-                strcat( lDialogString , "print tkFileDialog.asksaveasfilename(");
+                strcat( lDialogString , "res=tkFileDialog.asksaveasfilename(");
                 if ( aTitle && strlen(aTitle) )
                 {
                         strcat(lDialogString, "title='") ;
@@ -6473,8 +6473,8 @@ char * tinyfd_saveFileDialog(
                         strcat( lDialogString , "))," ) ;
                         strcat( lDialogString , "('All files','*'))" ) ;
             }
-                strcat( lDialogString , ")\"" ) ;
-        }
+			strcat( lDialogString, ");\nif not isinstance(res, tuple):\n\tprint res \n\"" ) ;
+		}
         else if ( xdialogPresent() || dialogName() )
         {
                 if ( xdialogPresent( ) )
@@ -7241,7 +7241,7 @@ char * tinyfd_selectFolderDialog(
 			strcpy( lDialogString , gPython3Name ) ;
 			strcat( lDialogString ,
 				" -S -c \"import tkinter;from tkinter import filedialog;root=tkinter.Tk();root.withdraw();");
-			strcat( lDialogString , "print( filedialog.askdirectory(");
+			strcat( lDialogString , "res=filedialog.askdirectory(");
 			if ( aTitle && strlen(aTitle) )
 			{
 				strcat(lDialogString, "title='") ;
@@ -7254,7 +7254,7 @@ char * tinyfd_selectFolderDialog(
 				strcat(lDialogString, aDefaultPath ) ;
 				strcat(lDialogString , "'" ) ;
 			}
-			strcat( lDialogString , ") )\"" ) ;
+			strcat( lDialogString, ");\nif not isinstance(res, tuple):\n\tprint(res)\n\"" ) ;
 		}
 		else if ( !xdialogPresent() && tkinter2Present( ) )
         {

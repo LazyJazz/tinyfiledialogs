@@ -4325,40 +4325,6 @@ static int osx9orBetter(void)
 }
 
 
-static int python2Present(void)
-{
-    static int lPython2Present = -1 ;
-        int i;
-
-        if ( lPython2Present < 0 )
-        {
-                lPython2Present = 0 ;
-                strcpy(gPython2Name , "python2" ) ;
-                if ( detectPresence(gPython2Name) ) lPython2Present = 1;
-                else
-                {
-                        for ( i = 9 ; i >= 0 ; i -- )
-                        {
-                                sprintf( gPython2Name , "python2.%d" , i ) ;
-                                if ( detectPresence(gPython2Name) )
-                                {
-                                        lPython2Present = 1;
-                                        break;
-                                }
-                        }
-                        /*if ( ! lPython2Present )
-                        {
-                                strcpy(gPython2Name , "python" ) ;
-                                if ( detectPresence(gPython2Name) ) lPython2Present = 1;
-                        }*/
-                }
-                if (tinyfd_verbose) printf("lPython2Present %d\n", lPython2Present) ;
-                if (tinyfd_verbose) printf("gPython2Name %s\n", gPython2Name) ;
-        }
-        return lPython2Present ;
-}
-
-
 static int python3Present(void)
 {
         static int lPython3Present = -1 ;
@@ -4380,38 +4346,40 @@ static int python3Present(void)
                                         break;
                                 }
                         }
-                        /*if ( ! lPython3Present )
-                        {
-                                strcpy(gPython3Name , "python" ) ;
-                                if ( detectPresence(gPython3Name) ) lPython3Present = 1;
-                        }*/
                 }
                 if (tinyfd_verbose) printf("lPython3Present %d\n", lPython3Present) ;
                 if (tinyfd_verbose) printf("gPython3Name %s\n", gPython3Name) ;
         }
-        return lPython3Present ;
+		return lPython3Present ;
 }
 
 
-static int tkinter2Present(void)
+static int python2Present(void)
 {
-    static int lTkinter2Present = -1 ;
-        char lPythonCommand[256];
-        char lPythonParams[128] =
-"-S -c \"try:\n\timport Tkinter;\nexcept:\n\tprint 0;\"";
+	static int lPython2Present = -1 ;
+	int i;
 
-
-        if ( lTkinter2Present < 0 )
-        {
-                lTkinter2Present = 0 ;
-                if ( python2Present() )
-        {
-                    sprintf( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
-                    lTkinter2Present = tryCommand(lPythonCommand) ;
-                }
-                if (tinyfd_verbose) printf("lTkinter2Present %d\n", lTkinter2Present) ;
-        }
-        return lTkinter2Present && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
+	if ( lPython2Present < 0 )
+	{
+		lPython2Present = 0 ;
+		strcpy(gPython2Name , "python2" ) ;
+		if ( detectPresence(gPython2Name) ) lPython2Present = 1;
+		else
+		{
+			for ( i = 9 ; i >= 0 ; i -- )
+			{
+				sprintf( gPython2Name , "python2.%d" , i ) ;
+				if ( detectPresence(gPython2Name) )
+				{
+					lPython2Present = 1;
+					break;
+				}
+			}
+		}
+		if (tinyfd_verbose) printf("lPython2Present %d\n", lPython2Present) ;
+		if (tinyfd_verbose) printf("gPython2Name %s\n", gPython2Name) ;
+	}
+	return lPython2Present ;
 }
 
 
@@ -4432,7 +4400,28 @@ static int tkinter3Present(void)
                 }
                 if (tinyfd_verbose) printf("lTkinter3Present %d\n", lTkinter3Present) ;
         }
-        return lTkinter3Present && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
+		return lTkinter3Present && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
+}
+
+
+static int tkinter2Present(void)
+{
+	static int lTkinter2Present = -1 ;
+	char lPythonCommand[256];
+	char lPythonParams[128] =
+		"-S -c \"try:\n\timport Tkinter;\nexcept:\n\tprint 0;\"";
+
+	if ( lTkinter2Present < 0 )
+	{
+		lTkinter2Present = 0 ;
+		if ( python2Present() )
+		{
+			sprintf( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
+			lTkinter2Present = tryCommand(lPythonCommand) ;
+		}
+		if (tinyfd_verbose) printf("lTkinter2Present %d\n", lTkinter2Present) ;
+	}
+	return lTkinter2Present && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
 }
 
 
@@ -4893,9 +4882,9 @@ else :\n\tprint(1)\n\"" ) ;
 		else if ( !gxmessagePresent() && !gmessagePresent() && !gdialogPresent() && !xdialogPresent() && tkinter2Present() )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python2-tkinter");return 1;}
-
-                strcpy( lDialogString , gPython2Name ) ;
-                if ( ! isTerminalRunning( ) && isDarwin( ) )
+				strcpy( lDialogString , "export PYTHONIOENCODING=utf-8;" ) ;
+				strcat( lDialogString , gPython2Name ) ;
+				if ( ! isTerminalRunning( ) && isDarwin( ) )
                 {
                         strcat( lDialogString , " -i" ) ;  /* for osx without console */
                 }
@@ -5889,14 +5878,15 @@ char * tinyfd_inputBox(
 		else if ( !gdialogPresent() && !xdialogPresent() && tkinter2Present( ) )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python2-tkinter");return (char *)1;}
-                strcpy( lDialogString , gPython2Name ) ;
-                if ( ! isTerminalRunning( ) && isDarwin( ) )
+				strcpy( lDialogString , "export PYTHONIOENCODING=utf-8;" ) ;
+				strcat( lDialogString , gPython2Name ) ;
+				if ( ! isTerminalRunning( ) && isDarwin( ) )
                 {
                 strcat( lDialogString , " -i" ) ;  /* for osx without console */
                 }
 
-                strcat( lDialogString ,
-" -S -c \"import Tkinter,tkSimpleDialog;root=Tkinter.Tk();root.withdraw();");
+				strcat( lDialogString ,
+					" -S -c \"import Tkinter,tkSimpleDialog;root=Tkinter.Tk();root.withdraw();");
 
                 if ( isDarwin( ) )
                 {
@@ -6423,8 +6413,9 @@ char * tinyfd_saveFileDialog(
 		else if ( !xdialogPresent() && tkinter2Present( ) )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python2-tkinter");return (char *)1;}
-                strcpy( lDialogString , gPython2Name ) ;
-                if ( ! isTerminalRunning( ) && isDarwin( ))
+				strcpy( lDialogString , "export PYTHONIOENCODING=utf-8;" ) ;
+				strcat( lDialogString , gPython2Name ) ;
+				if ( ! isTerminalRunning( ) && isDarwin( ))
                 {
                 strcat( lDialogString , " -i" ) ;  /* for osx without console */
                 }
@@ -6907,8 +6898,9 @@ char * tinyfd_openFileDialog(
 		else if ( tkinter2Present( ) )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python2-tkinter");return (char *)1;}
-                strcpy( lDialogString , gPython2Name ) ;
-                if ( ! isTerminalRunning( ) && isDarwin( ) )
+				strcpy( lDialogString , "export PYTHONIOENCODING=utf-8;" ) ;
+				strcat( lDialogString , gPython2Name ) ;
+				if ( ! isTerminalRunning( ) && isDarwin( ) )
                 {
                 strcat( lDialogString , " -i" ) ;  /* for osx without console */
                 }
@@ -7267,7 +7259,8 @@ char * tinyfd_selectFolderDialog(
 		else if ( !xdialogPresent() && tkinter2Present( ) )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python2-tkinter");return (char *)1;}
-                strcpy( lDialogString , gPython2Name ) ;
+				strcpy( lDialogString , "export PYTHONIOENCODING=utf-8;" ) ;
+                strcat( lDialogString , gPython2Name ) ;
                 if ( ! isTerminalRunning( ) && isDarwin( ) )
                 {
                 strcat( lDialogString , " -i" ) ;  /* for osx without console */
@@ -7585,8 +7578,9 @@ to set mycolor to choose color default color {");
 		else if ( tkinter2Present( ) )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python2-tkinter");return (char *)1;}
-                strcpy( lDialogString , gPython2Name ) ;
-                if ( ! isTerminalRunning( ) && isDarwin( ) )
+				strcpy( lDialogString , "export PYTHONIOENCODING=utf-8;" ) ;
+				strcat( lDialogString , gPython2Name ) ;
+				if ( ! isTerminalRunning( ) && isDarwin( ) )
                 {
                 strcat( lDialogString , " -i" ) ;  /* for osx without console */
                 }

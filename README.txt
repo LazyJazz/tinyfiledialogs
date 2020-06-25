@@ -87,7 +87,7 @@ char const * tinyfd_colorChooser (
         // returns NULL on cancel
 
 
-- This is not for android nor ios.
+- This is not for ios nor android (it works in termux though).
 - The code is pure C, perfectly compatible with C++.
 - the windows only wchar_t (utf-16) prototypes are in the header file
 - windows is fully supported from XP to 10 (maybe even older versions)

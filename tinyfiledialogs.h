@@ -68,7 +68,6 @@ on Windows Mac Linux Bsd Solaris Minix Raspbian
 using Gnome Kde Enlightenment Mate Cinnamon Budgie Unity Lxde Lxqt Xfce
 WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm Cwm
 
-
 Bindings for LUA and C# dll, Haskell, Fortran
 Included in LWJGL(java), Rust, Allegrobasic
 
@@ -286,11 +285,11 @@ char * tinyfd_arrayDialog(
 #endif /* TINYFILEDIALOGS_H */
 
 /*
-- This is not for android nor ios.
+- This is not for ios nor android (it works in termux though).
 - The code is pure C, perfectly compatible with C++.
 - the windows only wchar_t (utf-16) prototypes are in the header file
 - windows is fully supported from XP to 10 (maybe even older versions)
-- C# & LUA via dll, see example files
+- C# & LUA via dll, see files in the folder EXTRAS
 - OSX supported from 10.4 to latest (maybe even older versions)
 - Avoid using " and ' in titles and messages.
 - There's one file filter only, it may contain several patterns.
@@ -299,8 +298,9 @@ char * tinyfd_arrayDialog(
 - char const * filterPatterns[3] = { "*.obj" , "*.stl" , "*.dxf" } ;
 - On windows char defaults to UTF-8, set tinyfd_winUtf8=0 to use MBCS
 - On windows link against Comdlg32.lib and Ole32.lib
-  This linking is not compulsary for console mode (see above).
-- On unix: it tries command line calls, so no such need.
+  (on windows the no linking claim is a lie)
+  This linking is not compulsary for console mode (see header file).
+- On unix: it tries command line calls, so no such need (NO LINKING).
 - On unix you need one of the following:
   applescript, kdialog, zenity, matedialog, shellementary, qarma,
   python (2 or 3)/tkinter/python-dbus (optional), Xdialog
@@ -317,18 +317,16 @@ char * tinyfd_arrayDialog(
   make sure it ends with a separator.
 - tinyfd_forceConsole=1; at run time, forces dialogs into console mode.
 - On windows, console mode only make sense for console applications.
-- On windows, Console mode is not implemented for wchar_T UTF-16, but it is for MBCS.
+- On windows, Console mode is not implemented for wchar_T UTF-16.
 - Mutiple selects are not allowed in console mode.
-- The enhanced console mode uses the package "dialog" based on "curses".
-- It is difficult to use (for advanced users only).
-- It must be present on the target machine for tinyfiledialogs to call it.
-- It is already installed on most unix systems.
-- On osx, the package "dialog" can be installed via
+- The package dialog must be installed to run in enhanced console mode.
+  It is already installed on most unix systems.
+- On osx, the package dialog can be installed via
   http://macappstore.org/dialog or http://macports.org
-- On windows, for enhanced console mode (but only ascii mode),
+- On windows, for enhanced console mode,
   dialog.exe should be copied somewhere on your executable path.
   It can be found at the bottom of the following page:
   http://andrear.altervista.org/home/cdialog.php
-- If "dialog" is missing, it will switch to basic console input.
+- If dialog is missing, it will switch to basic console input.
 - You can query the type of dialog that will be use (pass "tinyfd_query" as aTitle)
 */

@@ -25,4 +25,4 @@
 gcc -c tinyfiledialogs.c tinyopen.c
 gfortran -c ftinyopen.F90 main2.F90
 gfortran -o gopen main2.o ftinyopen.o tinyopen.o tinyfiledialogs.o
-
+(on windows, to link with the windows libraries, you must add: -lcomdlg32 -lole32)

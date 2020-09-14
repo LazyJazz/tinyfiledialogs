@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.6.3 [May 11, 2020] zlib licence
+ /         \ tinyfiledialogs.c v3.6.4 [Sep 14, 2020] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -140,7 +140,7 @@ misrepresented as being the original software.
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char const tinyfd_version[8] = "3.6.3";
+char const tinyfd_version[8] = "3.6.4";
 
 /******************************************************************************************************/
 /**************************************** UTF-8 on Windows ********************************************/
@@ -783,7 +783,8 @@ static void RGB2HexW(
                 {
                         /* wprintf(L"aoResultHexRGB %s\n", aoResultHexRGB); */
                         swprintf(aoResultHexRGB,
-#if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
+
+#if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
                                 8,
 #endif
 
@@ -1262,7 +1263,7 @@ wchar_t * tinyfd_inputBoxW(
         if (aDefaultInput)
         {
 			swprintf(lDialogString,
-#if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
+#if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
                 lDialogStringLen,
 #endif
                 L"%ls\\AppData\\Local\\Temp\\tinyfd.vbs", _wgetenv(L"USERPROFILE"));
@@ -1270,7 +1271,7 @@ wchar_t * tinyfd_inputBoxW(
         else
         {
                 swprintf(lDialogString,
-#if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
+#if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
                         lDialogStringLen,
 #endif
                         L"%ls\\AppData\\Local\\Temp\\tinyfd.hta", _wgetenv(L"USERPROFILE"));
@@ -1405,7 +1406,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
         if (aDefaultInput)
         {
                 swprintf(lDialogString,
-#if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
+#if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
                         lDialogStringLen,
 #endif
                         L"%ls\\AppData\\Local\\Temp\\tinyfd.txt",_wgetenv(L"USERPROFILE"));
@@ -1434,7 +1435,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
         hiddenConsoleW(lDialogString, aTitle, 1);
 
         swprintf(lDialogString,
-#if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
+#if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
                 lDialogStringLen,
 #endif
 				L"%ls\\AppData\\Local\\Temp\\tinyfd.txt", _wgetenv(L"USERPROFILE"));
@@ -1464,7 +1465,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
 		if (aDefaultInput)
 		{
 			swprintf(lDialogString,
-#if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
+#if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
                         lDialogStringLen,
 #endif
                         L"%ls\\AppData\\Local\\Temp\\tinyfd.vbs",
@@ -1473,7 +1474,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
         else
         {
                 swprintf(lDialogString,
-#if !defined(__BORLANDC__) && !defined(__TINYC__) && ( !defined(__GNUC__) || (__GNUC__) >= 5 )
+#if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
                         lDialogStringLen,
 #endif
                         L"%ls\\AppData\\Local\\Temp\\tinyfd.hta",

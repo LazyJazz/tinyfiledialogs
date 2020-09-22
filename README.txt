@@ -20,16 +20,19 @@ Bindings for LUA and C# dll, Haskell, Fortran. Included in LWJGL(java), Rust, Al
  |                                                                  |
  | my email address at the top of the header file tinyfiledialogs.h |
  |__________________________________________________________________|
-  _________________________________________________________________________________
- |                                                                                 |
- | the windows only wchar_t UTF-16 prototypes are at the bottom of the header file |
- |_________________________________________________________________________________|
   _________________________________________________________
  |                                                         |
  | on windows: - since v3.6 char is UTF-8 by default       |
  |             - if you want MBCS set tinyfd_winUtf8 to 0  |
  |             - functions like fopen expect MBCS          |
  |_________________________________________________________|
+
+ ____________________________________________________________________________________
+|  ________________________________________________________________________________  |
+| |                                                                                | |
+| | wchar_t UTF-16 (windows only) prototypes are at the bottom of the header file  | |
+| |________________________________________________________________________________| |
+|____________________________________________________________________________________|
 
 void tinyfd_beep() ;
 

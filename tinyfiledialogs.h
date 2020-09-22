@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.h v3.6.4 [Sep 14, 2020] zlib licence
+ /         \ tinyfiledialogs.h v3.6.5 [Sep 22, 2020] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -264,17 +264,6 @@ wchar_t * tinyfd_colorChooserW(
 		/* aDefaultRGB is used only if aDefaultHexRGB is NULL */
 		/* aDefaultRGB and aoResultRGB can be the same array */
 		/* returns NULL on cancel */
-
-#else /*_WIN32*/
-
-/* unix zenity only */
-char * tinyfd_arrayDialog(
-	char const * aTitle , /* NULL or "" */
-	int aNumOfColumns , /* 2 */
-	char const * const * aColumns, /* {"Column 1","Column 2"} */
-	int aNumOfRows, /* 2 */
-	char const * const * aCells);
-		/* {"Row1 Col1","Row1 Col2","Row2 Col1","Row2 Col2"} */
 
 #endif /*_WIN32 */
 

@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.6.4 [Sep 14, 2020] zlib licence
+ /         \ tinyfiledialogs.c v3.6.5 [Sep 22, 2020] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -140,7 +140,7 @@ misrepresented as being the original software.
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char const tinyfd_version[8] = "3.6.4";
+char const tinyfd_version[8] = "3.6.5";
 
 /******************************************************************************************************/
 /**************************************** UTF-8 on Windows ********************************************/
@@ -358,7 +358,7 @@ static void RGB2Hex( unsigned char const aRGB [3] ,
 }
 
 
-static void replaceSubStr( char const * aSource ,
+void replaceSubStr( char const * aSource ,
                                                    char const * aOldSubStr ,
                                                    char const * aNewSubStr ,
                                                    char * aoDestination )
@@ -3640,7 +3640,7 @@ static char gPython2Name[16];
 static char gPython3Name[16];
 static char gPythonName[16];
 
-static int isDarwin(void)
+int isDarwin(void)
 {
         static int lsIsDarwin = -1 ;
         struct utsname lUtsname ;
@@ -4161,7 +4161,7 @@ static int osascriptPresent(void)
 }
 
 
-static int qarmaPresent(void)
+int qarmaPresent(void)
 {
         static int lQarmaPresent = -1 ;
         if ( lQarmaPresent < 0 )
@@ -4172,7 +4172,7 @@ static int qarmaPresent(void)
 }
 
 
-static int matedialogPresent(void)
+int matedialogPresent(void)
 {
         static int lMatedialogPresent = -1 ;
         if ( lMatedialogPresent < 0 )
@@ -4183,7 +4183,7 @@ static int matedialogPresent(void)
 }
 
 
-static int shellementaryPresent(void)
+int shellementaryPresent(void)
 {
         static int lShellementaryPresent = -1 ;
         if ( lShellementaryPresent < 0 )
@@ -4194,7 +4194,7 @@ static int shellementaryPresent(void)
 }
 
 
-static int zenityPresent(void)
+int zenityPresent(void)
 {
         static int lZenityPresent = -1 ;
         if ( lZenityPresent < 0 )
@@ -4205,7 +4205,7 @@ static int zenityPresent(void)
 }
 
 
-static int zenity3Present(void)
+int zenity3Present(void)
 {
         static int lZenity3Present = -1 ;
         char lBuff [MAX_PATH_OR_CMD] ;
@@ -4246,7 +4246,7 @@ static int zenity3Present(void)
 }
 
 
-static int kdialogPresent(void)
+int kdialogPresent(void)
 {
 	static int lKdialogPresent = -1 ;
 	char lBuff [MAX_PATH_OR_CMD] ;
@@ -7712,109 +7712,6 @@ frontmost of process \\\"Python\\\" to true' ''');");
 	return lDefaultHexRGB ;
 }
 
-
-/* not cross platform - zenity only */
-/* contributed by Attila Dusnoki */
-char * tinyfd_arrayDialog(
-        char const * aTitle , /* "" */
-        int aNumOfColumns , /* 2 */
-        char const * const * aColumns , /* {"Column 1","Column 2"} */
-        int aNumOfRows , /* 2 */
-        char const * const * aCells )
-                /* {"Row1 Col1","Row1 Col2","Row2 Col1","Row2 Col2"} */
-{
-        static char lBuff [MAX_PATH_OR_CMD] ;
-        char lDialogString [MAX_PATH_OR_CMD] ;
-        FILE * lIn ;
-        int i ;
-
-        lBuff[0]='\0';
-
-        if ( zenityPresent() || matedialogPresent() || shellementaryPresent() || qarmaPresent() )
-        {
-                if ( zenityPresent() )
-                {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char *)1;}
-                        strcpy( lDialogString , "zenity" ) ;
-                        if ( (zenity3Present() >= 4) && !getenv("SSH_TTY") )
-                        {
-                                strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
-                }
-                else if ( matedialogPresent() )
-                {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char *)1;}
-                        strcpy( lDialogString , "matedialog" ) ;
-                }
-                else if ( shellementaryPresent() )
-                {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shellementary");return (char *)1;}
-                        strcpy( lDialogString , "shellementary" ) ;
-                }
-                else
-                {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char *)1;}
-                        strcpy( lDialogString , "qarma" ) ;
-                        if ( !getenv("SSH_TTY") )
-                        {
-                                strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
-                }
-                strcat( lDialogString , " --list --print-column=ALL" ) ;
-
-                if ( aTitle && strlen(aTitle) )
-                {
-                        strcat(lDialogString, " --title=\"") ;
-                        strcat(lDialogString, aTitle) ;
-                        strcat(lDialogString, "\"") ;
-                }
-
-                if ( aColumns && (aNumOfColumns > 0) )
-                {
-                        for ( i = 0 ; i < aNumOfColumns ; i ++ )
-                        {
-                                strcat( lDialogString , " --column=\"" ) ;
-                                strcat( lDialogString , aColumns [i] ) ;
-                                strcat( lDialogString , "\"" ) ;
-                        }
-                }
-
-                if ( aCells && (aNumOfRows > 0) )
-                {
-                        strcat( lDialogString , " " ) ;
-                        for ( i = 0 ; i < aNumOfRows*aNumOfColumns ; i ++ )
-                        {
-                                strcat( lDialogString , "\"" ) ;
-                                strcat( lDialogString , aCells [i] ) ;
-                                strcat( lDialogString , "\" " ) ;
-                        }
-                }
-        }
-        else
-        {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"");return (char *)0;}
-                return NULL ;
-        }
-
-        if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
-        if ( ! ( lIn = popen( lDialogString , "r" ) ) )
-        {
-                return NULL ;
-        }
-        while ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
-        {}
-        pclose( lIn ) ;
-        if ( lBuff[strlen( lBuff ) -1] == '\n' )
-        {
-                lBuff[strlen( lBuff ) -1] = '\0' ;
-        }
-        /* printf( "lBuff: %s\n" , lBuff ) ; */
-        if ( ! strlen( lBuff ) )
-        {
-                return NULL ;
-        }
-        return lBuff ;
-}
 #endif /* _WIN32 */
 
 

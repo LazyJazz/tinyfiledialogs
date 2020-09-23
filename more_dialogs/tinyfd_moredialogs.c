@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs v3.6.5 [Sep 22, 2020] zlib licence
+ /         \ tinyfiledialogs v3.6.6 [Sep 23, 2020] zlib licence
  |tiny file| 
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -28,16 +28,16 @@
 #include "tinyfiledialogs.h"
 
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
-void replaceSubStr( char const * aSource ,char const * aOldSubStr ,
-				   char const * aNewSubStr ,char * aoDestination );
+void tfd_replaceSubStr( char const * aSource ,char const * aOldSubStr ,
+                        char const * aNewSubStr ,char * aoDestination );
 #ifndef _WIN32
-int isDarwin(void);
-int kdialogPresent(void);
-int matedialogPresent(void);
-int qarmaPresent(void);
-int shellementaryPresent(void);
-int zenityPresent(void);
-int zenity3Present(void);
+int tfd_isDarwin(void);
+int tfd_kdialogPresent(void);
+int tfd_matedialogPresent(void);
+int tfd_qarmaPresent(void);
+int tfd_shellementaryPresent(void);
+int tfd_zenityPresent(void);
+int tfd_zenity3Present(void);
 #endif /*_WIN32 */
 
 
@@ -59,23 +59,23 @@ char * tinyfd_arrayDialog(
 
         lBuff[0]='\0';
 
-        if ( zenityPresent() || matedialogPresent() || shellementaryPresent() || qarmaPresent() )
+		if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent() || tfd_qarmaPresent() )
         {
-                if ( zenityPresent() )
+			if ( tfd_zenityPresent() )
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char *)1;}
                         strcpy( lDialogString , "zenity" ) ;
-                        if ( (zenity3Present() >= 4) && !getenv("SSH_TTY") )
+                        if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") )
                         {
                                 strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
                         }
                 }
-                else if ( matedialogPresent() )
+			else if ( tfd_matedialogPresent() )
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char *)1;}
                         strcpy( lDialogString , "matedialog" ) ;
                 }
-                else if ( shellementaryPresent() )
+			else if ( tfd_shellementaryPresent() )
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shellementary");return (char *)1;}
                         strcpy( lDialogString , "shellementary" ) ;
@@ -162,7 +162,7 @@ char *tinyfd_checklistDialog(
         FILE *lIn;
         char *target = lDialogString;
         lBuff[0] = '\0';
-        if (isDarwin())
+        if (tfd_isDarwin())
         {
                 target += sprintf(target, "osascript -e \'set Choices to {");
                 for (int i = 0; i < aNumOfOptions; i++)
@@ -175,7 +175,7 @@ char *tinyfd_checklistDialog(
                 target += sprintf(target, "}\' -e \'set Choice to choose from list Choices with prompt \"%s\" with multiple selections allowed\' -e \'Choice\'", aTitle);
         }
 
-        else if (kdialogPresent())
+		else if (tfd_kdialogPresent())
         {
                 target += sprintf(target, "kdialog --checklist \'%s\' ", aTitle);
                 for (int i = 0; i < aNumOfOptions; i++)
@@ -183,7 +183,7 @@ char *tinyfd_checklistDialog(
                         target += sprintf(target, "\'%s\' \'%s\' OFF ", aOptions[i], aOptions[i]);
                 }
         }
-        else if (zenityPresent())
+		else if (tfd_zenityPresent())
         {
                 target += sprintf(target, "zenity --list --column= --column= --checklist --title=\'%s\' ", aTitle);
                 for (int i = 0; i < aNumOfOptions; i++)
@@ -210,15 +210,15 @@ char *tinyfd_checklistDialog(
         {
                 return NULL;
         }
-        if (kdialogPresent())
+		if (tfd_kdialogPresent())
         {
-                replaceSubStr(lBuff, "\" \"", "|", dest);
+                tfd_replaceSubStr(lBuff, "\" \"", "|", dest);
                 dest[strlen(dest) - 2] = '\0';
                 return dest + 1;
         }
-        if (isDarwin())
+		if (tfd_isDarwin())
         {
-                replaceSubStr(lBuff, "\", \"", "|", dest);
+                tfd_replaceSubStr(lBuff, "\", \"", "|", dest);
                 dest[strlen(dest) - 2] = '\0';
                 dest[strlen(dest) - 3] = '\0';
                 return dest + 2;

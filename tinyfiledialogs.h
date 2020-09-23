@@ -1,23 +1,28 @@
 /*_________
- /         \ tinyfiledialogs.h v3.6.5 [Sep 22, 2020] zlib licence
+ /         \ tinyfiledialogs.h v3.6.6 [Sep 23, 2020] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|     git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
-              ____________________________________________
-             |                                            |
-             |   email: tinyfiledialogs at ysengrin.com   |
-             |____________________________________________|
-  _________________________________________________________________________________
- |                                                                                 |
- | the windows only wchar_t UTF-16 functions are at the bottom of this header file |
- |_________________________________________________________________________________|
-  _________________________________________________________
- |                                                         |
- | on windows: - since v3.6 char is UTF-8 by default       |
- |             - if you want MBCS set tinyfd_winUtf8 to 0  |
- |             - functions like fopen expect MBCS          |
- |_________________________________________________________|
+ ____________________________________________
+|                                            |
+|   email: tinyfiledialogs at ysengrin.com   |
+|____________________________________________|
+ ________________________________________________________________________________
+|  ____________________________________________________________________________  |
+| |                                                                            | |
+| | on windows:                                                                | |
+| |  - for UTF-16, use the wchar_t functions at the bottom of the header file  | |
+| |  - _wfopen() requires wchar_t                                              | |
+| |                                                                            | |
+| |  - in tinyfiledialogs, char is UTF-8 by default (since v3.6)               | |
+| |  - but fopen() expect MBCS (not UTF-8)                                     | |
+| |  - if you want char to be MBCS: set tinyfd_winUtf8 to 0                    | |
+| |                                                                            | |
+| |  - alternatively, tinyfiledialogs provides                                 | |
+| |                        functions to convert between UTF-8, UTF-16 and MBCS | |
+| |____________________________________________________________________________| |
+|________________________________________________________________________________|
 
 If you like tinyfiledialogs, please upvote my stackoverflow answer
 https://stackoverflow.com/a/47651444
@@ -109,9 +114,13 @@ extern int tinyfd_winUtf8; /* on windows char strings can be 1:UTF-8(default) or
 
 /* Here are some functions to help you convert between UTF-16 UTF-8 MBSC */
 char * tinyfd_utf8toMbcs(char const * aUtf8string);
+char * tinyfd_utf16toMbcs(wchar_t const * aUtf16string);
+wchar_t * tinyfd_mbcsTo16(char const * aMbcsString);
+char * tinyfd_mbcsTo8(char const * aMbcsString);
 wchar_t * tinyfd_utf8to16(char const * aUtf8string);
 char * tinyfd_utf16to8(wchar_t const * aUtf16string);
-void tinyfd_setWinUtf8(int aIsUtf8); /* made to be used from C# to set the global variable tinyfd_winUtf8 to 1 or 0 */
+
+void tinyfd_setWinUtf8(int aIsUtf8); /* only to be used from C# to set the global variable tinyfd_winUtf8 to 1 or 0 */
 #endif
 /******************************************************************************************************/
 /******************************************************************************************************/
@@ -203,7 +212,7 @@ char * tinyfd_colorChooser(
 		/* returns NULL on cancel */
 
 
-/************ NOT CROSS PLATFORM SECTION STARTS HERE ************************/
+/************ WINDOWS ONLY SECTION ************************/
 #ifdef _WIN32
 
 /* windows only - utf-16 version */
@@ -276,7 +285,6 @@ wchar_t * tinyfd_colorChooserW(
 /*
 - This is not for ios nor android (it works in termux though).
 - The code is pure C, perfectly compatible with C++.
-- the windows only wchar_t (utf-16) prototypes are in the header file
 - windows is fully supported from XP to 10 (maybe even older versions)
 - C# & LUA via dll, see files in the folder EXTRAS
 - OSX supported from 10.4 to latest (maybe even older versions)

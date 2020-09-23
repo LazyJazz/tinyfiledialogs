@@ -1,4 +1,4 @@
-tiny file dialogs ( cross-platform C C++ ) v3.6.5 [Sep 22, 2020] zlib licence
+tiny file dialogs ( cross-platform C C++ ) v3.6.6 [Sep 23, 2020] zlib licence
  _________
 /         \   Beep Popup InputBox PasswordBox MessageBox ColorPicker
 |tiny file|   OpenFileDialog SaveFileDialog SelectFolderDialog
@@ -16,23 +16,25 @@ Bindings for LUA and C# dll, Haskell, Fortran. Included in LWJGL(java), Rust, Al
 
                    http://tinyfiledialogs.sourceforge.net
          git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
-  __________________________________________________________________
- |                                                                  |
- | my email address at the top of the header file tinyfiledialogs.h |
- |__________________________________________________________________|
-  _________________________________________________________
- |                                                         |
- | on windows: - since v3.6 char is UTF-8 by default       |
- |             - if you want MBCS set tinyfd_winUtf8 to 0  |
- |             - functions like fopen expect MBCS          |
- |_________________________________________________________|
-
- ___________________________________________________________________________________
-|  _______________________________________________________________________________  |
-| |                                                                               | |
-| | wchar_t UTF-16 (windows only) prototypes are at the bottom of the header file | |
-| |_______________________________________________________________________________| |
-|___________________________________________________________________________________|
+ __________________________________________________________________
+|                                                                  |
+| my email address at the top of the header file tinyfiledialogs.h |
+|__________________________________________________________________|
+ ________________________________________________________________________________
+|  ____________________________________________________________________________  |
+| |                                                                            | |
+| | on windows:                                                                | |
+| |  - for UTF-16, use the wchar_t functions at the bottom of the header file  | |
+| |  - _wfopen() requires wchar_t                                              | |
+| |                                                                            | |
+| |  - in tinyfiledialogs, char is UTF-8 by default (since v3.6)               | |
+| |  - but fopen() expect MBCS (not UTF-8)                                     | |
+| |  - if you want char to be MBCS: set tinyfd_winUtf8 to 0                    | |
+| |                                                                            | |
+| |  - alternatively, tinyfiledialogs provides                                 | |
+| |                        functions to convert between UTF-8, UTF-16 and MBCS | |
+| |____________________________________________________________________________| |
+|________________________________________________________________________________|
 
 void tinyfd_beep() ;
 
@@ -88,11 +90,15 @@ char const * tinyfd_colorChooser (
         // aDefaultRGB is used only if aDefaultHexRGB is NULL
         // aDefaultRGB and aoResultRGB can be the same array
         // returns NULL on cancel
-
+ ___________________________________________________________________________________
+|  _______________________________________________________________________________  |
+| |                                                                               | |
+| | wchar_t UTF-16 (windows only) prototypes are at the bottom of the header file | |
+| |_______________________________________________________________________________| |
+|___________________________________________________________________________________|
 
 - This is not for ios nor android (it works in termux though).
 - The code is pure C, perfectly compatible with C++.
-- the windows only wchar_t (utf-16) prototypes are in the header file
 - windows is fully supported from XP to 10 (maybe even older versions)
 - C# & LUA via dll, see files in the folder EXTRAS
 - OSX supported from 10.4 to latest (maybe even older versions)
@@ -134,179 +140,12 @@ char const * tinyfd_colorChooser (
   http://andrear.altervista.org/home/cdialog.php
 - If dialog is missing, it will switch to basic console input.
 - You can query the type of dialog that will be use (pass "tinyfd_query" as aTitle)
-
-
-- Here is the Hello World:
-            if a console is missing, it will use graphic dialogs
-            if a graphical display is absent, it will use console dialogs
-
-
-hello.c
-#include <stdio.h>
-#include <string.h>
-#include "tinyfiledialogs.h"
-int main()
-{
-	char const * lTmp;
-	char const * lTheSaveFileName;
-	char const * lTheOpenFileName;
-	char const * lTheSelectFolderName;
-	char const * lTheHexColor;
-	char const * lWillBeGraphicMode;
-	unsigned char lRgbColor[3];
-	FILE * lIn;
-	char lBuffer[1024];
-	char lString[1024];
-	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
-
-	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
-
-	if (lWillBeGraphicMode)
-	{
-		strcpy(lBuffer, "graphic mode: ");
-	}
-	else
-	{
-		strcpy(lBuffer, "console mode: ");
-	}
-
-	strcat(lBuffer, tinyfd_response);
-	strcpy(lString, "v");
-	strcat(lString, tinyfd_version);
-	strcat(lString, " tinyfiledialogs");
-	tinyfd_messageBox(lString, lBuffer, "ok", "info", 0);
-
-	tinyfd_notifyPopup("the title", "the message\n\tfrom outer-space", "info");
-
-	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )
-	{
-		tinyfd_forceConsole = ! tinyfd_messageBox("Hello World",
-			"graphic dialogs [yes] / console mode [no]?",
-			"yesno", "question", 1);
-	}
-
-	lTmp = tinyfd_inputBox(
-		"a password box", "your password will be revealed", NULL);
-
-	if (!lTmp) return 1 ;
-
-	/* copy lTmp because saveDialog would overwrites
-	inputBox static buffer in basicinput mode */
-
-	strcpy(lString, lTmp);
-
-	lTheSaveFileName = tinyfd_saveFileDialog(
-		"let us save this password",
-		"passwordFile.txt",
-		2,
-		lFilterPatterns,
-		NULL);
-
-	if (! lTheSaveFileName)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"Save file name is NULL",
-			"ok",
-			"error",
-			1);
-		return 1 ;
-	}
-
-	lIn = fopen(lTheSaveFileName, "w");
-	if (!lIn)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"Can not open this file in write mode",
-			"ok",
-			"error",
-			1);
-		return 1 ;
-	}
-	fputs(lString, lIn);
-	fclose(lIn);
-
-	lTheOpenFileName = tinyfd_openFileDialog(
-		"let us read the password back",
-		"",
-		2,
-		lFilterPatterns,
-		NULL,
-		0);
-
-	if (! lTheOpenFileName)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"Open file name is NULL",
-			"ok",
-			"error",
-			1);
-		return 1 ;
-	}
-
-	lIn = fopen(lTheOpenFileName, "r");
-
-	if (!lIn)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"Can not open this file in read mode",
-			"ok",
-			"error",
-			1);
-		return(1);
-	}
-	lBuffer[0] = '\0';
-	fgets(lBuffer, sizeof(lBuffer), lIn);
-	fclose(lIn);
-
-	tinyfd_messageBox("your password is",
-			lBuffer, "ok", "info", 1);
-
-	lTheSelectFolderName = tinyfd_selectFolderDialog(
-		"let us just select a directory", NULL);
-
-	if (!lTheSelectFolderName)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"Select folder name is NULL",
-			"ok",
-			"error",
-			1);
-		return 1;
-	}
-
-	tinyfd_messageBox("The selected folder is",
-		lTheSelectFolderName, "ok", "info", 1);
-
-	lTheHexColor = tinyfd_colorChooser(
-		"choose a nice color",
-		"#FF0077",
-		lRgbColor,
-		lRgbColor);
-
-	if (!lTheHexColor)
-	{
-		tinyfd_messageBox(
-			"Error",
-			"hexcolor is NULL",
-			"ok",
-			"error",
-			1);
-		return 1;
-	}
-
-	tinyfd_messageBox("The selected hexcolor is",
-		lTheHexColor, "ok", "info", 1);
-
-	tinyfd_beep();
-
-	return 0;
-}
-
+  _________________________________________________________________
+ |                                                                 |
+ | The project provides an Hello World example:                    |
+ |   if a console is missing, it will use graphic dialogs          |
+ |   if a graphical display is absent, it will use console dialogs |
+ |_________________________________________________________________|
 
 OSX :
 $ clang -o hello.app hello.c tinyfiledialogs.c
@@ -325,9 +164,8 @@ Windows :
         -isystem C:\tcc\winapi-full-for-0.9.27\include\winapi
         -lcomdlg32 -lole32 -luser32 -lshell32
 
-	Borland C: > bcc32c -o hello.exe hello.c tinyfiledialogs.c
-
-	OpenWatcom v2: create a character-mode executable project.
+    Borland C: > bcc32c -o hello.exe hello.c tinyfiledialogs.c
+    OpenWatcom v2: create a character-mode executable project.
 
     VisualStudio :
       Create a console application project,

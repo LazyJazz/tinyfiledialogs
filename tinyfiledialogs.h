@@ -16,7 +16,7 @@
 | |  - _wfopen() requires wchar_t                                              | |
 | |                                                                            | |
 | |  - in tinyfiledialogs, char is UTF-8 by default (since v3.6)               | |
-| |  - but fopen() expect MBCS (not UTF-8)                                     | |
+| |  - but fopen() expects MBCS (not UTF-8)                                    | |
 | |  - if you want char to be MBCS: set tinyfd_winUtf8 to 0                    | |
 | |                                                                            | |
 | |  - alternatively, tinyfiledialogs provides                                 | |

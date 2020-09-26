@@ -1,4 +1,4 @@
-tiny file dialogs ( cross-platform C C++ ) v3.6.6 [Sep 23, 2020] zlib licence
+tiny file dialogs ( cross-platform C C++ ) v3.7.0 [Sep 26, 2020] zlib licence
  _________
 /         \   Beep Popup InputBox PasswordBox MessageBox ColorPicker
 |tiny file|   OpenFileDialog SaveFileDialog SelectFolderDialog
@@ -128,8 +128,8 @@ char const * tinyfd_colorChooser (
   make sure it ends with a separator.
 - tinyfd_forceConsole=1; at run time, forces dialogs into console mode.
 - On windows, console mode only make sense for console applications.
-- On windows, Console mode is not implemented for wchar_T UTF-16.
-- Mutiple selects are not allowed in console mode.
+- On windows, console mode is not implemented for wchar_T UTF-16.
+- Mutiple selects are not possible in console mode.
 - The package dialog must be installed to run in enhanced console mode.
   It is already installed on most unix systems.
 - On osx, the package dialog can be installed via

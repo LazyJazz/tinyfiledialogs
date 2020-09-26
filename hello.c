@@ -1,5 +1,5 @@
 /*_________
- /         \ hello.c v3.6.4 [Sep 14, 2020] zlib licence
+ /         \ hello.c v3.7.0 [Sep 26, 2020] zlib licence
  |tiny file| Hello World file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -120,12 +120,12 @@ int main( int argc , char * argv[] )
 	char lBuffer[1024];
 	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
-	/*tinyfd_forceConsole = 1;*/ /* default is 0 */
-	tinyfd_verbose = argc - 1;
-	tinyfd_silent = 1;
+	tinyfd_forceConsole = 0; /* default is 0 */
+	tinyfd_verbose = argc - 1;  /* default is 0 */
+	tinyfd_silent = 1;  /* default is 1 */
 
 #ifdef _WIN32
-	/* tinyfd_winUtf8 = 1; */
+	 tinyfd_winUtf8 = 1; /* default is 1 */
 /* On windows, you decide if char holds 1:UTF-8(default) or 0:MBCS */
 /* Windows is not ready to handle UTF-8 as many char functions like fopen() expect MBCS filenames.*/	   
 /* This hello.c file has been prepared, on windows, to convert the filenames from UTF-8 to UTF-16

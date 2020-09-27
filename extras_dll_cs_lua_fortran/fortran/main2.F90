@@ -21,6 +21,7 @@
 ! 3. This notice may not be removed or altered from any source distribution.
 
 ! this fortran code for tinyfiledialogs was contributed by Bo Sundman
+! https://github.com/sundmanbo/opencalphad
 
 program test3
   use iso_c_binding

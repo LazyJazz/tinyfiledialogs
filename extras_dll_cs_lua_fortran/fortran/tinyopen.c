@@ -20,7 +20,8 @@
  misrepresented as being the original software.
  3. This notice may not be removed or altered from any source distribution.
 
- this fortran code for tinyfiledialogs was contributed by Bo Sundman */
+ this fortran code for tinyfiledialogs was contributed by Bo Sundman
+ https://github.com/sundmanbo/opencalphad     */
 
 
 /* dummy C routine that returns a legal filename */

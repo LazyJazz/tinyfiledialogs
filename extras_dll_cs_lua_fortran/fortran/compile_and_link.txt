@@ -21,6 +21,7 @@
 # 3. This notice may not be removed or altered from any source distribution.
 
 # this fortran code for tinyfiledialogs was contributed by Bo Sundman
+# https://github.com/sundmanbo/opencalphad
 
 gcc -c tinyfiledialogs.c tinyopen.c
 gfortran -c ftinyopen.F90 main2.F90

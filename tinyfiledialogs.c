@@ -112,9 +112,9 @@ misrepresented as being the original software.
  #ifndef _WIN32_WINNT
   #define _WIN32_WINNT 0x0500
  #endif
-  #include <windows.h>
-  #include <commdlg.h>
-  #include <shlobj.h>
+ #include <windows.h>
+ #include <commdlg.h>
+ #include <shlobj.h>
  #include <conio.h>
  #include <direct.h>
  #define TINYFD_NOCCSUNICODE
@@ -1619,20 +1619,6 @@ wchar_t * tinyfd_openFileDialogW(
         }
 		return lBuff;
 }
-
-
-BOOL CALLBACK BrowseCallbackProc_enum(HWND hWndChild, LPARAM lParam)
-{
-	char buf[255];
-	GetClassNameA(hWndChild, buf, sizeof(buf));
-	if (strcmp(buf, "SysTreeView32") == 0) {
-		HTREEITEM hNode = TreeView_GetSelection(hWndChild);
-		TreeView_EnsureVisible(hWndChild, hNode);
-		return FALSE;
-	}
-	return TRUE;
-}
-
 
 
 BOOL CALLBACK BrowseCallbackProcW_enum(HWND hWndChild, LPARAM lParam)

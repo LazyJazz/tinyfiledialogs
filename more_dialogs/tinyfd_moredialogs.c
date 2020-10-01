@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs v3.6.6 [Sep 23, 2020] zlib licence
+ /         \ tinyfiledialogs v3.7.1 [Oct 1, 2020] zlib licence
  |tiny file| 
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -66,7 +66,7 @@ char * tinyfd_arrayDialog(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char *)1;}
                         strcpy( lDialogString , "zenity" ) ;
-                        if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") )
+						if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
                         {
                                 strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
                         }
@@ -85,7 +85,7 @@ char * tinyfd_arrayDialog(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char *)1;}
                         strcpy( lDialogString , "qarma" ) ;
-                        if ( !getenv("SSH_TTY") )
+						if ( !getenv("SSH_TTY") && tfd_xpropPresent() )
                         {
                                 strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
                         }

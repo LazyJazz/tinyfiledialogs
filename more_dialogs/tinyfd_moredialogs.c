@@ -36,6 +36,7 @@ int tfd_kdialogPresent(void);
 int tfd_matedialogPresent(void);
 int tfd_qarmaPresent(void);
 int tfd_shellementaryPresent(void);
+int tfd_xpropPresent(void);
 int tfd_zenityPresent(void);
 int tfd_zenity3Present(void);
 #endif /*_WIN32 */

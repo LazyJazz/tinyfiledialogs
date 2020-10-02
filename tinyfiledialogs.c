@@ -3880,7 +3880,7 @@ static void sigHandler(int signum)
         {
                 pclose( lIn ) ;
         }
-		if (tinyfd_verbose) printf("Caught signal %d\n", signum);
+		if (tinyfd_verbose) printf("tinyfiledialogs aught signal %d\n", signum);
 }
 
 void tinyfd_beep(void)

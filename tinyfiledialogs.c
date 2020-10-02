@@ -3873,13 +3873,14 @@ notify=dbus.Interface(notif,'org.freedesktop.Notifications');\nexcept:\n\tprint(
 }
 
 
-static void sigHandler(int sig)
+static void sigHandler(int signum)
 {
         FILE * lIn ;
         if ( ( lIn = popen( "pactl unload-module module-sine" , "r" ) ) )
         {
                 pclose( lIn ) ;
         }
+		if (tinyfd_verbose) printf("Caught signal %d\n", signum);
 }
 
 void tinyfd_beep(void)

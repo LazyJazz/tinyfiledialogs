@@ -96,7 +96,9 @@ misrepresented as being the original software.
 
 
 #ifndef __sun
+#ifndef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE 2 /* to accept POSIX 2 in old ANSI C standards */
+#endif
 #endif
 
 #include <stdio.h>

@@ -5694,10 +5694,11 @@ char * tinyfd_saveFileDialog(
                 if ( aNumOfFilterPatterns > 0 )
                 {
                         strcat(lDialogString , " \"" ) ;
-                        for ( i = 0 ; i < aNumOfFilterPatterns ; i ++ )
+						strcat( lDialogString , aFilterPatterns [0] ) ;
+                        for ( i = 1 ; i < aNumOfFilterPatterns ; i ++ )
                         {
-                                strcat( lDialogString , aFilterPatterns [i] ) ;
-                                strcat( lDialogString , " " ) ;
+							strcat( lDialogString , " " ) ;
+							strcat( lDialogString , aFilterPatterns [i] ) ;
                         }
                         if ( aSingleFilterDescription && strlen(aSingleFilterDescription) )
                         {
@@ -5763,12 +5764,12 @@ char * tinyfd_saveFileDialog(
                         if ( aSingleFilterDescription && strlen(aSingleFilterDescription) )
                         {
                                 strcat( lDialogString , aSingleFilterDescription ) ;
-                                strcat( lDialogString , " | " ) ;
+                                strcat( lDialogString , " |" ) ;
                         }
                         for ( i = 0 ; i < aNumOfFilterPatterns ; i ++ )
                         {
-                                strcat( lDialogString , aFilterPatterns [i] ) ;
-                                strcat( lDialogString , " " ) ;
+							strcat( lDialogString , " " ) ;
+							strcat( lDialogString , aFilterPatterns [i] ) ;
                         }
                         strcat( lDialogString , "' --file-filter='All files | *'" ) ;
                 }
@@ -6164,10 +6165,11 @@ char * tinyfd_openFileDialog(
                 if ( aNumOfFilterPatterns > 0 )
                 {
                         strcat(lDialogString , " \"" ) ;
-                        for ( i = 0 ; i < aNumOfFilterPatterns ; i ++ )
+						strcat( lDialogString , aFilterPatterns [0] ) ;
+                        for ( i = 1 ; i < aNumOfFilterPatterns ; i ++ )
                         {
-                                strcat( lDialogString , aFilterPatterns [i] ) ;
-                                strcat( lDialogString , " " ) ;
+							strcat( lDialogString , " " ) ;
+							strcat( lDialogString , aFilterPatterns [i] ) ;
                         }
                         if ( aSingleFilterDescription && strlen(aSingleFilterDescription) )
                         {
@@ -6241,12 +6243,12 @@ char * tinyfd_openFileDialog(
                         if ( aSingleFilterDescription && strlen(aSingleFilterDescription) )
                         {
                                 strcat( lDialogString , aSingleFilterDescription ) ;
-                                strcat( lDialogString , " | " ) ;
+                                strcat( lDialogString , " |" ) ;
                         }
                         for ( i = 0 ; i < aNumOfFilterPatterns ; i ++ )
                         {
-                                strcat( lDialogString , aFilterPatterns [i] ) ;
-                                strcat( lDialogString , " " ) ;
+							strcat( lDialogString , " " ) ;
+							strcat( lDialogString , aFilterPatterns [i] ) ;
                         }
                         strcat( lDialogString , "' --file-filter='All files | *'" ) ;
                 }

@@ -732,22 +732,24 @@ static void RGB2HexW(
         unsigned char const aRGB[3],
         wchar_t aoResultHexRGB[8])
 {
+
+#if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__clang__)
+	wchar_t const * const lPrintFormat = L"#%02hhx%02hhx%02hhx";
+#else
+	wchar_t const * const lPrintFormat = L"#%02hx%02hx%02hx";
+#endif
+
         if (aoResultHexRGB)
         {
                 if (aRGB)
                 {
                         /* wprintf(L"aoResultHexRGB %s\n", aoResultHexRGB); */
-                        swprintf(aoResultHexRGB,
-
 #if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
-                                8,
+					swprintf(aoResultHexRGB, 8, lPrintFormat, aRGB[0], aRGB[1], aRGB[2]);
+#else
+					swprintf(aoResultHexRGB, lPrintFormat, aRGB[0], aRGB[1], aRGB[2]);
 #endif
 
-#if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__clang__)
-								L"#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
-#else
-								L"#%02hx%02hx%02hx", aRGB[0], aRGB[1], aRGB[2]);
-#endif
                 }
                 else
                 {

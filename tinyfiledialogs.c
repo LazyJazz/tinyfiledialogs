@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.7.1 [Oct 1, 2020] zlib licence
+ /         \ tinyfiledialogs.c v3.7.2 [Oct 4, 2020] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -140,7 +140,7 @@ misrepresented as being the original software.
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char const tinyfd_version[8] = "3.7.1";
+char const tinyfd_version[8] = "3.7.2";
 
 /******************************************************************************************************/
 /**************************************** UTF-8 on Windows ********************************************/
@@ -164,6 +164,11 @@ int tinyfd_forceConsole = 0 ; /* 0 (default) or 1 */
 1: forces all dialogs into console mode even when the X server is present,
   if the package dialog (and a console is present) or dialog.exe is installed.
   on windows it only make sense for console applications */
+
+int tinyfd_assumeGraphicDisplay = 0; /* 0 (default) or 1  */
+/* some systems don't set the environment variable DISPLAY even when a graphic display is present.
+set this to 1 to tell tinyfiledialogs to assume the existence of a graphic display */
+
 
 char tinyfd_response[1024];
 /* if you pass "tinyfd_query" as aTitle,
@@ -220,11 +225,19 @@ char const tinyfd_needs[] = "\
 #pragma warning(disable:4706) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
 #endif
 
-char * getCurDir(void)
+
+static int getenvDISPLAY(void)
+{
+	return tinyfd_assumeGraphicDisplay || getenv("DISPLAY");
+}
+
+
+static char * getCurDir(void)
 {
 	static char lCurDir [MAX_PATH_OR_CMD];
 	return getcwd(lCurDir, sizeof(lCurDir));
 }
+
 
 static char * getPathWithoutFinalSlash(
         char * aoDestination, /* make sure it is allocated, use _MAX_PATH */
@@ -2551,7 +2564,7 @@ int tinyfd_messageBox(
 	UINT lOriginalOutputCP;
 
 	if ((!tinyfd_forceConsole || !(GetConsoleWindow() || dialogPresent()))
-		&& (!getenv("SSH_CLIENT") || getenv("DISPLAY")))
+		&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
 	{
 		if (aTitle&&!strcmp(aTitle, "tinyfd_query")){ strcpy(tinyfd_response, "windows"); return 1; }
 		return messageBoxWinGui(aTitle, aMessage, aDialogType, aIconType, aDefaultButton);
@@ -2665,7 +2678,7 @@ int tinyfd_notifyPopup(
         if ((!tinyfd_forceConsole || !(
                 GetConsoleWindow() ||
                 dialogPresent()))
-                && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
+				&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return 1;}
                 return notifyWinGui(aTitle, aMessage, aIconType);
@@ -2704,7 +2717,7 @@ char * tinyfd_inputBox(
     if ((!tinyfd_forceConsole || !(
             GetConsoleWindow() ||
             dialogPresent()))
-            && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
+			&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
     {
         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char *)1;}
         lBuff[0]='\0';
@@ -2825,7 +2838,7 @@ char * tinyfd_saveFileDialog(
         lBuff[0]='\0';
 
 		if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
-          && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
+			&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
         {
             if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char *)1;}
             p = saveFileDialogWinGui(lBuff,
@@ -2884,7 +2897,7 @@ char * tinyfd_openFileDialog(
 	char * lPointerInputBox;
 
     if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
-          && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
+		&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char *)1;}
                 p = openFileDialogWinGui( aTitle, aDefaultPathAndFile, aNumOfFilterPatterns,
@@ -2935,7 +2948,7 @@ char * tinyfd_selectFolderDialog(
 	char lString[MAX_PATH_OR_CMD];
 
     if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
-          && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
+		&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char *)1;}
                 p = selectFolderDialogWinGui(lBuff, aTitle, aDefaultPath);
@@ -2986,7 +2999,7 @@ char * tinyfd_colorChooser(
 	lDefaultHexRGB[0] = '\0';
 
     if ( (!tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent()) )
-          && (!getenv("SSH_CLIENT") || getenv("DISPLAY")) )
+		&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
     {
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char *)1;}
 		p = colorChooserWinGui(aTitle, aDefaultHexRGB, aDefaultRGB, aoResultRGB);
@@ -3400,8 +3413,8 @@ static int whiptailPresent(void)
 static int graphicMode(void)
 {
         return !( tinyfd_forceConsole && (isTerminalRunning() || terminalName()) )
-          && ( getenv("DISPLAY")
-            || (tfd_isDarwin() && (!getenv("SSH_TTY") || getenv("DISPLAY") ) ) ) ;
+			&& ( getenvDISPLAY()
+			|| (tfd_isDarwin() && (!getenv("SSH_TTY") || getenvDISPLAY() ) ) ) ;
 }
 
 

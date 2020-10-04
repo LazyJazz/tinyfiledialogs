@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.h v3.6.6 [Sep 23, 2020] zlib licence
+ /         \ tinyfiledialogs.h v3.7.2 [Oct 4, 2020] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -140,6 +140,10 @@ extern int tinyfd_forceConsole;  /* 0 (default) or 1 */
 1: forces all dialogs into console mode even when an X server is present,
   if the package dialog (and a console is present) or dialog.exe is installed.
   on windows it only make sense for console applications */
+
+extern int tinyfd_assumeGraphicDisplay; /* 0 (default) or 1  */
+/* some systems don't set the environment variable DISPLAY even when a graphic display is present.
+set this to 1 to tell tinyfiledialogs to assume the existence of a graphic display */
 
 extern char tinyfd_response[1024];
 /* if you pass "tinyfd_query" as aTitle,

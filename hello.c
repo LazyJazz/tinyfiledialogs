@@ -120,9 +120,11 @@ int main( int argc , char * argv[] )
 	char lBuffer[1024];
 	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
-	tinyfd_forceConsole = 0; /* default is 0 */
 	tinyfd_verbose = argc - 1;  /* default is 0 */
 	tinyfd_silent = 1;  /* default is 1 */
+
+	tinyfd_forceConsole = 0; /* default is 0 */
+	tinyfd_assumeGraphicDisplay = 0; /* default is 0 */
 
 #ifdef _WIN32
 	 tinyfd_winUtf8 = 1; /* default is 1 */

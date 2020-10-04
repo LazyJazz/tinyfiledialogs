@@ -64,7 +64,7 @@ the same executable can run across desktops & distributions
 
 C89/C18 & C++98/C++20 compliant: tested with C & C++ compilers
 VisualStudio MinGW-gcc GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC ZapCC
-on Windows Mac Linux Bsd Solaris Minix Raspbian
+on Windows Mac Linux Bsd Solaris Minix Raspbian Flatpak
 using Gnome Kde Enlightenment Mate Cinnamon Budgie Unity Lxde Lxqt Xfce
 WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm Cwm
 

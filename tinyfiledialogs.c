@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.7.2 [Oct 4, 2020] zlib licence
+ /         \ tinyfiledialogs.c v3.8.0 [Oct 5, 2020] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -185,10 +185,10 @@ for console mode:
   dialog whiptail basicinput no_solution */
 
 static int gWarningDisplayed = 0 ;
-static char const gTitle[]="missing software! (we will try basic console input)";
+static char gTitle[]="missing software! (we will try basic console input)";
 
 #ifdef _WIN32
-char const tinyfd_needs[] = "\
+char tinyfd_needs[] = "\
  ___________\n\
 /           \\ \n\
 | tiny file |\n\
@@ -200,7 +200,7 @@ char const tinyfd_needs[] = "\
 \nor dialog.exe (enhanced console mode)\
 \nor a console for basic input";
 #else
-char const tinyfd_needs[] = "\
+char tinyfd_needs[] = "\
  ___________\n\
 /           \\ \n\
 | tiny file |\n\
@@ -224,7 +224,6 @@ char const tinyfd_needs[] = "\
 #pragma warning(disable:4100) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
 #pragma warning(disable:4706) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
 #endif
-
 
 static int getenvDISPLAY(void)
 {
@@ -449,6 +448,28 @@ static void wipefile(char const * aFilename)
 }
 
 
+static int quoteDetected(char const * aString)
+{
+	char const * p;
+
+	if (!aString) return 0;
+
+	p = aString;
+	while ((p = strchr(p, '\'')))
+	{
+		return 1;
+	}
+
+	p = aString;
+	while ((p = strchr(p, '\"')))
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
+
 #ifdef _WIN32
 
 /* windows only (not for wchar_t): you can set char to 1:utf-8(default) or 0:MBCS */
@@ -458,31 +479,20 @@ void tinyfd_setWinUtf8(int aIsUtf8) /* made to be used from C# to modify the glo
 }
 
 
-static int replaceChr( char * aString ,
-                                           char aOldChr ,
-                                           char aNewChr )
+static void replaceChr(char * aString, char aOldChr, char aNewChr)
 {
-        char * p ;
-        int lRes = 0 ;
+	char * p;
 
-        if ( ! aString )
-        {
-                return 0 ;
-        }
+	if (!aString) return;
+	if (aOldChr == aNewChr) return;
 
-        if ( aOldChr == aNewChr )
-        {
-                return 0 ;
-        }
-
-        p = aString ;
-        while ( (p = strchr( p , aOldChr )) )
-        {
-                * p = aNewChr ;
-                p ++ ;
-                lRes = 1 ;
-        }
-        return lRes ;
+	p = aString;
+	while ((p = strchr(p, aOldChr)))
+	{
+		*p = aNewChr;
+		p++;
+	}
+	return;
 }
 
 
@@ -831,21 +841,20 @@ static int fileExists(char const * aFilePathAndName)
         }
 }
 
-static int replaceWchar(wchar_t * aString,
+static void replaceWchar(wchar_t * aString,
 	wchar_t aOldChr,
 	wchar_t aNewChr)
 {
 	wchar_t * p;
-	int lRes = 0;
 
 	if (!aString)
 	{
-		return 0;
+		return ;
 	}
 
 	if (aOldChr == aNewChr)
 	{
-		return 0;
+		return ;
 	}
 
 	p = aString;
@@ -856,9 +865,30 @@ static int replaceWchar(wchar_t * aString,
 		p++;
 #endif
 		p++;
-		lRes = 1;
 	}
-	return lRes;
+	return ;
+}
+
+
+static int quoteDetectedW(wchar_t const * aString)
+{
+	wchar_t const * p;
+
+	if (!aString) return 0;
+
+	p = aString;
+	while ((p = wcsrchr(p, L'\'')))
+	{
+		return 1;
+	}
+
+	p = aString;
+	while ((p = wcsrchr(p, L'\"')))
+	{
+		return 1;
+	}
+
+	return 0;
 }
 
 #endif /* _WIN32 */
@@ -968,6 +998,9 @@ int tinyfd_messageBoxW(
 
         if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return 1; }
 
+		if (quoteDetectedW(aTitle)) return tinyfd_messageBoxW(L"INVALID TITLE WITH QUOTES", aMessage, aDialogType, aIconType, aDefaultButton);
+		if (quoteDetectedW(aMessage)) return tinyfd_messageBoxW(aTitle, L"INVALID MESSAGE WITH QUOTES", aDialogType, aIconType, aDefaultButton);
+
         if (aIconType && !wcscmp(L"warning", aIconType))
         {
                 aCode = MB_ICONWARNING;
@@ -1036,6 +1069,9 @@ int tinyfd_notifyPopupW(
         size_t lDialogStringLen;
 
         if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return 1; }
+
+		if (quoteDetectedW(aTitle)) return tinyfd_notifyPopupW(L"INVALID TITLE WITH QUOTES", aMessage, aIconType);
+		if (quoteDetectedW(aMessage)) return tinyfd_notifyPopupW(aTitle, L"INVALID MESSAGE WITH QUOTES", aIconType);
 
         lTitleLen = aTitle ? wcslen(aTitle) : 0;
         lMessageLen = aMessage ? wcslen(aMessage) : 0;
@@ -1108,6 +1144,10 @@ wchar_t * tinyfd_inputBoxW(
         size_t lDialogStringLen;
 
         if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t *)1; }
+
+		if (quoteDetectedW(aTitle)) return tinyfd_inputBoxW(L"INVALID TITLE WITH QUOTES", aMessage, aDefaultInput);
+		if (quoteDetectedW(aMessage)) return tinyfd_inputBoxW(aTitle, L"INVALID MESSAGE WITH QUOTES", aDefaultInput);
+		if (quoteDetectedW(aDefaultInput)) return tinyfd_inputBoxW(aTitle, aMessage, L"INVALID DEFAULT_INPUT WITH QUOTES");
 
         lTitleLen =  aTitle ? wcslen(aTitle) : 0 ;
         lMessageLen =  aMessage ? wcslen(aMessage) : 0 ;
@@ -1386,6 +1426,14 @@ wchar_t * tinyfd_saveFileDialogW(
 
         if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t *)1; }
 
+		if (quoteDetectedW(aTitle)) return tinyfd_saveFileDialogW(L"INVALID TITLE WITH QUOTES", aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription);
+		if (quoteDetectedW(aDefaultPathAndFile)) return tinyfd_saveFileDialogW(aTitle, L"INVALID DEFAULT_PATH WITH QUOTES", aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription);
+		if (quoteDetectedW(aSingleFilterDescription)) return tinyfd_saveFileDialogW(aTitle, aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, L"INVALID FILTER_DESCRIPTION WITH QUOTES");
+		for (i = 0; i < aNumOfFilterPatterns; i++)
+		{
+			if (quoteDetectedW(aFilterPatterns[i])) return tinyfd_saveFileDialogW(L"INVALID FILTER_PATTERN WITH QUOTES", aDefaultPathAndFile, 0, NULL, NULL);
+		}
+
         lHResult = CoInitializeEx(NULL, 0);
 
         getPathWithoutFinalSlashW(lDirname, aDefaultPathAndFile);
@@ -1462,10 +1510,10 @@ wchar_t * tinyfd_saveFileDialogW(
 
 wchar_t * tinyfd_openFileDialogW(
         wchar_t const * aTitle, /* NULL or "" */
-        wchar_t const * aDefaultPathAndFile, /* NULL or "" */
+		wchar_t const * aDefaultPathAndFile, /* NULL or "" */
         int aNumOfFilterPatterns, /* 0 */
-        wchar_t const * const * aFilterPatterns, /* NULL or {"*.jpg","*.png"} */
-        wchar_t const * aSingleFilterDescription, /* NULL or "image files" */
+		wchar_t const * const * aFilterPatterns, /* NULL or {"*.jpg","*.png"} */
+		wchar_t const * aSingleFilterDescription, /* NULL or "image files" */
         int aAllowMultipleSelects) /* 0 or 1 ; -1 to free allocated memory and return */
 {
         size_t lLengths[MAX_MULTIPLE_FILES];
@@ -1485,6 +1533,14 @@ wchar_t * tinyfd_openFileDialogW(
 		if (aAllowMultipleSelects < 0) return (wchar_t *)0;
 
 		if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t *)1; }
+
+		if (quoteDetectedW(aTitle)) return tinyfd_openFileDialogW(L"INVALID TITLE WITH QUOTES", aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription, aAllowMultipleSelects);
+		if (quoteDetectedW(aDefaultPathAndFile)) return tinyfd_openFileDialogW(aTitle, L"INVALID DEFAULT_PATH WITH QUOTES", aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription, aAllowMultipleSelects);
+		if (quoteDetectedW(aSingleFilterDescription)) return tinyfd_openFileDialogW(aTitle, aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, L"INVALID FILTER_DESCRIPTION WITH QUOTES", aAllowMultipleSelects);
+		for (i = 0; i < aNumOfFilterPatterns; i++)
+		{
+			if (quoteDetectedW(aFilterPatterns[i])) return tinyfd_openFileDialogW(L"INVALID FILTER_PATTERN WITH QUOTES", aDefaultPathAndFile, 0, NULL, NULL, aAllowMultipleSelects);
+		}
 
 		if (aAllowMultipleSelects)
 		{
@@ -1655,6 +1711,9 @@ wchar_t * tinyfd_selectFolderDialogW(
 
         if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t *)1; }
 
+		if (quoteDetectedW(aTitle)) return tinyfd_selectFolderDialogW(L"INVALID TITLE WITH QUOTES", aDefaultPath);
+		if (quoteDetectedW(aDefaultPath)) return tinyfd_selectFolderDialogW(aTitle, L"INVALID DEFAULT_PATH WITH QUOTES");
+
         lHResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 
         bInfo.hwndOwner = GetForegroundWindow();
@@ -1703,6 +1762,9 @@ wchar_t * tinyfd_colorChooserW(
         HRESULT lHResult;
 
         if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t *)1; }
+
+		if (quoteDetectedW(aTitle)) return tinyfd_colorChooserW(L"INVALID TITLE WITH QUOTES", aDefaultHexRGB, aDefaultRGB, aoResultRGB);
+		if (quoteDetectedW(aDefaultHexRGB)) return tinyfd_colorChooserW(aTitle, L"INVALID DEFAULT_HEX_RGB WITH QUOTES", aDefaultRGB, aoResultRGB);
 
         lHResult = CoInitializeEx(NULL, 0);
 
@@ -1935,8 +1997,7 @@ static char * saveFileDialogWinGui(
 		lTitle,
 		lDefaultPathAndFile,
 		aNumOfFilterPatterns,
-		(wchar_t const**) /*stupid cast for gcc*/
-		lFilterPatterns,
+		(wchar_t const**) lFilterPatterns, /*stupid cast for gcc*/
 		lSingleFilterDescription);
 
 	for (i = 0; i < aNumOfFilterPatterns; i++)
@@ -2008,8 +2069,7 @@ static char * openFileDialogWinGui(
 		lTitle,
 		lDefaultPathAndFile,
 		aNumOfFilterPatterns,
-		(wchar_t const**) /*stupid cast for gcc*/
-		lFilterPatterns,
+		(wchar_t const**) lFilterPatterns, /*stupid cast for gcc*/
 		lSingleFilterDescription,
 		aAllowMultipleSelects);
 
@@ -2565,6 +2625,9 @@ int tinyfd_messageBox(
 	UINT lOriginalCP;
 	UINT lOriginalOutputCP;
 
+	if (quoteDetected(aTitle)) return tinyfd_messageBox("INVALID TITLE WITH QUOTES", aMessage, aDialogType, aIconType, aDefaultButton);
+	if (quoteDetected(aMessage)) return tinyfd_messageBox(aTitle, "INVALID MESSAGE WITH QUOTES", aDialogType, aIconType, aDefaultButton);
+
 	if ((!tinyfd_forceConsole || !(GetConsoleWindow() || dialogPresent()))
 		&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
 	{
@@ -2673,10 +2736,13 @@ int tinyfd_messageBox(
 
 /* return has only meaning for tinyfd_query */
 int tinyfd_notifyPopup(
-        char const * aTitle , /* NULL or "" */
+        char const * aTitle, /* NULL or "" */
         char const * aMessage , /* NULL or "" may contain \n \t */
         char const * aIconType ) /* "info" "warning" "error" */
 {
+	if (quoteDetected(aTitle)) return tinyfd_notifyPopup("INVALID TITLE WITH QUOTES", aMessage, aIconType);
+	if (quoteDetected(aMessage)) return tinyfd_notifyPopup(aTitle, "INVALID MESSAGE WITH QUOTES", aIconType);
+
         if ((!tinyfd_forceConsole || !(
                 GetConsoleWindow() ||
                 dialogPresent()))
@@ -2710,8 +2776,11 @@ char * tinyfd_inputBox(
 	UINT lOriginalCP;
 	UINT lOriginalOutputCP;
 
-
 	if (!aTitle && !aMessage && !aDefaultInput) return lBuff; /* now I can fill lBuff from outside */
+
+	if (quoteDetected(aTitle)) return tinyfd_inputBox("INVALID TITLE WITH QUOTES", aMessage, aDefaultInput);
+	if (quoteDetected(aMessage)) return tinyfd_inputBox(aTitle, "INVALID MESSAGE WITH QUOTES", aDefaultInput);
+	if (quoteDetected(aDefaultInput)) return tinyfd_inputBox(aTitle, aMessage, "INVALID DEFAULT_INPUT WITH QUOTES");
 
     mode = 0;
     hStdin = GetStdHandle(STD_INPUT_HANDLE);
@@ -2837,14 +2906,25 @@ char * tinyfd_saveFileDialog(
         char lString[MAX_PATH_OR_CMD] ;
         char * p ;
 		char * lPointerInputBox;
+		int i;
+
         lBuff[0]='\0';
+
+		if (quoteDetected(aTitle)) return tinyfd_saveFileDialog("INVALID TITLE WITH QUOTES", aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription);
+		if (quoteDetected(aDefaultPathAndFile)) return tinyfd_saveFileDialog(aTitle, "INVALID DEFAULT_PATH WITH QUOTES", aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription);
+		if (quoteDetected(aSingleFilterDescription)) return tinyfd_saveFileDialog(aTitle, aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, "INVALID FILTER_DESCRIPTION WITH QUOTES");
+		for (i = 0; i < aNumOfFilterPatterns; i++)
+		{
+			if (quoteDetected(aFilterPatterns[i])) return tinyfd_saveFileDialog("INVALID FILTER_PATTERN WITH QUOTES", aDefaultPathAndFile, 0, NULL, NULL);
+		}
+
 
 		if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
 			&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
         {
             if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char *)1;}
             p = saveFileDialogWinGui(lBuff,
-                    aTitle, aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription);
+				aTitle, aDefaultPathAndFile, aNumOfFilterPatterns, (char const * const *)aFilterPatterns, aSingleFilterDescription);
         }
 		else if (dialogPresent())
 		{
@@ -2864,7 +2944,6 @@ char * tinyfd_saveFileDialog(
 			if (lPointerInputBox) strcpy(lPointerInputBox, lString); /* restore its previous content to tinyfd_inputBox */
 			p = lBuff;
 		}
-
 
         if ( ! p || ! strlen( p )  )
         {
@@ -2887,23 +2966,32 @@ char * tinyfd_saveFileDialog(
 /* in case of multiple files, the separator is | */
 char * tinyfd_openFileDialog(
     char const * aTitle , /* NULL or "" */
-    char const * aDefaultPathAndFile , /* NULL or "" */
+	char const * aDefaultPathAndFile, /* NULL or "" */
     int aNumOfFilterPatterns , /* 0 */
-    char const * const * aFilterPatterns , /* NULL or {"*.jpg","*.png"} */
-    char const * aSingleFilterDescription , /* NULL or "image files" */
+	char const * const * aFilterPatterns, /* NULL or {"*.jpg","*.png"} */
+	char const * aSingleFilterDescription, /* NULL or "image files" */
     int aAllowMultipleSelects ) /* 0 or 1 */
 {
 	char lString[MAX_PATH_OR_CMD];
 	char lBuff[MAX_PATH_OR_CMD];
 	char * p;
 	char * lPointerInputBox;
+	int i;
+
+	if (quoteDetected(aTitle)) return tinyfd_openFileDialog("INVALID TITLE WITH QUOTES", aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription, aAllowMultipleSelects);
+	if (quoteDetected(aDefaultPathAndFile)) return tinyfd_openFileDialog(aTitle, "INVALID DEFAULT_PATH WITH QUOTES", aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription, aAllowMultipleSelects);
+	if (quoteDetected(aSingleFilterDescription)) return tinyfd_openFileDialog(aTitle, aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, "INVALID FILTER_DESCRIPTION WITH QUOTES", aAllowMultipleSelects);
+	for (i = 0; i < aNumOfFilterPatterns; i++)
+	{
+		if (quoteDetected(aFilterPatterns[i])) return tinyfd_openFileDialog("INVALID FILTER_PATTERN WITH QUOTES", aDefaultPathAndFile, 0, NULL, NULL, aAllowMultipleSelects);
+	}
 
     if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
 		&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char *)1;}
                 p = openFileDialogWinGui( aTitle, aDefaultPathAndFile, aNumOfFilterPatterns,
-                        aFilterPatterns, aSingleFilterDescription, aAllowMultipleSelects);
+					(char const * const *)aFilterPatterns, aSingleFilterDescription, aAllowMultipleSelects);
         }
 		else if (dialogPresent())
 		{
@@ -2948,6 +3036,9 @@ char * tinyfd_selectFolderDialog(
 	char * p;
 	char * lPointerInputBox;
 	char lString[MAX_PATH_OR_CMD];
+
+	if (quoteDetected(aTitle)) return tinyfd_selectFolderDialog("INVALID TITLE WITH QUOTES", aDefaultPath);
+	if (quoteDetected(aDefaultPath)) return tinyfd_selectFolderDialog(aTitle, "INVALID DEFAULT_PATH WITH QUOTES");
 
     if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
 		&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
@@ -2999,6 +3090,9 @@ char * tinyfd_colorChooser(
 	char lString[MAX_PATH_OR_CMD];
 
 	lDefaultHexRGB[0] = '\0';
+
+	if (quoteDetected(aTitle)) return tinyfd_colorChooser("INVALID TITLE WITH QUOTES", aDefaultHexRGB, aDefaultRGB, aoResultRGB);
+	if (quoteDetected(aDefaultHexRGB)) return tinyfd_colorChooser(aTitle, "INVALID DEFAULT_HEX_RGB WITH QUOTES", aDefaultRGB, aoResultRGB);
 
     if ( (!tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent()) )
 		&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
@@ -3970,6 +4064,9 @@ int tinyfd_messageBox(
 
         lBuff[0]='\0';
 
+		if (quoteDetected(aTitle)) return tinyfd_messageBox("INVALID TITLE WITH QUOTES", aMessage, aDialogType, aIconType, aDefaultButton);
+		if (quoteDetected(aMessage)) return tinyfd_messageBox(aTitle, "INVALID MESSAGE WITH QUOTES", aDialogType, aIconType, aDefaultButton);
+
         lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
         lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
         if ( !aTitle || strcmp(aTitle,"tinyfd_query") )
@@ -4886,6 +4983,9 @@ int tinyfd_notifyPopup(
         size_t lTitleLen ;
         size_t lMessageLen ;
 
+		if (quoteDetected(aTitle)) return tinyfd_notifyPopup("INVALID TITLE WITH QUOTES", aMessage, aIconType);
+		if (quoteDetected(aMessage)) return tinyfd_notifyPopup(aTitle, "INVALID MESSAGE WITH QUOTES", aIconType);
+
         if ( getenv("SSH_TTY") )
         {
                 return tinyfd_messageBox(aTitle, aMessage, "ok", aIconType, 0);
@@ -5099,6 +5199,10 @@ char * tinyfd_inputBox(
 		if (!aTitle && !aMessage && !aDefaultInput) return lBuff; /* now I can fill lBuff from outside */
 
         lBuff[0]='\0';
+
+		if (quoteDetected(aTitle)) return tinyfd_inputBox("INVALID TITLE WITH QUOTES", aMessage, aDefaultInput);
+		if (quoteDetected(aMessage)) return tinyfd_inputBox(aTitle, "INVALID MESSAGE WITH QUOTES", aDefaultInput);
+		if (quoteDetected(aDefaultInput)) return tinyfd_inputBox(aTitle, aMessage, "INVALID DEFAULT_INPUT WITH QUOTES");
 
         lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
         lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
@@ -5649,6 +5753,14 @@ char * tinyfd_saveFileDialog(
         FILE * lIn ;
         lBuff[0]='\0';
 
+		if (quoteDetected(aTitle)) return tinyfd_saveFileDialog("INVALID TITLE WITH QUOTES", aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription);
+		if (quoteDetected(aDefaultPathAndFile)) return tinyfd_saveFileDialog(aTitle, "INVALID DEFAULT_PATH WITH QUOTES", aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription);
+		if (quoteDetected(aSingleFilterDescription)) return tinyfd_saveFileDialog(aTitle, aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, "INVALID FILTER_DESCRIPTION WITH QUOTES");
+		for (i = 0; i < aNumOfFilterPatterns; i++)
+		{
+			if (quoteDetected(aFilterPatterns[i])) return tinyfd_saveFileDialog("INVALID FILTER_PATTERN WITH QUOTES", aDefaultPathAndFile, 0, NULL, NULL);
+		}
+
         if ( osascriptPresent( ) )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char *)1;}
@@ -6040,10 +6152,10 @@ char * tinyfd_saveFileDialog(
 
 /* in case of multiple files, the separator is | */
 char * tinyfd_openFileDialog(
-    char const * aTitle , /* NULL or "" */
-    char const * aDefaultPathAndFile , /* NULL or "" */
+	char const * aTitle , /* NULL or "" */
+	char const * aDefaultPathAndFile , /* NULL or "" */
     int aNumOfFilterPatterns , /* 0 */
-    char const * const * aFilterPatterns , /* NULL or {"*.jpg","*.png"} */
+	char const * const * aFilterPatterns , /* NULL or {"*.jpg","*.png"} */
     char const * aSingleFilterDescription , /* NULL or "image files" */
     int aAllowMultipleSelects ) /* 0 or 1 */
 {
@@ -6059,6 +6171,14 @@ char * tinyfd_openFileDialog(
         int lWasXterm = 0 ;
 		size_t lFullBuffLen ;
 		static char * lBuff = NULL;
+
+		if (quoteDetected(aTitle)) return tinyfd_openFileDialog("INVALID TITLE WITH QUOTES", aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription, aAllowMultipleSelects);
+		if (quoteDetected(aDefaultPathAndFile)) return tinyfd_openFileDialog(aTitle, "INVALID DEFAULT_PATH WITH QUOTES", aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription, aAllowMultipleSelects);
+		if (quoteDetected(aSingleFilterDescription)) return tinyfd_openFileDialog(aTitle, aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, "INVALID FILTER_DESCRIPTION WITH QUOTES", aAllowMultipleSelects);
+		for (i = 0; i < aNumOfFilterPatterns; i++)
+		{
+			if (quoteDetected(aFilterPatterns[i])) return tinyfd_openFileDialog("INVALID FILTER_PATTERN WITH QUOTES", aDefaultPathAndFile, 0, NULL, NULL, aAllowMultipleSelects);
+		}
 
 		free(lBuff);
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query"))
@@ -6567,6 +6687,9 @@ char * tinyfd_selectFolderDialog(
         int lWasXterm = 0 ;
         lBuff[0]='\0';
 
+		if (quoteDetected(aTitle)) return tinyfd_selectFolderDialog("INVALID TITLE WITH QUOTES", aDefaultPath);
+		if (quoteDetected(aDefaultPath)) return tinyfd_selectFolderDialog(aTitle, "INVALID DEFAULT_PATH WITH QUOTES");
+
         if ( osascriptPresent( ))
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char *)1;}
@@ -6861,6 +6984,9 @@ char * tinyfd_colorChooser(
         int lWasOsascript = 0 ;
         int lWasXdialog = 0 ;
         lBuff[0]='\0';
+
+		if (quoteDetected(aTitle)) return tinyfd_colorChooser("INVALID TITLE WITH QUOTES", aDefaultHexRGB, aDefaultRGB, aoResultRGB);
+		if (quoteDetected(aDefaultHexRGB)) return tinyfd_colorChooser(aTitle, "INVALID DEFAULT_HEX_RGB WITH QUOTES", aDefaultRGB, aoResultRGB);
 
 		if (aDefaultHexRGB)
 		{

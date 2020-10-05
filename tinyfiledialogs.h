@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.h v3.7.2 [Oct 4, 2020] zlib licence
+ /         \ tinyfiledialogs.h v3.8.0 [Oct 5, 2020] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -127,7 +127,7 @@ void tinyfd_setWinUtf8(int aIsUtf8); /* only to be used from C# to set the globa
 /******************************************************************************************************/
 
 extern char const tinyfd_version[8]; /* contains tinyfd current version number */
-extern char const tinyfd_needs[]; /* info about requirements */
+extern char tinyfd_needs[]; /* info about requirements */
 extern int tinyfd_verbose; /* 0 (default) or 1 : on unix, prints the command line calls */
 extern int tinyfd_silent; /* 1 (default) or 0 : on unix, hide errors and warnings from called dialogs */
 
@@ -190,23 +190,23 @@ char * tinyfd_saveFileDialog(
 		/* returns NULL on cancel */
 
 char * tinyfd_openFileDialog(
-	char const * aTitle , /* NULL or "" */
-	char const * aDefaultPathAndFile , /* NULL or "" */
+	char const * aTitle, /* NULL or "" */
+	char const * aDefaultPathAndFile, /* NULL or "" */
 	int aNumOfFilterPatterns , /* 0 */
-	char const * const * aFilterPatterns , /* NULL | {"*.jpg","*.png"} */
-	char const * aSingleFilterDescription , /* NULL | "image files" */
+	char const * const * aFilterPatterns, /* NULL | {"*.jpg","*.png"} */
+	char const * aSingleFilterDescription, /* NULL | "image files" */
 	int aAllowMultipleSelects ) ; /* 0 or 1 */
 		/* in case of multiple files, the separator is | */
 		/* returns NULL on cancel */
 
 char * tinyfd_selectFolderDialog(
-	char const * aTitle , /* NULL or "" */
-	char const * aDefaultPath ) ; /* NULL or "" */
+	char const * aTitle, /* NULL or "" */
+	char const * aDefaultPath); /* NULL or "" */
 		/* returns NULL on cancel */
 
 char * tinyfd_colorChooser(
-	char const * aTitle , /* NULL or "" */
-	char const * aDefaultHexRGB , /* NULL or "#FF0000" */
+	char const * aTitle, /* NULL or "" */
+	char const * aDefaultHexRGB, /* NULL or "#FF0000" */
 	unsigned char const aDefaultRGB[3] , /* { 0 , 255 , 255 } */
 	unsigned char aoResultRGB[3] ) ; /* { 0 , 0 , 0 } */
 		/* returns the hexcolor as a string "#FF0000" */
@@ -227,7 +227,7 @@ int tinyfd_notifyPopupW(
 
 /* windows only - utf-16 version */
 int tinyfd_messageBoxW(
-	wchar_t const * aTitle , /* NULL or L"" */
+	wchar_t const * aTitle, /* NULL or L"" */
 	wchar_t const * aMessage, /* NULL or L"" may contain \n \t */
 	wchar_t const * aDialogType, /* L"ok" L"okcancel" L"yesno" */
 	wchar_t const * aIconType, /* L"info" L"warning" L"error" L"question" */
@@ -238,7 +238,7 @@ int tinyfd_messageBoxW(
 wchar_t * tinyfd_inputBoxW(
 	wchar_t const * aTitle, /* NULL or L"" */
 	wchar_t const * aMessage, /* NULL or L"" may NOT contain \n nor \t */
-	wchar_t const * aDefaultInput ); /* L"" , if NULL it's a passwordBox */
+	wchar_t const * aDefaultInput); /* L"" , if NULL it's a passwordBox */
 
 /* windows only - utf-16 version */
 wchar_t * tinyfd_saveFileDialogW(
@@ -292,7 +292,7 @@ wchar_t * tinyfd_colorChooserW(
 - windows is fully supported from XP to 10 (maybe even older versions)
 - C# & LUA via dll, see files in the folder EXTRAS
 - OSX supported from 10.4 to latest (maybe even older versions)
-- Avoid using " and ' in titles and messages.
+- avoid using " and ' as they will be removed from all titles, messages, etc...
 - There's one file filter only, it may contain several patterns.
 - If no filter description is provided,
   the list of patterns will become the description.

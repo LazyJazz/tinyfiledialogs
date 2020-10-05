@@ -1,5 +1,5 @@
 /*_________
- /         \ hello_wchar_t.c v3.6.4 [Sep 14, 2020] zlib licence
+ /         \ hello_wchar_t.c v3.8.0 [Oct 5, 2020] zlib licence
  |tiny file| Hello WCHAR_T windows only file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net

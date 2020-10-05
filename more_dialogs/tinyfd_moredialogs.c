@@ -28,6 +28,7 @@
 #include "tinyfiledialogs.h"
 
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
+int tfd_quoteDetected(char const * aString);
 void tfd_replaceSubStr( char const * aSource ,char const * aOldSubStr ,
                         char const * aNewSubStr ,char * aoDestination );
 #ifndef _WIN32
@@ -57,6 +58,16 @@ char * tinyfd_arrayDialog(
         char lDialogString [MAX_PATH_OR_CMD] ;
         FILE * lIn ;
         int i ;
+
+		if (tfd_quoteDetected(aTitle)) return tinyfd_arrayDialog("INVALID TITLE WITH QUOTES", aNumOfColumns, aColumns, aNumOfRows, aCells);
+		for (i = 0; i < aNumOfColumns; i++)
+		{
+			if (tfd_quoteDetected(aColumns[i])) return tinyfd_arrayDialog("INVALID COLUMNS WITH QUOTES", 0, NULL, 0, NULL);
+		}
+		for (i = 0; i < aNumOfRows; i++)
+		{
+			if (tfd_quoteDetected(aCells[i])) return tinyfd_arrayDialog("INVALID ROWS WITH QUOTES", 0, NULL, 0, NULL);
+		}
 
         lBuff[0]='\0';
 
@@ -161,7 +172,15 @@ char *tinyfd_checklistDialog(
 
         char lDialogString[MAX_PATH_OR_CMD];
         FILE *lIn;
-        char *target = lDialogString;
+		int i ;
+		char *target = lDialogString;
+
+		if (tfd_quoteDetected(aTitle)) return tinyfd_checklistDialog("INVALID TITLE WITH QUOTES", aNumOfOptions, aOptions);
+		for (i = 0; i < aNumOfOptions; i++)
+		{
+			if (tfd_quoteDetected(aOptions[i])) return tinyfd_checklistDialog("INVALID COLUMNS WITH QUOTES", 0, NULL);
+		}
+
         lBuff[0] = '\0';
         if (tfd_isDarwin())
         {

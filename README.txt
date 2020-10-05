@@ -53,7 +53,7 @@ int tinyfd_messageBox (
 
 char const * tinyfd_inputBox (
     char const * aTitle , // NULL or ""
-    char const * aMessage , // NULL or "" may NOT contain \n \t on windows
+    char const * aMessage , // NULL or "" (\n and \t have no effect)
     char const * aDefaultInput ) ; // "" , if NULL it's a passwordBox
         // returns NULL on cancel
 

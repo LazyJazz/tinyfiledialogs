@@ -177,7 +177,7 @@ int tinyfd_messageBox(
 
 char * tinyfd_inputBox(
 	char const * aTitle , /* NULL or "" */
-	char const * aMessage , /* NULL or "" may NOT contain \n \t on windows */
+	char const * aMessage , /* NULL or "" (\n and \t have no effect) */
 	char const * aDefaultInput ) ;  /* "" , if NULL it's a passwordBox */
 		/* returns NULL on cancel */
 
@@ -237,7 +237,7 @@ int tinyfd_messageBoxW(
 /* windows only - utf-16 version */
 wchar_t * tinyfd_inputBoxW(
 	wchar_t const * aTitle, /* NULL or L"" */
-	wchar_t const * aMessage, /* NULL or L"" may NOT contain \n nor \t */
+	wchar_t const * aMessage, /* NULL or L"" (\n nor \t not respected) */
 	wchar_t const * aDefaultInput); /* L"" , if NULL it's a passwordBox */
 
 /* windows only - utf-16 version */

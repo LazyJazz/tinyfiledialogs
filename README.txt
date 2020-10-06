@@ -54,23 +54,23 @@ int tinyfd_messageBox (
 char const * tinyfd_inputBox (
     char const * aTitle , // NULL or ""
     char const * aMessage , // NULL or "" (\n and \t have no effect)
-    char const * aDefaultInput ) ; // "" , if NULL it's a passwordBox
+    char const * aDefaultInput ) ; // NULL for a passwordBox, "" for an inputbox
         // returns NULL on cancel
 
 char const * tinyfd_saveFileDialog (
     char const * aTitle , // NULL or ""
     char const * aDefaultPathAndFile , // NULL or ""
-    int aNumOfFilterPatterns , // 0
-    char const * const * aFilterPatterns , // NULL | {"*.txt"}
-    char const * aSingleFilterDescription ) ; // NULL | "text files"
+    int aNumOfFilterPatterns , // 0 (1 in the following example)
+    char const * const * aFilterPatterns , // NULL or char const * lFilterPatterns[1]={"*.txt"};
+    char const * aSingleFilterDescription ) ; // NULL or "text files"
         // returns NULL on cancel
 
 char const * tinyfd_openFileDialog (
     char const * aTitle , // NULL or ""
     char const * aDefaultPathAndFile , // NULL or ""
-    int aNumOfFilterPatterns , // 0
-    char const * const * aFilterPatterns , // NULL {"*.jpg","*.png"}
-    char const * aSingleFilterDescription , // NULL | "image files"
+    int aNumOfFilterPatterns , // 0 (2 in the following example)
+    char const * const * aFilterPatterns , // NULL or char const * lFilterPatterns[2]={"*.png","*.jpg"};
+    char const * aSingleFilterDescription , // NULL or "image files"
     int aAllowMultipleSelects ) ; // 0
         // in case of multiple files, the separator is |
         // returns NULL on cancel

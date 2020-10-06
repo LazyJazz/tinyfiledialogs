@@ -178,23 +178,23 @@ int tinyfd_messageBox(
 char * tinyfd_inputBox(
 	char const * aTitle , /* NULL or "" */
 	char const * aMessage , /* NULL or "" (\n and \t have no effect) */
-	char const * aDefaultInput ) ;  /* "" , if NULL it's a passwordBox */
+	char const * aDefaultInput ) ;  /* NULL passwordBox, "" inputbox */
 		/* returns NULL on cancel */
 
 char * tinyfd_saveFileDialog(
 	char const * aTitle , /* NULL or "" */
 	char const * aDefaultPathAndFile , /* NULL or "" */
-	int aNumOfFilterPatterns , /* 0 */
-	char const * const * aFilterPatterns , /* NULL | {"*.jpg","*.png"} */
-	char const * aSingleFilterDescription ) ; /* NULL | "text files" */
+	int aNumOfFilterPatterns , /* 0  (1 in the following example) */
+	char const * const * aFilterPatterns , /* NULL or char const * lFilterPatterns[1]={"*.txt"} */
+	char const * aSingleFilterDescription ) ; /* NULL or "text files" */
 		/* returns NULL on cancel */
 
 char * tinyfd_openFileDialog(
 	char const * aTitle, /* NULL or "" */
 	char const * aDefaultPathAndFile, /* NULL or "" */
-	int aNumOfFilterPatterns , /* 0 */
-	char const * const * aFilterPatterns, /* NULL | {"*.jpg","*.png"} */
-	char const * aSingleFilterDescription, /* NULL | "image files" */
+	int aNumOfFilterPatterns , /* 0 (2 in the following example) */
+	char const * const * aFilterPatterns, /* NULL or char const * lFilterPatterns[2]={"*.png","*.jpg"}; */
+	char const * aSingleFilterDescription, /* NULL or "image files" */
 	int aAllowMultipleSelects ) ; /* 0 or 1 */
 		/* in case of multiple files, the separator is | */
 		/* returns NULL on cancel */
@@ -238,23 +238,23 @@ int tinyfd_messageBoxW(
 wchar_t * tinyfd_inputBoxW(
 	wchar_t const * aTitle, /* NULL or L"" */
 	wchar_t const * aMessage, /* NULL or L"" (\n nor \t not respected) */
-	wchar_t const * aDefaultInput); /* L"" , if NULL it's a passwordBox */
+	wchar_t const * aDefaultInput); /* NULL passwordBox, L"" inputbox */
 
 /* windows only - utf-16 version */
 wchar_t * tinyfd_saveFileDialogW(
 	wchar_t const * aTitle, /* NULL or L"" */
 	wchar_t const * aDefaultPathAndFile, /* NULL or L"" */
-	int aNumOfFilterPatterns, /* 0 */
-	wchar_t const * const * aFilterPatterns, /* NULL or {L"*.jpg",L"*.png"} */
-	wchar_t const * aSingleFilterDescription); /* NULL or L"image files" */
+	int aNumOfFilterPatterns, /* 0 (1 in the following example) */
+	wchar_t const * const * aFilterPatterns, /* NULL or wchar_t const * lFilterPatterns[1]={L"*.txt"} */
+	wchar_t const * aSingleFilterDescription); /* NULL or L"text files" */
 		/* returns NULL on cancel */
 
 /* windows only - utf-16 version */
 wchar_t * tinyfd_openFileDialogW(
 	wchar_t const * aTitle, /* NULL or L"" */
 	wchar_t const * aDefaultPathAndFile, /* NULL or L"" */
-	int aNumOfFilterPatterns , /* 0 */
-	wchar_t const * const * aFilterPatterns, /* NULL {L"*.jpg",L"*.png"} */
+	int aNumOfFilterPatterns , /* 0 (2 in the following example) */
+	wchar_t const * const * aFilterPatterns, /* NULL or wchar_t const * lFilterPatterns[2]={L"*.png","*.jpg"} */
 	wchar_t const * aSingleFilterDescription, /* NULL or L"image files" */
 	int aAllowMultipleSelects ) ; /* 0 or 1 */
 		/* in case of multiple files, the separator is | */

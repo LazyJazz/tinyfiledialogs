@@ -157,7 +157,7 @@ int tinyfd_winUtf8 = 1; /* on windows char strings can be 1:UTF-8(default) or 0:
 
 int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix, hide errors and warnings from called dialogs*/
-static int const tinyfd_allowCursesDialogs = 0 ; /* 0 (default) or 1 : curses dialogs are difficult to use, on windows they are only ascii*/
+int tinyfd_allowCursesDialogs = 0 ; /* 0 (default) or 1 : curses dialogs are difficult to use, on windows they are only ascii*/
 int tinyfd_forceConsole = 0 ; /* 0 (default) or 1 */
 /* for unix & windows: 0 (graphic mode) or 1 (console mode).
 0: try to use a graphic solution, if it fails then it uses console mode.

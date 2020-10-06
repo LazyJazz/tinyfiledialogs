@@ -107,16 +107,14 @@ char const * tinyfd_colorChooser (
 - There's one file filter only, it may contain several patterns.
 - If no filter description is provided,
   the list of patterns will become the description.
-- char const * filterPatterns[3] = { "*.obj" , "*.stl" , "*.dxf" } ;
-- On windows char defaults to UTF-8, set tinyfd_winUtf8=0 to use MBCS
 - On windows link against Comdlg32.lib and Ole32.lib
   (on windows the no linking claim is a lie)
-  This linking is not compulsary for console mode (see header file).
 - On unix: it tries command line calls, so no such need (NO LINKING).
 - On unix you need one of the following:
   applescript, kdialog, zenity, matedialog, shellementary, qarma,
   python (2 or 3)/tkinter/python-dbus (optional), Xdialog
-  or dialog (opens terminal if running without console) or xterm.
+  or curses dialogs (opens terminal if running without console), xterm.
+- for curses dialogs (unix Dialog) you must set tinyfd_allowCursesDialogs=1
 - One of those is already included on most (if not all) desktops.
 - In the absence of those it will use gdialog, gxmessage or whiptail
   with a textinputbox.
@@ -124,18 +122,16 @@ char const * tinyfd_colorChooser (
   it opens a console if needed (requires xterm + bash).
 - Use windows separators on windows and unix separators on unix.
 - String memory is preallocated statically for all the returned values.
-- File and path names are tested before return, they are valid.
-- If you pass only a path instead of path + filename,
-  make sure it ends with a separator.
+- File and path names are tested before return, they should be valid.
 - tinyfd_forceConsole=1; at run time, forces dialogs into console mode.
 - On windows, console mode only make sense for console applications.
 - On windows, console mode is not implemented for wchar_T UTF-16.
 - Mutiple selects are not possible in console mode.
-- The package dialog must be installed to run in enhanced console mode.
+- The package dialog must be installed to run in curses dialogs in console mode.
   It is already installed on most unix systems.
 - On osx, the package dialog can be installed via
   http://macappstore.org/dialog or http://macports.org
-- On windows, for enhanced console mode,
+- On windows, for curses dialogs console mode,
   dialog.exe should be copied somewhere on your executable path.
   It can be found at the bottom of the following page:
   http://andrear.altervista.org/home/cdialog.php

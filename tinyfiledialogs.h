@@ -138,8 +138,8 @@ extern int tinyfd_forceConsole;  /* 0 (default) or 1 */
 /* for unix & windows: 0 (graphic mode) or 1 (console mode).
 0: try to use a graphic solution, if it fails then it uses console mode.
 1: forces all dialogs into console mode even when an X server is present,
-  if the package dialog (and a console is present) or dialog.exe is installed.
-  on windows it only make sense for console applications */
+   it can use the package dialog or dialog.exe.
+   on windows it only make sense for console applications */
 
 extern int tinyfd_assumeGraphicDisplay; /* 0 (default) or 1  */
 /* some systems don't set the environment variable DISPLAY even when a graphic display is present.
@@ -320,7 +320,7 @@ wchar_t * tinyfd_colorChooserW(
   applescript, kdialog, zenity, matedialog, shellementary, qarma,
   python (2 or 3)/tkinter/python-dbus (optional), Xdialog
   or curses dialogs (opens terminal if running without console), xterm.
-- for curses dialogs (unix Dialog app) you must set tinyfd_allowCursesDialogs=1
+- for curses dialogs you must set tinyfd_allowCursesDialogs=1
 - One of those is already included on most (if not all) desktops.
 - In the absence of those it will use gdialog, gxmessage or whiptail
   with a textinputbox.

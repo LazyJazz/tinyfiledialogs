@@ -114,7 +114,7 @@ char const * tinyfd_colorChooser (
   applescript, kdialog, zenity, matedialog, shellementary, qarma,
   python (2 or 3)/tkinter/python-dbus (optional), Xdialog
   or curses dialogs (opens terminal if running without console), xterm.
-- for curses dialogs (unix Dialog) you must set tinyfd_allowCursesDialogs=1
+- for curses dialogs you must set tinyfd_allowCursesDialogs=1
 - One of those is already included on most (if not all) desktops.
 - In the absence of those it will use gdialog, gxmessage or whiptail
   with a textinputbox.

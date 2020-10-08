@@ -308,7 +308,7 @@ wchar_t * tinyfd_colorChooserW(
 - windows is fully supported from XP to 10 (maybe even older versions)
 - C# & LUA via dll, see files in the folder EXTRAS
 - OSX supported from 10.4 to latest (maybe even older versions)
-- Do not use " and ' as the dialogs will be display with a warning
+- Do not use " and ' as the dialogs will be displayed with a warning
   instead of the title, message, etc...
 - There's one file filter only, it may contain several patterns.
 - If no filter description is provided,
@@ -322,8 +322,7 @@ wchar_t * tinyfd_colorChooserW(
   or curses dialogs (opens terminal if running without console), xterm.
 - One of those is already included on most (if not all) desktops.
 - In the absence of those it will use gdialog, gxmessage or whiptail
-  with a textinputbox.
-- If nothing is found, it switches to basic console input,
+  with a textinputbox. If nothing is found, it switches to basic console input,
   it opens a console if needed (requires xterm + bash).
 - for curses dialogs you must set tinyfd_allowCursesDialogs=1
 - You can query the type of dialog that will be used (pass "tinyfd_query" as aTitle)

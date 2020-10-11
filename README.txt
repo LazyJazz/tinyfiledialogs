@@ -36,25 +36,25 @@ Bindings for LUA and C# dll, Haskell, Fortran. Included in LWJGL(java), Rust, Al
 | |____________________________________________________________________________| |
 |________________________________________________________________________________|
 
-void tinyfd_beep() ;
+void tinyfd_beep();
 
 int tinyfd_notifyPopup (
-    char const * aTitle, // NULL or ""
-    char const * aMessage, // NULL or "" may contain \n \t
-    char const * aIconType); // "info" "warning" "error"
+    char const * aTitle , // NULL or ""
+    char const * aMessage , // NULL or "" may contain \n \t
+    char const * aIconType ); // "info" "warning" "error"
 
 int tinyfd_messageBox (
     char const * aTitle , // NULL or ""
     char const * aMessage , // NULL or "" may contain \n \t
     char const * aDialogType , // "ok" "okcancel" "yesno" "yesnocancel"
     char const * aIconType , // "info" "warning" "error" "question"
-    int aDefaultButton ) ;
+    int aDefaultButton );
         // 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel
 
 char const * tinyfd_inputBox (
     char const * aTitle , // NULL or ""
     char const * aMessage , // NULL or "" (\n and \t have no effect)
-    char const * aDefaultInput ) ; // NULL for a passwordBox, "" for an inputbox
+    char const * aDefaultInput ); // NULL for a passwordBox, "" for an inputbox
         // returns NULL on cancel
 
 char const * tinyfd_saveFileDialog (
@@ -62,7 +62,7 @@ char const * tinyfd_saveFileDialog (
     char const * aDefaultPathAndFile , // NULL or ""
     int aNumOfFilterPatterns , // 0 (1 in the following example)
     char const * const * aFilterPatterns , // NULL or char const * lFilterPatterns[1]={"*.txt"};
-    char const * aSingleFilterDescription ) ; // NULL or "text files"
+    char const * aSingleFilterDescription ); // NULL or "text files"
         // returns NULL on cancel
 
 char const * tinyfd_openFileDialog (
@@ -71,20 +71,20 @@ char const * tinyfd_openFileDialog (
     int aNumOfFilterPatterns , // 0 (2 in the following example)
     char const * const * aFilterPatterns , // NULL or char const * lFilterPatterns[2]={"*.png","*.jpg"};
     char const * aSingleFilterDescription , // NULL or "image files"
-    int aAllowMultipleSelects ) ; // 0
+    int aAllowMultipleSelects ); // 0
         // in case of multiple files, the separator is |
         // returns NULL on cancel
 
 char const * tinyfd_selectFolderDialog (
     char const * aTitle , // NULL or ""
-    char const * aDefaultPath ) ; // NULL or ""
+    char const * aDefaultPath ); // NULL or ""
         // returns NULL on cancel
 
 char const * tinyfd_colorChooser (
     char const * aTitle , // NULL or ""
     char const * aDefaultHexRGB , // NULL or "#FF0000”
     unsigned char const aDefaultRGB[3] , // { 0 , 255 , 255 }
-    unsigned char aoResultRGB[3] ) ; // { 0 , 0 , 0 }
+    unsigned char aoResultRGB[3] ); // { 0 , 0 , 0 }
         // returns the hexcolor as a string "#FF0000"
         // aoResultRGB also contains the result
         // aDefaultRGB is used only if aDefaultHexRGB is NULL

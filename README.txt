@@ -38,12 +38,12 @@ Bindings for LUA and C# dll, Haskell, Fortran. Included in LWJGL(java), Rust, Al
 
 void tinyfd_beep();
 
-int tinyfd_notifyPopup (
+int tinyfd_notifyPopup(
     char const * aTitle , // NULL or ""
     char const * aMessage , // NULL or "" may contain \n \t
     char const * aIconType ); // "info" "warning" "error"
 
-int tinyfd_messageBox (
+int tinyfd_messageBox(
     char const * aTitle , // NULL or ""
     char const * aMessage , // NULL or "" may contain \n \t
     char const * aDialogType , // "ok" "okcancel" "yesno" "yesnocancel"
@@ -51,13 +51,13 @@ int tinyfd_messageBox (
     int aDefaultButton );
         // 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel
 
-char const * tinyfd_inputBox (
+char const * tinyfd_inputBox(
     char const * aTitle , // NULL or ""
     char const * aMessage , // NULL or "" (\n and \t have no effect)
     char const * aDefaultInput ); // NULL for a passwordBox, "" for an inputbox
         // returns NULL on cancel
 
-char const * tinyfd_saveFileDialog (
+char const * tinyfd_saveFileDialog(
     char const * aTitle , // NULL or ""
     char const * aDefaultPathAndFile , // NULL or ""
     int aNumOfFilterPatterns , // 0 (1 in the following example)
@@ -65,7 +65,7 @@ char const * tinyfd_saveFileDialog (
     char const * aSingleFilterDescription ); // NULL or "text files"
         // returns NULL on cancel
 
-char const * tinyfd_openFileDialog (
+char const * tinyfd_openFileDialog(
     char const * aTitle , // NULL or ""
     char const * aDefaultPathAndFile , // NULL or ""
     int aNumOfFilterPatterns , // 0 (2 in the following example)
@@ -75,12 +75,12 @@ char const * tinyfd_openFileDialog (
         // in case of multiple files, the separator is |
         // returns NULL on cancel
 
-char const * tinyfd_selectFolderDialog (
+char const * tinyfd_selectFolderDialog(
     char const * aTitle , // NULL or ""
     char const * aDefaultPath ); // NULL or ""
         // returns NULL on cancel
 
-char const * tinyfd_colorChooser (
+char const * tinyfd_colorChooser(
     char const * aTitle , // NULL or ""
     char const * aDefaultHexRGB , // NULL or "#FF0000”
     unsigned char const aDefaultRGB[3] , // { 0 , 255 , 255 }

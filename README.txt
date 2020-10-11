@@ -4,7 +4,7 @@ tiny file dialogs ( cross-platform C C++ ) v3.8.0 [Oct 5, 2020] zlib licence
 |tiny file|   OpenFileDialog SaveFileDialog SelectFolderDialog
 | dialogs |   ASCII UTF-8 (and also MBCS & UTF-16 for windows)
 \____  ___/   Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE
-     \|       SSH support via automatic switch to console mode or X11 forwarding
+     \|       SSH support via automatic switch to console mode or X forwarding
 
 C89/C18 & C++98/C++20 compliant: tested with C & C++ compilers
 VisualStudio MinGW GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC ZapCC

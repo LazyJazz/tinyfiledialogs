@@ -37,7 +37,7 @@ using System.Runtime.InteropServices;
 
 class tinyfd
 {
-    const string mDllLocation = "C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\extras_dll_cs_lua_fortran\\tinyfiledialogs32.dll";
+    public const string mDllLocation = "C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\extras_dll_cs_lua_fortran\\tinyfiledialogs32.dll";
 
     [DllImport(mDllLocation, CallingConvention = CallingConvention.Cdecl)] public static extern void tinyfd_beep();
 
@@ -80,6 +80,10 @@ class tinyfd
         public static extern int tinyfd_getGlobalInt(string aIntVariableName);
     [DllImport(mDllLocation, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern int tinyfd_setGlobalInt(string aIntVariableName, int aValue);
+
+    // ******** a complicated manner to access tinyfd's global variables
+    // [DllImport("kernel32.dll", SetLastError = true)] internal static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+    // [DllImport("kernel32.dll", SetLastError = true)] internal static extern IntPtr LoadLibrary(string lpszLib);
 }
 
 namespace ConsoleApplication1
@@ -98,9 +102,10 @@ namespace ConsoleApplication1
 
         static void Main(string[] args)
         {
+            // ******** a simple manner to access tinyfd's global variables
             IntPtr lTheVersionText = tinyfd.tinyfd_getGlobalChar("tinyfd_version");
             string lTheVersionString = stringFromAnsi(lTheVersionText);
-            tinyfd.tinyfd_messageBox("tinyfiledialgs version", lTheVersionString, "ok", "info", 1);
+            tinyfd.tinyfd_messageBox("tinyfiledialogs version", lTheVersionString, "ok", "info", 1);
 
             // cross platform utf-8
             IntPtr lTheInputText = tinyfd.tinyfd_inputBox("input box", "gimme a string", "A text to input");
@@ -114,7 +119,22 @@ namespace ConsoleApplication1
             int lili = tinyfd.tinyfd_messageBoxW("a message box wchar_t", lAnotherInputString, "ok", "info", 1);
             tinyfd.tinyfd_notifyPopupW("there is no warning (even if it is a warning icon)", lAnotherInputString, "warning");
 
-            tinyfd.tinyfd_beep();        
+            tinyfd.tinyfd_beep();
+
+            // ******** a complicated manner to access tinyfd's global variables
+            // IntPtr tinyfd_DLL = tinyfd.LoadLibrary(tinyfd.mDllLocation);
+            // if (tinyfd_DLL != IntPtr.Zero)
+            // {
+            //    IntPtr lVersionAddr = tinyfd.GetProcAddress(tinyfd_DLL, "tinyfd_version");
+            //    string lVersion = stringFromAnsi(lVersionAddr);
+            //    IntPtr lForceConsoleAddr = tinyfd.GetProcAddress(tinyfd_DLL, "tinyfd_forceConsole");
+            //    if (lForceConsoleAddr != IntPtr.Zero)
+            //    {
+            //        int lForceConsoleValue = Marshal.ReadInt32(lForceConsoleAddr);
+            //        tinyfd.tinyfd_notifyPopup(lVersion, lForceConsoleValue.ToString(), "info");
+            //        Marshal.WriteInt32(lForceConsoleAddr, 0);
+            //    }
+            // }
         }
     }
 }

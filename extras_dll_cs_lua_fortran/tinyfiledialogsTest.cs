@@ -81,7 +81,7 @@ class tinyfd
     [DllImport(mDllLocation, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern int tinyfd_setGlobalInt(string aIntVariableName, int aValue);
 
-    // ******** a complicated manner to access tinyfd's global variables
+    // ******** a complicated way to access tinyfd's global variables
     // [DllImport("kernel32.dll", SetLastError = true)] internal static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
     // [DllImport("kernel32.dll", SetLastError = true)] internal static extern IntPtr LoadLibrary(string lpszLib);
 }
@@ -102,26 +102,26 @@ namespace ConsoleApplication1
 
         static void Main(string[] args)
         {
-            // ******** a simple manner to access tinyfd's global variables
+            // ******** a simple way to access tinyfd's global variables
             IntPtr lTheVersionText = tinyfd.tinyfd_getGlobalChar("tinyfd_version");
             string lTheVersionString = stringFromAnsi(lTheVersionText);
-            tinyfd.tinyfd_messageBox("tinyfiledialogs version", lTheVersionString, "ok", "info", 1);
+            tinyfd.tinyfd_messageBox("tinyfd_version", lTheVersionString, "ok", "info", 1);
 
             // cross platform utf-8
             IntPtr lTheInputText = tinyfd.tinyfd_inputBox("input box", "gimme a string", "A text to input");
             string lTheInputString = stringFromAnsi(lTheInputText);
             int lala = tinyfd.tinyfd_messageBox("a message box char", lTheInputString, "ok", "warning", 1);
-            tinyfd.tinyfd_notifyPopup("there is no error (even if it is an error icon)", lTheInputString, "error");
 
             // windows only utf-16
             IntPtr lAnotherInputTextW = tinyfd.tinyfd_inputBoxW("input box", "gimme another string", "Another text to input");
             string lAnotherInputString = stringFromUni(lAnotherInputTextW);
             int lili = tinyfd.tinyfd_messageBoxW("a message box wchar_t", lAnotherInputString, "ok", "info", 1);
-            tinyfd.tinyfd_notifyPopupW("there is no warning (even if it is a warning icon)", lAnotherInputString, "warning");
+
+            tinyfd.tinyfd_notifyPopupW("there is no warning (even if it is a warning icon)", lTheVersionString, "warning");
 
             tinyfd.tinyfd_beep();
 
-            // ******** a complicated manner to access tinyfd's global variables
+            // ******** a complicated way to access tinyfd's global variables (uncomment the 2 lines in the class tinyfd above)
             // IntPtr tinyfd_DLL = tinyfd.LoadLibrary(tinyfd.mDllLocation);
             // if (tinyfd_DLL != IntPtr.Zero)
             // {

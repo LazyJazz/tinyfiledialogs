@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.8.0 [Oct 5, 2020] zlib licence
+ /         \ tinyfiledialogs.c v3.8.1 [Oct 18, 2020] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -89,7 +89,7 @@ Thanks for contributions, bug corrections & thorough testing to:
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char const tinyfd_version[8] = "3.8.0";
+char const tinyfd_version[8] = "3.8.1";
 
 /******************************************************************************************************/
 /**************************************** UTF-8 on Windows ********************************************/
@@ -421,14 +421,48 @@ int tfd_quoteDetected(char const * aString)
 }
 
 
-#ifdef _WIN32
-
-/* windows only (not for wchar_t): you can set char to 1:utf-8(default) or 0:MBCS */
-void tinyfd_setWinUtf8(int aIsUtf8) /* made to be used from C# to modify the global variable tinyfd_winUtf8 */
+char const * tinyfd_getGlobalChar(char const * aCharVariableName) /* to be called from C# (you don't need this in C or C++) */
 {
-	tinyfd_winUtf8 = aIsUtf8;
+	if (!aCharVariableName || !strlen(aCharVariableName)) return NULL;
+	else if (!strcmp(aCharVariableName, "tinyfd_version")) return tinyfd_version;
+	else if (!strcmp(aCharVariableName, "tinyfd_needs")) return tinyfd_needs;
+	else if (!strcmp(aCharVariableName, "tinyfd_response")) return tinyfd_response;
+	else return NULL ;
 }
 
+
+int tinyfd_getGlobalInt(char const * aIntVariableName) /* to be called from C# (you don't need this in C or C++) */
+{
+	if ( !aIntVariableName || !strlen(aIntVariableName) ) return -1 ;
+	else if ( !strcmp(aIntVariableName, "tinyfd_verbose") ) return tinyfd_verbose ;
+	else if ( !strcmp(aIntVariableName, "tinyfd_silent") ) return tinyfd_silent ;
+	else if ( !strcmp(aIntVariableName, "tinyfd_allowCursesDialogs") ) return tinyfd_allowCursesDialogs ;
+	else if ( !strcmp(aIntVariableName, "tinyfd_forceConsole") ) return tinyfd_forceConsole ;
+	else if ( !strcmp(aIntVariableName, "tinyfd_assumeGraphicDisplay") ) return tinyfd_assumeGraphicDisplay ;
+#ifdef _WIN32
+	else if ( !strcmp(aIntVariableName, "tinyfd_winUtf8") ) return tinyfd_winUtf8 ;
+#endif
+	else return -1;
+}
+
+
+int tinyfd_setGlobalInt(char const * aIntVariableName, int aValue) /* to be called from C# (you don't need this in C or C++) */
+{
+	if (!aIntVariableName || !strlen(aIntVariableName)) return -1 ;
+	else if (!strcmp(aIntVariableName, "tinyfd_verbose")) { tinyfd_verbose = aValue; return tinyfd_verbose; }
+	else if (!strcmp(aIntVariableName, "tinyfd_silent")) { tinyfd_silent = aValue; return tinyfd_silent; }
+	else if (!strcmp(aIntVariableName, "tinyfd_allowCursesDialogs")) { tinyfd_allowCursesDialogs = aValue; return tinyfd_allowCursesDialogs; }
+	else if (!strcmp(aIntVariableName, "tinyfd_forceConsole")) { tinyfd_forceConsole = aValue; return tinyfd_forceConsole; }
+	else if (!strcmp(aIntVariableName, "tinyfd_assumeGraphicDisplay")) { tinyfd_assumeGraphicDisplay = aValue; return tinyfd_assumeGraphicDisplay; }
+#ifdef _WIN32
+	else if (!strcmp(aIntVariableName, "tinyfd_winUtf8")) { tinyfd_winUtf8 = aValue; return tinyfd_winUtf8; }
+#endif
+	else return -1;
+}
+
+
+
+#ifdef _WIN32
 
 static void replaceChr(char * aString, char aOldChr, char aNewChr)
 {

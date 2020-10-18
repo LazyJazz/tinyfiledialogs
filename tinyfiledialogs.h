@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.h v3.8.0 [Oct 5, 2020] zlib licence
+ /         \ tinyfiledialogs.h v3.8.1 [Oct 18, 2020] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -67,12 +67,20 @@ wchar_t * tinyfd_mbcsTo16(char const * aMbcsString);
 char * tinyfd_mbcsTo8(char const * aMbcsString);
 wchar_t * tinyfd_utf8to16(char const * aUtf8string);
 char * tinyfd_utf16to8(wchar_t const * aUtf16string);
-
-void tinyfd_setWinUtf8(int aIsUtf8); /* only to be used from C# to set the global variable tinyfd_winUtf8 to 1 or 0 */
 #endif
 /******************************************************************************************************/
 /******************************************************************************************************/
 /******************************************************************************************************/
+
+/************* 3 funtions for C# (you don't need this in C or C++) : */
+char const * tinyfd_getGlobalChar(char const * aCharVariableName); /* returns NULL on error */
+int tinyfd_getGlobalInt(char const * aIntVariableName); /* returns -1 on error */
+int tinyfd_setGlobalInt(char const * aIntVariableName, int aValue); /* returns -1 on error */
+/* aCharVariableName: "tinyfd_version" "tinyfd_needs" "tinyfd_response"
+   aIntVariableName : "tinyfd_verbose" "tinyfd_silent" "tinyfd_allowCursesDialogs"
+				      "tinyfd_forceConsole" "tinyfd_assumeGraphicDisplay" "tinyfd_winUtf8"
+**************/
+
 
 extern char const tinyfd_version[8]; /* contains tinyfd current version number */
 extern char tinyfd_needs[]; /* info about requirements */

@@ -89,7 +89,7 @@ Thanks for contributions, bug corrections & thorough testing to:
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char const tinyfd_version[8] = "3.7.2";
+char const tinyfd_version[8] = "3.8.0";
 
 /******************************************************************************************************/
 /**************************************** UTF-8 on Windows ********************************************/

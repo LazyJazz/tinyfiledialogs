@@ -16,10 +16,10 @@ Bindings for LUA and C# dll, Haskell, Fortran. Included in LWJGL(java), Rust, Al
 
                    http://tinyfiledialogs.sourceforge.net
          git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
- __________________________________________________________________
-|                                                                  |
-| my email address at the top of the header file tinyfiledialogs.h |
-|__________________________________________________________________|
+ _____________________________________________________________________
+|                                                                     |
+| my email address is at the top of the header file tinyfiledialogs.h |
+|_____________________________________________________________________|
  ________________________________________________________________________________
 |  ____________________________________________________________________________  |
 | |                                                                            | |
@@ -83,8 +83,8 @@ char const * tinyfd_selectFolderDialog(
 char const * tinyfd_colorChooser(
     char const * aTitle , // NULL or ""
     char const * aDefaultHexRGB , // NULL or "#FF0000”
-    unsigned char const aDefaultRGB[3] , // { 0 , 255 , 255 }
-    unsigned char aoResultRGB[3] ); // { 0 , 0 , 0 }
+    unsigned char const aDefaultRGB[3] , // unsigned char lDefaultRGB[3] = { 0 , 128 , 255 };
+    unsigned char aoResultRGB[3] ); // unsigned char lResultRGB[3];
         // returns the hexcolor as a string "#FF0000"
         // aoResultRGB also contains the result
         // aDefaultRGB is used only if aDefaultHexRGB is NULL

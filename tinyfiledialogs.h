@@ -155,8 +155,8 @@ char * tinyfd_selectFolderDialog(
 char * tinyfd_colorChooser(
 	char const * aTitle, /* NULL or "" */
 	char const * aDefaultHexRGB, /* NULL or "#FF0000" */
-	unsigned char const aDefaultRGB[3] , /* { 0 , 255 , 255 } */
-	unsigned char aoResultRGB[3] ) ; /* { 0 , 0 , 0 } */
+	unsigned char const aDefaultRGB[3] , /* unsigned char lDefaultRGB[3] = { 0 , 128 , 255 }; */
+	unsigned char aoResultRGB[3] ) ; /* unsigned char lResultRGB[3]; */
 		/* returns the hexcolor as a string "#FF0000" */
 		/* aoResultRGB also contains the result */
 		/* aDefaultRGB is used only if aDefaultHexRGB is NULL */
@@ -218,8 +218,8 @@ wchar_t * tinyfd_selectFolderDialogW(
 wchar_t * tinyfd_colorChooserW(
 	wchar_t const * aTitle, /* NULL or L"" */
 	wchar_t const * aDefaultHexRGB, /* NULL or L"#FF0000" */
-	unsigned char const aDefaultRGB[3] , /* { 0 , 255 , 255 } */
-	unsigned char aoResultRGB[3] ) ; /* { 0 , 0 , 0 } */
+	unsigned char const aDefaultRGB[3], /* unsigned char lDefaultRGB[3] = { 0 , 128 , 255 }; */
+	unsigned char aoResultRGB[3]); /* unsigned char lResultRGB[3]; */
 		/* returns the hexcolor as a string L"#FF0000" */
 		/* aoResultRGB also contains the result */
 		/* aDefaultRGB is used only if aDefaultHexRGB is NULL */

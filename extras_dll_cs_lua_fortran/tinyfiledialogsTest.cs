@@ -1,5 +1,5 @@
 ﻿/*_________
- /         \ tinyfiledialogsTest.cs v3.8.0 [Oct 5, 2020] zlib licence
+ /         \ tinyfiledialogsTest.cs v3.8.1 [Oct 18, 2020] zlib licence
  |tiny file| C# bindings created [2015]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -11,6 +11,21 @@
 
 If you like tinyfiledialogs, please upvote my stackoverflow answer
 https://stackoverflow.com/a/47651444
+
+- License -
+ This software is provided 'as-is', without any express or implied
+ warranty.  In no event will the authors be held liable for any damages
+ arising from the use of this software.
+ Permission is granted to anyone to use this software for any purpose,
+ including commercial applications, and to alter it and redistribute it
+ freely, subject to the following restrictions:
+ 1. The origin of this software must not be misrepresented; you must not
+ claim that you wrote the original software.  If you use this software
+ in a product, an acknowledgment in the product documentation would be
+ appreciated but is not required.
+ 2. Altered source versions must be plainly marked as such, and must not be
+ misrepresented as being the original software.
+ 3. This notice may not be removed or altered from any source distribution.
 */
 
 using System;
@@ -22,54 +37,49 @@ using System.Runtime.InteropServices;
 
 class tinyfd
 {
+    const string mDllLocation = "C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\extras_dll_cs_lua_fortran\\tinyfiledialogs32.dll";
+
+    [DllImport(mDllLocation, CallingConvention = CallingConvention.Cdecl)] public static extern void tinyfd_beep();
+
     // cross platform UTF8
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CallingConvention = CallingConvention.Cdecl)]
-    public static extern void tinyfd_beep();
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int tinyfd_notifyPopup(string aTitle, string aMessage, string aIconType);
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int tinyfd_messageBox(string aTitle, string aMessage, string aDialogTyle, string aIconType, int aDefaultButton);
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr tinyfd_inputBox(string aTitle, string aMessage, string aDefaultInput);
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr tinyfd_saveFileDialog(string aTitle, string aDefaultPathAndFile, int aNumOfFilterPatterns, string[] aFilterPatterns, string aSingleFilterDescription);
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr tinyfd_openFileDialog(string aTitle, string aDefaultPathAndFile, int aNumOfFilterPatterns, string[] aFilterPatterns, string aSingleFilterDescription, int aAllowMultipleSelects);
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr tinyfd_selectFolderDialog(string aTitle, string aDefaultPathAndFile);
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr tinyfd_colorChooser(string aTitle, string aDefaultHexRGB, byte[] aDefaultRGB, byte[] aoResultRGB);
+    [DllImport(mDllLocation, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int tinyfd_notifyPopup(string aTitle, string aMessage, string aIconType);
+    [DllImport(mDllLocation, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int tinyfd_messageBox(string aTitle, string aMessage, string aDialogTyle, string aIconType, int aDefaultButton);
+    [DllImport(mDllLocation, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr tinyfd_inputBox(string aTitle, string aMessage, string aDefaultInput);
+    [DllImport(mDllLocation, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr tinyfd_saveFileDialog(string aTitle, string aDefaultPathAndFile, int aNumOfFilterPatterns, string[] aFilterPatterns, string aSingleFilterDescription);
+    [DllImport(mDllLocation, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr tinyfd_openFileDialog(string aTitle, string aDefaultPathAndFile, int aNumOfFilterPatterns, string[] aFilterPatterns, string aSingleFilterDescription, int aAllowMultipleSelects);
+    [DllImport(mDllLocation, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr tinyfd_selectFolderDialog(string aTitle, string aDefaultPathAndFile);
+    [DllImport(mDllLocation, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr tinyfd_colorChooser(string aTitle, string aDefaultHexRGB, byte[] aDefaultRGB, byte[] aoResultRGB);
 
     // windows only utf16
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int tinyfd_notifyPopupW(string aTitle, string aMessage, string aIconType);
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-    public static extern int tinyfd_messageBoxW(string aTitle, string aMessage, string aDialogTyle, string aIconType, int aDefaultButton);
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr tinyfd_inputBoxW(string aTitle, string aMessage, string aDefaultInput);
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr tinyfd_saveFileDialogW(string aTitle, string aDefaultPathAndFile, int aNumOfFilterPatterns, string[] aFilterPatterns, string aSingleFilterDescription);
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr tinyfd_openFileDialogW(string aTitle, string aDefaultPathAndFile, int aNumOfFilterPatterns, string[] aFilterPatterns, string aSingleFilterDescription, int aAllowMultipleSelects);
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr tinyfd_selectFolderDialogW(string aTitle, string aDefaultPathAndFile);
-    [DllImport("C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\tinyfiledialogs32.dll",
-        CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr tinyfd_colorChooserW(string aTitle, string aDefaultHexRGB, byte[] aDefaultRGB, byte[] aoResultRGB);
+    [DllImport(mDllLocation, CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int tinyfd_notifyPopupW(string aTitle, string aMessage, string aIconType);
+    [DllImport(mDllLocation, CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int tinyfd_messageBoxW(string aTitle, string aMessage, string aDialogTyle, string aIconType, int aDefaultButton);
+    [DllImport(mDllLocation, CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr tinyfd_inputBoxW(string aTitle, string aMessage, string aDefaultInput);
+    [DllImport(mDllLocation, CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr tinyfd_saveFileDialogW(string aTitle, string aDefaultPathAndFile, int aNumOfFilterPatterns, string[] aFilterPatterns, string aSingleFilterDescription);
+    [DllImport(mDllLocation, CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr tinyfd_openFileDialogW(string aTitle, string aDefaultPathAndFile, int aNumOfFilterPatterns, string[] aFilterPatterns, string aSingleFilterDescription, int aAllowMultipleSelects);
+    [DllImport(mDllLocation, CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr tinyfd_selectFolderDialogW(string aTitle, string aDefaultPathAndFile);
+    [DllImport(mDllLocation, CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr tinyfd_colorChooserW(string aTitle, string aDefaultHexRGB, byte[] aDefaultRGB, byte[] aoResultRGB);
+
+    // cross platform
+    [DllImport(mDllLocation, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr tinyfd_getGlobalChar(string aCharVariableName);
+    [DllImport(mDllLocation, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int tinyfd_getGlobalInt(string aIntVariableName);
+    [DllImport(mDllLocation, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int tinyfd_setGlobalInt(string aIntVariableName, int aValue);
 }
 
 namespace ConsoleApplication1
@@ -87,7 +97,11 @@ namespace ConsoleApplication1
         }
 
         static void Main(string[] args)
-        {                                         
+        {
+            IntPtr lTheVersionText = tinyfd.tinyfd_getGlobalChar("tinyfd_version");
+            string lTheVersionString = stringFromAnsi(lTheVersionText);
+            tinyfd.tinyfd_messageBox("tinyfiledialgs version", lTheVersionString, "ok", "info", 1);
+
             // cross platform utf-8
             IntPtr lTheInputText = tinyfd.tinyfd_inputBox("input box", "gimme a string", "A text to input");
             string lTheInputString = stringFromAnsi(lTheInputText);
@@ -98,7 +112,7 @@ namespace ConsoleApplication1
             IntPtr lAnotherInputTextW = tinyfd.tinyfd_inputBoxW("input box", "gimme another string", "Another text to input");
             string lAnotherInputString = stringFromUni(lAnotherInputTextW);
             int lili = tinyfd.tinyfd_messageBoxW("a message box wchar_t", lAnotherInputString, "ok", "info", 1);
-            tinyfd.tinyfd_notifyPopupW("there is no error (even if it is an error icon)", lAnotherInputString, "error");
+            tinyfd.tinyfd_notifyPopupW("there is no warning (even if it is a warning icon)", lAnotherInputString, "warning");
 
             tinyfd.tinyfd_beep();        
         }

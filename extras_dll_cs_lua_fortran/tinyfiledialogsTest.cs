@@ -37,7 +37,7 @@ using System.Runtime.InteropServices;
 
 class tinyfd
 {
-    public const string mDllLocation = "C:\\Users\\frogs\\yomspace2015\\yomlibs\\tinyfd\\extras_dll_cs_lua_fortran\\tinyfiledialogs32.dll";
+    public const string mDllLocation = "C:\\Users\\frogs\\yomspace2021\\yomlibs\\tinyfd\\extras_dll_cs_lua_fortran\\tinyfiledialogs32.dll";
 
     [DllImport(mDllLocation, CallingConvention = CallingConvention.Cdecl)] public static extern void tinyfd_beep();
 

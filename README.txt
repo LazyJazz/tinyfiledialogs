@@ -167,4 +167,4 @@ Windows :
       it links against comdlg32.lib & ole32.lib.
 
     VisualStudio command line :
-      > cl hello.c tinyfiledialogs.c comdlg32.lib ole32.lib user32.lib shell32.lib
+      > cl hello.c tinyfiledialogs.c comdlg32.lib ole32.lib user32.lib shell32.lib /W4

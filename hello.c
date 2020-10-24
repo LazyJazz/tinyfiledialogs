@@ -71,6 +71,8 @@ int main( int argc , char * argv[] )
 	char lBuffer[1024];
 	char const * lFilterPatterns[2] = { "*.txt", "*.text" };
 
+	(void)argv; /*to silence stupid visual studio warning*/
+
 	tinyfd_verbose = argc - 1;  /* default is 0 */
 	tinyfd_silent = 1;  /* default is 1 */
 
@@ -253,22 +255,24 @@ $ clang -o hello.app hello.c tinyfiledialogs.c
 
 UNIX :
 $ gcc -o hello hello.c tinyfiledialogs.c
-( or clang tcc owcc cc CC  )
+( or clang tcc owcc cc CC )
 
 Windows :
-	MinGW needs gcc >= v4.9 otherwise some headers are incomplete:
+	MinGW needs gcc >= v4.9 otherwise some headers are incomplete
 	> gcc -o hello.exe hello.c tinyfiledialogs.c -LC:/mingw/lib -lcomdlg32 -lole32
 
 	TinyCC needs >= v0.9.27 (+ tweaks - contact me) otherwise some headers are missing
-	> tcc -o hello.exe hello.c tinyfiledialogs.c
-	    -isystem C:\tcc\winapi-full-for-0.9.27\include\winapi
-	    -lcomdlg32 -lole32 -luser32 -lshell32
+	> tcc -o hello.exe hello.c tinyfiledialogs.c ^
+		-isystem C:\tcc\winapi-full-for-0.9.27\include\winapi ^
+		-lcomdlg32 -lole32 -luser32 -lshell32
 
 	Borland C: > bcc32c -o hello.exe hello.c tinyfiledialogs.c
-
 	OpenWatcom v2: create a character-mode executable project.
 
 	VisualStudio :
 	  Create a console application project,
-	  it links against Comdlg32.lib & Ole32.lib.
+	  it links against comdlg32.lib & ole32.lib.
+
+	VisualStudio command line :
+	  > cl hello.c tinyfiledialogs.c comdlg32.lib ole32.lib user32.lib shell32.lib /W4
 */

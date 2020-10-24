@@ -761,7 +761,7 @@ static int dirExists(char const * aDirPath)
         struct _stat lInfo;
         wchar_t * lTmpWChar;
         int lStatRet;
-		int lDirLen;
+		size_t lDirLen;
 
 		if (!aDirPath)
 			return 0;
@@ -1508,7 +1508,8 @@ wchar_t * tinyfd_openFileDialogW(
         wchar_t * lPointers[MAX_MULTIPLE_FILES+1];
         wchar_t * p;
         int i, j;
-		size_t lBuffLen, lFullBuffLen;
+		size_t lBuffLen;
+		DWORD lFullBuffLen;
         HRESULT lHResult;
         OPENFILENAMEW ofn = { 0 };
 		static wchar_t * lBuff = NULL;
@@ -2595,7 +2596,7 @@ static void writeUtf8( char const * aUtf8String )
 
 	lConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	lTmpWChar = tinyfd_utf8to16(aUtf8String);
-	(void)WriteConsoleW(lConsoleHandle, lTmpWChar, wcslen(lTmpWChar), &lNum, NULL);
+	(void)WriteConsoleW(lConsoleHandle, lTmpWChar, (DWORD) wcslen(lTmpWChar), &lNum, NULL);
 }
 
 
@@ -2607,8 +2608,8 @@ int tinyfd_messageBox(
 	int aDefaultButton) /* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */
 {
 	char lChar;
-	UINT lOriginalCP;
-	UINT lOriginalOutputCP;
+	UINT lOriginalCP = 0;
+	UINT lOriginalOutputCP = 0;
 
 	if (tfd_quoteDetected(aTitle)) return tinyfd_messageBox("INVALID TITLE WITH QUOTES", aMessage, aDialogType, aIconType, aDefaultButton);
 	if (tfd_quoteDetected(aMessage)) return tinyfd_messageBox(aTitle, "INVALID MESSAGE WITH QUOTES", aDialogType, aIconType, aDefaultButton);
@@ -2758,8 +2759,8 @@ char * tinyfd_inputBox(
 	char * lTmpChar;
 	wchar_t lBuffW[1024];
 
-	UINT lOriginalCP;
-	UINT lOriginalOutputCP;
+	UINT lOriginalCP = 0;
+	UINT lOriginalOutputCP = 0;
 
 	if (!aTitle && !aMessage && !aDefaultInput) return lBuff; /* now I can fill lBuff from outside */
 

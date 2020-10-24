@@ -1,5 +1,5 @@
 #  _________
-# /         \ tinyfiledialogs v3.8.0 [Oct 5, 2020] zlib licence
+# /         \ tinyfiledialogs v3.8.1 [Oct 18, 2020] zlib licence
 # |tiny file| 
 # | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
 # \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -26,4 +26,8 @@
 gcc -c tinyfiledialogs.c tinyopen.c
 gfortran -c ftinyopen.F90 main2.F90
 gfortran -o gopen main2.o ftinyopen.o tinyopen.o tinyfiledialogs.o
-(on windows, to link with the windows libraries, you must add: -lcomdlg32 -lole32)
+
+On windows, to link with the windows libraries,
+you must add: -lcomdlg32 -lole32
+(and maybe: -luser32.lib -lshell32.lib)
+

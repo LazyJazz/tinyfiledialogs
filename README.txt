@@ -164,4 +164,7 @@ Windows :
 
     VisualStudio :
       Create a console application project,
-      it links against Comdlg32.lib & Ole32.lib.
+      it links against comdlg32.lib & ole32.lib.
+
+	VisualStudio command line :
+	  > cl hello.c tinyfiledialogs.c comdlg32.lib ole32.lib user32.lib shell32.lib

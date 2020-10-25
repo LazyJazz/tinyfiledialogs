@@ -4247,7 +4247,7 @@ int tinyfd_messageBox(
                 }
                 else if ( aDialogType && ! strcmp( "yesno" , aDialogType ) )
                 {
-                                strcat( lDialogString , "question" ) ;
+                                strcat( lDialogString , "question --ok-label=Yes --cancel-label=No" ) ;
                 }
                 else if ( aDialogType && ! strcmp( "yesnocancel" , aDialogType ) )
                 {

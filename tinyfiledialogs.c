@@ -51,7 +51,7 @@ Thanks for contributions, bug corrections & thorough testing to:
 #endif
 
 #if !defined(_WIN32) && ( defined(__GNUC__) || defined(__clang__) )
- #define _GNU_SOURCE
+ /*#define _GNU_SOURCE*/
 #endif
 
 #include <stdio.h>

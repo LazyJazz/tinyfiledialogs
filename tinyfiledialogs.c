@@ -3734,6 +3734,17 @@ int tfd_zenityPresent(void)
 }
 
 
+int tfd_yadPresent(void)
+{
+   static int lYadPresent = -1;
+   if (lYadPresent < 0)
+   {
+      lYadPresent = detectPresence("yad");
+   }
+   return lYadPresent && graphicMode();
+}
+
+
 int tfd_zenity3Present(void)
 {
         static int lZenity3Present = -1 ;
@@ -5097,6 +5108,31 @@ int tinyfd_notifyPopup(
                         strcat( lDialogString , aMessage ) ;
                 }
                 strcat( lDialogString , " \"" ) ;
+        }
+        else if ( tfd_yadPresent() )
+        {
+           if (aTitle && !strcmp(aTitle, "tinyfd_query")) { strcpy(tinyfd_response, "yad"); return 1; }
+           strcpy(lDialogString, "yad");
+           strcat(lDialogString, " --notification");
+
+           if (aIconType && strlen(aIconType))
+           {
+              strcat(lDialogString, " --window-icon '");
+              strcat(lDialogString, aIconType);
+              strcat(lDialogString, "'");
+           }
+
+           strcat(lDialogString, " --text \"");
+           if (aTitle && strlen(aTitle))
+           {
+              strcat(lDialogString, aTitle);
+              strcat(lDialogString, "\n");
+           }
+           if (aMessage && strlen(aMessage))
+           {
+              strcat(lDialogString, aMessage);
+           }
+           strcat(lDialogString, " \"");
         }
         else if ( perlPresent() >= 2 )
         {

@@ -3766,7 +3766,7 @@ int tfd_zenity3Present(void)
                                 {
                                         lZenity3Present = 2 ;
                                 }
-                                if (tinyfd_verbose) printf("zenity %d\n", lZenity3Present);
+                                if (tinyfd_verbose) printf("zenity type %d\n", lZenity3Present);
                         }
                         pclose( lIn ) ;
                 }

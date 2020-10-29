@@ -89,7 +89,7 @@ int main( int argc , char * argv[] )
 
 	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 
-	strcpy(lBuffer, "v");
+	strcpy(lBuffer, "tinyfiledialogs\nv");
 	strcat(lBuffer, tinyfd_version);
 	if (lWillBeGraphicMode)
 	{
@@ -100,8 +100,6 @@ int main( int argc , char * argv[] )
 		strcat(lBuffer, "\nconsole mode: ");
 	}
 	strcat(lBuffer, tinyfd_response);
-	strcat(lBuffer, "\n");
-	strcat(lBuffer, tinyfd_needs+78);
 	tinyfd_messageBox("hello", lBuffer, "ok", "info", 0);
 
 	tinyfd_notifyPopup("the title", "the message\n\tfrom outer-space", "info");

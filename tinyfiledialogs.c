@@ -51,7 +51,7 @@ Thanks for contributions, bug corrections & thorough testing to:
 #endif
 
 #if !defined(_WIN32) && ( defined(__GNUC__) || defined(__clang__) )
- /*#define _GNU_SOURCE*/
+ #define _GNU_SOURCE /* used only to resolve symbolic links. Can be commented out */
 #endif
 
 #include <stdio.h>
@@ -1067,7 +1067,7 @@ int tinyfd_notifyPopupW(
         lDialogStringLen = 3 * MAX_PATH_OR_CMD + lTitleLen + lMessageLen;
         lDialogString = (wchar_t *)malloc(2 * lDialogStringLen);
 
-        wcscpy(lDialogString, L"powershell.exe -command \"\
+        if (lDialogString) wcscpy(lDialogString, L"powershell.exe -command \"\
 function Show-BalloonTip {\
 [cmdletbinding()] \
 param( \
@@ -1080,7 +1080,7 @@ $balloon = New-Object System.Windows.Forms.NotifyIcon ; \
 $path = Get-Process -id $pid | Select-Object -ExpandProperty Path ; \
 $icon = [System.Drawing.Icon]::ExtractAssociatedIcon($path) ;");
 
-        wcscat(lDialogString, L"\
+        if (lDialogString) wcscat(lDialogString, L"\
 $balloon.Icon = $icon ; \
 $balloon.BalloonTipIcon = $IconType ; \
 $balloon.BalloonTipText = $Message ; \
@@ -1827,7 +1827,7 @@ static int messageBoxWinGui(
 		if (tinyfd_winUtf8) lTmpWChar = tinyfd_utf8to16(aMessage);
 		else lTmpWChar = tinyfd_mbcsTo16(aMessage);
 		lMessage = malloc((wcslen(lTmpWChar) + 1)* sizeof(wchar_t));
-		wcscpy(lMessage, lTmpWChar);
+		if (lMessage) wcscpy(lMessage, lTmpWChar);
 	}
 	if (aDialogType)
 	{
@@ -1871,7 +1871,7 @@ static int notifyWinGui(
 		if (tinyfd_winUtf8) lTmpWChar = tinyfd_utf8to16(aMessage);
 		else lTmpWChar = tinyfd_mbcsTo16(aMessage);
 		lMessage = malloc((wcslen(lTmpWChar) + 1)* sizeof(wchar_t));
-		wcscpy(lMessage, lTmpWChar);
+      if (lMessage) wcscpy(lMessage, lTmpWChar);
 	}
 	if (aIconType)
 	{
@@ -1911,7 +1911,7 @@ static int inputBoxWinGui(
 		if (tinyfd_winUtf8) lTmpWChar = tinyfd_utf8to16(aMessage);
 		else lTmpWChar = tinyfd_mbcsTo16(aMessage);
 		lMessage = malloc((wcslen(lTmpWChar) + 1)* sizeof(wchar_t));
-		wcscpy(lMessage, lTmpWChar);
+      if (lMessage) wcscpy(lMessage, lTmpWChar);
 	}
 	if (aDefaultInput)
 	{
@@ -1961,7 +1961,7 @@ static char * saveFileDialogWinGui(
 		if (tinyfd_winUtf8) lTmpWChar = tinyfd_utf8to16(aFilterPatterns[i]);
 		else lTmpWChar = tinyfd_mbcsTo16(aFilterPatterns[i]);
 		lFilterPatterns[i] = (wchar_t *)malloc((wcslen(lTmpWChar) + 1) * sizeof(wchar_t *));
-		wcscpy(lFilterPatterns[i], lTmpWChar);
+      if (lFilterPatterns[i]) wcscpy(lFilterPatterns[i], lTmpWChar);
 	}
 
 	if (aTitle)
@@ -2033,7 +2033,7 @@ static char * openFileDialogWinGui(
 		if (tinyfd_winUtf8) lTmpWChar = tinyfd_utf8to16(aFilterPatterns[i]);
 		else lTmpWChar = tinyfd_mbcsTo16(aFilterPatterns[i]);
 		lFilterPatterns[i] = (wchar_t *)malloc((wcslen(lTmpWChar) + 1)*sizeof(wchar_t *));
-		wcscpy(lFilterPatterns[i], lTmpWChar);
+      if (lFilterPatterns[i]) wcscpy(lFilterPatterns[i], lTmpWChar);
 	}
 
 	if (aTitle)
@@ -4339,8 +4339,7 @@ int tinyfd_messageBox(
       else if (tfd_yadPresent())
       {
          if (aTitle && !strcmp(aTitle, "tinyfd_query")) { strcpy(tinyfd_response, "yad"); return 1; }
-         strcpy(lDialogString, "szAnswer=$(yad");
-         strcat(lDialogString, " --");
+         strcpy(lDialogString, "szAnswer=$(yad --");
          if (aDialogType && !strcmp("okcancel", aDialogType))
          {
             strcat(lDialogString,
@@ -5413,6 +5412,36 @@ char * tinyfd_inputBox(
                 strcat( lDialogString ,
                                 ");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
         }
+        else if (tfd_yadPresent())
+        {
+           if (aTitle && !strcmp(aTitle, "tinyfd_query")) { strcpy(tinyfd_response, "yad"); return (char*)1; }
+           strcpy(lDialogString, "szAnswer=$(yad --entry");
+           if (aTitle && strlen(aTitle))
+           {
+              strcat(lDialogString, " --title=\"");
+              strcat(lDialogString, aTitle);
+              strcat(lDialogString, "\"");
+           }
+           if (aMessage && strlen(aMessage))
+           {
+              strcat(lDialogString, " --text=\"");
+              strcat(lDialogString, aMessage);
+              strcat(lDialogString, "\"");
+           }
+           if (aDefaultInput && strlen(aDefaultInput))
+           {
+              strcat(lDialogString, " --entry-text=\"");
+              strcat(lDialogString, aDefaultInput);
+              strcat(lDialogString, "\"");
+           }
+           else
+           {
+              strcat(lDialogString, " --hide-text");
+           }
+           if (tinyfd_silent) strcat(lDialogString, " 2>/dev/null ");
+           strcat(lDialogString,
+              ");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
+        }
         else if ( gxmessagePresent() || gmessagePresent() )
         {
                 if ( gxmessagePresent() ) {
@@ -5973,7 +6002,40 @@ char * tinyfd_saveFileDialog(
                 }
                 if (tinyfd_silent) strcat( lDialogString , " 2>/dev/null ");
         }
-		else if ( !xdialogPresent() && tkinter3Present( ) )
+        else if (tfd_yadPresent())
+        {
+           if (aTitle && !strcmp(aTitle, "tinyfd_query")) { strcpy(tinyfd_response, "yad"); return (char*)1; }
+           strcpy(lDialogString, "yad --file-selection --save --confirm-overwrite");
+           if (aTitle && strlen(aTitle))
+           {
+              strcat(lDialogString, " --title=\"");
+              strcat(lDialogString, aTitle);
+              strcat(lDialogString, "\"");
+           }
+           if (aDefaultPathAndFile && strlen(aDefaultPathAndFile))
+           {
+              strcat(lDialogString, " --filename=\"");
+              strcat(lDialogString, aDefaultPathAndFile);
+              strcat(lDialogString, "\"");
+           }
+           if (aNumOfFilterPatterns > 0)
+           {
+              strcat(lDialogString, " --file-filter='");
+              if (aSingleFilterDescription && strlen(aSingleFilterDescription))
+              {
+                 strcat(lDialogString, aSingleFilterDescription);
+                 strcat(lDialogString, " |");
+              }
+              for (i = 0; i < aNumOfFilterPatterns; i++)
+              {
+                 strcat(lDialogString, " ");
+                 strcat(lDialogString, aFilterPatterns[i]);
+              }
+              strcat(lDialogString, "' --file-filter='All files | *'");
+           }
+           if (tinyfd_silent) strcat(lDialogString, " 2>/dev/null ");
+      }
+      else if ( !xdialogPresent() && tkinter3Present( ) )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python3-tkinter");return (char *)1;}
 			strcpy( lDialogString , gPython3Name ) ;
@@ -6460,7 +6522,44 @@ char * tinyfd_openFileDialog(
                 }
                 if (tinyfd_silent) strcat( lDialogString , " 2>/dev/null ");
         }
-		else if ( tkinter3Present( ) )
+        else if (tfd_yadPresent())
+        {
+           if (aTitle && !strcmp(aTitle, "tinyfd_query")) { strcpy(tinyfd_response, "yad"); return (char*)1; }
+           strcpy(lDialogString, "yad --file-selection");
+           if (aAllowMultipleSelects)
+           {
+              strcat(lDialogString, " --multiple");
+           }
+           if (aTitle && strlen(aTitle))
+           {
+              strcat(lDialogString, " --title=\"");
+              strcat(lDialogString, aTitle);
+              strcat(lDialogString, "\"");
+           }
+           if (aDefaultPathAndFile && strlen(aDefaultPathAndFile))
+           {
+              strcat(lDialogString, " --filename=\"");
+              strcat(lDialogString, aDefaultPathAndFile);
+              strcat(lDialogString, "\"");
+           }
+           if (aNumOfFilterPatterns > 0)
+           {
+              strcat(lDialogString, " --file-filter='");
+              if (aSingleFilterDescription && strlen(aSingleFilterDescription))
+              {
+                 strcat(lDialogString, aSingleFilterDescription);
+                 strcat(lDialogString, " |");
+              }
+              for (i = 0; i < aNumOfFilterPatterns; i++)
+              {
+                 strcat(lDialogString, " ");
+                 strcat(lDialogString, aFilterPatterns[i]);
+              }
+              strcat(lDialogString, "' --file-filter='All files | *'");
+           }
+           if (tinyfd_silent) strcat(lDialogString, " 2>/dev/null ");
+      }
+      else if ( tkinter3Present( ) )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python3-tkinter");return (char *)1;}
 			strcpy( lDialogString , gPython3Name ) ;
@@ -6862,7 +6961,25 @@ char * tinyfd_selectFolderDialog(
                 }
                 if (tinyfd_silent) strcat( lDialogString , " 2>/dev/null ");
         }
-		else if ( !xdialogPresent() && tkinter3Present( ) )
+        else if (tfd_yadPresent())
+        {
+           if (aTitle && !strcmp(aTitle, "tinyfd_query")) { strcpy(tinyfd_response, "yad"); return (char*)1; }
+           strcpy(lDialogString, "yad --file-selection --directory");
+           if (aTitle && strlen(aTitle))
+           {
+              strcat(lDialogString, " --title=\"");
+              strcat(lDialogString, aTitle);
+              strcat(lDialogString, "\"");
+           }
+           if (aDefaultPath && strlen(aDefaultPath))
+           {
+              strcat(lDialogString, " --filename=\"");
+              strcat(lDialogString, aDefaultPath);
+              strcat(lDialogString, "\"");
+           }
+           if (tinyfd_silent) strcat(lDialogString, " 2>/dev/null ");
+      }
+      else if ( !xdialogPresent() && tkinter3Present( ) )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python3-tkinter");return (char *)1;}
 			strcpy( lDialogString , gPython3Name ) ;
@@ -7167,6 +7284,19 @@ to set mycolor to choose color default color {");
                         strcat(lDialogString, "\"") ;
                 }
                 if (tinyfd_silent) strcat( lDialogString , " 2>/dev/null ");
+        }
+        else if (tfd_yadPresent())
+        {
+           if (aTitle && !strcmp(aTitle, "tinyfd_query")) { strcpy(tinyfd_response, "yad"); return (char*)1; }
+           strcpy(lDialogString, "yad --color-selection --show-palette");
+           sprintf(lDialogString + strlen(lDialogString), " --color=%s", lDefaultHexRGB);
+           if (aTitle && strlen(aTitle))
+           {
+              strcat(lDialogString, " --title=\"");
+              strcat(lDialogString, aTitle);
+              strcat(lDialogString, "\"");
+           }
+           if (tinyfd_silent) strcat(lDialogString, " 2>/dev/null ");
         }
         else if ( xdialogPresent() )
         {

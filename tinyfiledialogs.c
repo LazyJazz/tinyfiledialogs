@@ -3196,7 +3196,7 @@ static int detectPresence( char const * aExecutable )
       if (lSubstringUndetected)
       {
          if (tinyfd_verbose) printf("detectPresence %s %d\n", aExecutable, 1);
-         return 0;
+         return 1;
       }
 #endif /*_GNU_SOURCE*/
 

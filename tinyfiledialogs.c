@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.8.1 [Oct 18, 2020] zlib licence
+ /         \ tinyfiledialogs.c v3.8.2 [Oct 29, 2020] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -93,7 +93,7 @@ Thanks for contributions, bug corrections & thorough testing to:
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char const tinyfd_version[8] = "3.8.1";
+char const tinyfd_version[8] = "3.8.2";
 
 /******************************************************************************************************/
 /**************************************** UTF-8 on Windows ********************************************/

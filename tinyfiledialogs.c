@@ -50,6 +50,10 @@ Thanks for contributions, bug corrections & thorough testing to:
 #endif
 #endif
 
+#ifndef _WIN32
+ #define _GNU_SOURCE
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -393,8 +397,8 @@ static void wipefile(char const * aFilename)
                         {
                                 fputc('A', lIn);
                         }
+                        fclose(lIn);
                 }
-                fclose(lIn);
         }
 }
 
@@ -631,8 +635,8 @@ static void wipefileW(wchar_t const * aFilename)
                         {
                                 fputc('A', lIn);
                         }
+                        fclose(lIn);
                 }
-                fclose(lIn);
         }
 }
 
@@ -3167,27 +3171,44 @@ static int dirExists( char const * aDirPath )
 
 static int detectPresence( char const * aExecutable )
 {
-        char lBuff [MAX_PATH_OR_CMD] ;
-        char lTestedString [MAX_PATH_OR_CMD] = "which " ;
-        FILE * lIn ;
+   char lBuff [MAX_PATH_OR_CMD] ;
+   char lTestedString [MAX_PATH_OR_CMD] = "which " ;
+   FILE * lIn ;
+#ifdef _GNU_SOURCE
+   char* lAllocatedCharString;
+   int lSubstringUndetected;
+#endif
 
-    strcat( lTestedString , aExecutable ) ;
-        strcat( lTestedString, " 2>/dev/null ");
-    lIn = popen( lTestedString , "r" ) ;
-    if ( ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
-                && ( ! strchr( lBuff , ':' ) )
-                && ( strncmp(lBuff, "no ", 3) ) )
-    {   /* present */
-        pclose( lIn ) ;
-        if (tinyfd_verbose) printf("detectPresence %s %d\n", aExecutable, 1);
-        return 1 ;
-    }
-    else
-    {
-        pclose( lIn ) ;
-        if (tinyfd_verbose) printf("detectPresence %s %d\n", aExecutable, 0);
-        return 0 ;
-    }
+   strcat( lTestedString , aExecutable ) ;
+   strcat( lTestedString, " 2>/dev/null ");
+   lIn = popen( lTestedString , "r" ) ;
+   if ( ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
+    && ( ! strchr( lBuff , ':' ) ) && ( strncmp(lBuff, "no ", 3) ) )
+   {   /* present */
+      pclose( lIn ) ;
+
+#ifdef _GNU_SOURCE /*to bypass this, just comment out the define _GNU_SOURCE at the top of the file*/
+      //lAllocatedCharString = realpath(aExecutable,NULL); 
+      lAllocatedCharString = canonicalize_file_name(aExecutable);
+      printf("detectPresence %s %d\n", lAllocatedCharString, 1);
+      lSubstringUndetected = ! strstr(lAllocatedCharString, aExecutable);
+      free(lAllocatedCharString);
+      if (lSubstringUndetected)
+      {
+         if (tinyfd_verbose) printf("detectPresence %s %d\n", aExecutable, 1);
+         return 0;
+      }
+#endif /*_GNU_SOURCE*/
+
+      if (tinyfd_verbose) printf("detectPresence %s %d\n", aExecutable, 1);
+      return 1 ;
+   }
+   else
+   {
+      pclose( lIn ) ;
+      if (tinyfd_verbose) printf("detectPresence %s %d\n", aExecutable, 0);
+      return 0 ;
+   }
 }
 
 

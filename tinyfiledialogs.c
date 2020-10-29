@@ -4334,8 +4334,77 @@ int tinyfd_messageBox(
                 {
                         strcat( lDialogString , ");if [ $? = 0 ];then echo 1;else echo 0;fi");
                 }
-        }
-		else if ( !gxmessagePresent() && !gmessagePresent() && !gdialogPresent() && !xdialogPresent() && tkinter3Present() )
+      }
+
+      else if (tfd_yadPresent())
+      {
+         if (aTitle && !strcmp(aTitle, "tinyfd_query")) { strcpy(tinyfd_response, "yad"); return 1; }
+         strcpy(lDialogString, "szAnswer=$(yad");
+         strcat(lDialogString, " --");
+         if (aDialogType && !strcmp("okcancel", aDialogType))
+         {
+            strcat(lDialogString,
+               "question --ok-label=Ok --cancel-label=Cancel");
+         }
+         else if (aDialogType && !strcmp("yesno", aDialogType))
+         {
+            strcat(lDialogString, "question");
+         }
+         else if (aDialogType && !strcmp("yesnocancel", aDialogType))
+         {
+            strcat(lDialogString, "list --column \"\" --hide-header \"Yes\" \"No\"");
+         }
+         else if (aIconType && !strcmp("error", aIconType))
+         {
+            strcat(lDialogString, "error");
+         }
+         else if (aIconType && !strcmp("warning", aIconType))
+         {
+            strcat(lDialogString, "warning");
+         }
+         else
+         {
+            strcat(lDialogString, "info");
+         }
+         if (aTitle && strlen(aTitle))
+         {
+            strcat(lDialogString, " --title=\"");
+            strcat(lDialogString, aTitle);
+            strcat(lDialogString, "\"");
+         }
+         if (aMessage && strlen(aMessage))
+         {
+            strcat(lDialogString, " --no-wrap --text=\"");
+            strcat(lDialogString, aMessage);
+            strcat(lDialogString, "\"");
+         }
+
+         strcat(lDialogString, " --icon-name=dialog-");
+         if (aIconType && (!strcmp("question", aIconType)
+            || !strcmp("error", aIconType)
+            || !strcmp("warning", aIconType)))
+         {
+            strcat(lDialogString, aIconType);
+         }
+         else
+         {
+            strcat(lDialogString, "information");
+         }
+                
+         if (tinyfd_silent) strcat(lDialogString, " 2>/dev/null ");
+
+         if (!strcmp("yesnocancel", aDialogType))
+         {
+            strcat(lDialogString,
+               ");if [ $? = 1 ];then echo 0;elif [ $szAnswer = \"No\" ];then echo 2;else echo 1;fi");
+         }
+         else
+         {
+            strcat(lDialogString, ");if [ $? = 0 ];then echo 1;else echo 0;fi");
+         }
+      }
+
+      else if ( !gxmessagePresent() && !gmessagePresent() && !gdialogPresent() && !xdialogPresent() && tkinter3Present() )
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python3-tkinter");return 1;}
 
@@ -5063,7 +5132,7 @@ int tinyfd_notifyPopup(
                 }
                 strcat( lDialogString , " \" 5" ) ;
         }
-        else if ( (tfd_zenity3Present()>=5) || tfd_matedialogPresent() || tfd_shellementaryPresent() || tfd_qarmaPresent() )
+        else if ( (tfd_zenity3Present()>=5) )
         {
                 /* zenity 2.32 & 3.14 has the notification but with a bug: it doesnt return from it */
                 /* zenity 3.8 show the notification as an alert ok cancel box */
@@ -5071,21 +5140,6 @@ int tinyfd_notifyPopup(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
                         strcpy( lDialogString , "zenity" ) ;
-                }
-                else if ( tfd_matedialogPresent() )
-                {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return 1;}
-                        strcpy( lDialogString , "matedialog" ) ;
-                }
-                else if ( tfd_shellementaryPresent() )
-                {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shellementary");return 1;}
-                        strcpy( lDialogString , "shellementary" ) ;
-                }
-                else
-                {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return 1;}
-                        strcpy( lDialogString , "qarma" ) ;
                 }
 
                 strcat( lDialogString , " --notification");
@@ -5108,31 +5162,6 @@ int tinyfd_notifyPopup(
                         strcat( lDialogString , aMessage ) ;
                 }
                 strcat( lDialogString , " \"" ) ;
-        }
-        else if ( tfd_yadPresent() )
-        {
-           if (aTitle && !strcmp(aTitle, "tinyfd_query")) { strcpy(tinyfd_response, "yad"); return 1; }
-           strcpy(lDialogString, "yad");
-           strcat(lDialogString, " --notification");
-
-           if (aIconType && strlen(aIconType))
-           {
-              strcat(lDialogString, " --window-icon '");
-              strcat(lDialogString, aIconType);
-              strcat(lDialogString, "'");
-           }
-
-           strcat(lDialogString, " --text \"");
-           if (aTitle && strlen(aTitle))
-           {
-              strcat(lDialogString, aTitle);
-              strcat(lDialogString, "\n");
-           }
-           if (aMessage && strlen(aMessage))
-           {
-              strcat(lDialogString, aMessage);
-           }
-           strcat(lDialogString, " \"");
         }
         else if ( perlPresent() >= 2 )
         {

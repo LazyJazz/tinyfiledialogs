@@ -7179,12 +7179,14 @@ char * tinyfd_colorChooser(
 		if (aDefaultHexRGB)
 		{
 			Hex2RGB(aDefaultHexRGB, lDefaultRGB);
+         strcpy(lDefaultHexRGB, aDefaultHexRGB);
 		}
 		else
 		{
 			lDefaultRGB[0] = aDefaultRGB[0];
 			lDefaultRGB[1] = aDefaultRGB[1];
 			lDefaultRGB[2] = aDefaultRGB[2];
+         RGB2Hex(aDefaultRGB, lDefaultHexRGB);
 		}
 
         if ( osascriptPresent( ) )

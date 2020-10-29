@@ -4348,7 +4348,7 @@ int tinyfd_messageBox(
          }
          else if (aDialogType && !strcmp("yesno", aDialogType))
          {
-            strcat(lDialogString, "question --button=yad-yes --button=yad-no");
+            strcat(lDialogString, "question --button=Yes --button=No");
          }
          else if (aDialogType && !strcmp("yesnocancel", aDialogType))
          {

@@ -3188,7 +3188,7 @@ static int detectPresence( char const * aExecutable )
       pclose( lIn ) ;
 
 #ifdef _GNU_SOURCE /*to bypass this, just comment out the define _GNU_SOURCE at the top of the file*/
-      //lAllocatedCharString = realpath(aExecutable,NULL); 
+/*      //lAllocatedCharString = realpath(aExecutable,NULL); 
       lAllocatedCharString = canonicalize_file_name(aExecutable);
       printf("detectPresence %s %d\n", lAllocatedCharString, 1);
       lSubstringUndetected = ! strstr(lAllocatedCharString, aExecutable);
@@ -3197,7 +3197,7 @@ static int detectPresence( char const * aExecutable )
       {
          if (tinyfd_verbose) printf("detectPresence %s %d\n", aExecutable, 1);
          return 1;
-      }
+      }*/
 #endif /*_GNU_SOURCE*/
 
       if (tinyfd_verbose) printf("detectPresence %s %d\n", aExecutable, 1);

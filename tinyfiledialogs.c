@@ -51,7 +51,7 @@ Thanks for contributions, bug corrections & thorough testing to:
 #endif
 
 #ifndef _WIN32
- #define _GNU_SOURCE
+ /*#define _GNU_SOURCE*/
 #endif
 
 #include <stdio.h>

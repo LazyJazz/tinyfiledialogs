@@ -7290,8 +7290,8 @@ to set mycolor to choose color default color {");
         else if (tfd_yadPresent())
         {
            if (aTitle && !strcmp(aTitle, "tinyfd_query")) { strcpy(tinyfd_response, "yad"); return (char*)1; }
-           strcpy(lDialogString, "yad --color-selection --show-palette");
-           sprintf(lDialogString + strlen(lDialogString), " --color=%s", lDefaultHexRGB);
+           strcpy(lDialogString, "yad --color");
+           sprintf(lDialogString + strlen(lDialogString), " --init-color=%s", lDefaultHexRGB);
            if (aTitle && strlen(aTitle))
            {
               strcat(lDialogString, " --title=\"");

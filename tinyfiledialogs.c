@@ -4344,11 +4344,11 @@ int tinyfd_messageBox(
          if (aDialogType && !strcmp("okcancel", aDialogType))
          {
             strcat(lDialogString,
-               "question --ok-label=Ok --cancel-label=Cancel");
+               "question");
          }
          else if (aDialogType && !strcmp("yesno", aDialogType))
          {
-            strcat(lDialogString, "question");
+            strcat(lDialogString, "question --button=yad-yes --button=yad-no");
          }
          else if (aDialogType && !strcmp("yesnocancel", aDialogType))
          {

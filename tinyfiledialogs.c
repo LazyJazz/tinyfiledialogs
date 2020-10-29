@@ -132,10 +132,9 @@ but and return 0 for console mode, 1 for graphic mode.
 tinyfd_response is then filled with the retain solution.
 possible values for tinyfd_response are (all lowercase)
 for graphic mode:
-  windows_wchar windows
-  applescript kdialog zenity zenity3 matedialog qarma
-  python2-tkinter python3-tkinter python-dbus perl-dbus
-  gxmessage gmessage xmessage xdialog gdialog
+  windows_wchar windows applescript kdialog zenity zenity3 matedialog
+  shellementary qarma yad python2-tkinter python3-tkinter python-dbus
+  perl-dbus gxmessage gmessage xmessage xdialog gdialog
 for console mode:
   dialog whiptail basicinput no_solution */
 
@@ -152,7 +151,7 @@ char tinyfd_needs[] = "\
       \\|\
 \ntiny file dialogs on Windows needs:\
 \n   a graphic display\
-\nor dialog.exe (enhanced console mode)\
+\nor dialog.exe (curses console mode)\
 \nor a console for basic input";
 #else
 char tinyfd_needs[] = "\
@@ -163,14 +162,11 @@ char tinyfd_needs[] = "\
 \\_____  ____/\n\
       \\|\
 \ntiny file dialogs on UNIX needs:\
-\n   applescript\
-\nor kdialog\
-\nor zenity (or matedialog or qarma)\
-\nor python (2 or 3)\
-\n + tkinter + python-dbus (optional)\
+\n   applescript or kdialog or yad or Xdialog\
+\nor zenity (or matedialog or shellementary or qarma)\
+\nor python (2 or 3) + tkinter + python-dbus (optional)\
 \nor dialog (opens console if needed)\
-\nor xterm + bash\
-\n   (opens console for basic input)\
+\nor xterm + bash (opens console for basic input)\
 \nor existing console for basic input";
 #endif
 

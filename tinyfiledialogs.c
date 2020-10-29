@@ -3187,17 +3187,16 @@ static int detectPresence( char const * aExecutable )
    {   /* present */
       pclose( lIn ) ;
 
-#ifdef _GNU_SOURCE /*to bypass this, just comment out the define _GNU_SOURCE at the top of the file*/
-/*      //lAllocatedCharString = realpath(aExecutable,NULL); 
-      lAllocatedCharString = canonicalize_file_name(aExecutable);
-      printf("detectPresence %s %d\n", lAllocatedCharString, 1);
+#ifdef _GNU_SOURCE /*to bypass this, just comment out "#define _GNU_SOURCE" at the top of the file*/
+      if ( lBuff[strlen( lBuff ) -1] == '\n' ) lBuff[strlen( lBuff ) -1] = '\0' ;
+      lAllocatedCharString = realpath(lBuff,NULL); /*same as canonicalize_file_name*/
       lSubstringUndetected = ! strstr(lAllocatedCharString, aExecutable);
       free(lAllocatedCharString);
       if (lSubstringUndetected)
       {
-         if (tinyfd_verbose) printf("detectPresence %s %d\n", aExecutable, 1);
-         return 1;
-      }*/
+         if (tinyfd_verbose) printf("detectPresence %s %d\n", aExecutable, 0);
+         return 0;
+      }
 #endif /*_GNU_SOURCE*/
 
       if (tinyfd_verbose) printf("detectPresence %s %d\n", aExecutable, 1);

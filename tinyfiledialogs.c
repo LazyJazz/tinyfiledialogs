@@ -1066,8 +1066,9 @@ int tinyfd_notifyPopupW(
         lMessageLen = aMessage ? wcslen(aMessage) : 0;
         lDialogStringLen = 3 * MAX_PATH_OR_CMD + lTitleLen + lMessageLen;
         lDialogString = (wchar_t *)malloc(2 * lDialogStringLen);
+        if (!lDialogString) return 0;
 
-        if (lDialogString) wcscpy(lDialogString, L"powershell.exe -command \"\
+        wcscpy(lDialogString, L"powershell.exe -command \"\
 function Show-BalloonTip {\
 [cmdletbinding()] \
 param( \
@@ -1080,7 +1081,7 @@ $balloon = New-Object System.Windows.Forms.NotifyIcon ; \
 $path = Get-Process -id $pid | Select-Object -ExpandProperty Path ; \
 $icon = [System.Drawing.Icon]::ExtractAssociatedIcon($path) ;");
 
-        if (lDialogString) wcscat(lDialogString, L"\
+        wcscat(lDialogString, L"\
 $balloon.Icon = $icon ; \
 $balloon.BalloonTipIcon = $IconType ; \
 $balloon.BalloonTipText = $Message ; \

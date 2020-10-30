@@ -3531,14 +3531,14 @@ static int speakertestPresent(void)
 }
 
 
-static int beepexePresent(void)
+static int beepPresent(void)
 {
-        static int lBeepexePresent = -1 ;
-        if ( lBeepexePresent < 0 )
+        static int lBeepPresent = -1 ;
+        if ( lBeepPresent < 0 )
         {
-                lBeepexePresent = detectPresence("beep.exe") ;
+                lBeepPresent = detectPresence("beep") ;
         }
-        return lBeepexePresent ;
+        return lBeepPresent ;
 }
 
 
@@ -4025,9 +4025,9 @@ void tinyfd_beep(void)
                 /*strcpy( lDialogString , "timeout -k .3 .3 speaker-test --frequency 440 --test sine > /dev/tty" ) ;*/
                 strcpy( lDialogString , "( speaker-test -t sine -f 440 > /dev/tty )& pid=$!;sleep .3; kill -9 $pid" ) ;
         }
-        else if ( beepexePresent() )
+        else if ( beepPresent() )
         {
-                strcpy( lDialogString , "beep.exe 440 300" ) ;
+                strcpy( lDialogString , "beep 440 300" ) ;
         }
         else
         {

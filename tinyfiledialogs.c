@@ -3542,6 +3542,17 @@ static int playPresent()
 }
 
 
+static int beepexePresent()
+{
+   static int lBeepexePresent = -1;
+   if (lBeepexePresent < 0)
+   {
+      lBeepexePresent = detectPresence("beep.exe");
+   }
+   return lBeepexePresent;
+}
+
+
 static int beepPresent(void)
 {
         static int lBeepPresent = -1 ;
@@ -4036,13 +4047,17 @@ void tinyfd_beep(void)
                 /*strcpy( lDialogString , "timeout -k .3 .3 speaker-test --frequency 440 --test sine > /dev/tty" ) ;*/
                 strcpy( lDialogString , "( speaker-test -t sine -f 440 > /dev/tty )& pid=$!;sleep .3; kill -9 $pid" ) ;
         }
+        else if (beepexePresent())
+        {
+                strcpy(lDialogString, "beep.exe 440 300");
+        }
         else if (playPresent()) /* play is part of sox */
         {
-            sprintf(lDialogString, "play -n -r %d -c1 synth %f sine %f\n", (int)(2.5f * 440.f), .3f, 440.f);
+                strcpy(lDialogString, "play -q -n synth .3 sine 440");
         }
         else if ( beepPresent() )
         {
-                strcpy( lDialogString , "beep -f 440. -l 300" ) ;
+                strcpy( lDialogString , "beep -f 440 -l 300" ) ;
         }
         else
         {

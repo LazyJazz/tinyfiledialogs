@@ -87,7 +87,7 @@ int main( int argc , char * argv[] )
    and pass them passed to _wfopen() instead of fopen() */
 #endif
 
-	/*tinyfd_beep();*/
+	tinyfd_beep();/**/
 
 	lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 

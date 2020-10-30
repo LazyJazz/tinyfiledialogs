@@ -3531,6 +3531,17 @@ static int speakertestPresent(void)
 }
 
 
+static int playPresent()
+{
+   static int lPlayPresent = -1;
+   if (lPlayPresent < 0)
+   {
+      lPlayPresent = detectPresence("sox"); /*if sox is present, play is ready*/
+   }
+   return 1;// lPlayPresent;
+}
+
+
 static int beepPresent(void)
 {
         static int lBeepPresent = -1 ;
@@ -4025,9 +4036,13 @@ void tinyfd_beep(void)
                 /*strcpy( lDialogString , "timeout -k .3 .3 speaker-test --frequency 440 --test sine > /dev/tty" ) ;*/
                 strcpy( lDialogString , "( speaker-test -t sine -f 440 > /dev/tty )& pid=$!;sleep .3; kill -9 $pid" ) ;
         }
+        else if (playPresent()) /* play is part of sox */
+        {
+            sprintf(lDialogString, "play -n -r %d -c1 synth %f sine %f\n", (int)(2.5f * 440.f), .3f, 440.f);
+        }
         else if ( beepPresent() )
         {
-                strcpy( lDialogString , "beep -f 440 -l 300" ) ;
+                strcpy( lDialogString , "beep -f 440. -l 300" ) ;
         }
         else
         {

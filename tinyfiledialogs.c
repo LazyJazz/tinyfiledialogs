@@ -184,7 +184,7 @@ static int getenvDISPLAY(void)
 
 static char * getCurDir(void)
 {
-	static char lCurDir [MAX_PATH_OR_CMD];
+	static char lCurDir[MAX_PATH_OR_CMD];
 	return getcwd(lCurDir, sizeof(lCurDir));
 }
 
@@ -262,10 +262,9 @@ static void ensureFinalSlash( char * aioString )
 }
 
 
-static void Hex2RGB( char const aHexRGB [8] ,
-                                         unsigned char aoResultRGB [3] )
+static void Hex2RGB( char const aHexRGB[8] , unsigned char aoResultRGB[3] )
 {
-        char lColorChannel [8] ;
+        char lColorChannel[8] ;
         if ( aoResultRGB )
         {
                 if ( aHexRGB )
@@ -287,8 +286,7 @@ static void Hex2RGB( char const aHexRGB [8] ,
         }
 }
 
-static void RGB2Hex( unsigned char const aRGB [3] ,
-                                         char aoResultHexRGB [8] )
+static void RGB2Hex( unsigned char const aRGB[3], char aoResultHexRGB[8] )
 {
         if ( aoResultHexRGB )
         {
@@ -311,10 +309,8 @@ static void RGB2Hex( unsigned char const aRGB [3] ,
 }
 
 
-void tfd_replaceSubStr( char const * aSource ,
-                                                   char const * aOldSubStr ,
-                                                   char const * aNewSubStr ,
-                                                   char * aoDestination )
+void tfd_replaceSubStr( char const * aSource, char const * aOldSubStr,
+                        char const * aNewSubStr, char * aoDestination )
 {
         char const * pOccurence ;
         char const * p ;
@@ -697,8 +693,7 @@ static wchar_t * getLastNameW(
 }
 
 
-static void Hex2RGBW(wchar_t const aHexRGB[8],
-        unsigned char aoResultRGB[3])
+static void Hex2RGBW(wchar_t const aHexRGB[8], unsigned char aoResultRGB[3])
 {
         wchar_t lColorChannel[8];
         if (aoResultRGB)
@@ -723,11 +718,8 @@ static void Hex2RGBW(wchar_t const aHexRGB[8],
 }
 
 
-static void RGB2HexW(
-        unsigned char const aRGB[3],
-        wchar_t aoResultHexRGB[8])
+static void RGB2HexW( unsigned char const aRGB[3], wchar_t aoResultHexRGB[8])
 {
-
 #if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__clang__)
 	wchar_t const * const lPrintFormat = L"#%02hhx%02hhx%02hhx";
 #else
@@ -2164,7 +2156,7 @@ static char * colorChooserWinGui(
 static int dialogPresent(void)
 {
         static int lDialogPresent = -1 ;
-        char lBuff [MAX_PATH_OR_CMD] ;
+        char lBuff[MAX_PATH_OR_CMD] ;
         FILE * lIn ;
         char const * lString = "dialog.exe";
 		if (!tinyfd_allowCursesDialogs) return 0;
@@ -2205,7 +2197,7 @@ static int messageBoxWinConsole(
         char lDialogString[MAX_PATH_OR_CMD];
         char lDialogFile[MAX_PATH_OR_CMD];
         FILE * lIn;
-        char lBuff [MAX_PATH_OR_CMD] = "";
+        char lBuff[MAX_PATH_OR_CMD] = "";
 
 		strcpy(lDialogString, "dialog ");
 		if (aTitle && strlen(aTitle))
@@ -2536,8 +2528,8 @@ static char * selectFolderDialogWinConsole(
         char const * aTitle , /*  NULL or "" */
         char const * aDefaultPath ) /* NULL or "" */
 {
-        char lDialogString [MAX_PATH_OR_CMD] ;
-        char lString [MAX_PATH_OR_CMD] ;
+        char lDialogString[MAX_PATH_OR_CMD] ;
+        char lString[MAX_PATH_OR_CMD] ;
         FILE * lIn ;
 
         strcpy( lDialogString , "dialog " ) ;
@@ -2889,7 +2881,7 @@ char * tinyfd_saveFileDialog(
         char const * const * aFilterPatterns , /* NULL or {"*.jpg","*.png"} */
         char const * aSingleFilterDescription ) /* NULL or "image files" */
 {
-        static char lBuff [MAX_PATH_OR_CMD] ;
+        static char lBuff[MAX_PATH_OR_CMD] ;
         char lString[MAX_PATH_OR_CMD] ;
         char * p ;
 		char * lPointerInputBox;
@@ -3168,8 +3160,8 @@ static int dirExists( char const * aDirPath )
 
 static int detectPresence( char const * aExecutable )
 {
-   char lBuff [MAX_PATH_OR_CMD] ;
-   char lTestedString [MAX_PATH_OR_CMD] = "which " ;
+   char lBuff[MAX_PATH_OR_CMD] ;
+   char lTestedString[MAX_PATH_OR_CMD] = "which " ;
    FILE * lIn ;
 #ifdef _GNU_SOURCE
    char* lAllocatedCharString;
@@ -3210,8 +3202,8 @@ static int detectPresence( char const * aExecutable )
 
 static char * getVersion( char const * aExecutable ) /*version must be first numeral*/
 {
-	static char lBuff [MAX_PATH_OR_CMD] ;
-	char lTestedString [MAX_PATH_OR_CMD] ;
+	static char lBuff[MAX_PATH_OR_CMD] ;
+	char lTestedString[MAX_PATH_OR_CMD] ;
 	FILE * lIn ;
 	char * lTmp ;
 
@@ -3230,7 +3222,7 @@ static char * getVersion( char const * aExecutable ) /*version must be first num
 
 static int * getMajorMinorPatch( char const * aExecutable )
 {
-	static int lArray [3] ;
+	static int lArray[3] ;
 	char * lTmp ;
 
 	lTmp = (char *) getVersion(aExecutable);
@@ -3248,7 +3240,7 @@ static int * getMajorMinorPatch( char const * aExecutable )
 
 static int tryCommand( char const * aCommand )
 {
-        char lBuff [MAX_PATH_OR_CMD] ;
+        char lBuff[MAX_PATH_OR_CMD] ;
         FILE * lIn ;
 
         lIn = popen( aCommand , "r" ) ;
@@ -3597,7 +3589,7 @@ static int notifysendPresent(void)
 static int perlPresent(void)
 {
         static int lPerlPresent = -1 ;
-        char lBuff [MAX_PATH_OR_CMD] ;
+        char lBuff[MAX_PATH_OR_CMD] ;
         FILE * lIn ;
 
         if ( lPerlPresent < 0 )
@@ -3621,7 +3613,7 @@ static int perlPresent(void)
 static int afplayPresent(void)
 {
         static int lAfplayPresent = -1 ;
-        char lBuff [MAX_PATH_OR_CMD] ;
+        char lBuff[MAX_PATH_OR_CMD] ;
         FILE * lIn ;
 
         if ( lAfplayPresent < 0 )
@@ -3745,7 +3737,7 @@ int tfd_yadPresent(void)
 int tfd_zenity3Present(void)
 {
         static int lZenity3Present = -1 ;
-        char lBuff [MAX_PATH_OR_CMD] ;
+        char lBuff[MAX_PATH_OR_CMD] ;
         FILE * lIn ;
 		int lIntTmp ;
 
@@ -3786,7 +3778,7 @@ int tfd_zenity3Present(void)
 int tfd_kdialogPresent(void)
 {
 	static int lKdialogPresent = -1 ;
-	char lBuff [MAX_PATH_OR_CMD] ;
+	char lBuff[MAX_PATH_OR_CMD] ;
 	FILE * lIn ;
 	char * lDesktop;
 
@@ -3839,7 +3831,7 @@ int tfd_kdialogPresent(void)
 static int osx9orBetter(void)
 {
         static int lOsx9orBetter = -1 ;
-        char lBuff [MAX_PATH_OR_CMD] ;
+        char lBuff[MAX_PATH_OR_CMD] ;
         FILE * lIn ;
         int V,v;
 
@@ -4008,7 +4000,7 @@ static void sigHandler(int signum)
 
 void tinyfd_beep(void)
 {
-        char lDialogString [256] ;
+        char lDialogString[256] ;
         FILE * lIn ;
 
         if ( osascriptPresent() )
@@ -4063,7 +4055,7 @@ int tinyfd_messageBox(
         char const * aIconType , /* "info" "warning" "error" "question" */
         int aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */
 {
-        char lBuff [MAX_PATH_OR_CMD] ;
+        char lBuff[MAX_PATH_OR_CMD] ;
         char * lDialogString = NULL ;
         char * lpDialogString;
         FILE * lIn ;
@@ -5839,9 +5831,9 @@ char * tinyfd_saveFileDialog(
     char const * const * aFilterPatterns , /* NULL or {"*.jpg","*.png"} */
     char const * aSingleFilterDescription ) /* NULL or "image files" */
 {
-        static char lBuff [MAX_PATH_OR_CMD] ;
-        char lDialogString [MAX_PATH_OR_CMD] ;
-        char lString [MAX_PATH_OR_CMD] ;
+        static char lBuff[MAX_PATH_OR_CMD] ;
+        char lDialogString[MAX_PATH_OR_CMD] ;
+        char lString[MAX_PATH_OR_CMD] ;
         int i ;
         int lWasGraphicDialog = 0 ;
         int lWasXterm = 0 ;
@@ -5918,11 +5910,11 @@ char * tinyfd_saveFileDialog(
                 if ( aNumOfFilterPatterns > 0 )
                 {
                         strcat(lDialogString , " \"" ) ;
-						strcat( lDialogString , aFilterPatterns [0] ) ;
+						strcat( lDialogString , aFilterPatterns[0] ) ;
                         for ( i = 1 ; i < aNumOfFilterPatterns ; i ++ )
                         {
 							strcat( lDialogString , " " ) ;
-							strcat( lDialogString , aFilterPatterns [i] ) ;
+							strcat( lDialogString , aFilterPatterns[i] ) ;
                         }
                         if ( aSingleFilterDescription && strlen(aSingleFilterDescription) )
                         {
@@ -5993,7 +5985,7 @@ char * tinyfd_saveFileDialog(
                         for ( i = 0 ; i < aNumOfFilterPatterns ; i ++ )
                         {
 							strcat( lDialogString , " " ) ;
-							strcat( lDialogString , aFilterPatterns [i] ) ;
+							strcat( lDialogString , aFilterPatterns[i] ) ;
                         }
                         strcat( lDialogString , "' --file-filter='All files | *'" ) ;
                 }
@@ -6076,7 +6068,7 @@ char * tinyfd_saveFileDialog(
 				for ( i = 0 ; i < aNumOfFilterPatterns ; i ++ )
 				{
 					strcat( lDialogString , "'" ) ;
-					strcat( lDialogString , aFilterPatterns [i] ) ;
+					strcat( lDialogString , aFilterPatterns[i] ) ;
 					strcat( lDialogString , "'," ) ;
 				}
 				strcat( lDialogString , "))," ) ;
@@ -6141,7 +6133,7 @@ char * tinyfd_saveFileDialog(
                         for ( i = 0 ; i < aNumOfFilterPatterns ; i ++ )
                         {
                                 strcat( lDialogString , "'" ) ;
-                                strcat( lDialogString , aFilterPatterns [i] ) ;
+                                strcat( lDialogString , aFilterPatterns[i] ) ;
                                 strcat( lDialogString , "'," ) ;
                         }
                         strcat( lDialogString , "))," ) ;
@@ -6289,8 +6281,8 @@ char * tinyfd_openFileDialog(
     char const * aSingleFilterDescription , /* NULL or "image files" */
     int aAllowMultipleSelects ) /* 0 or 1 */
 {
-        char lDialogString [MAX_PATH_OR_CMD] ;
-        char lString [MAX_PATH_OR_CMD] ;
+        char lDialogString[MAX_PATH_OR_CMD] ;
+        char lString[MAX_PATH_OR_CMD] ;
         int i ;
         FILE * lIn ;
         char * p ;
@@ -6369,12 +6361,12 @@ char * tinyfd_openFileDialog(
                 if ( aNumOfFilterPatterns > 0 )
                 {
                         strcat(lDialogString , "of type {\"" );
-                        strcat( lDialogString , aFilterPatterns [0] + 2 ) ;
+                        strcat( lDialogString , aFilterPatterns[0] + 2 ) ;
                         strcat( lDialogString , "\"" ) ;
                         for ( i = 1 ; i < aNumOfFilterPatterns ; i ++ )
                         {
                                 strcat( lDialogString , ",\"" ) ;
-                                strcat( lDialogString , aFilterPatterns [i] + 2) ;
+                                strcat( lDialogString , aFilterPatterns[i] + 2) ;
                                 strcat( lDialogString , "\"" ) ;
                         }
                         strcat( lDialogString , "} " ) ;
@@ -6430,11 +6422,11 @@ char * tinyfd_openFileDialog(
                 if ( aNumOfFilterPatterns > 0 )
                 {
                         strcat(lDialogString , " \"" ) ;
-						strcat( lDialogString , aFilterPatterns [0] ) ;
+						strcat( lDialogString , aFilterPatterns[0] ) ;
                         for ( i = 1 ; i < aNumOfFilterPatterns ; i ++ )
                         {
 							strcat( lDialogString , " " ) ;
-							strcat( lDialogString , aFilterPatterns [i] ) ;
+							strcat( lDialogString , aFilterPatterns[i] ) ;
                         }
                         if ( aSingleFilterDescription && strlen(aSingleFilterDescription) )
                         {
@@ -6513,7 +6505,7 @@ char * tinyfd_openFileDialog(
                         for ( i = 0 ; i < aNumOfFilterPatterns ; i ++ )
                         {
 							strcat( lDialogString , " " ) ;
-							strcat( lDialogString , aFilterPatterns [i] ) ;
+							strcat( lDialogString , aFilterPatterns[i] ) ;
                         }
                         strcat( lDialogString , "' --file-filter='All files | *'" ) ;
                 }
@@ -6604,7 +6596,7 @@ char * tinyfd_openFileDialog(
 				for ( i = 0 ; i < aNumOfFilterPatterns ; i ++ )
 				{
 					strcat( lDialogString , "'" ) ;
-					strcat( lDialogString , aFilterPatterns [i] ) ;
+					strcat( lDialogString , aFilterPatterns[i] ) ;
 					strcat( lDialogString , "'," ) ;
 				}
 				strcat( lDialogString , "))," ) ;
@@ -6675,7 +6667,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
                         for ( i = 0 ; i < aNumOfFilterPatterns ; i ++ )
                         {
                                 strcat( lDialogString , "'" ) ;
-                                strcat( lDialogString , aFilterPatterns [i] ) ;
+                                strcat( lDialogString , aFilterPatterns[i] ) ;
                                 strcat( lDialogString , "'," ) ;
                         }
                         strcat( lDialogString , "))," ) ;
@@ -6845,8 +6837,8 @@ char * tinyfd_selectFolderDialog(
         char const * aTitle , /* "" */
         char const * aDefaultPath ) /* "" */
 {
-        static char lBuff [MAX_PATH_OR_CMD] ;
-        char lDialogString [MAX_PATH_OR_CMD] ;
+        static char lBuff[MAX_PATH_OR_CMD] ;
+        char lDialogString[MAX_PATH_OR_CMD] ;
         FILE * lIn ;
         char * p ;
 		char * lPointerInputBox ;
@@ -7153,13 +7145,13 @@ char * tinyfd_colorChooser(
         unsigned char aoResultRGB[3] ) /* { 0 , 0 , 0 } */
 {
 	static char lDefaultHexRGB[16];
-	char lBuff [128] ;
+	char lBuff[128] ;
 
-        char lTmp [128] ;
+        char lTmp[128] ;
 #if !((defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__clang__))
 		char * lTmp2 ;
 #endif
-        char lDialogString [MAX_PATH_OR_CMD] ;
+        char lDialogString[MAX_PATH_OR_CMD] ;
         unsigned char lDefaultRGB[3];
         char * p;
 		char * lPointerInputBox;

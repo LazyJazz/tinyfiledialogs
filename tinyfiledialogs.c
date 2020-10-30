@@ -4027,7 +4027,7 @@ void tinyfd_beep(void)
         }
         else if ( beepPresent() )
         {
-                strcpy( lDialogString , "beep 440 300" ) ;
+                strcpy( lDialogString , "beep -f 440 -l 300" ) ;
         }
         else
         {

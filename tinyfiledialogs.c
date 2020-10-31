@@ -4359,18 +4359,21 @@ int tinyfd_messageBox(
       {
          if (aTitle && !strcmp(aTitle, "tinyfd_query")) { strcpy(tinyfd_response, "yad"); return 1; }
          strcpy(lDialogString, "szAnswer=$(yad --");
-         if (aDialogType && !strcmp("okcancel", aDialogType))
+         if (aDialogType && !strcmp("ok", aDialogType))
          {
-            strcat(lDialogString,
-               "question");
+            strcat(lDialogString,"button=Ok:1");
+         }
+         else if (aDialogType && !strcmp("okcancel", aDialogType))
+         {
+            strcat(lDialogString,"button=Ok:1 --button=Cancel:0");
          }
          else if (aDialogType && !strcmp("yesno", aDialogType))
          {
-            strcat(lDialogString, "question --button=Yes --button=No");
+            strcat(lDialogString, "button=Yes:1 --button=No:0");
          }
          else if (aDialogType && !strcmp("yesnocancel", aDialogType))
          {
-            strcat(lDialogString, "list --column \"\" --hide-header \"Yes\" \"No\"");
+            strcat(lDialogString, "button=Yes:1 --button=No:2 --button=Cancel:0");
          }
          else if (aIconType && !strcmp("error", aIconType))
          {
@@ -4408,18 +4411,9 @@ int tinyfd_messageBox(
          {
             strcat(lDialogString, "information");
          }
-                
-         if (tinyfd_silent) strcat(lDialogString, " 2>/dev/null ");
 
-         if (!strcmp("yesnocancel", aDialogType))
-         {
-            strcat(lDialogString,
-               ");if [ $? = 1 ];then echo 0;elif [ $szAnswer = \"No\" ];then echo 2;else echo 1;fi");
-         }
-         else
-         {
-            strcat(lDialogString, ");if [ $? = 0 ];then echo 1;else echo 0;fi");
-         }
+         if (tinyfd_silent) strcat(lDialogString, " 2>/dev/null ");
+         strcat(lDialogString,");echo $?");
       }
 
       else if ( !gxmessagePresent() && !gmessagePresent() && !gdialogPresent() && !xdialogPresent() && tkinter3Present() )

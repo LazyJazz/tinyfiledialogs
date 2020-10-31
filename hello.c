@@ -82,7 +82,7 @@ int main( int argc , char * argv[] )
 #ifdef _WIN32
 	 tinyfd_winUtf8 = 1; /* default is 1 */
 /* On windows, you decide if char holds 1:UTF-8(default) or 0:MBCS */
-/* Windows is not ready to handle UTF-8 as many char functions like fopen() expect MBCS filenames.*/	   
+/* Windows is not ready to handle UTF-8 as many char functions like fopen() expect MBCS filenames.*/
 /* This hello.c file has been prepared, on windows, to convert the filenames from UTF-8 to UTF-16
    and pass them passed to _wfopen() instead of fopen() */
 #endif
@@ -108,10 +108,13 @@ int main( int argc , char * argv[] )
 
 	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )
 	{
-		lIntValue = tinyfd_messageBox("Hello World",
-			"graphic dialogs [yes] / console mode [no]?",
-			"yesno", "question", 1);
-		tinyfd_forceConsole = ! lIntValue ;	
+		lIntValue = tinyfd_messageBox("Hello World","\
+graphic dialogs [Yes]\n\
+console mode [No]\n\
+quit [Cancel]",
+			"yesnocancel", "question", 1);
+		if (!lIntValue) return 1;
+		tinyfd_forceConsole = (lIntValue == 2) ;
 	}
 
 	lPassword = tinyfd_inputBox(

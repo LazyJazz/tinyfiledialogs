@@ -4496,7 +4496,7 @@ int tinyfd_messageBox(
 				strcat(lDialogString, ");\n\
 if res is None :\n\tprint(0)\n\
 elif res is False :\n\tprint(2)\n\
-else :\n\tprint 1\n\"" ) ;
+else :\n\tprint (1)\n\"" ) ;
 			}
 			else
 			{

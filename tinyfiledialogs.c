@@ -4045,7 +4045,7 @@ void tinyfd_beep(void)
         else if ( speakertestPresent() )
         {
                 /*strcpy( lDialogString , "timeout -k .3 .3 speaker-test --frequency 440 --test sine > /dev/tty" ) ;*/
-                strcpy( lDialogString , "( speaker-test -t sine -f 440 > /dev/tty )& pid=$!;sleep .3; kill -9 $pid" ) ;
+                strcpy( lDialogString , "( speaker-test -t sine -f 440 > /dev/tty )& pid=$!;sleep .4; kill -9 $pid" ) ; /*.3 was too short for mac g3*/
         }
         else if (beepexePresent())
         {

@@ -118,7 +118,7 @@ quit [Cancel]",
 			tinyfd_forceConsole = (lIntValue == 2);
 #else
 			lIntValue = tinyfd_messageBox("Hello World", "graphic dialogs [Yes] / console mode [No]", "yesno", "question", 1);
-			tinyfd_forceConsole = lIntValue;
+			tinyfd_forceConsole = ! lIntValue;
 #endif
 	}
 

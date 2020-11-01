@@ -188,7 +188,7 @@ char *tinyfd_checklistDialog(
         if (tfd_isDarwin())
         {
                 target += sprintf(target, "osascript -e \'set Choices to {");
-                for (int i = 0; i < aNumOfOptions; i++)
+                for (i = 0; i < aNumOfOptions; i++)
                 {
                         if (i != aNumOfOptions - 1)
                                 target += sprintf(target, "\"%s\", ", aOptions[i]);
@@ -201,7 +201,7 @@ char *tinyfd_checklistDialog(
 		else if (tfd_kdialogPresent())
         {
                 target += sprintf(target, "kdialog --checklist \'%s\' ", aTitle);
-                for (int i = 0; i < aNumOfOptions; i++)
+                for (i = 0; i < aNumOfOptions; i++)
                 {
                         target += sprintf(target, "\'%s\' \'%s\' OFF ", aOptions[i], aOptions[i]);
                 }
@@ -209,7 +209,7 @@ char *tinyfd_checklistDialog(
 		else if (tfd_zenityPresent())
         {
                 target += sprintf(target, "zenity --list --column= --column= --checklist --title=\'%s\' ", aTitle);
-                for (int i = 0; i < aNumOfOptions; i++)
+                for (i = 0; i < aNumOfOptions; i++)
                 {
                         target += sprintf(target, "\'\' \'%s\' ", aOptions[i]);
                 }

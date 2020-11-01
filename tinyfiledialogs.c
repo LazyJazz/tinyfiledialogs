@@ -3610,25 +3610,25 @@ static int notifysendPresent(void)
 
 static int perlPresent(void)
 {
-        static int lPerlPresent = -1 ;
-        char lBuff[MAX_PATH_OR_CMD] ;
-        FILE * lIn ;
+   static int lPerlPresent = -1 ;
+   char lBuff[MAX_PATH_OR_CMD] ;
+   FILE * lIn ;
 
-        if ( lPerlPresent < 0 )
-        {
-                lPerlPresent = detectPresence("perl") ;
-                if ( lPerlPresent )
-                {
-                        lIn = popen( "perl -MNet::DBus -e \"Net::DBus->session->get_service('org.freedesktop.Notifications')\" 2>&1" , "r" ) ;
-                        if ( fgets( lBuff , sizeof( lBuff ) , lIn ) == NULL )
-                        {
-                                lPerlPresent = 2 ;
-                        }
-                        pclose( lIn ) ;
-                        if (tinyfd_verbose) printf("perl-dbus %d\n", lPerlPresent);
-                }
-    }
-    return graphicMode() ? lPerlPresent : 0 ;
+   if ( lPerlPresent < 0 )
+   {
+      lPerlPresent = detectPresence("perl") ;
+      if (lPerlPresent)
+      {
+         lIn = popen("perl -MNet::DBus -e \"Net::DBus->session->get_service('org.freedesktop.Notifications')\" 2>&1", "r");
+         if (fgets(lBuff, sizeof(lBuff), lIn) == NULL)
+         {
+            lPerlPresent = 2;
+         }
+         pclose(lIn);
+         if (tinyfd_verbose) printf("perl-dbus %d\n", lPerlPresent);
+      }
+   }
+   return graphicMode() ? lPerlPresent : 0 ;
 }
 
 
@@ -3979,34 +3979,34 @@ static int tkinter2Present(void)
 
 static int pythonDbusPresent(void)
 {
-    static int lDbusPresent = -1 ;
+    static int lPythonDbusPresent = -1 ;
         char lPythonCommand[384];
         char lPythonParams[256] =
 "-c \"try:\n\timport dbus;bus=dbus.SessionBus();\
 notif=bus.get_object('org.freedesktop.Notifications','/org/freedesktop/Notifications');\
 notify=dbus.Interface(notif,'org.freedesktop.Notifications');\nexcept:\n\tprint(0);\"";
 
-        if ( lDbusPresent < 0 )
+        if (lPythonDbusPresent < 0 )
         {
-                lDbusPresent = 0 ;
+           lPythonDbusPresent = 0 ;
                 if ( python2Present() )
                 {
                         strcpy(gPythonName , gPython2Name ) ;
                         sprintf( lPythonCommand , "%s %s" , gPythonName , lPythonParams ) ;
-                        lDbusPresent = tryCommand(lPythonCommand) ;
+                        lPythonDbusPresent = tryCommand(lPythonCommand) ;
                 }
 
-                if ( ! lDbusPresent && python3Present() )
+                if ( !lPythonDbusPresent && python3Present() )
                 {
                         strcpy(gPythonName , gPython3Name ) ;
                         sprintf( lPythonCommand , "%s %s" , gPythonName , lPythonParams ) ;
-                        lDbusPresent = tryCommand(lPythonCommand) ;
+                        lPythonDbusPresent = tryCommand(lPythonCommand) ;
                 }
 
-                if (tinyfd_verbose) printf("lDbusPresent %d\n", lDbusPresent) ;
+                if (tinyfd_verbose) printf("lPythonDbusPresent %d\n", lPythonDbusPresent) ;
                 if (tinyfd_verbose) printf("gPythonName %s\n", gPythonName) ;
         }
-        return lDbusPresent && graphicMode() && !(tfd_isDarwin() && getenv("SSH_TTY") );
+        return lPythonDbusPresent && graphicMode() && !(tfd_isDarwin() && getenv("SSH_TTY") );
 }
 
 

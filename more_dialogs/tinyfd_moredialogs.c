@@ -24,6 +24,12 @@ https://stackoverflow.com/a/47651444
  3. This notice may not be removed or altered from any source distribution.
 */
 
+#ifndef __sun
+#ifndef _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE 2 /* to accept POSIX 2 in old ANSI C standards */
+#endif
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

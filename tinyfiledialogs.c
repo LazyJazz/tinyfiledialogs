@@ -3538,7 +3538,7 @@ static int playPresent()
    {
       lPlayPresent = detectPresence("sox"); /*if sox is present, play is ready*/
    }
-   return 1;// lPlayPresent;
+   return lPlayPresent;
 }
 
 

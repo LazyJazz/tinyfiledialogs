@@ -4323,8 +4323,8 @@ int tinyfd_messageBox(
                 }
                 if ( aMessage && strlen(aMessage) )
                 {
-                  if (!strcmp("yesnocancel", aDialogType)) strcat(lDialogString, " --no-wrap");
-                  strcat(lDialogString, " --no-wrap --text=\"") ;
+                  if (strcmp("yesnocancel", aDialogType)) strcat(lDialogString, " --no-wrap");
+                  strcat(lDialogString, " --text=\"") ;
                   strcat(lDialogString, aMessage) ;
                   strcat(lDialogString, "\"") ;
                 }

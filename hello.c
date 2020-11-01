@@ -108,10 +108,8 @@ int main( int argc , char * argv[] )
 
 	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )
 	{
-		lIntValue = tinyfd_messageBox("Hello World","\
-graphic dialogs [Yes]\n\
-console mode [No]\n\
-quit [Cancel]",
+		lIntValue = tinyfd_messageBox(
+			"Hello World","graphic dialogs [Yes] console mode [No] quit [Cancel]",
 			"yesnocancel", "question", 1);
 		if (!lIntValue) return 1;
 		tinyfd_forceConsole = (lIntValue == 2) ;

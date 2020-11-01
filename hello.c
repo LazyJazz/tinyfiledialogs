@@ -1,5 +1,5 @@
 /*_________
- /         \ hello.c v3.8.2 [Oct 29, 2020] zlib licence
+ /         \ hello.c v3.8.3 [Nov 1, 2020] zlib licence
  |tiny file| Hello World file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -108,13 +108,18 @@ int main( int argc , char * argv[] )
 
 	if ( lWillBeGraphicMode && ! tinyfd_forceConsole )
 	{
-		lIntValue = tinyfd_messageBox("Hello World","\
+#if 0
+			lIntValue = tinyfd_messageBox("Hello World", "\
 graphic dialogs [Yes]\n\
 console mode [No]\n\
 quit [Cancel]",
-			"yesnocancel", "question", 1);
-		if (!lIntValue) return 1;
-		tinyfd_forceConsole = (lIntValue == 2) ;
+				"yesnocancel", "question", 1);
+			if (!lIntValue) return 1;
+			tinyfd_forceConsole = (lIntValue == 2);
+#else
+			lIntValue = tinyfd_messageBox("Hello World", "graphic dialogs [Yes] / console mode [No]", "yesno", "question", 1);
+			tinyfd_forceConsole = lIntValue;
+#endif
 	}
 
 	lPassword = tinyfd_inputBox(

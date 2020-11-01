@@ -1,4 +1,4 @@
-tiny file dialogs ( cross-platform C C++ ) v3.8.2 [Oct 29, 2020] zlib licence
+tiny file dialogs ( cross-platform C C++ ) v3.8.3 [Nov 1, 2020] zlib licence
  _________
 /         \   Beep Popup InputBox PasswordBox MessageBox ColorPicker
 |tiny file|   OpenFileDialog SaveFileDialog SelectFolderDialog

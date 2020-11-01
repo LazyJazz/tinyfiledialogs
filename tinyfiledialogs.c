@@ -4292,8 +4292,7 @@ int tinyfd_messageBox(
 
                 if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
                 {
-                                strcat( lDialogString ,
-                                                "question --ok-label=Ok --cancel-label=Cancel" ) ;
+                  strcat( lDialogString , "question --ok-label=Ok --cancel-label=Cancel" ) ;
                 }
                 else if ( aDialogType && ! strcmp( "yesno" , aDialogType ) )
                 {
@@ -4323,7 +4322,7 @@ int tinyfd_messageBox(
                 }
                 if ( aMessage && strlen(aMessage) )
                 {
-                        strcat(lDialogString, " --no-wrap --text=\"") ;
+                        strcat(lDialogString, " --text=\"") ;
                         strcat(lDialogString, aMessage) ;
                         strcat(lDialogString, "\"") ;
                 }
@@ -4395,7 +4394,7 @@ int tinyfd_messageBox(
          }
          if (aMessage && strlen(aMessage))
          {
-            strcat(lDialogString, " --no-wrap --text=\"");
+            strcat(lDialogString, " --text=\"");
             strcat(lDialogString, aMessage);
             strcat(lDialogString, "\"");
          }

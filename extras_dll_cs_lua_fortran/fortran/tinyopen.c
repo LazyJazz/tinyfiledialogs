@@ -30,8 +30,7 @@
 #include <string.h>
 #include "tinyfiledialogs.h"
 
-char const * tinyopen(
-		      int const typ)
+char const * tinyopen(int const typ)
 {
   char const * lFilterPatterns1[1] = {"*.TDB"};
   char const * lFilterPatterns2[1] = {"*.UNF"};
@@ -45,14 +44,13 @@ char const * tinyopen(
   //strcpy(filename,"C:\\User\\Bosse\\Document\\Software\\openfile\\test.TDB");
   if(typ<0)
     {
-      //lTheOpenFileName = tinyfd_openFileDialog(
-      p2 = tinyfd_openFileDialog(
+      //lTheOpenFileName = tinyfd_saveFileDialog(
+      p2 = tinyfd_saveFileDialog(
 					       "Output file name",
 					       "",
-					       1,
-					       lFilterPatterns1,
+					       0,
 					       NULL,
-					       0);
+					       NULL);
     }
   else if(typ==1)
     {

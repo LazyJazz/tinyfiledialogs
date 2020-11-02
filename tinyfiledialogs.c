@@ -6780,7 +6780,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
         }
         else
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){return tinyfd_inputBox(aTitle,NULL,NULL);}
+            if (aTitle&&!strcmp(aTitle,"tinyfd_query")){return tinyfd_inputBox(aTitle,NULL,NULL);}
 				strcpy(lBuff, "Open file from ");
 				strcat(lBuff, getCurDir());
 				lPointerInputBox = tinyfd_inputBox(NULL, NULL, NULL); /* obtain a pointer on the current content of tinyfd_inputBox */
@@ -6788,16 +6788,13 @@ frontmost of process \\\"Python\\\" to true' ''');");
 				p2 = tinyfd_inputBox(aTitle, lBuff, "");
 				if (p2) strcpy(lBuff, p2); else lBuff[0] = '\0';
 				if (lPointerInputBox) strcpy(lPointerInputBox, lDialogString); /* restore its previous content to tinyfd_inputBox */
-				p2 = lBuff;
-
-                if ( ! fileExists(p2) )
-                {
+            if ( ! fileExists(lBuff) )
+            {
 					free(lBuff);
 					lBuff = NULL;
-                }
+            }
 				else
 				{
-					strcpy(lBuff, p2);
 					lBuff = (char *)( realloc( lBuff, (strlen(lBuff)+1) * sizeof(char)));
 				}
 				return lBuff ;

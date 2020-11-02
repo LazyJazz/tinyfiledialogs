@@ -6306,18 +6306,17 @@ char * tinyfd_openFileDialog(
     char const * aSingleFilterDescription , /* NULL or "image files" */
     int aAllowMultipleSelects ) /* 0 or 1 */
 {
-        char lDialogString[MAX_PATH_OR_CMD] ;
-        char lString[MAX_PATH_OR_CMD] ;
-        int i ;
-        FILE * lIn ;
-        char * p ;
-        char * p2 ;
-		char * lPointerInputBox ;
-        int lWasKdialog = 0 ;
-        int lWasGraphicDialog = 0 ;
-        int lWasXterm = 0 ;
-		size_t lFullBuffLen ;
-		static char * lBuff = NULL;
+      char lDialogString[MAX_PATH_OR_CMD] ;
+      char lString[MAX_PATH_OR_CMD] ;
+      int i ;
+      FILE * lIn ;
+      char * p ;
+      char * lPointerInputBox ;
+      int lWasKdialog = 0 ;
+      int lWasGraphicDialog = 0 ;
+      int lWasXterm = 0 ;
+      size_t lFullBuffLen ;
+      static char * lBuff = NULL;
 
 		if (tfd_quoteDetected(aTitle)) return tinyfd_openFileDialog("INVALID TITLE WITH QUOTES", aDefaultPathAndFile, aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription, aAllowMultipleSelects);
 		if (tfd_quoteDetected(aDefaultPathAndFile)) return tinyfd_openFileDialog(aTitle, "INVALID DEFAULT_PATH WITH QUOTES", aNumOfFilterPatterns, aFilterPatterns, aSingleFilterDescription, aAllowMultipleSelects);
@@ -6785,8 +6784,8 @@ frontmost of process \\\"Python\\\" to true' ''');");
 				strcat(lBuff, getCurDir());
 				lPointerInputBox = tinyfd_inputBox(NULL, NULL, NULL); /* obtain a pointer on the current content of tinyfd_inputBox */
 				if (lPointerInputBox) strcpy(lDialogString, lPointerInputBox); /* preserve the current content of tinyfd_inputBox */
-				p2 = tinyfd_inputBox(aTitle, lBuff, "");
-				if (p2) strcpy(lBuff, p2); else lBuff[0] = '\0';
+				p = tinyfd_inputBox(aTitle, lBuff, "");
+				if ( p ) strcpy(lBuff, p); else lBuff[0] = '\0';
 				if (lPointerInputBox) strcpy(lPointerInputBox, lDialogString); /* restore its previous content to tinyfd_inputBox */
             if ( ! fileExists(lBuff) )
             {
@@ -6808,7 +6807,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		return NULL ;
     }
         lBuff[0]='\0';
-        p=lBuff;
+        p = lBuff;
         while ( fgets( p , sizeof( lBuff ) , lIn ) != NULL )
         {
                 p += strlen( p );

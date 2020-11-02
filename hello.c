@@ -73,7 +73,7 @@ int main( int argc , char * argv[] )
 
 	(void)argv; /*to silence stupid visual studio warning*/
 
-	tinyfd_verbose = argc - 1;  /* default is 0 */
+	tinyfd_verbose = 1;//argc - 1;  /* default is 0 */
 	tinyfd_silent = 1;  /* default is 1 */
 
 	tinyfd_forceConsole = 0; /* default is 0 */

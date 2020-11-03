@@ -1,7 +1,7 @@
 tiny file dialogs ( cross-platform C C++ ) v3.8.3 [Nov 1, 2020] zlib licence
  _________
-/         \   Beep Popup InputBox PasswordBox MessageBox ColorPicker
-|tiny file|   OpenFileDialog SaveFileDialog SelectFolderDialog
+/         \   Tray-popup InputBox PasswordBox MessageBox Notification Beep
+|tiny file|   ColorPicker OpenFileDialog SaveFileDialog SelectFolderDialog
 | dialogs |   ASCII UTF-8 (and also MBCS & UTF-16 for windows)
 \____  ___/   Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE
      \|       SSH support via automatic switch to console mode or X forwarding

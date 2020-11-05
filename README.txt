@@ -29,7 +29,7 @@ Bindings for LUA and C# dll, Haskell, Fortran. Included in LWJGL(java), Rust, Al
 | |                                                                            | |
 | |  - in tinyfiledialogs, char is UTF-8 by default (since v3.6)               | |
 | |  - but fopen() expects MBCS (not UTF-8)                                    | |
-| |  - if you want char to be MBCS: set tinyfd_winUtf8 to 0                    | |
+| |  - if you want char to be MBCS: set tinyfd_winUtf8 = 0                     | |
 | |                                                                            | |
 | |  - alternatively, tinyfiledialogs provides                                 | |
 | |                        functions to convert between UTF-8, UTF-16 and MBCS | |

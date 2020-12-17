@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.8.3 [Nov 1, 2020] zlib licence
+ /         \ tinyfiledialogs.c v3.8.4 [Dec 4, 2020] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -93,7 +93,7 @@ Thanks for contributions, bug corrections & thorough testing to:
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char const tinyfd_version[8] = "3.8.3";
+char const tinyfd_version[8] = "3.8.4";
 
 /******************************************************************************************************/
 /**************************************** UTF-8 on Windows ********************************************/
@@ -1907,9 +1907,9 @@ static int inputBoxWinGui(
 		if (tinyfd_winUtf8) lTmpWChar = tinyfd_utf8to16(aDefaultInput);
 		else lTmpWChar = tinyfd_mbcsTo16(aDefaultInput);
 		wcscpy(lDefaultInput, lTmpWChar);
+        lTmpWChar = tinyfd_inputBoxW(lTitle, lMessage, lDefaultInput);
 	}
-
-	lTmpWChar = tinyfd_inputBoxW(lTitle, lMessage, lDefaultInput);
+    else lTmpWChar = tinyfd_inputBoxW(lTitle, lMessage, NULL);
 
 	free(lMessage);
 

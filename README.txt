@@ -1,4 +1,4 @@
-tiny file dialogs ( cross-platform C C++ ) v3.8.3 [Nov 1, 2020] zlib licence
+tiny file dialogs ( cross-platform C C++ ) v3.8.4 [Dec 4, 2020] zlib licence
  _________
 /         \   Tray-popup InputBox PasswordBox MessageBox Notification Beep
 |tiny file|   ColorPicker OpenFileDialog SaveFileDialog SelectFolderDialog
@@ -16,6 +16,14 @@ Bindings for LUA and C# dll, Haskell, Fortran. Included in LWJGL(java), Rust, Al
 
                    http://tinyfiledialogs.sourceforge.net
          git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
+ ____________________________________________________________________________
+|  ________________________________________________________________________  |
+| |  ____________________________________________________________________  | |
+| | | If you like tinyfiledialogs, please upvote my stackoverflow answer | | |
+| | |                https://stackoverflow.com/a/47651444                | | |
+| | |____________________________________________________________________| | |
+| |________________________________________________________________________| |
+|____________________________________________________________________________|
  _____________________________________________________________________
 |                                                                     |
 | my email address is at the top of the header file tinyfiledialogs.h |

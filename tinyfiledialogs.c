@@ -1,4 +1,5 @@
-/* this file can be renamed with extension ".cpp" as the code is 100% compatible C C++
+/* this file can be renamed with extension ".cpp" and compiled as C++.
+The code is 100% compatible C C++
 (just comment out << extern "C" >> in the header file) */
 
 /*_________

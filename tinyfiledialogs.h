@@ -1,3 +1,6 @@
+/* If you compiled the C file tinyfiledialogs.c (maybe renamed with an extension ".cpp")
+with a C++ compiler, then comment out << extern "C" >> bellow in this header file) */
+
 /*_________
  /         \ tinyfiledialogs.h v3.8.4 [Dec 23, 2020] zlib licence
  |tiny file| Unique header file created [November 9, 2014]

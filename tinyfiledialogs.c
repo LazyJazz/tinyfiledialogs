@@ -1,3 +1,6 @@
+/* this file can be renamed with extension ".cpp" as the code is 100% compatible C C++
+(just comment out << extern "C" >> in the header file) */
+
 /*_________
  /         \ tinyfiledialogs.c v3.8.4 [Dec 23, 2020] zlib licence
  |tiny file| Unique code file created [November 9, 2014]

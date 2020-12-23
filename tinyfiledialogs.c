@@ -1,5 +1,5 @@
 /*_________
- /         \ tinyfiledialogs.c v3.8.4 [Dec 4, 2020] zlib licence
+ /         \ tinyfiledialogs.c v3.8.4 [Dec 23, 2020] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -51,7 +51,9 @@ Thanks for contributions, bug corrections & thorough testing to:
 #endif
 
 #if !defined(_WIN32) && ( defined(__GNUC__) || defined(__clang__) )
+#if !defined(_GNU_SOURCE)
  #define _GNU_SOURCE /* used only to resolve symbolic links. Can be commented out */
+#endif
 #endif
 
 #include <stdio.h>
@@ -93,7 +95,7 @@ Thanks for contributions, bug corrections & thorough testing to:
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char const tinyfd_version[8] = "3.8.4";
+char tinyfd_version[8] = "3.8.4";
 
 /******************************************************************************************************/
 /**************************************** UTF-8 on Windows ********************************************/
@@ -1815,7 +1817,7 @@ static int messageBoxWinGui(
 	{
 		if (tinyfd_winUtf8) lTmpWChar = tinyfd_utf8to16(aMessage);
 		else lTmpWChar = tinyfd_mbcsTo16(aMessage);
-		lMessage = malloc((wcslen(lTmpWChar) + 1)* sizeof(wchar_t));
+		lMessage = (wchar_t *) malloc((wcslen(lTmpWChar) + 1)* sizeof(wchar_t));
 		if (lMessage) wcscpy(lMessage, lTmpWChar);
 	}
 	if (aDialogType)
@@ -1859,7 +1861,7 @@ static int notifyWinGui(
 	{
 		if (tinyfd_winUtf8) lTmpWChar = tinyfd_utf8to16(aMessage);
 		else lTmpWChar = tinyfd_mbcsTo16(aMessage);
-		lMessage = malloc((wcslen(lTmpWChar) + 1)* sizeof(wchar_t));
+		lMessage = (wchar_t *) malloc((wcslen(lTmpWChar) + 1)* sizeof(wchar_t));
       if (lMessage) wcscpy(lMessage, lTmpWChar);
 	}
 	if (aIconType)
@@ -1899,7 +1901,7 @@ static int inputBoxWinGui(
 	{
 		if (tinyfd_winUtf8) lTmpWChar = tinyfd_utf8to16(aMessage);
 		else lTmpWChar = tinyfd_mbcsTo16(aMessage);
-		lMessage = malloc((wcslen(lTmpWChar) + 1)* sizeof(wchar_t));
+		lMessage = (wchar_t *) malloc((wcslen(lTmpWChar) + 1)* sizeof(wchar_t));
       if (lMessage) wcscpy(lMessage, lTmpWChar);
 	}
 	if (aDefaultInput)

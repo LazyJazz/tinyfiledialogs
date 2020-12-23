@@ -1,4 +1,4 @@
-/* If you compiled the C file tinyfiledialogs.c (maybe renamed with an extension ".cpp")
+/* If you compiled tinyfiledialogs.c (maybe renamed with an extension ".cpp")
 with a C++ compiler, then comment out << extern "C" >> bellow in this header file) */
 
 /*_________

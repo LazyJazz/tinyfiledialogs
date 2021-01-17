@@ -3,9 +3,9 @@ The code is 100% compatible C C++
 (just comment out << extern "C" >> in the header file) */
 
 /*_________
- /         \ tinyfiledialogs.c v3.8.4 [Dec 23, 2020] zlib licence
+ /         \ tinyfiledialogs.c v3.8.5 [Jan 17, 2021] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
- | dialogs | Copyright (c) 2014 - 2020 Guillaume Vareille http://ysengrin.com
+ | dialogs | Copyright (c) 2014 - 2021 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
       \|     git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
               ____________________________________________
@@ -99,7 +99,7 @@ Thanks for contributions, bug corrections & thorough testing to:
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char tinyfd_version[8] = "3.8.4";
+char tinyfd_version[8] = "3.8.5";
 
 /******************************************************************************************************/
 /**************************************** UTF-8 on Windows ********************************************/
@@ -640,7 +640,8 @@ char * tinyfd_mbcsTo8(char const * aMbcsString)
 
 void tinyfd_beep(void)
 {
-        Beep(440,300);
+    if (windowsVersion() > 5) Beep(440, 300);
+    else MessageBeep(-1);
 }
 
 

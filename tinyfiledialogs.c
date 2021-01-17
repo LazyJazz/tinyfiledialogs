@@ -466,7 +466,7 @@ int tinyfd_setGlobalInt(char const * aIntVariableName, int aValue) /* to be call
 
 #ifdef _WIN32
 
-int windowsVersion()
+static int windowsVersion(void)
 {
     typedef LONG NTSTATUS, * PNTSTATUS;
     typedef NTSTATUS(WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
@@ -1169,7 +1169,7 @@ wchar_t * tinyfd_inputBoxW(
 #if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
                 lDialogStringLen,
 #endif
-                L"%ls\\AppData\\Local\\Temp\\tinyfd.vbs", _wgetenv(L"USERPROFILE"));
+                L"%ls\\tinyfd.vbs", _wgetenv(L"TEMP"));
         }
         else
         {
@@ -1177,7 +1177,7 @@ wchar_t * tinyfd_inputBoxW(
 #if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
                         lDialogStringLen,
 #endif
-                        L"%ls\\AppData\\Local\\Temp\\tinyfd.hta", _wgetenv(L"USERPROFILE"));
+                L"%ls\\tinyfd.hta", _wgetenv(L"TEMP"));
         }
         lIn = _wfopen(lDialogString, L"w");
         if (!lIn)
@@ -1241,8 +1241,8 @@ End Sub\n\
 Sub Window_onUnload\n\
 Set objFSO = CreateObject(\"Scripting.FileSystemObject\")\n\
 Set oShell = CreateObject(\"WScript.Shell\")\n\
-strHomeFolder = oShell.ExpandEnvironmentStrings(\"%USERPROFILE%\")\n\
-Set objFile = objFSO.CreateTextFile(strHomeFolder & \"\\AppData\\Local\\Temp\\tinyfd.txt\",True,True)\n\
+strTempFolder = oShell.ExpandEnvironmentStrings(\"%TEMP%\")\n\
+Set objFile = objFSO.CreateTextFile(strTempFolder & \"\\tinyfd.txt\",True,True)\n\
 If result = 1 Then\n\
 objFile.Write 1 & txt_input.Value\n\
 Else\n\
@@ -1312,7 +1312,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
 #if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
                         lDialogStringLen,
 #endif
-                        L"%ls\\AppData\\Local\\Temp\\tinyfd.txt",_wgetenv(L"USERPROFILE"));
+                        L"%ls\\tinyfd.txt",_wgetenv(L"TEMP"));
 
 #ifdef TINYFD_NOCCSUNICODE
 				lFile = _wfopen(lDialogString, L"w");
@@ -1324,13 +1324,13 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
 				fclose(lFile);
 
                 wcscpy(lDialogString, L"cmd.exe /c cscript.exe //U //Nologo ");
-                wcscat(lDialogString, L"\"%USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.vbs\" ");
-                wcscat(lDialogString, L">> \"%USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.txt\"");
+                wcscat(lDialogString, L"\"%TEMP%\\tinyfd.vbs\" ");
+                wcscat(lDialogString, L">> \"%TEMP%\\tinyfd.txt\"");
         }
         else
         {
                 wcscpy(lDialogString,
-                        L"cmd.exe /c mshta.exe \"%USERPROFILE%\\AppData\\Local\\Temp\\tinyfd.hta\"");
+                        L"cmd.exe /c mshta.exe \"%TEMP%\\tinyfd.hta\"");
         }
 
         /* wprintf ( "lDialogString: %ls\n" , lDialogString ) ; */
@@ -1341,7 +1341,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
 #if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
                 lDialogStringLen,
 #endif
-				L"%ls\\AppData\\Local\\Temp\\tinyfd.txt", _wgetenv(L"USERPROFILE"));
+				L"%ls\\tinyfd.txt", _wgetenv(L"TEMP"));
 		/* wprintf(L"lDialogString: %ls\n", lDialogString); */
 #ifdef TINYFD_NOCCSUNICODE
 		if (!(lIn = _wfopen(lDialogString, L"r")))
@@ -1371,8 +1371,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
 #if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
                         lDialogStringLen,
 #endif
-                        L"%ls\\AppData\\Local\\Temp\\tinyfd.vbs",
-                        _wgetenv(L"USERPROFILE"));
+                        L"%ls\\tinyfd.vbs", _wgetenv(L"TEMP"));
         }
         else
         {
@@ -1380,8 +1379,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
 #if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
                         lDialogStringLen,
 #endif
-                        L"%ls\\AppData\\Local\\Temp\\tinyfd.hta",
-                        _wgetenv(L"USERPROFILE"));
+                        L"%ls\\tinyfd.hta", _wgetenv(L"TEMP"));
         }
         _wremove(lDialogString);
         free(lDialogString);
@@ -2296,8 +2294,8 @@ static int messageBoxWinConsole(
                 strcat(lDialogString, " && echo 1 > ");
         }
 
-        strcpy(lDialogFile, getenv("USERPROFILE"));
-        strcat(lDialogFile, "\\AppData\\Local\\Temp\\tinyfd.txt");
+        strcpy(lDialogFile, getenv("TEMP"));
+        strcat(lDialogFile, "\\tinyfd.txt");
         strcat(lDialogString, lDialogFile);
 
         /*if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;*/
@@ -2344,8 +2342,8 @@ static int inputBoxWinConsole(
         FILE * lIn;
         int lResult;
 
-        strcpy(lDialogFile, getenv("USERPROFILE"));
-        strcat(lDialogFile, "\\AppData\\Local\\Temp\\tinyfd.txt");
+        strcpy(lDialogFile, getenv("TEMP"));
+        strcat(lDialogFile, "\\tinyfd.txt");
         strcpy(lDialogString , "echo|set /p=1 >" ) ;
         strcat(lDialogString, lDialogFile);
         strcat( lDialogString , " & " ) ;
@@ -2389,8 +2387,8 @@ static int inputBoxWinConsole(
         }
 
         strcat(lDialogString, "2>>");
-        strcpy(lDialogFile, getenv("USERPROFILE"));
-        strcat(lDialogFile, "\\AppData\\Local\\Temp\\tinyfd.txt");
+        strcpy(lDialogFile, getenv("TEMP"));
+        strcat(lDialogFile, "\\tinyfd.txt");
         strcat(lDialogString, lDialogFile);
         strcat(lDialogString, " || echo 0 > ");
         strcat(lDialogString, lDialogFile);
@@ -2467,8 +2465,8 @@ static char * saveFileDialogWinConsole(
         }
         strcat(lDialogString, lPathAndFile) ;
         strcat(lDialogString, "\" 0 60 2>");
-        strcpy(lPathAndFile, getenv("USERPROFILE"));
-        strcat(lPathAndFile, "\\AppData\\Local\\Temp\\tinyfd.txt");
+        strcpy(lPathAndFile, getenv("TEMP"));
+        strcat(lPathAndFile, "\\tinyfd.txt");
         strcat(lDialogString, lPathAndFile);
 
         /* printf( "lDialogString: %s\n" , lDialogString ) ; */
@@ -2532,8 +2530,8 @@ static char * openFileDialogWinConsole(
         }
         strcat(lDialogString, lFilterPatterns) ;
         strcat(lDialogString, "\" 0 60 2>");
-        strcpy(lFilterPatterns, getenv("USERPROFILE"));
-        strcat(lFilterPatterns, "\\AppData\\Local\\Temp\\tinyfd.txt");
+        strcpy(lFilterPatterns, getenv("TEMP"));
+        strcat(lFilterPatterns, "\\tinyfd.txt");
         strcat(lDialogString, lFilterPatterns);
 
         /* printf( "lDialogString: %s\n" , lDialogString ) ; */
@@ -2591,8 +2589,8 @@ static char * selectFolderDialogWinConsole(
                 strcat(lDialogString, "./") ;
         }
         strcat(lDialogString, "\" 0 60 2>");
-        strcpy(lString, getenv("USERPROFILE"));
-        strcat(lString, "\\AppData\\Local\\Temp\\tinyfd.txt");
+        strcpy(lString, getenv("TEMP"));
+        strcat(lString, "\\tinyfd.txt");
         strcat(lDialogString, lString);
 
         /* printf( "lDialogString: %s\n" , lDialogString ) ; */
@@ -2753,7 +2751,7 @@ int tinyfd_notifyPopup(
 	if (tfd_quoteDetected(aTitle)) return tinyfd_notifyPopup("INVALID TITLE WITH QUOTES", aMessage, aIconType);
 	if (tfd_quoteDetected(aMessage)) return tinyfd_notifyPopup(aTitle, "INVALID MESSAGE WITH QUOTES", aIconType);
 
-    if ( (windowsVersion() > 5) && (!tinyfd_forceConsole || !(
+    if ( /*(windowsVersion() > 5) &&*/ (!tinyfd_forceConsole || !(
             GetConsoleWindow() ||
             dialogPresent()))
 			&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))

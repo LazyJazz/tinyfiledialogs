@@ -2753,16 +2753,16 @@ int tinyfd_notifyPopup(
 	if (tfd_quoteDetected(aTitle)) return tinyfd_notifyPopup("INVALID TITLE WITH QUOTES", aMessage, aIconType);
 	if (tfd_quoteDetected(aMessage)) return tinyfd_notifyPopup(aTitle, "INVALID MESSAGE WITH QUOTES", aIconType);
 
-        if ((!tinyfd_forceConsole || !(
-                GetConsoleWindow() ||
-                dialogPresent()))
-				&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
-        {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return 1;}
-                return notifyWinGui(aTitle, aMessage, aIconType);
-        }
-        else
-		return tinyfd_messageBox(aTitle, aMessage, "ok" , aIconType, 0);
+    if ( (windowsVersion() > 5) && (!tinyfd_forceConsole || !(
+            GetConsoleWindow() ||
+            dialogPresent()))
+			&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
+    {
+            if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return 1;}
+            return notifyWinGui(aTitle, aMessage, aIconType);
+    }
+    else
+	    return tinyfd_messageBox(aTitle, aMessage, "ok" , aIconType, 0);
 }
 
 

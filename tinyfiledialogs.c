@@ -466,7 +466,7 @@ int tinyfd_setGlobalInt(char const * aIntVariableName, int aValue) /* to be call
 
 #ifdef _WIN32
 static int powershellPresent(void)
-{
+{ /*only on vista and above*/
     static int lPowershellPresent = -1;
     char lBuff[MAX_PATH_OR_CMD];
     FILE* lIn;
@@ -499,11 +499,12 @@ static int powershellPresent(void)
     return lPowershellPresent;
 }
 
-
 static int windowsVersion(void)
 {
-#ifndef __MINGW32__
-    typedef LONG NTSTATUS;
+#if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
+    if (powershellPresent()) return 6; /*minimum is vista*/
+#else
+    typedef LONG NTSTATUS  ;
     typedef NTSTATUS(WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
     HMODULE hMod;
     RtlGetVersionPtr lFxPtr;
@@ -521,8 +522,6 @@ static int windowsVersion(void)
             }
         }
     }
-#else
-    if ( powershellPresent() ) return 6; /*minimum is vista*/
 #endif
     return 0;
 }
@@ -2789,7 +2788,7 @@ int tinyfd_notifyPopup(
 	if (tfd_quoteDetected(aTitle)) return tinyfd_notifyPopup("INVALID TITLE WITH QUOTES", aMessage, aIconType);
 	if (tfd_quoteDetected(aMessage)) return tinyfd_notifyPopup(aTitle, "INVALID MESSAGE WITH QUOTES", aIconType);
 
-    if ( (windowsVersion() > 5) && (!tinyfd_forceConsole || !(
+    if ( powershellPresent() && (!tinyfd_forceConsole || !(
             GetConsoleWindow() ||
             dialogPresent()))
 			&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))

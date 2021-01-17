@@ -465,9 +465,44 @@ int tinyfd_setGlobalInt(char const * aIntVariableName, int aValue) /* to be call
 
 
 #ifdef _WIN32
+static int powershellPresent(void)
+{
+    static int lPowershellPresent = -1;
+    char lBuff[MAX_PATH_OR_CMD];
+    FILE* lIn;
+    char const* lString = "powershell.exe";
+
+    if (lPowershellPresent < 0)
+    {
+        if (!(lIn = _popen("where powershell.exe", "r")))
+        {
+            lPowershellPresent = 0;
+            return 0;
+        }
+        while (fgets(lBuff, sizeof(lBuff), lIn) != NULL)
+        {
+        }
+        _pclose(lIn);
+        if (lBuff[strlen(lBuff) - 1] == '\n')
+        {
+            lBuff[strlen(lBuff) - 1] = '\0';
+        }
+        if (strcmp(lBuff + strlen(lBuff) - strlen(lString), lString))
+        {
+            lPowershellPresent = 0;
+        }
+        else
+        {
+            lPowershellPresent = 1;
+        }
+    }
+    return lPowershellPresent;
+}
+
 
 static int windowsVersion(void)
 {
+#ifndef __MINGW32__
     typedef LONG NTSTATUS;
     typedef NTSTATUS(WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
     HMODULE hMod;
@@ -486,7 +521,9 @@ static int windowsVersion(void)
             }
         }
     }
-
+#else
+    if ( powershellPresent() ) return 6; /*minimum is vista*/
+#endif
     return 0;
 }
 

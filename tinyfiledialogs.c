@@ -510,7 +510,7 @@ static void replaceChr(char * aString, char aOldChr, char aNewChr)
 
 #if !defined(WC_ERR_INVALID_CHARS)
 /* undefined prior to Vista, so not yet in MINGW header file */
-#define WC_ERR_INVALID_CHARS 0x00000080
+#define WC_ERR_INVALID_CHARS 0x00000000 /* 0x00000080 for MINGW maybe ? */
 #endif
 
 static int sizeUtf16From8(char const * aUtf8string)

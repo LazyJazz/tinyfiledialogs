@@ -468,7 +468,7 @@ int tinyfd_setGlobalInt(char const * aIntVariableName, int aValue) /* to be call
 
 static int windowsVersion(void)
 {
-    typedef LONG NTSTATUS, * PNTSTATUS;
+    typedef LONG NTSTATUS;
     typedef NTSTATUS(WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
     HMODULE hMod;
     RtlGetVersionPtr lFxPtr;

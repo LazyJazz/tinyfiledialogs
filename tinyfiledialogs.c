@@ -466,6 +466,31 @@ int tinyfd_setGlobalInt(char const * aIntVariableName, int aValue) /* to be call
 
 #ifdef _WIN32
 
+int windowsVersion()
+{
+    typedef LONG NTSTATUS, * PNTSTATUS;
+    typedef NTSTATUS(WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
+    HMODULE hMod;
+    RtlGetVersionPtr lFxPtr;
+    RTL_OSVERSIONINFOW lRovi = { 0 };
+
+    hMod = GetModuleHandleW(L"ntdll.dll");
+    if (hMod) {
+        lFxPtr = (RtlGetVersionPtr)GetProcAddress(hMod, "RtlGetVersion");
+        if (lFxPtr)
+        {
+            lRovi.dwOSVersionInfoSize = sizeof(lRovi);
+            if (!lFxPtr(&lRovi))
+            {
+                return lRovi.dwMajorVersion;
+            }
+        }
+    }
+
+    return 0;
+}
+
+
 static void replaceChr(char * aString, char aOldChr, char aNewChr)
 {
 	char * p;
@@ -1051,9 +1076,9 @@ int tinyfd_notifyPopupW(
         size_t lMessageLen;
         size_t lDialogStringLen;
 
-        if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return 1; }
-
-		if (quoteDetectedW(aTitle)) return tinyfd_notifyPopupW(L"INVALID TITLE WITH QUOTES", aMessage, aIconType);
+        if (aTitle && !wcscmp(aTitle, L"tinyfd_query")) { strcpy(tinyfd_response, "windows_wchar"); return 1; }
+        
+        if (quoteDetectedW(aTitle)) return tinyfd_notifyPopupW(L"INVALID TITLE WITH QUOTES", aMessage, aIconType);
 		if (quoteDetectedW(aMessage)) return tinyfd_notifyPopupW(aTitle, L"INVALID MESSAGE WITH QUOTES", aIconType);
 
         lTitleLen = aTitle ? wcslen(aTitle) : 0;
@@ -1080,7 +1105,7 @@ $balloon.Icon = $icon ; \
 $balloon.BalloonTipIcon = $IconType ; \
 $balloon.BalloonTipText = $Message ; \
 $balloon.BalloonTipTitle = $Title ; \
-$balloon.Text = 'lalala' ; \
+$balloon.Text = 'tinyfiledialogs' ; \
 $balloon.Visible = $true ; \
 $balloon.ShowBalloonTip(5000)};\
 Show-BalloonTip");

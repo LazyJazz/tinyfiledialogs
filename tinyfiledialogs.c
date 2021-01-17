@@ -2751,7 +2751,7 @@ int tinyfd_notifyPopup(
 	if (tfd_quoteDetected(aTitle)) return tinyfd_notifyPopup("INVALID TITLE WITH QUOTES", aMessage, aIconType);
 	if (tfd_quoteDetected(aMessage)) return tinyfd_notifyPopup(aTitle, "INVALID MESSAGE WITH QUOTES", aIconType);
 
-    if ( /*(windowsVersion() > 5) &&*/ (!tinyfd_forceConsole || !(
+    if ( (windowsVersion() > 5) && (!tinyfd_forceConsole || !(
             GetConsoleWindow() ||
             dialogPresent()))
 			&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))

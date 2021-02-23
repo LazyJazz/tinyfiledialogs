@@ -3,7 +3,7 @@ The code is 100% compatible C C++
 (just comment out << extern "C" >> in the header file) */
 
 /*_________
- /         \ tinyfiledialogs.c v3.8.5 [Jan 17, 2021] zlib licence
+ /         \ tinyfiledialogs.c v3.8.6 [Feb 23, 2021] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2021 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -3143,8 +3143,12 @@ char * tinyfd_colorChooser(
     {
 		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char *)1;}
 		p = colorChooserWinGui(aTitle, aDefaultHexRGB, aDefaultRGB, aoResultRGB);
-		strcpy(lDefaultHexRGB, p);
-		return lDefaultHexRGB;
+        if (p)
+        {
+            strcpy(lDefaultHexRGB, p);
+            return lDefaultHexRGB;
+        }
+        return NULL;
     }
 	else if (dialogPresent())
 	{

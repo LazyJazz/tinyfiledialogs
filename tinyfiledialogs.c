@@ -3,7 +3,7 @@ The code is 100% compatible C C++
 (just comment out << extern "C" >> in the header file) */
 
 /*_________
- /         \ tinyfiledialogs.c v3.8.6 [Feb 23, 2021] zlib licence
+ /         \ tinyfiledialogs.c v3.8.7 [Feb 25, 2021] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2021 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -99,7 +99,7 @@ Thanks for contributions, bug corrections & thorough testing to:
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char tinyfd_version[8] = "3.8.6";
+char tinyfd_version[8] = "3.8.7";
 
 /******************************************************************************************************/
 /**************************************** UTF-8 on Windows ********************************************/
@@ -463,10 +463,9 @@ int tinyfd_setGlobalInt(char const * aIntVariableName, int aValue) /* to be call
 }
 
 
-
 #ifdef _WIN32
 static int powershellPresent(void)
-{ /*only on vista and above*/
+{ /*only on vista and above (or installed on xp)*/
     static int lPowershellPresent = -1;
     char lBuff[MAX_PATH_OR_CMD];
     FILE* lIn;
@@ -683,10 +682,14 @@ void tinyfd_beep(void)
 static void wipefileW(wchar_t const * aFilename)
 {
         int i;
-        struct _stat st;
         FILE * lIn;
-
+#if defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64__) && (__MINGW32_MAJOR_VERSION <= 3)
+        struct _stat st;
         if (_wstat(aFilename, &st) == 0)
+#else
+        struct __stat64 st;
+        if (_wstat64(aFilename, &st) == 0)
+#endif
         {
                 if ((lIn = _wfopen(aFilename, L"w")))
                 {
@@ -817,7 +820,11 @@ static void RGB2HexW( unsigned char const aRGB[3], wchar_t aoResultHexRGB[8])
 
 static int dirExists(char const * aDirPath)
 {
-        struct _stat lInfo;
+#if defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64__) && (__MINGW32_MAJOR_VERSION <= 3)
+    struct _stat lInfo;
+#else
+    struct __stat64 lInfo;
+#endif
         wchar_t * lTmpWChar;
         int lStatRet;
 		size_t lDirLen;
@@ -833,7 +840,11 @@ static int dirExists(char const * aDirPath)
         if (tinyfd_winUtf8)
         {
 			lTmpWChar = tinyfd_utf8to16(aDirPath);
+#if defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64__) && (__MINGW32_MAJOR_VERSION <= 3)
             lStatRet = _wstat(lTmpWChar, &lInfo);
+#else
+            lStatRet = _wstat64(lTmpWChar, &lInfo);
+#endif
             if (lStatRet != 0)
                     return 0;
             else if (lInfo.st_mode & S_IFDIR)
@@ -841,7 +852,11 @@ static int dirExists(char const * aDirPath)
             else
                         return 0;
         }
+#if defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64__) && (__MINGW32_MAJOR_VERSION <= 3)
         else if (_stat(aDirPath, &lInfo) != 0)
+#else
+        else if (_stat64(aDirPath, &lInfo) != 0)
+#endif
                 return 0;
         else if (lInfo.st_mode & S_IFDIR)
                 return 1;
@@ -852,7 +867,11 @@ static int dirExists(char const * aDirPath)
 
 static int fileExists(char const * aFilePathAndName)
 {
-        struct _stat lInfo;
+#if defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64__) && (__MINGW32_MAJOR_VERSION <= 3)
+    struct _stat lInfo;
+#else
+    struct __stat64 lInfo;
+#endif
         wchar_t * lTmpWChar;
         int lStatRet;
         FILE * lIn;
@@ -865,7 +884,12 @@ static int fileExists(char const * aFilePathAndName)
         if (tinyfd_winUtf8)
         {
 			lTmpWChar = tinyfd_utf8to16(aFilePathAndName);
+#if defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64__) && (__MINGW32_MAJOR_VERSION <= 3)
             lStatRet = _wstat(lTmpWChar, &lInfo);
+#else
+            lStatRet = _wstat64(lTmpWChar, &lInfo);
+#endif
+
             if (lStatRet != 0)
                     return 0;
             else if (lInfo.st_mode & _S_IFREG)

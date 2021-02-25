@@ -26,5 +26,4 @@
 \MinGW32-63\bin\gcc -pedantic -Wstrict-prototypes -Wall -o hello32.exe ../hello.c tinyfiledialogs32.lib
 \MinGW32-63\bin\gcc -pedantic -Wstrict-prototypes -Wall -o helloW32.exe ../hello_wchar_t.c tinyfiledialogs32.lib
 
-
 @REM -std=gnu89 -Ofast -std=c++11

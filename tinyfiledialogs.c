@@ -585,10 +585,12 @@ wchar_t* tinyfd_mbcsTo16(char const* aMbcsString)
     free(lMbcsString);
     if (!aMbcsString) { lMbcsString = NULL; return NULL; }
     lSize = sizeUtf16FromMbcs(aMbcsString);
-    lMbcsString = (wchar_t*)malloc(lSize * sizeof(wchar_t));
-    lSize = MultiByteToWideChar(CP_ACP, 0,
-        aMbcsString, -1, lMbcsString, lSize);
-    if (lSize == 0) wcscpy(lMbcsString, L"");
+    if (lSize)
+    {
+        lMbcsString = (wchar_t*)malloc(lSize * sizeof(wchar_t));
+        lSize = MultiByteToWideChar(CP_ACP, 0, aMbcsString, -1, lMbcsString, lSize);
+    }
+    else wcscpy(lMbcsString, L"");
     return lMbcsString;
 }
 
@@ -601,17 +603,19 @@ wchar_t * tinyfd_utf8to16(char const * aUtf8string)
 	free(lUtf16string);
 	if (!aUtf8string) {lUtf16string = NULL; return NULL;}
 	lSize = sizeUtf16From8(aUtf8string);
-    if (lSize == 0)
+    if (lSize)
+    {
+        lUtf16string = (wchar_t*)malloc(lSize * sizeof(wchar_t));
+        lSize = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+            aUtf8string, -1, lUtf16string, lSize);
+        return lUtf16string;
+    }
+    else
     {
         /* let's try mbcs anyway */
         lUtf16string = NULL;
         return tinyfd_mbcsTo16(aUtf8string);
     }
-    lUtf16string = (wchar_t*)malloc(lSize * sizeof(wchar_t));
-    lSize = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
-            aUtf8string, -1, lUtf16string, lSize);
-	if (lSize == 0) wcscpy(lUtf16string, L"");
-	return lUtf16string;
 }
 
 
@@ -623,10 +627,12 @@ char * tinyfd_utf16toMbcs(wchar_t const * aUtf16string)
 	free(lMbcsString);
 	if (!aUtf16string) { lMbcsString = NULL; return NULL; }
 	lSize = sizeMbcs(aUtf16string);
-	lMbcsString = (char *)malloc(lSize);
-	lSize = WideCharToMultiByte(CP_ACP, 0,
-		aUtf16string, -1, lMbcsString, lSize, NULL, NULL);
-    if (lSize == 0) strcpy(lMbcsString, "");
+    if (lSize)
+    {
+        lMbcsString = (char*)malloc(lSize);
+        lSize = WideCharToMultiByte(CP_ACP, 0, aUtf16string, -1, lMbcsString, lSize, NULL, NULL);
+    }
+    else strcpy(lMbcsString, "");
 	return lMbcsString;
 }
 
@@ -647,10 +653,12 @@ char * tinyfd_utf16to8(wchar_t const * aUtf16string)
 	free(lUtf8string);
 	if (!aUtf16string) { lUtf8string = NULL; return NULL; }
 	lSize = sizeUtf8(aUtf16string);
-	lUtf8string = (char *)malloc(lSize);
-	lSize = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
-		aUtf16string, -1, lUtf8string, lSize, NULL, NULL);
-    if (lSize == 0) strcpy(lUtf8string, "");
+    if (lSize)
+    {
+        lUtf8string = (char*)malloc(lSize);
+        lSize = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, aUtf16string, -1, lUtf8string, lSize, NULL, NULL);
+    }
+    else strcpy(lUtf8string, "");
 	return lUtf8string;
 }
 

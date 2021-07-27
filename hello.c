@@ -173,7 +173,7 @@ quit [Cancel]",
 		"",
 		2,
 		lFilterPatterns,
-		NULL,
+		"text files",
 		0);
 
 	if (! lTheOpenFileName)

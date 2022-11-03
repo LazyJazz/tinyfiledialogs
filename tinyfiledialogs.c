@@ -1274,7 +1274,7 @@ wchar_t * tinyfd_inputBoxW(
 					wcscat(lDialogString, lBuff);
                 }
                 wcscat(lDialogString, L"\",\"");
-                wcscat(lDialogString, aTitle);
+                if (aTitle) wcscat(lDialogString, aTitle);
                 wcscat(lDialogString, L"\",\"");
 
                 if (aDefaultInput && wcslen(aDefaultInput))
@@ -1292,7 +1292,7 @@ wchar_t * tinyfd_inputBoxW(
 <html>\n\
 <head>\n\
 <title>");
-                wcscat(lDialogString, aTitle);
+                if (aTitle) wcscat(lDialogString, aTitle);
                 wcscat(lDialogString, L"</title>\n\
 <HTA:APPLICATION\n\
 ID = 'tinyfdHTA'\n\
